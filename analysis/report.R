@@ -1,5 +1,4 @@
 library("tidyverse")
-library("finalfit")
 
 df_os = read_csv(
   here::here("output", "input.csv"),

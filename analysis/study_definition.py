@@ -152,11 +152,46 @@ study = StudyDefinition(
         },
     ),
 
+    #########
+    # Death #
+    #########
+    death_date=patients.died_from_any_cause(
+        between=[start_date, end_date],
+        returning="date_of_death",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform"
+        },
+    ),
+
+    ##############
+    # Conditions #
+    ##############
+
+    # CURRENT ASTHMA
+    asthma=patients.with_these_clinical_events(
+        current_asthma_codes,
+        on_or_before="2020-02-29",
+        return_first_date_in_period=True,
+        include_month=True,
+        return_expectations={"date": {"latest": "2020-02-29"}},
+    ),
+
+    # DIABETES
+    diabetes=patients.with_these_clinical_events(
+        diabetes_codes,
+        on_or_before=start_date,
+        return_first_date_in_period=True,
+        include_month=True,
+        return_expectations={"date": {"latest": start_date}},
+    ),
+
     #######################
     # Hospital Admissions #
     #######################
 
-    # Hospital admissions in period
+    # Number of hospital admissions in period
     hospital_admissions_total=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
         between=["index_date + 1 day", end_date],
@@ -205,5 +240,4 @@ study = StudyDefinition(
             "rate": "exponential_increase"
         },
     ),
-
 )
