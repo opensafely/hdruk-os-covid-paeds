@@ -16,4 +16,4 @@ actions:
     needs: [generate_study_population]
     outputs:
       moderately_sensitive:
-        cohort: output/descriptive.png
+        cohort: output/hist_age.png
