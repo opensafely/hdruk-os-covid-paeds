@@ -1,11 +1,5 @@
 {
   "files": {
-    "opensafely-chronic-kidney-disease.csv": {
-      "id": "opensafely/chronic-kidney-disease/2020-04-14",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/chronic-kidney-disease/2020-04-14/",
-      "downloaded_at": "2021-11-29 16:42:06.275820Z",
-      "sha": "08e003f1222fe26781288b2eeff22db99780f202"
-    },
     "opensafely-current-asthma.csv": {
       "id": "opensafely/current-asthma/2020-05-06",
       "url": "https://codelists.opensafely.org/codelist/opensafely/current-asthma/2020-05-06/",
