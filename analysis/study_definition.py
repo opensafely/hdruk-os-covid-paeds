@@ -3,8 +3,60 @@ from cohortextractor import StudyDefinition, patients, codelist, codelist_from_c
 # Import Codelists
 from codelists import *
 
-start_date = "2020-01-01"
-end_date = "2021-10-31"
+#############
+# FUNCTIONS #
+#############
+
+# admitted_to_hospital_date_X: Creates n columns for hospital admission/discharge dates
+def admitted_to_hospital_date_X(n):
+    def var_signature(name, returning, on_or_after, return_expectations):
+        return {
+            name: patients.admitted_to_hospital(
+                    returning=returning,
+                    on_or_after=on_or_after,
+                    date_format="YYYY-MM-DD",
+                    find_first_match_in_period=True,
+                    return_expectations=return_expectations
+                    ),
+        }
+
+    return_expectations_date={
+        "date": {"earliest": start_date, "latest": end_date},
+        "rate": "uniform",
+        "incidence": 1
+        }
+    return_expectations_method={
+        "category": {"ratios": {"cat1": 0.1, "cat2": 0.2, "cat3": 0.7}}, "incidence": 1}
+    variables = var_signature("admission_date_1", "date_admitted", "index_date + 1 day", return_expectations_date)
+    variables.update(var_signature("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date))
+    variables.update(var_signature("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
+    for i in range(2, n+1):
+        variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1} + 1 day", return_expectations_date))
+        variables.update(var_signature(f"discharge_date_{i}", "date_discharged", f"admission_date_{i-1} + 1 day", return_expectations_date))
+        variables.update(var_signature(f"admission_method_{i}", "admission_method", f"admission_date_{i-1} + 1 day", return_expectations_method))
+    return variables
+
+
+####################
+# Study Definition #
+####################
+
+# import json module
+import json
+
+# import global-variables.json
+with open("./analysis/global_variables.json") as f:
+    gbl_vars = json.load(f)
+
+# define variables explicitly
+start_date = gbl_vars["start_date"] # change this in global-variables.json if necessary
+end_date = gbl_vars["end_date"] # change this in global-variables.json if necessary
+
+# start_date is currently set to the start of the vaccination campaign
+# end_date depends on the most reent data coverage in the database, and the particular variables of interest
+
+
+n_max = 5
 
 study = StudyDefinition(
     index_date=start_date,
@@ -172,10 +224,10 @@ study = StudyDefinition(
     # CURRENT ASTHMA
     asthma=patients.with_these_clinical_events(
         current_asthma_codes,
-        on_or_before="2020-02-29",
+        on_or_before=start_date,
         return_first_date_in_period=True,
         include_month=True,
-        return_expectations={"date": {"latest": "2020-02-29"}},
+        return_expectations={"date": {"latest": start_date}},
     ),
 
     # DIABETES
@@ -194,34 +246,18 @@ study = StudyDefinition(
     # Number of hospital admissions in period
     hospital_admissions_total=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
-        between=["index_date + 1 day", end_date],
+        between=["index_date", end_date],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 5},
-            "incidence": 0.3,
+            "incidence": 1,
         },
     ),
 
-    # Hospital admission 1: Date of admission
-    hospital_admission_1=patients.admitted_to_hospital(
-        returning="date_admitted",
-        between=["index_date + 1 day", end_date],
-        date_format="YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "incidence": 0.3,
-        },
+    # Hospital admission X: X columns of all date of admissions
+    **admitted_to_hospital_date_X(
+        n=n_max
     ),
-
-    # Hospital admission 1: Date of discharge
-    hospital_discharge_1=patients.admitted_to_hospital(
-        returning="date_discharged",
-        between=["hospital_admission_1 + 1 day", end_date],
-        date_format="YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "incidence": 0.3,
-        },
-    ),
+    
 
     #################
     # Covid Testing #

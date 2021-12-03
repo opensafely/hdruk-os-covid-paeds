@@ -1,6 +1,4 @@
 library("tidyverse")
-install.packages("finalfit")
-library("finalfit")
 
 
 df_os = read_csv(
