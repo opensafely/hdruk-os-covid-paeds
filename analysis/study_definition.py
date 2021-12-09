@@ -30,33 +30,20 @@ def admitted_to_hospital_X(n):
                                 "24": 0.05, "25": 0.05, "2A": 0.05, "2B": 0.05, "2C": 0.05, "2D": 0.05, "28": 0.05,
                                 "31": 0.01, "32": 0.01, "82": 0.01, "83": 0.01, "81": 0.01}},
                      "incidence": 1}
-     
-    # Calculate days in study
-    date_format = "%Y-%m-%d"
-    a = datetime.datetime.strptime(start_date, date_format)
-    b = datetime.datetime.strptime(end_date, date_format)
-    delta = b - a
+                     
+    # Expections for admission dates
+    return_expectations_date_adm={
+        "date": {"earliest": start_date, "latest": end_date},
+        "rate": "uniform",
+        "incidence": 0.5}
+        
+    # Expections for discharge dates
+    return_expectations_date_dis={
+        "date": {"earliest": start_date, "latest": end_date},
+        "rate": "uniform",
+        "incidence": 0.5}
 
     for i in range(1, n+1):
-        # Create staged date ranges for admission and discharge dates
-        date_1 = a + datetime.timedelta(days = delta.days*(i-1)/n+1)
-        date_2 = a + datetime.timedelta(days = delta.days*(i-0.5)/n)
-        date_3 = a + datetime.timedelta(days = delta.days*(i)/n)
-        date_1_str = date_1.strftime(date_format)
-        date_2_str = date_2.strftime(date_format)
-        date_3_str = date_3.strftime(date_format)
-        # Expections for admission dates
-        return_expectations_date_adm={
-            "date": {"earliest": date_1_str, "latest": date_2_str},
-            "rate": "uniform",
-            "incidence": 0.3
-            }
-        # Expections for discharge dates
-        return_expectations_date_dis={
-            "date": {"earliest": date_2_str, "latest": date_3_str},
-            "rate": "uniform",
-            "incidence": 0.3
-            }
         if i == 1:
             variables = var_signature("admission_date_1", "date_admitted", "index_date + 1 day", return_expectations_date_adm)
             variables.update(var_signature("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
@@ -299,14 +286,19 @@ study = StudyDefinition(
         returning="number_of_matches_in_period",
         between=["index_date", end_date],
         return_expectations={
-            "int": {"distribution": "poisson", "mean": 5},
+            "int": {"distribution": "poisson", "mean": 2},
             "incidence": 1,
         },
     ),
-
+    
+    # Number of hospital admissions to query
+    # n_admission = patients.maximum_of("hospital_admissions_total")
+    
+    
     # Hospital admission X: n columns of date of admissions, date of discharge, admission method
     **admitted_to_hospital_X(
         n=n_admission
+        #n=patients.maximum_of("hospital_admissions_total")
     ),
     
     ###################
@@ -322,6 +314,9 @@ study = StudyDefinition(
             "incidence": 1,
         },
     ),
+    
+    # Number of GP interactions to query
+    #n_gp = patients.maximum_of("gp_consultations_total")
 
     # Hospital admission X: n columns of date of admissions, date of discharge, admission method
     **gp_consultation_date_X(
