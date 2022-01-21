@@ -1,4 +1,4 @@
-# os_testing
+# hdruk-os-covid-paeds
 
 This is the code and configuration for hdruk-os-covid-paeds.
 
