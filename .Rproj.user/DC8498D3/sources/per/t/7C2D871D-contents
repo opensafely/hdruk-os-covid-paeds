@@ -96,9 +96,9 @@ data_extract = data_extract %>%
   select(patient_id, everything())
 
 ### SECTION TO SORT OUT BAD DUMMY DATA ----
-## Hospital admissions ----
 
-data_admission = data_extract %>% 
+## Hospital admissions ----
+data_hospital_admissions = data_extract %>% 
   select(patient_id,
          starts_with(c("admission_", "discharge_"))) %>%
   mutate_at(vars(starts_with(c("admission_", "discharge_"))), as.character) %>% 
@@ -116,7 +116,7 @@ data_admission = data_extract %>%
   mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d")
 
 # Filter out rows with bad admission dates
-data_admission = data_admission %>% 
+data_hospital_admissions = data_hospital_admissions %>% 
   filter(admission_date <= discharge_date,
          !is.na(admission_date),
          !is.na(discharge_date)) %>% 
@@ -125,7 +125,7 @@ data_admission = data_admission %>%
   mutate(index = row_number())
 
 # Combine rows if admission periods overlap
-data_admission = data_admission %>%
+data_hospital_admissions = data_hospital_admissions %>%
   group_by(patient_id) %>% 
   mutate(overlap_with_prior =  
            case_when(admission_date < lag(discharge_date)~ 1,
@@ -139,7 +139,7 @@ data_admission = data_admission %>%
   ungroup()
 
 # Pivot wider 
-data_admission_wide = data_admission %>%
+data_hospital_admissions_wide = data_hospital_admissions %>%
   mutate_at(vars(starts_with(c("admission_", "discharge_"))), as.character) %>% 
   pivot_longer(
     cols = -c(patient_id, index),
@@ -186,7 +186,7 @@ data_extract = data_extract %>%
   select(-matches("^(.*)_date_(\\d+)")) %>% 
   select(-starts_with(c("admission_", "discharge_"))) %>%
   left_join(
-    data_admission_wide,
+    data_hospital_admissions_wide,
     by = "patient_id"
   ) %>% 
   left_join(
@@ -194,9 +194,6 @@ data_extract = data_extract %>%
     by = "patient_id"
   ) %>% 
   select(patient_id, everything())
-
-
-
 
 
 # Save rds

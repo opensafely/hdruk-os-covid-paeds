@@ -17,3 +17,11 @@ actions:
     outputs:
       highly_sensitive:
         data1: output/data/data_processed.rds
+
+  descriptives:
+    run: r:latest analysis/descriptives.R
+    needs: [process_data]
+    outputs:
+      moderately_sensitive:
+        plots: output/descriptive/plots/*.jpeg
+        tables: output/descriptive/tables/*.csv

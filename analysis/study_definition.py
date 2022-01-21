@@ -317,8 +317,9 @@ study = StudyDefinition(
     
     # Number of GP interactions to query
     #n_gp = patients.maximum_of("gp_consultations_total")
+    #n_gp = max("gp_consultations_total")
 
-    # Hospital admission X: n columns of date of admissions, date of discharge, admission method
+    # GP consultation X: n columns of date of admissions, date of discharge, admission method
     **gp_consultation_date_X(
         n=n_gp
     ),
