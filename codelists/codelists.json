@@ -1,5 +1,11 @@
 {
   "files": {
+    "opensafely-covid-identification.csv": {
+      "id": "opensafely/covid-identification/2020-06-03",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/covid-identification/2020-06-03/",
+      "downloaded_at": "2022-02-18 22:38:39.727600Z",
+      "sha": "124db6929439379b7dacd55ba26ae4f2ed9370bc"
+    },
     "opensafely-current-asthma.csv": {
       "id": "opensafely/current-asthma/2020-05-06",
       "url": "https://codelists.opensafely.org/codelist/opensafely/current-asthma/2020-05-06/",
@@ -9,8 +15,8 @@
     "opensafely-diabetes.csv": {
       "id": "opensafely/diabetes/2020-04-15",
       "url": "https://codelists.opensafely.org/codelist/opensafely/diabetes/2020-04-15/",
-      "downloaded_at": "2021-11-29 16:42:06.926268Z",
-      "sha": "605104b3e3770b7ab703d12943f5f15fa8eafe77"
+      "downloaded_at": "2022-02-18 22:38:40.496977Z",
+      "sha": "f2781f0c9a0617b30996d681a798eedd152a09af"
     },
     "opensafely-ethnicity.csv": {
       "id": "opensafely/ethnicity/2020-04-27",

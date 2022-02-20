@@ -16,7 +16,7 @@ actions:
     needs: [generate_study_population]
     outputs:
       highly_sensitive:
-        data1: output/data/data_processed.rds
+        data1: output/data/*.rds
 
   descriptives:
     run: r:latest analysis/descriptives.R

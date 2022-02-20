@@ -2,43 +2,76 @@
 ## Import libraries ----
 library("tidyverse")
 library("lubridate")
+library("finalfit")
 
+# Set defaults ----
+my_theme = theme_bw()
 
-## create output directories ----
+# Functions ----
+plot_hist = function(data, x, fill = NULL, bins = 50){
+  if(is.null(fill)){
+    ggplot(data = data, aes_string(x = x)) + 
+      geom_histogram(bins = bins) +
+      my_theme
+  } else {
+    ggplot(data = data, aes_string(x = x, fill = fill)) + 
+      geom_histogram(bins = bins) +
+      my_theme
+  }
+  ggsave(paste0("plot_hist_", x, ".jpeg"),
+         plot = last_plot(),
+         device = "jpeg",
+         path = here::here("output", "descriptive", "plots"))
+}
+
+# Create output directories ----
 dir.create(here::here("output", "descriptive", "plots"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "descriptive", "tables"), showWarnings = FALSE, recursive=TRUE)
 
+# Read processed data  ----
+data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
 
-# Read processed data
-data_extract = read_rds(here::here("output", "data", "data_processed.rds"))
+# Export summary table ---
+dependent = "covid_status"
+explanatory = c("age", "age.factor", "sex", "ethnicity", "ethnicity_6_sus",
+                "region", "imd", "rural_urban",
+                "asthma", "diabetes",
+                "death.factor",
+                "admission_count.factor", "gp_contact_count.factor")
 
-## Summarise data
-tbl_counts = data_extract %>% 
+tbl_summary = data_patient %>%
+  summary_factorlist(dependent, explanatory, p = TRUE, 
+                     add_col_totals = TRUE,
+                     add_row_total = TRUE)
+
+write_csv(tbl_summary, here::here("output", "descriptive", "tables", "tbl_summary.csv"))
+
+# Export maximum admissions and GP counts ----
+max_counts = data_patient %>% 
   summarise(n = n(),
-            max_admissions = max(hospital_admissions_total),
-            max_gp_interactions = max(gp_consultations_total))
+            max_admissions_count = max(admission_count),
+            max_gp_contact_count = max(gp_contact_count),
+            max_covid_negative_test_count = max(covid_negative_test_count),
+            max_covid_positive_test_count = max(covid_positive_test_count))
 
-write_csv(tbl_counts, here::here("output", "descriptive", "tables", "tbl_counts.csv"))
+write_csv(max_counts, here::here("output", "descriptive", "tables", "max_counts.csv"))
 
 
 
-## Plot histogram
-# Hospital admissions
-plot_hist_hospital_admission_count = data_extract %>% 
-  ggplot(aes(hospital_admissions_total)) +
-  geom_histogram()
 
-ggsave("plot_hist_hospital_admission_count.jpeg",
-       plot_hist_hospital_admission_count,
-       "jpeg",
-       here::here("output", "descriptive", "plots"))
 
-# GP-patient interaction
-plot_hist_gp_count = data_extract %>% 
-  ggplot(aes(gp_consultations_total)) +
-  geom_histogram()
+## Plot histograms  -----
 
-ggsave("plot_hist_gp_count.jpeg",
-       plot_hist_gp_count,
-       "jpeg",
-       here::here("output", "descriptive", "plots"))
+list("age",
+     "death_date",
+     "covid_positive_test_date_1",
+     "covid_negative_test_date_1",
+     "admission_count",
+     "gp_contact_count",
+     "covid_positive_test_count",
+     "covid_negative_test_count") %>% 
+  lapply(function(x){
+    plot_hist(data_patient, x)
+  })
+
+plot_hist(data_patient, "death_date")

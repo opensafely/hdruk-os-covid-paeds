@@ -1,93 +1,52 @@
-######################################
-
+##### Description ----
 # This script:
 # - imports data extracted by the cohort extractor
 # - tidies missing values
 # - removes bad dummy admission dates and reorders dates so no negative time 
-#   differences (only actually does anything for dummy data)
+#   differences (only alters data for dummy data)
 # - fills in unknown ethnicity from GP records with ethnicity from SUS (secondary care)
-
 
 # standardises some variables (eg convert to factor) and derives some new ones
 # - saves: - processed one-row-per-patient dataset
-#          - processed one-row-per-event datasets for hospital admissions,
-#            outpatient and GP attendances
+#          - processed one-row-per-hospital admission dataset
+#          - processed one-row-per-GP contact dataset
 
-######################################
-
-# Import libraries ----
+# Import libraries
 library("tidyverse")
 library("lubridate")
+library("finalfit")
 
-# Import globally defined repo variables from
+# Import globally defined variables
 gbl_vars = jsonlite::fromJSON(
   txt="./analysis/global_variables.json"
 )
 
-# Create directory for processed data
+# Create directory for processed data ----
 dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 
-# Read data from csv
-data_extract = read_csv(
+# Set column type based on column name ----
+data_format = tibble(
+  column_names = c(read_csv(
+    here::here("output", "input.csv.gz"),
+    n_max = 1,
+    col_names = FALSE
+  ))) %>% 
+  mutate(column_type = case_when(
+    column_names == "patient_id" ~ "i",
+    str_detect(column_names, "age") ~ "d",
+    str_detect(column_names, "_date") ~ "D",
+    str_detect(column_names, "_count") ~ "i",
+    TRUE ~ "c"
+  ))
+
+# Read data from csv ----
+data_patient = read_csv(
   here::here("output", "input.csv.gz"),
-  col_types = cols_only(
-    
-    # Identifiers
-    patient_id = col_integer(),
-    
-    # Demographics
-    age = col_integer(),
-    sex = col_character(),
-    ethnicity = col_character(),
-    ethnicity_6_sus = col_character(),
-    region = col_character(),
-    imd = col_character(),
-    bmi = col_character(),
-    
-    # Comorbidities
-    asthma = col_integer(),
-    diabetes = col_integer(),
-    
-    # Counts
-    hospital_admissions_total = col_integer(),
-    gp_consultations_total = col_integer(),
-    
-    # Dates
-    death_date = col_date(format="%Y-%m-%d"),
-    
-    admission_date_1 = col_date(format="%Y-%m-%d"),
-    discharge_date_1 = col_date(format="%Y-%m-%d"),
-    admission_date_2 = col_date(format="%Y-%m-%d"),
-    discharge_date_2 = col_date(format="%Y-%m-%d"),
-    admission_date_3 = col_date(format="%Y-%m-%d"),
-    discharge_date_3 = col_date(format="%Y-%m-%d"),
-    admission_date_4 = col_date(format="%Y-%m-%d"),
-    discharge_date_4 = col_date(format="%Y-%m-%d"),
-    admission_date_5 = col_date(format="%Y-%m-%d"),
-    discharge_date_5 = col_date(format="%Y-%m-%d"),
-    
-    gp_consultation_date_1 = col_date(format="%Y-%m-%d"),
-    gp_consultation_date_2 = col_date(format="%Y-%m-%d"),
-    gp_consultation_date_3 = col_date(format="%Y-%m-%d"),
-    gp_consultation_date_4 = col_date(format="%Y-%m-%d"),
-    gp_consultation_date_5 = col_date(format="%Y-%m-%d"),
-    
-    covid_positive_test_date_1 = col_date(format="%Y-%m-%d"),
-    
-    # Admission method
-    admission_method_1 = col_character(),
-    admission_method_2 = col_character(),
-    admission_method_3 = col_character(),
-    admission_method_4 = col_character(),
-    admission_method_5 = col_character()
-    
-  ),
-  
-  na = character() # more stable to convert to missing later
+  col_types = data_format %>% pull(column_type) %>% paste(collapse = "")
 )
 
-# Parse character NAs
-data_extract = data_extract %>%
+# Parse character NAs ----
+data_patient = data_patient %>%
   mutate(across(
     .cols = where(is.character),
     .fns = ~na_if(.x, "")
@@ -95,13 +54,11 @@ data_extract = data_extract %>%
   arrange(patient_id) %>%
   select(patient_id, everything())
 
-### SECTION TO SORT OUT BAD DUMMY DATA ----
-
-## Hospital admissions ----
-data_hospital_admissions = data_extract %>% 
+# Hospital admissions dataset ----
+data_admissions = data_patient %>% 
   select(patient_id,
-         starts_with(c("admission_", "discharge_"))) %>%
-  mutate_at(vars(starts_with(c("admission_", "discharge_"))), as.character) %>% 
+         starts_with(c("admission_date", "discharge_date", "admission_method"))) %>%
+  mutate_at(vars(starts_with(c("admission_date", "discharge_date"))), as.character) %>% 
   pivot_longer(
     cols = -patient_id,
     names_to = c("variable", "index"),
@@ -115,22 +72,38 @@ data_hospital_admissions = data_extract %>%
   ) %>% 
   mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d")
 
-# Filter out rows with bad admission dates
-data_hospital_admissions = data_hospital_admissions %>% 
+# Log number of bad admission rows ----
+# Expect to be 0 for real data
+log_admissions_filter = data_admissions %>% 
+  summarise(n_discharge_before_admission = 
+              sum(admission_date <= discharge_date, na.rm=TRUE),
+            n_missing_admission_date = sum(is.na(admission_date)),
+            n_missing_discharge_date = sum(is.na(discharge_date)))
+
+# Filter out rows with bad admission dates ----
+data_admissions = data_admissions %>% 
   filter(admission_date <= discharge_date,
          !is.na(admission_date),
          !is.na(discharge_date)) %>% 
   group_by(patient_id) %>% 
   arrange(patient_id, admission_date) %>% 
-  mutate(index = row_number())
+  mutate(index = row_number()) %>% 
+  ungroup()
 
-# Combine rows if admission periods overlap
-data_hospital_admissions = data_hospital_admissions %>%
+# Check and log if admission periods overlap ----
+data_admissions = data_admissions %>%
   group_by(patient_id) %>% 
   mutate(overlap_with_prior =  
            case_when(admission_date < lag(discharge_date)~ 1,
-                     TRUE ~ 0),
-         index = row_number() - cumsum(overlap_with_prior)) %>%
+                     TRUE ~ 0))
+
+log_admissions_filter = log_admissions_filter %>% 
+  mutate(overlapping_episodes = sum(data_admissions %>% 
+                                      pull(overlap_with_prior)))
+
+# Fix overlapping admission episodes ----
+data_admissions = data_admissions %>%
+  mutate(index = row_number() - cumsum(overlap_with_prior)) %>%
   select(-overlap_with_prior) %>% 
   group_by(patient_id, index) %>% 
   mutate(admission_date = min(admission_date),
@@ -138,75 +111,105 @@ data_hospital_admissions = data_hospital_admissions %>%
   slice(1) %>% 
   ungroup()
 
-# Pivot wider 
-data_hospital_admissions_wide = data_hospital_admissions %>%
-  mutate_at(vars(starts_with(c("admission_", "discharge_"))), as.character) %>% 
-  pivot_longer(
-    cols = -c(patient_id, index),
-    names_to = c("variable"),
-    values_to = "data",
-    values_drop_na = FALSE
-  ) %>%
-  mutate(variable_name = paste0(variable, "_", index)) %>% 
-  pivot_wider(
-    id_cols = c(patient_id),
-    names_from = variable_name,
-    values_from = data
-  ) %>% 
-  mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d")
-
-## Other date events ----
-
-data_dates_long = data_extract %>% 
-  select(patient_id, matches("^(.*)_date_(\\d+)")) %>% 
-  select(-starts_with(c("admission_", "discharge_"))) %>% 
+# GP contact dataset ----
+data_gp = data_patient %>% 
+  select(patient_id, starts_with("gp_contact_date_")) %>%
   pivot_longer(
     cols = -patient_id,
     names_to = c("variable", "index"),
     names_pattern = "^(.*)_(\\d+)",
-    values_to = "date",
+    values_to = "data",
     values_drop_na = TRUE
   ) %>% 
-  arrange(patient_id, variable, date) %>%
-  group_by(patient_id, variable) %>%
+  pivot_wider(
+    names_from = variable,
+    values_from = data
+  ) %>% 
+  mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") %>% 
+  group_by(patient_id) %>% 
+  arrange(patient_id, gp_contact_date) %>% 
   mutate(index = row_number()) %>% 
   ungroup()
 
-data_dates_wide = data_dates_long %>% 
-  mutate(variable = paste0(variable, "_", index)) %>%
-  arrange(patient_id, variable) %>% 
-  pivot_wider(
-    id_cols = patient_id,
-    names_from = variable,
-    values_from = date) %>% 
-  select(patient_id, sort(names(.)))
+# Remove admission and gp columns from data_patient
+data_patient = data_patient %>% 
+  select(-starts_with(c("admission_date", "discharge_date", "admission_method"))) %>% 
+  select(-starts_with("gp_contact_date_"))
 
-# Combine wide datasets with extract
-data_extract = data_extract %>% 
-  select(-matches("^(.*)_date_(\\d+)")) %>% 
-  select(-starts_with(c("admission_", "discharge_"))) %>%
-  left_join(
-    data_hospital_admissions_wide,
-    by = "patient_id"
-  ) %>% 
-  left_join(
-    data_dates_wide,
-    by = "patient_id"
-  ) %>% 
-  select(patient_id, everything())
+# Create factors and label variables -----
+data_patient = data_patient %>% 
+  mutate(
+    
+    age = age %>% 
+      ff_label("Age (years)"),
+    
+    age.factor = cut(age, 
+                     breaks = c(4,10,15,18))%>%
+      ff_label("Age group (years)"),
+    
+    sex = sex %>% 
+      factor() %>% 
+      ff_label("Sex"),
+    
+    ethnicity = ethnicity %>% 
+      factor() %>% 
+      ff_label("Ethnicity"),
+    
+    ethnicity_6_sus = ethnicity_6_sus %>% 
+      factor() %>% 
+      ff_label("Ethnicity (SUS)"),
+    
+    region = region %>% 
+      factor() %>% 
+      ff_label("Region"),
+    
+    admission_count.factor = case_when(
+      admission_count == 0 ~ "0",
+      admission_count == 1 ~ "1",
+      admission_count > 1 ~ "2+",
+      TRUE ~ "(Missing)") %>%
+      factor() %>% 
+      ff_label("Hospital admissions"),
+    
+    gp_contact_count.factor = case_when(
+      gp_contact_count == 0 ~ "0",
+      gp_contact_count == 1 ~ "1",
+      gp_contact_count > 1 ~ "2+",
+      TRUE ~ "(Missing)") %>%
+      factor() %>% 
+      ff_label("GP interactions"),
+    
+    covid_status = case_when(
+      !is.na(covid_positive_test_date_1) ~ "Tested positive",
+      !is.na(covid_negative_test_date_1) ~ "Tested negative",
+      TRUE ~ "Never tested") %>%
+      factor() %>% 
+      ff_label("COVID status"),
+    
+    death.factor = case_when(
+      !is.na(death_date) ~ "Dead",
+      TRUE ~ "Alive") %>% 
+      factor() %>% 
+      ff_label("Death"),
+    
+    diabetes = diabetes %>% 
+      factor() %>% 
+      ff_label("Diabetes"),
+    
+    asthma = asthma %>% 
+      factor() %>% 
+      ff_label("Asthma")
+    )
 
-
-# Save rds
-write_rds(data_extract,
-          here::here("output", "data", "data_processed.rds"),
+# Save rds ----
+write_rds(data_patient,
+          here::here("output", "data", "data_patient.rds"),
           compress="gz")
 
+write_rds(data_admissions,
+          here::here("output", "data", "data_admissions.rds"),
+          compress="gz")
 
-
-
-
-
-
-
-
-
+write_rds(data_gp,
+          here::here("output", "data", "data_gp.rds"),
+          compress="gz")

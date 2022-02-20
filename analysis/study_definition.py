@@ -55,8 +55,8 @@ def admitted_to_hospital_X(n):
     return variables
 
 
-# gp_consultation_date_X: Creates n columns for each consecutive GP consulation date
-def gp_consultation_date_X(n):
+# gp_contact_date_X: Creates n columns for each consecutive GP consulation date
+def gp_contact_date_X(n):
     def var_signature(name, on_or_after):
         return {
             name: patients.with_gp_consultations(
@@ -74,10 +74,11 @@ def gp_consultation_date_X(n):
      
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("gp_consultation_date_1", "index_date + 1 day")
+            variables = var_signature("gp_contact_date_1", "index_date + 1 day")
         else:
-            variables.update(var_signature(f"gp_consultation_date_{i}", f"gp_consultation_date_{i-1} + 1 day"))
+            variables.update(var_signature(f"gp_contact_date_{i}", f"gp_contact_date_{i-1} + 1 day"))
     return variables
+
 
 ####################
 # Study Definition #
@@ -92,9 +93,11 @@ with open("./analysis/global_variables.json") as f:
 start_date = gbl_vars["start_date"] # change this in global-variables.json if necessary
 end_date = gbl_vars["end_date"] # change this in global-variables.json if necessary
 
-# Number of hospital admissions and GP interactions to query
+# Number of hospital admissions, GP interactions, covid tests to query
 n_admission = 5
 n_gp = 5
+n_positive_test = 1
+n_negative_test = 5
 
 study = StudyDefinition(
     index_date=start_date,
@@ -108,9 +111,7 @@ study = StudyDefinition(
         """
         registered
         AND
-        (age < 19)
-        AND
-        (sex = "M" OR sex = "F")
+        (age < 18) AND (age > 4)
         AND
         (NOT has_died)
         """,
@@ -125,10 +126,10 @@ study = StudyDefinition(
 
     # https://github.com/opensafely/risk-factors-research/issues/49
     age=patients.age_as_of(
-        "2020-03-31",
+        start_date,
         return_expectations={
             "rate": "universal",
-            "int": {"distribution": "population_ages"},
+            "int": {"distribution": "normal", "mean": 11, "stddev": 2},
             "incidence": 1
         },
     ),
@@ -139,33 +140,6 @@ study = StudyDefinition(
             "rate": "universal",
             "category": {"ratios": {"M": 0.49, "F": 0.51}},
         }
-    ),
-
-    # https://github.com/opensafely/risk-factors-research/issues/51
-    bmi=patients.categorised_as(
-        {
-            "Not obese": "DEFAULT",
-            "Obese I (30-34.9)": """ bmi_value >= 30 AND bmi_value < 35""",
-            "Obese II (35-39.9)": """ bmi_value >= 35 AND bmi_value < 40""",
-            "Obese III (40+)": """ bmi_value >= 40 AND bmi_value < 100""",
-            # set maximum to avoid any impossibly extreme values being
-            # classified as obese
-        },
-        bmi_value=patients.most_recent_bmi(
-            on_or_after="2015-12-01",
-            minimum_age_at_measurement=16
-            ),
-        return_expectations={
-            "rate": "universal",
-            "category": {
-                "ratios": {
-                    "Not obese": 0.7,
-                    "Obese I (30-34.9)": 0.1,
-                    "Obese II (35-39.9)": 0.1,
-                    "Obese III (40+)": 0.1,
-                }
-            },
-        },
     ),
 
     # Ethnicity in 6 categories
@@ -186,7 +160,7 @@ study = StudyDefinition(
         use_most_frequent_code=True,
         return_expectations={
             "category": {"ratios": {"1": 0.2, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}},
-            "incidence": 0.8,
+            "incidence": 0.3,
             },
     ),
 
@@ -212,39 +186,43 @@ study = StudyDefinition(
         },
     ),
 
-    # IMD - quintile
-    imd=patients.categorised_as(
-        {
-            "0": "DEFAULT",
-            "1": """index_of_multiple_deprivation >=1 AND index_of_multiple_deprivation < 32844*1/5""",
-            "2": """index_of_multiple_deprivation >= 32844*1/5 AND index_of_multiple_deprivation < 32844*2/5""",
-            "3": """index_of_multiple_deprivation >= 32844*2/5 AND index_of_multiple_deprivation < 32844*3/5""",
-            "4": """index_of_multiple_deprivation >= 32844*3/5 AND index_of_multiple_deprivation < 32844*4/5""",
-            "5": """index_of_multiple_deprivation >= 32844*4/5 """,
-        },
-        index_of_multiple_deprivation=patients.address_as_of(
-            "index_date",
-            returning="index_of_multiple_deprivation",
-            round_to_nearest=100,
-        ),
+    # IMD - index of multiple deprivation
+    imd=patients.address_as_of(
+        "index_date",
+        returning="index_of_multiple_deprivation",
+        round_to_nearest=100,
         return_expectations={
             "rate": "universal",
-            "category": {
-                "ratios": {
-                    "0": 0.01,
-                    "1": 0.20,
-                    "2": 0.20,
-                    "3": 0.20,
-                    "4": 0.20,
-                    "5": 0.19,
+            "category": {"ratios": {"100": 0.1, "200": 0.2, "300": 0.7}},
+        },
+    ),
+
+    # Rural/Urban Classification
+    rural_urban=patients.address_as_of(
+        "index_date",
+        returning="rural_urban_classification",
+        return_expectations={
+            "rate": "universal",
+            "category": 
+                {"ratios": {
+                    "1": 0.1,
+                    "2": 0.1,
+                    "3": 0.1,
+                    "4": 0.1,
+                    "5": 0.1,
+                    "6": 0.1,
+                    "7": 0.2,
+                    "8": 0.2,
                 }
             },
         },
     ),
 
+
     #########
     # Death #
     #########
+    # ONS date of death
     death_date=patients.died_from_any_cause(
         between=[start_date, end_date],
         returning="date_of_death",
@@ -253,6 +231,22 @@ study = StudyDefinition(
             "date": {"earliest": start_date, "latest": end_date},
             "rate": "uniform"
         },
+    ),
+
+    # ONS death - covid mentioned on certificate
+    death_covid_flag_any=patients.with_these_codes_on_death_certificate(
+        covid_codelist,
+        on_or_after="index_date",
+        match_only_underlying_cause=False,
+        return_expectations={"incidence": 0.33},
+    ),
+
+    # ONS death - covid as underlying cause
+    death_covid_flag_underlying=patients.with_these_codes_on_death_certificate(
+        covid_codelist,
+        on_or_after="index_date",
+        match_only_underlying_cause=True,
+        return_expectations={"incidence": 0.33},
     ),
 
     ##############
@@ -282,23 +276,18 @@ study = StudyDefinition(
     #######################
 
     # Number of hospital admissions in period
-    hospital_admissions_total=patients.admitted_to_hospital(
+    admission_count=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
         between=["index_date", end_date],
         return_expectations={
-            "int": {"distribution": "poisson", "mean": 2},
+            "int": {"distribution": "poisson", "mean": 1},
             "incidence": 1,
         },
     ),
     
-    # Number of hospital admissions to query
-    # n_admission = patients.maximum_of("hospital_admissions_total")
-    
-    
     # Hospital admission X: n columns of date of admissions, date of discharge, admission method
     **admitted_to_hospital_X(
         n=n_admission
-        #n=patients.maximum_of("hospital_admissions_total")
     ),
     
     ###################
@@ -306,21 +295,17 @@ study = StudyDefinition(
     ###################
     
     # Number of GP-patient interactions in period
-    gp_consultations_total=patients.with_gp_consultations(
+    gp_contact_count=patients.with_gp_consultations(
         returning="number_of_matches_in_period",
         between=["index_date", end_date],
         return_expectations={
-            "int": {"distribution": "poisson", "mean": 5},
+            "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
         },
     ),
-    
-    # Number of GP interactions to query
-    #n_gp = patients.maximum_of("gp_consultations_total")
-    #n_gp = max("gp_consultations_total")
 
-    # GP consultation X: n columns of date of admissions, date of discharge, admission method
-    **gp_consultation_date_X(
+    # GP contact X: n columns of date of GP consultations
+    **gp_contact_date_X(
         n=n_gp
     ),
     
@@ -333,14 +318,72 @@ study = StudyDefinition(
     covid_positive_test_date_1=patients.with_test_result_in_sgss(
         pathogen="SARS-CoV-2",
         test_result="positive",
-        on_or_after="2020-02-01",
+        between=["index_date", end_date],
         find_first_match_in_period=True,
         returning="date",
         date_format="YYYY-MM-DD",
         return_expectations={
-            "date": {"earliest": "2020-02-01"},
+            "date": {"earliest": start_date, "latest": end_date},
             "rate": "exponential_increase",
             "incidence": 0.2
         },
     ),
+
+    # 1st negative covid test date
+    covid_negative_test_date_1=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="negative",
+        between=["index_date", end_date],
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "exponential_increase",
+            "incidence": 0.2
+        },
+    ),
+
+    # 1st negative covid test date on or before 1st positive covid test
+    covid_negative_test_date_before_positive=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="negative",
+        on_or_before="covid_positive_test_date_1",
+        find_last_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "exponential_increase",
+            "incidence": 0.2
+        },
+    ),
+
+    # Number of positive covid tests
+    covid_positive_test_count=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="positive",
+        between=["index_date", end_date],
+        returning="number_of_matches_in_period",
+        restrict_to_earliest_specimen_date=False,
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    # Number of negative covid tests
+    covid_negative_test_count=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="negative",
+        between=["index_date", end_date],
+        returning="number_of_matches_in_period",
+        restrict_to_earliest_specimen_date=False,
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 2},
+            "incidence": 1,
+        },
+    ),
+
+
 )
