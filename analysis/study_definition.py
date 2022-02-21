@@ -305,8 +305,68 @@ study = StudyDefinition(
     ),
 
     # GP contact X: n columns of date of GP consultations
-    **gp_contact_date_X(
-        n=n_gp
+    #**gp_contact_date_X(
+    #    n=n_gp
+    #),
+
+    gp_contact_date_1 = patients.with_gp_consultations(
+        returning="date",
+        on_or_after="index_date",
+        date_format="YYYY-MM-DD",
+        find_first_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+    gp_contact_date_2 = patients.with_gp_consultations(
+        returning="date",
+        on_or_after="gp_contact_date_1",
+        date_format="YYYY-MM-DD",
+        find_first_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+    gp_contact_date_3 = patients.with_gp_consultations(
+        returning="date",
+        on_or_after="gp_contact_date_2",
+        date_format="YYYY-MM-DD",
+        find_first_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+    gp_contact_date_4 = patients.with_gp_consultations(
+        returning="date",
+        on_or_after="gp_contact_date_3",
+        date_format="YYYY-MM-DD",
+        find_first_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+    gp_contact_date_5 = patients.with_gp_consultations(
+        returning="date",
+        on_or_after="gp_contact_date_4",
+        date_format="YYYY-MM-DD",
+        find_first_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
     ),
     
 
