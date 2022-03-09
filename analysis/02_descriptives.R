@@ -25,19 +25,23 @@ plot_hist = function(data, x, fill = NULL, bins = 50){
 }
 
 # Create output directories ----
-dir.create(here::here("output", "descriptive", "plots"), showWarnings = FALSE, recursive=TRUE)
-dir.create(here::here("output", "descriptive", "tables"), showWarnings = FALSE, recursive=TRUE)
+dir.create(here::here("output", "descriptive", "plots"),
+           showWarnings = FALSE, recursive=TRUE)
+dir.create(here::here("output", "descriptive", "tables"),
+           showWarnings = FALSE, recursive=TRUE)
 
 # Read processed data  ----
 data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
 
-# Export summary table ---
+# Export summary table ----
 dependent = "covid_status"
-explanatory = c("age", "age.factor", "sex", "ethnicity", "ethnicity_6_sus",
-                "region", "imd", "rural_urban",
+explanatory = c("age", "age_factor", "sex", 
+                "ethnicity", "ethnicity_6_sus", "ethnicity_comb",
+                "region", "imd_Q5", "rural_urban_group",
                 "asthma", "diabetes",
-                "death.factor",
-                "admission_count.factor", "gp_contact_count.factor")
+                "death_factor",
+                "admission_count_factor", 
+                "gp_contact_count_factor")
 
 tbl_summary = data_patient %>%
   summary_factorlist(dependent, explanatory, p = TRUE, 
@@ -56,12 +60,7 @@ max_counts = data_patient %>%
 
 write_csv(max_counts, here::here("output", "descriptive", "tables", "max_counts.csv"))
 
-
-
-
-
-## Plot histograms  -----
-
+# Plot histograms  -----
 list("age",
      "death_date",
      "covid_positive_test_date_1",

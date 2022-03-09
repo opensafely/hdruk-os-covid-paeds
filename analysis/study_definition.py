@@ -193,7 +193,7 @@ study = StudyDefinition(
         round_to_nearest=100,
         return_expectations={
             "rate": "universal",
-            "category": {"ratios": {"100": 0.1, "200": 0.2, "300": 0.7}},
+            "category": {"ratios": {"3300": 0.2, "9900": 0.2, "16400": 0.2, "23000": 0.2, "30000": 0.2}},
         },
     ),
 
@@ -229,7 +229,8 @@ study = StudyDefinition(
         date_format="YYYY-MM-DD",
         return_expectations={
             "date": {"earliest": start_date, "latest": end_date},
-            "rate": "uniform"
+            "rate": "uniform",
+            "incidence": 0.05
         },
     ),
 

@@ -33,6 +33,7 @@ data_format = tibble(
   ))) %>% 
   mutate(column_type = case_when(
     column_names == "patient_id" ~ "i",
+    column_names == "imd" ~ "i",
     str_detect(column_names, "age") ~ "d",
     str_detect(column_names, "_date") ~ "D",
     str_detect(column_names, "_count") ~ "i",
@@ -143,52 +144,93 @@ data_patient = data_patient %>%
     age = age %>% 
       ff_label("Age (years)"),
     
-    age.factor = cut(age, 
-                     breaks = c(4,10,15,18))%>%
+    age_factor = cut(age, 
+                     breaks = c(-Inf, 4, 10, 15, 18, Inf),
+                     labels = c("under 4", "4-9", "10-14", "15-17", "18+"))%>%
+      factor(levels = c("under 4", "4-9", "10-14", "15-17", "18+")) %>% 
       ff_label("Age group (years)"),
     
-    sex = sex %>% 
+    sex = case_when(
+      sex == "F" ~ "Female",
+      sex == "M" ~ "Male",
+      TRUE ~ NA_character_
+    ) %>% 
       factor() %>% 
       ff_label("Sex"),
     
     ethnicity = ethnicity %>% 
       factor() %>% 
-      ff_label("Ethnicity"),
+      ff_label("Ethnicity (primary care)"),
     
     ethnicity_6_sus = ethnicity_6_sus %>% 
       factor() %>% 
       ff_label("Ethnicity (SUS)"),
     
-    region = region %>% 
-      factor() %>% 
+    ethnicity_comb = coalesce(ethnicity, ethnicity_6_sus) %>% 
+      ff_label("Ethnicity"),
+    
+    region = fct_collapse(
+      region,
+      `East of England` = "East",
+      `London`          = "London",
+      `Midlands`        = c("West Midlands", "East Midlands"),
+      `North East and Yorkshire` = c("Yorkshire and The Humber", "North East"),
+      `North West`      = "North West",
+      `South East`      = "South East",
+      `South West`      = "South West"
+    ) %>% 
       ff_label("Region"),
     
-    admission_count.factor = case_when(
+    imd_Q5 = case_when(
+      (imd >=1)          & (imd < 32844*1/5) ~ "(most deprived) 1",
+      (imd >= 32844*1/5) & (imd < 32844*2/5) ~ "2",
+      (imd >= 32844*2/5) & (imd < 32844*3/5) ~ "3",
+      (imd >= 32844*3/5) & (imd < 32844*4/5) ~ "4",
+      (imd >= 32844*4/5)                     ~ "(least deprived) 5",
+      TRUE ~ NA_character_
+      ) %>% 
+      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>% 
+      ff_label("Multiple deprivation quintile"),
+    
+    rural_urban_group = case_when(
+      rural_urban %in% c(1,2)     ~ "Urban conurbation",
+      rural_urban %in% c(3,4)     ~ "Urban city or town",
+      rural_urban %in% c(5,6,7,8) ~ "Rural town or village",
+      TRUE                        ~ NA_character_
+    ) %>%
+      factor() %>% 
+      ff_label("Rural-urban classification"),
+    
+    admission_count_factor = case_when(
       admission_count == 0 ~ "0",
       admission_count == 1 ~ "1",
-      admission_count > 1 ~ "2+",
-      TRUE ~ "(Missing)") %>%
+      admission_count > 1  ~ "2+",
+      TRUE                 ~ NA_character_
+    ) %>%
       factor() %>% 
       ff_label("Hospital admissions"),
     
-    gp_contact_count.factor = case_when(
-      gp_contact_count == 0 ~ "0",
-      gp_contact_count == 1 ~ "1",
-      gp_contact_count > 1 ~ "2+",
-      TRUE ~ "(Missing)") %>%
+    gp_contact_count_factor = case_when(
+      gp_contact_count == 0        ~ "0",
+      gp_contact_count %in% c(1,2) ~ "1-2",
+      gp_contact_count > 2         ~ "3+",
+      TRUE                         ~ NA_character_
+    ) %>%
       factor() %>% 
       ff_label("GP interactions"),
     
     covid_status = case_when(
       !is.na(covid_positive_test_date_1) ~ "Tested positive",
       !is.na(covid_negative_test_date_1) ~ "Tested negative",
-      TRUE ~ "Never tested") %>%
+      TRUE ~ "Never tested"
+    ) %>%
       factor() %>% 
       ff_label("COVID status"),
     
-    death.factor = case_when(
+    death_factor = case_when(
       !is.na(death_date) ~ "Dead",
-      TRUE ~ "Alive") %>% 
+      TRUE               ~ "Alive"
+    ) %>% 
       factor() %>% 
       ff_label("Death"),
     
@@ -213,3 +255,8 @@ write_rds(data_admissions,
 write_rds(data_gp,
           here::here("output", "data", "data_gp.rds"),
           compress="gz")
+
+# Save csv ----
+write_csv(log_admissions_filter,
+          here::here("output", "data", "log_admissions_filter.csv"))
+
