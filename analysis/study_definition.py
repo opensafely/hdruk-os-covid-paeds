@@ -49,9 +49,9 @@ def admitted_to_hospital_X(n):
             variables.update(var_signature("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
             variables.update(var_signature("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
         else:
-            variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1} + 1 day", return_expectations_date_adm))
-            variables.update(var_signature(f"discharge_date_{i}", "date_discharged", f"admission_date_{i-1} + 1 day", return_expectations_date_dis))
-            variables.update(var_signature(f"admission_method_{i}", "admission_method", f"admission_date_{i-1} + 1 day", return_expectations_method))
+            variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1}", return_expectations_date_adm))
+            variables.update(var_signature(f"discharge_date_{i}", "date_discharged", f"admission_date_{i-1}", return_expectations_date_dis))
+            variables.update(var_signature(f"admission_method_{i}", "admission_method", f"admission_date_{i-1}", return_expectations_method))
     return variables
 
 
@@ -100,7 +100,9 @@ n_positive_test = 1
 n_negative_test = 5
 
 study = StudyDefinition(
+
     index_date=start_date,
+
     default_expectations={
         "date": {"earliest": start_date, "latest": end_date},
         "rate": "uniform",
@@ -124,7 +126,6 @@ study = StudyDefinition(
         )
     ),
 
-    # https://github.com/opensafely/risk-factors-research/issues/49
     age=patients.age_as_of(
         start_date,
         return_expectations={
@@ -132,6 +133,15 @@ study = StudyDefinition(
             "int": {"distribution": "normal", "mean": 11, "stddev": 2},
             "incidence": 1
         },
+    ),
+
+    date_of_birth=patients.date_of_birth(
+        "YYYY-MM",
+        return_expectations={
+            "date": {"earliest": "2001-01-01", "latest": "2018-05-01"},
+            "rate": "uniform",
+            "incidence": 1
+        }
     ),
 
     # https://github.com/opensafely/risk-factors-research/issues/46
