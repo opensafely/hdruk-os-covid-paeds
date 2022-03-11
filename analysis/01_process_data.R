@@ -79,7 +79,8 @@ log_admissions_filter = data_admissions %>%
   summarise(n_discharge_before_admission = 
               sum(admission_date <= discharge_date, na.rm=TRUE),
             n_missing_admission_date = sum(is.na(admission_date)),
-            n_missing_discharge_date = sum(is.na(discharge_date)))
+            n_missing_discharge_date = sum(is.na(discharge_date)),
+            n_missing_both_date = sum(is.na(admission_date) & is.na(discharge_date)))
 
 # Filter out rows with bad admission dates ----
 data_admissions = data_admissions %>% 
@@ -91,7 +92,7 @@ data_admissions = data_admissions %>%
   mutate(index = row_number()) %>% 
   ungroup()
 
-# Check and log if admission periods overlap ----
+# Check and log if admission spells overlap ----
 data_admissions = data_admissions %>%
   group_by(patient_id) %>% 
   mutate(overlap_with_prior =  
@@ -99,10 +100,10 @@ data_admissions = data_admissions %>%
                      TRUE ~ 0))
 
 log_admissions_filter = log_admissions_filter %>% 
-  mutate(overlapping_episodes = sum(data_admissions %>% 
+  mutate(overlapping_spell = sum(data_admissions %>% 
                                       pull(overlap_with_prior)))
 
-# Fix overlapping admission episodes ----
+# Fix overlapping admission spells ----
 data_admissions = data_admissions %>%
   mutate(index = row_number() - cumsum(overlap_with_prior)) %>%
   select(-overlap_with_prior) %>% 
@@ -110,6 +111,26 @@ data_admissions = data_admissions %>%
   mutate(admission_date = min(admission_date),
          discharge_date = max(discharge_date)) %>%
   slice(1) %>% 
+  ungroup()
+
+# Outpatient dataset ----
+data_outpatient = data_patient %>% 
+  select(patient_id, starts_with("outpatient_date_")) %>%
+  pivot_longer(
+    cols = -patient_id,
+    names_to = c("variable", "index"),
+    names_pattern = "^(.*)_(\\d+)",
+    values_to = "data",
+    values_drop_na = TRUE
+  ) %>% 
+  pivot_wider(
+    names_from = variable,
+    values_from = data
+  ) %>% 
+  mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") %>% 
+  group_by(patient_id) %>% 
+  arrange(patient_id, outpatient_date) %>% 
+  mutate(index = row_number()) %>% 
   ungroup()
 
 # GP contact dataset ----
@@ -150,9 +171,9 @@ data_patient = data_patient %>%
       ff_label("Age (years)"),
     
     age_factor = cut(age, 
-                     breaks = c(-Inf, 4, 10, 15, 18, Inf),
-                     labels = c("under 4", "4-9", "10-14", "15-17", "18+"))%>%
-      factor(levels = c("under 4", "4-9", "10-14", "15-17", "18+")) %>% 
+                     breaks = c(4, 10, 15, Inf),
+                     labels = c("4-9", "10-14", "15+"))%>%
+      factor(levels = c("4-9", "10-14", "15+")) %>% 
       ff_label("Age group (years)"),
     
     sex = case_when(
@@ -163,27 +184,33 @@ data_patient = data_patient %>%
       factor() %>% 
       ff_label("Sex"),
     
-    ethnicity = ethnicity %>% 
+    ethnicity = case_when(
+      ethnicity == "1" ~ "White",
+      ethnicity == "4" ~ "Black",
+      ethnicity == "3" ~ "South Asian",
+      ethnicity == "2" ~ "Mixed",
+      ethnicity == "5" ~ "Other",
+      TRUE ~ NA_character_
+    ) %>% 
       factor() %>% 
       ff_label("Ethnicity (primary care)"),
     
-    ethnicity_6_sus = ethnicity_6_sus %>% 
+    ethnicity_6_sus = case_when(
+      ethnicity_6_sus == "1" ~ "White",
+      ethnicity_6_sus == "4" ~ "Black",
+      ethnicity_6_sus == "3" ~ "South Asian",
+      ethnicity_6_sus == "2" ~ "Mixed",
+      ethnicity_6_sus == "5" ~ "Other",
+      TRUE ~ NA_character_
+    ) %>% 
       factor() %>% 
       ff_label("Ethnicity (SUS)"),
     
     ethnicity_comb = coalesce(ethnicity, ethnicity_6_sus) %>% 
       ff_label("Ethnicity"),
     
-    region = fct_collapse(
-      region,
-      `East of England` = "East",
-      `London`          = "London",
-      `Midlands`        = c("West Midlands", "East Midlands"),
-      `North East and Yorkshire` = c("Yorkshire and The Humber", "North East"),
-      `North West`      = "North West",
-      `South East`      = "South East",
-      `South West`      = "South West"
-    ) %>% 
+    region = region %>%
+      factor() %>% 
       ff_label("Region"),
     
     imd_Q5 = case_when(

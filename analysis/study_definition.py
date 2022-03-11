@@ -49,10 +49,12 @@ def admitted_to_hospital_X(n):
             variables.update(var_signature("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
             variables.update(var_signature("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
         else:
-            variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1}", return_expectations_date_adm))
-            variables.update(var_signature(f"discharge_date_{i}", "date_discharged", f"admission_date_{i-1}", return_expectations_date_dis))
-            variables.update(var_signature(f"admission_method_{i}", "admission_method", f"admission_date_{i-1}", return_expectations_method))
+            variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1} + 1 day", return_expectations_date_adm))
+            variables.update(var_signature(f"discharge_date_{i}", "date_discharged", f"admission_date_{i}", return_expectations_date_dis))
+            variables.update(var_signature(f"admission_method_{i}", "admission_method", f"admission_date_{i}", return_expectations_method))
     return variables
+
+# outpatient_date_X: Creates n columns for each consecutive outpatient appointment
 
 
 # gp_contact_date_X: Creates n columns for each consecutive GP consulation date
@@ -301,6 +303,86 @@ study = StudyDefinition(
         n=n_admission
     ),
     
+    ###########################
+    # Outpatient appointments #
+    ###########################
+
+    outpatient_count=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["index_date", end_date],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_date_1=patients.outpatient_appointment_date(
+        returning="date",
+        attended=True,
+        find_first_match_in_period=True,
+        on_or_after="index_date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+    outpatient_date_2=patients.outpatient_appointment_date(
+        returning="date",
+        attended=True,
+        find_first_match_in_period=True,
+        on_or_after="outpatient_date_1 + 1 day",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+    outpatient_date_3=patients.outpatient_appointment_date(
+        returning="date",
+        attended=True,
+        find_first_match_in_period=True,
+        on_or_after="outpatient_date_2 + 1 day",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+    outpatient_date_4=patients.outpatient_appointment_date(
+        returning="date",
+        attended=True,
+        find_first_match_in_period=True,
+        on_or_after="outpatient_date_3 + 1 day",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+    outpatient_date_5=patients.outpatient_appointment_date(
+        returning="date",
+        attended=True,
+        find_first_match_in_period=True,
+        on_or_after="outpatient_date_4 + 1 day",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+            }
+    ),
+
+
     ###################
     # GP interactions #
     ###################
@@ -334,7 +416,7 @@ study = StudyDefinition(
 
     gp_contact_date_2 = patients.with_gp_consultations(
         returning="date",
-        on_or_after="gp_contact_date_1",
+        on_or_after="gp_contact_date_1 + 1 day",
         date_format="YYYY-MM-DD",
         find_first_match_in_period=True,
         return_expectations={
@@ -346,7 +428,7 @@ study = StudyDefinition(
 
     gp_contact_date_3 = patients.with_gp_consultations(
         returning="date",
-        on_or_after="gp_contact_date_2",
+        on_or_after="gp_contact_date_2 + 1 day",
         date_format="YYYY-MM-DD",
         find_first_match_in_period=True,
         return_expectations={
@@ -358,7 +440,7 @@ study = StudyDefinition(
 
     gp_contact_date_4 = patients.with_gp_consultations(
         returning="date",
-        on_or_after="gp_contact_date_3",
+        on_or_after="gp_contact_date_3 + 1 day",
         date_format="YYYY-MM-DD",
         find_first_match_in_period=True,
         return_expectations={
@@ -370,7 +452,7 @@ study = StudyDefinition(
 
     gp_contact_date_5 = patients.with_gp_consultations(
         returning="date",
-        on_or_after="gp_contact_date_4",
+        on_or_after="gp_contact_date_4 + 1 day",
         date_format="YYYY-MM-DD",
         find_first_match_in_period=True,
         return_expectations={

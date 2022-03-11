@@ -54,6 +54,7 @@ write_csv(tbl_summary, here::here("output", "descriptive", "tables", "tbl_summar
 max_counts = data_patient %>% 
   summarise(n = n(),
             max_admissions_count = max(admission_count),
+            max_outpatient_count = max(outpatient_count),
             max_gp_contact_count = max(gp_contact_count),
             max_covid_negative_test_count = max(covid_negative_test_count),
             max_covid_positive_test_count = max(covid_positive_test_count))
@@ -66,6 +67,7 @@ list("age",
      "covid_positive_test_date_1",
      "covid_negative_test_date_1",
      "admission_count",
+     "outpatient_count",
      "gp_contact_count",
      "covid_positive_test_count",
      "covid_negative_test_count") %>% 
