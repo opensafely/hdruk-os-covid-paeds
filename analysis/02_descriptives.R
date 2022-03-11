@@ -31,7 +31,10 @@ dir.create(here::here("output", "descriptive", "tables"),
            showWarnings = FALSE, recursive=TRUE)
 
 # Read processed data  ----
-data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
+data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
+data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
+data_outpatient = read_rds(here::here("output", "data", "data_outpatient.rds"))
+data_gp         = read_rds(here::here("output", "data", "data_gp.rds"))
 
 # Export summary table ----
 dependent = "covid_status"
@@ -75,4 +78,20 @@ list("age",
     plot_hist(data_patient, x)
   })
 
-plot_hist(data_patient, "death_date")
+list("admission_date",
+     "discharge_date"
+     ) %>% 
+  lapply(function(x){
+    plot_hist(data_admissions, x)
+  })
+
+list("outpatient_date") %>% 
+  lapply(function(x){
+    plot_hist(data_outpatient, x)
+  })
+
+list("gp_contact_date") %>% 
+  lapply(function(x){
+    plot_hist(data_gp, x)
+  })
+

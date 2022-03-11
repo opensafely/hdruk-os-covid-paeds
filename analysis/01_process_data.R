@@ -311,6 +311,10 @@ write_rds(data_admissions,
           here::here("output", "data", "data_admissions.rds"),
           compress="gz")
 
+write_rds(data_outpatient,
+          here::here("output", "data", "data_outpatient.rds"),
+          compress="gz")
+
 write_rds(data_gp,
           here::here("output", "data", "data_gp.rds"),
           compress="gz")
