@@ -77,7 +77,7 @@ data_admissions = data_patient %>%
 # Expect to be 0 for real data
 log_admissions_filter = data_admissions %>% 
   summarise(n_discharge_before_admission = 
-              sum(admission_date <= discharge_date, na.rm=TRUE),
+              sum(discharge_date < admission_date, na.rm=TRUE),
             n_missing_admission_date = sum(is.na(admission_date)),
             n_missing_discharge_date = sum(is.na(discharge_date)),
             n_missing_both_date = sum(is.na(admission_date) & is.na(discharge_date)))
@@ -97,7 +97,15 @@ data_admissions = data_admissions %>%
   group_by(patient_id) %>% 
   mutate(overlap_with_prior =  
            case_when(admission_date < lag(discharge_date)~ 1,
-                     TRUE ~ 0))
+                     TRUE ~ 0)) %>% 
+  ungroup()
+
+data_admissions_overlap = data_admissions %>% 
+  filter(patient_id %in% 
+           (data_admissions %>% 
+            filter(overlap_with_prior == 1) %>% 
+            pull(patient_id)))
+  
 
 log_admissions_filter = log_admissions_filter %>% 
   mutate(overlapping_spell = sum(data_admissions %>% 
@@ -153,9 +161,10 @@ data_gp = data_patient %>%
   mutate(index = row_number()) %>% 
   ungroup()
 
-# Remove admission and gp columns from data_patient
+# Remove admission, outpatient and gp columns from data_patient ----
 data_patient = data_patient %>% 
   select(-starts_with(c("admission_date", "discharge_date", "admission_method"))) %>% 
+  select(-starts_with("outpatient_date_")) %>% 
   select(-starts_with("gp_contact_date_"))
 
 # Create factors and label variables -----
@@ -252,9 +261,9 @@ data_patient = data_patient %>%
       ff_label("GP interactions"),
     
     covid_status = case_when(
-      !is.na(covid_positive_test_date_1) ~ "Tested positive",
-      !is.na(covid_negative_test_date_1) ~ "Tested negative",
-      TRUE ~ "Never tested"
+      !is.na(covid_positive_test_date_1) ~ "SARS-CoV-2 positive",
+      !is.na(covid_negative_test_date_1) ~ "SARS-CoV-2 negative",
+      TRUE ~ "Untested"
     ) %>%
       factor() %>% 
       ff_label("COVID status"),
@@ -266,13 +275,13 @@ data_patient = data_patient %>%
       factor() %>% 
       ff_label("Death"),
     
-    diabetes = diabetes %>% 
-      factor() %>% 
-      ff_label("Diabetes"),
-    
-    asthma = asthma %>% 
-      factor() %>% 
-      ff_label("Asthma")
+    # diabetes = diabetes %>% 
+    #   factor() %>% 
+    #   ff_label("Diabetes"),
+    # 
+    # asthma = asthma %>% 
+    #   factor() %>% 
+    #   ff_label("Asthma")
     )
 
 # Define potential nosocomial infection ----
@@ -294,7 +303,7 @@ data_patient = data_patient %>%
     by = "patient_id"
   )
 
-# Discrepant test result
+# Discrepant test result ----
 data_patient = data_patient %>% 
   mutate(covid_discrepant_test = if_else(
     covid_positive_test_date_1 == covid_negative_test_date_before_positive,
@@ -322,4 +331,7 @@ write_rds(data_gp,
 # Save csv ----
 write_csv(log_admissions_filter,
           here::here("output", "data", "log_admissions_filter.csv"))
+
+write_csv(data_admissions_overlap,
+          here::here("output", "data", "overlap_admissions.csv"))
 

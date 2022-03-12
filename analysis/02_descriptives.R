@@ -41,7 +41,7 @@ dependent = "covid_status"
 explanatory = c("age", "age_factor", "sex", 
                 "ethnicity", "ethnicity_6_sus", "ethnicity_comb",
                 "region", "imd_Q5", "rural_urban_group",
-                "asthma", "diabetes",
+                #"asthma", "diabetes",
                 "death_factor",
                 "admission_count_factor", 
                 "gp_contact_count_factor")
