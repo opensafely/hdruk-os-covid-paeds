@@ -45,7 +45,7 @@ def admitted_to_hospital_X(n):
 
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("admission_date_1", "date_admitted", "index_date + 1 day", return_expectations_date_adm)
+            variables = var_signature("admission_date_1", "date_admitted", "index_date", return_expectations_date_adm)
             variables.update(var_signature("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
             variables.update(var_signature("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
         else:
@@ -55,7 +55,29 @@ def admitted_to_hospital_X(n):
     return variables
 
 # outpatient_date_X: Creates n columns for each consecutive outpatient appointment
-
+def outpatient_date_X(n):
+    def var_signature(name, on_or_after):
+        return {
+            name: patients.outpatient_appointment_date(
+                    returning="date",
+                    attended=True,
+                    find_first_match_in_period=True,
+                    on_or_after="index_date",
+                    date_format="YYYY-MM-DD",
+                    return_expectations={
+                        "date": {"earliest": start_date, "latest": end_date},
+                        "rate": "uniform",
+                        "incidence": 0.2
+                        }
+                    ),
+        }
+     
+    for i in range(1, n+1):
+        if i == 1:
+            variables = var_signature("outpatient_date_1", "index_date")
+        else:
+            variables.update(var_signature(f"outpatient_date_{i}", f"outpatient_date_{i-1} + 1 day"))
+    return variables
 
 # gp_contact_date_X: Creates n columns for each consecutive GP consulation date
 def gp_contact_date_X(n):
@@ -63,7 +85,7 @@ def gp_contact_date_X(n):
         return {
             name: patients.with_gp_consultations(
                     returning="date",
-                    on_or_after=on_or_after,
+                    between=[on_or_after, end_date],
                     date_format="YYYY-MM-DD",
                     find_first_match_in_period=True,
                     return_expectations={
@@ -76,7 +98,7 @@ def gp_contact_date_X(n):
      
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("gp_contact_date_1", "index_date + 1 day")
+            variables = var_signature("gp_contact_date_1", "index_date")
         else:
             variables.update(var_signature(f"gp_contact_date_{i}", f"gp_contact_date_{i-1} + 1 day"))
     return variables
@@ -86,21 +108,22 @@ def gp_contact_date_X(n):
 # Study Definition #
 ####################
 
-
-# import global-variables.json
+# Import global-variables.json
 with open("./analysis/global_variables.json") as f:
     gbl_vars = json.load(f)
 
-# define variables explicitly
-start_date = gbl_vars["start_date"] # change this in global-variables.json if necessary
-end_date = gbl_vars["end_date"] # change this in global-variables.json if necessary
+# Define variables explicitly
+start_date = gbl_vars["start_date"]
+end_date = gbl_vars["end_date"] 
 
-# Number of hospital admissions, GP interactions, covid tests to query
-n_admission = 5
-n_gp = 5
-n_positive_test = 1
-n_negative_test = 5
+# Number of hospital admissions, outpatient appointments, GP interactions, covid tests to query
+n_admission = gbl_vars["n_admission"]
+n_outpatient = gbl_vars["n_outpatient"]
+n_gp = gbl_vars["n_gp"]
+n_positive_test = gbl_vars["n_positive_test"]
+n_negative_test = gbl_vars["n_negative_test"]
 
+# Study definition
 study = StudyDefinition(
 
     index_date=start_date,
@@ -115,7 +138,7 @@ study = StudyDefinition(
         """
         registered
         AND
-        (age < 18) AND (age > 4)
+        (age < 18) AND (age > 1)
         AND
         (NOT has_died)
         """,
@@ -132,7 +155,7 @@ study = StudyDefinition(
         start_date,
         return_expectations={
             "rate": "universal",
-            "int": {"distribution": "normal", "mean": 11, "stddev": 2},
+            "int": {"distribution": "normal", "mean": 12, "stddev": 2.5},
             "incidence": 1
         },
     ),
@@ -230,7 +253,6 @@ study = StudyDefinition(
         },
     ),
 
-
     #########
     # Death #
     #########
@@ -267,21 +289,31 @@ study = StudyDefinition(
     ##############
 
     # CURRENT ASTHMA
-    asthma=patients.with_these_clinical_events(
+    asthma_date=patients.with_these_clinical_events(
         current_asthma_codes,
-        on_or_before=start_date,
-        returning = "binary_flag",
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations = {"incidence": 0.05}
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
     ),
 
     # DIABETES
-    diabetes=patients.with_these_clinical_events(
+    diabetes_date=patients.with_these_clinical_events(
         diabetes_codes,
-        on_or_before=start_date,
-        returning = "binary_flag",
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations = {"incidence": 0.05}
+        return_expectations={
+            "date": {"earliest": start_date, "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
     ),
 
     #######################
@@ -317,71 +349,10 @@ study = StudyDefinition(
         },
     ),
 
-    outpatient_date_1=patients.outpatient_appointment_date(
-        returning="date",
-        attended=True,
-        find_first_match_in_period=True,
-        on_or_after="index_date",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.2
-            }
+    # Oupatient appointments X: n columns of date of admissions, date of discharge, admission method
+    **outpatient_date_X(
+        n=n_outpatient
     ),
-
-    outpatient_date_2=patients.outpatient_appointment_date(
-        returning="date",
-        attended=True,
-        find_first_match_in_period=True,
-        on_or_after="outpatient_date_1 + 1 day",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.2
-            }
-    ),
-
-    outpatient_date_3=patients.outpatient_appointment_date(
-        returning="date",
-        attended=True,
-        find_first_match_in_period=True,
-        on_or_after="outpatient_date_2 + 1 day",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.2
-            }
-    ),
-
-    outpatient_date_4=patients.outpatient_appointment_date(
-        returning="date",
-        attended=True,
-        find_first_match_in_period=True,
-        on_or_after="outpatient_date_3 + 1 day",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.2
-            }
-    ),
-
-    outpatient_date_5=patients.outpatient_appointment_date(
-        returning="date",
-        attended=True,
-        find_first_match_in_period=True,
-        on_or_after="outpatient_date_4 + 1 day",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.2
-            }
-    ),
-
 
     ###################
     # GP interactions #
@@ -398,70 +369,9 @@ study = StudyDefinition(
     ),
 
     # GP contact X: n columns of date of GP consultations
-    #**gp_contact_date_X(
-    #    n=n_gp
-    #),
-
-    gp_contact_date_1 = patients.with_gp_consultations(
-        returning="date",
-        on_or_after="index_date",
-        date_format="YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.2
-            }
-    ),
-
-    # gp_contact_date_2 = patients.with_gp_consultations(
-    #    returning="date",
-    #    on_or_after="gp_contact_date_1 + 1 day",
-    #    date_format="YYYY-MM-DD",
-    #    find_first_match_in_period=True,
-    #    return_expectations={
-    #        "date": {"earliest": start_date, "latest": end_date},
-    #        "rate": "uniform",
-    #        "incidence": 0.2
-    #        }
-    # ),
-
-    # gp_contact_date_3 = patients.with_gp_consultations(
-    #    returning="date",
-    #    on_or_after="gp_contact_date_2 + 1 day",
-    #    date_format="YYYY-MM-DD",
-    #    find_first_match_in_period=True,
-    #    return_expectations={
-    #        "date": {"earliest": start_date, "latest": end_date},
-    #        "rate": "uniform",
-    #        "incidence": 0.2
-    #        }
-    # ),
-
-    # gp_contact_date_4 = patients.with_gp_consultations(
-    #     returning="date",
-    #     on_or_after="gp_contact_date_3 + 1 day",
-    #     date_format="YYYY-MM-DD",
-    #     find_first_match_in_period=True,
-    #     return_expectations={
-    #         "date": {"earliest": start_date, "latest": end_date},
-    #         "rate": "uniform",
-    #         "incidence": 0.2
-    #         }
-    # ),
-
-    # gp_contact_date_5 = patients.with_gp_consultations(
-    #     returning="date",
-    #     on_or_after="gp_contact_date_4 + 1 day",
-    #     date_format="YYYY-MM-DD",
-    #     find_first_match_in_period=True,
-    #     return_expectations={
-    #         "date": {"earliest": start_date, "latest": end_date},
-    #         "rate": "uniform",
-    #         "incidence": 0.2
-    #         }
-    # ),
-    
+    **gp_contact_date_X(
+       n=n_gp
+    ),    
 
     #################
     # Covid Testing #
