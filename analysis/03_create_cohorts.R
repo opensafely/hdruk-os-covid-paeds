@@ -104,7 +104,3 @@ list_indexed_data = list_index_dates %>%
     
     return(data_index)
   })
-
-data_2019 = list_indexed_data[[1]]
-data_2020 = list_indexed_data[[2]]
-data_2021 = list_indexed_data[[3]]

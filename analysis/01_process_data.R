@@ -21,8 +21,9 @@ gbl_vars = jsonlite::fromJSON(
   txt="./analysis/global_variables.json"
 )
 
-# Create directory for processed data ----
+# Create directory for processed data and diagnostics ----
 dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
+dir.create(here::here("output", "diagnostics"), showWarnings = FALSE, recursive=TRUE)
 
 # Set column type based on column name ----
 col_type_data_patient = tibble(
@@ -99,10 +100,17 @@ data_high_admissions = read_csv(
     paste(collapse = "")
 )
 
+# Record characteristics of high admissions data ----
+log_high_admissions = tibble(
+  n_row = nrow(data_high_admissions),
+  n_col = ncol(data_high_admissions),
+  n_col_empty = data_high_admissions %>% 
+    select(where(~all(is.na(.)))) %>% 
+    length()
+)
+
 # Tidy high admissions ----
 # Create one row per admission spell
-# Filter out data already included in data_patient (index <= n_admission)
-# Remove data from patients not in data_patient (for dummy data)
 data_high_admissions = data_high_admissions %>% 
   select(patient_id,
          starts_with(c("admission_date", "discharge_date", "admission_method"))) %>%
@@ -119,7 +127,23 @@ data_high_admissions = data_high_admissions %>%
     values_from = data
   ) %>% 
   mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") %>%
-  mutate(index = index %>% as.numeric()) %>% 
+  mutate(index = index %>% as.numeric())
+
+# Log number of admission spells and filter counts ----
+log_high_admissions = log_high_admissions %>% 
+  mutate(n_spells_before_filter = nrow(data_high_admissions),
+         n_spells_filter_low = data_high_admissions %>% 
+           filter(index <= gbl_vars$n_admission) %>% 
+           nrow(), # Expect to be n_admissions*n_patients for real data
+         n_spells_filter_bad_id = data_high_admissions %>% 
+           filter(!patient_id %in% data_patient$patient_id) %>% 
+           nrow() # Expect to be 0 for real data
+         )
+
+# Filter out redundant admission spells ----
+#   - data already included in data_patient (index <= n_admission)
+#   - data from patients not in data_patient (for dummy data)
+data_high_admissions = data_high_admissions %>% 
   filter(index > gbl_vars$n_admission) %>% 
   filter(patient_id %in% data_patient$patient_id)
 
@@ -208,6 +232,15 @@ data_high_outpatient = read_csv(
     paste(collapse = "")
 )
 
+# Record characteristics of high admissions data ----
+log_high_outpatient = tibble(
+  n_row = nrow(data_high_outpatient),
+  n_col = ncol(data_high_outpatient),
+  n_col_empty = data_high_outpatient %>% 
+    select(where(~all(is.na(.)))) %>% 
+    length()
+)
+
 # Pivot longer high-outpatient dataset ----
 data_high_outpatient = data_high_outpatient %>% 
   select(patient_id, starts_with("outpatient_date_")) %>%
@@ -219,6 +252,17 @@ data_high_outpatient = data_high_outpatient %>%
     values_drop_na = TRUE
   ) %>% 
   mutate(index = index %>% as.numeric())
+
+# Log number of outpatient appointments and filter counts ----
+log_high_outpatient = log_high_outpatient %>% 
+  mutate(n_appointments_before_filter = nrow(data_high_outpatient),
+         n_appointments_filter_low = data_high_outpatient %>% 
+           filter(index <= gbl_vars$n_outpatient) %>% 
+           nrow(), # Expect to be n_admissions*n_outpatient for real data
+         n_appointments_filter_bad_id = data_high_outpatient %>% 
+           filter(!patient_id %in% data_patient$patient_id) %>% 
+           nrow() # Expect to be 0 for real data
+  )
 
 # Filter out high_outpatient dataset ----
 #   First n_outpatient appointments already in data_outpatient
@@ -276,6 +320,15 @@ data_high_gp = read_csv(
     paste(collapse = "")
 )
 
+# Record characteristics of high admissions data ----
+log_high_gp = tibble(
+  n_row = nrow(data_high_gp),
+  n_col = ncol(data_high_gp),
+  n_col_empty = data_high_gp %>% 
+    select(where(~all(is.na(.)))) %>% 
+    length()
+)
+
 # Pivot longer high count gp dataset ----
 data_high_gp = data_high_gp %>% 
   select(patient_id, starts_with("gp_contact_date_")) %>%
@@ -287,6 +340,17 @@ data_high_gp = data_high_gp %>%
     values_drop_na = TRUE
   ) %>% 
   mutate(index = index %>% as.numeric())
+
+# Log number of outpatient appointments and filter counts ----
+log_high_gp = log_high_gp %>% 
+  mutate(n_appointments_before_filter = nrow(data_high_gp),
+         n_appointments_filter_low = data_high_gp %>% 
+           filter(index <= gbl_vars$n_gp) %>% 
+           nrow(), # Expect to be n_admissions*n_gp for real data
+         n_appointments_filter_bad_id = data_high_gp %>% 
+           filter(!patient_id %in% data_patient$patient_id) %>% 
+           nrow() # Expect to be 0 for real data
+  )
 
 # Filter out high_gp dataset ----
 #   First n_gp contacts already in data_gp
@@ -473,14 +537,7 @@ data_patient = data_patient %>%
       factor() %>% 
       ff_label("Death"),
     
-    # diabetes = diabetes %>% 
-    #   factor() %>% 
-    #   ff_label("Diabetes"),
-    # 
-    # asthma = asthma %>% 
-    #   factor() %>% 
-    #   ff_label("Asthma")
-    )
+  )
 
 # Define potential nosocomial infection ----
 # Defined as a positive covid test after day 7 in hospital and on or before day of 
@@ -512,7 +569,7 @@ data_patient = data_patient %>%
     NA_character_
   ))
 
-# Save rds ----
+# Save data as rds ----
 write_rds(data_patient,
           here::here("output", "data", "data_patient.rds"),
           compress="gz")
@@ -529,10 +586,19 @@ write_rds(data_gp,
           here::here("output", "data", "data_gp.rds"),
           compress="gz")
 
-# Save csv ----
+# Save diagnostic log files as csv ----
 write_csv(log_admissions_filter,
-          here::here("output", "data", "log_admissions_filter.csv"))
+          here::here("output", "diagnostics", "log_admissions_filter.csv"))
+
+write_csv(log_high_admissions,
+          here::here("output", "diagnostics", "log_high_admissions.csv"))
+
+write_csv(log_high_outpatient,
+          here::here("output", "diagnostics", "log_high_outpatient.csv"))
+
+write_csv(log_high_gp,
+          here::here("output", "diagnostics", "log_high_gp.csv"))
 
 write_csv(data_admissions_overlap,
-          here::here("output", "data", "overlap_admissions.csv"))
+          here::here("output", "diagnostics", "overlap_admissions.csv"))
 
