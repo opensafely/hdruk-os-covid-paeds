@@ -71,7 +71,7 @@ study = StudyDefinition(
         AND
         (NOT has_died)
         AND
-        (gp_contact_count > 5)
+        (gp_contact_count > 35)
         """,
         registered=patients.registered_as_of(
             "index_date",

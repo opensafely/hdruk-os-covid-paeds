@@ -91,7 +91,7 @@ study = StudyDefinition(
         AND
         (NOT has_died)
         AND
-        (admission_count > 5)
+        (admission_count > 10)
         """,
         registered=patients.registered_as_of(
             "index_date",

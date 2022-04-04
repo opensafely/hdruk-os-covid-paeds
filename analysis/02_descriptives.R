@@ -40,7 +40,7 @@ data_gp         = read_rds(here::here("output", "data", "data_gp.rds"))
 dependent = "covid_status"
 explanatory = c("age", "age_factor", "sex", 
                 "ethnicity", "ethnicity_6_sus", "ethnicity_comb",
-                "region", "imd_Q5", "rural_urban_group",
+                "region_2019", "imd_Q5_2019", "rural_urban_2019",
                 #"asthma", "diabetes",
                 "death_factor",
                 "admission_count_factor", 

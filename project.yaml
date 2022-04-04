@@ -36,7 +36,7 @@ actions:
       highly_sensitive:
         data1: output/data/*.rds
       moderately_sensitive:
-        filter_log: output/data/*.csv
+        diagnostics: output/diagnostics/*.csv
 
   descriptives:
     run: r:latest analysis/02_descriptives.R
