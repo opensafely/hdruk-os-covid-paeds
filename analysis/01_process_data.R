@@ -11,12 +11,12 @@
 #          - processed one-row-per-hospital admission dataset
 #          - processed one-row-per-GP contact dataset
 
-# Import libraries
+# Load libraries ----
 library("tidyverse")
 library("lubridate")
 library("finalfit")
 
-# Import globally defined variables
+# Import globally defined variables ----
 gbl_vars = jsonlite::fromJSON(
   txt="./analysis/global_variables.json"
 )
@@ -25,7 +25,7 @@ gbl_vars = jsonlite::fromJSON(
 dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 
 # Set column type based on column name ----
-data_format = tibble(
+col_type_data_patient = tibble(
   column_names = c(read_csv(
     here::here("output", "input.csv.gz"),
     n_max = 1,
@@ -33,17 +33,19 @@ data_format = tibble(
   ))) %>% 
   mutate(column_type = case_when(
     column_names == "patient_id" ~ "i",
-    column_names == "imd" ~ "i",
+    str_detect(column_names, "imd_") ~ "i",
     str_detect(column_names, "age") ~ "d",
     str_detect(column_names, "_date") ~ "D",
     str_detect(column_names, "_count") ~ "i",
     TRUE ~ "c"
   ))
 
-# Read data from csv ----
+# Read patient data from csv ----
 data_patient = read_csv(
   here::here("output", "input.csv.gz"),
-  col_types = data_format %>% pull(column_type) %>% paste(collapse = "")
+  col_types = col_type_data_patient %>%
+    pull(column_type) %>%
+    paste(collapse = "")
 )
 
 # Parse character NAs ----
@@ -65,13 +67,65 @@ data_admissions = data_patient %>%
     names_to = c("variable", "index"),
     names_pattern = "^(.*)_(\\d+)",
     values_to = "data",
-    values_drop_na = FALSE
+    values_drop_na = TRUE
   ) %>% 
   pivot_wider(
     names_from = variable,
     values_from = data
   ) %>% 
-  mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d")
+  mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") %>% 
+  mutate(index = index %>% as.numeric())
+
+
+# High admission count data ----
+# Set column type based on column name ----
+col_type_data_high_admissions = tibble(
+  column_names = c(read_csv(
+    here::here("output", "input_high_admissions.csv.gz"),
+    n_max = 1,
+    col_names = FALSE
+  ))) %>% 
+  mutate(column_type = case_when(
+    column_names == "patient_id" ~ "i",
+    str_detect(column_names, "_date") ~ "D",
+    TRUE ~ "c"
+  ))
+
+# Read high count admissions from csv ----
+data_high_admissions = read_csv(
+  here::here("output", "input_high_admissions.csv.gz"),
+  col_types = col_type_data_high_admissions %>%
+    pull(column_type) %>%
+    paste(collapse = "")
+)
+
+# Tidy high admissions ----
+# Create one row per admission spell
+# Filter out data already included in data_patient (index <= n_admission)
+# Remove data from patients not in data_patient (for dummy data)
+data_high_admissions = data_high_admissions %>% 
+  select(patient_id,
+         starts_with(c("admission_date", "discharge_date", "admission_method"))) %>%
+  mutate_at(vars(starts_with(c("admission_date", "discharge_date"))), as.character) %>% 
+  pivot_longer(
+    cols = -patient_id,
+    names_to = c("variable", "index"),
+    names_pattern = "^(.*)_(\\d+)",
+    values_to = "data",
+    values_drop_na = TRUE
+  )  %>% 
+  pivot_wider(
+    names_from = variable,
+    values_from = data
+  ) %>% 
+  mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") %>%
+  mutate(index = index %>% as.numeric()) %>% 
+  filter(index > gbl_vars$n_admission) %>% 
+  filter(patient_id %in% data_patient$patient_id)
+
+# Combine admissions data ----
+data_admissions = data_admissions %>% 
+  bind_rows(data_high_admissions)
 
 # Log number of bad admission rows ----
 # Expect to be 0 for real data
@@ -80,7 +134,7 @@ log_admissions_filter = data_admissions %>%
               sum(discharge_date < admission_date, na.rm=TRUE),
             n_missing_admission_date = sum(is.na(admission_date)),
             n_missing_discharge_date = sum(is.na(discharge_date)),
-            n_missing_both_date = sum(is.na(admission_date) & is.na(discharge_date)))
+            n_missing_admission_method = sum(is.na(admission_method)))
 
 # Filter out rows with bad admission dates ----
 data_admissions = data_admissions %>% 
@@ -121,7 +175,7 @@ data_admissions = data_admissions %>%
   slice(1) %>% 
   ungroup()
 
-# Outpatient dataset ----
+# Outpatient dataset, pivot longer ----
 data_outpatient = data_patient %>% 
   select(patient_id, starts_with("outpatient_date_")) %>%
   pivot_longer(
@@ -131,13 +185,61 @@ data_outpatient = data_patient %>%
     values_to = "data",
     values_drop_na = TRUE
   ) %>% 
+  mutate(index = index %>% as.numeric())
+
+# Set column type in based on column name ----
+col_type_data_high_outpatient = tibble(
+  column_names = c(read_csv(
+    here::here("output", "input_high_outpatient.csv.gz"),
+    n_max = 1,
+    col_names = FALSE
+  ))) %>% 
+  mutate(column_type = case_when(
+    column_names == "patient_id" ~ "i",
+    str_detect(column_names, "_date") ~ "D",
+    TRUE ~ "c"
+  ))
+
+# Read high count outpatient data from csv ----
+data_high_outpatient = read_csv(
+  here::here("output", "input_high_outpatient.csv.gz"),
+  col_types = col_type_data_high_outpatient %>%
+    pull(column_type) %>%
+    paste(collapse = "")
+)
+
+# Pivot longer high-outpatient dataset ----
+data_high_outpatient = data_high_outpatient %>% 
+  select(patient_id, starts_with("outpatient_date_")) %>%
+  pivot_longer(
+    cols = -patient_id,
+    names_to = c("variable", "index"),
+    names_pattern = "^(.*)_(\\d+)",
+    values_to = "data",
+    values_drop_na = TRUE
+  ) %>% 
+  mutate(index = index %>% as.numeric())
+
+# Filter out high_outpatient dataset ----
+#   First n_outpatient appointments already in data_outpatient
+#   Filtering on patient_id only removes rows for dummy data 
+data_high_outpatient = data_high_outpatient %>% 
+  filter(index > gbl_vars$n_outpatient) %>% 
+  filter(patient_id %in% data_patient$patient_id)
+
+# Bind outpatient datasets and pivot wider ----
+# Remove duplicate dates
+data_outpatient = data_outpatient %>% 
+  bind_rows(data_high_outpatient) %>% 
   pivot_wider(
     names_from = variable,
     values_from = data
   ) %>% 
   mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") %>% 
+  arrange(patient_id, outpatient_date) %>%
+  group_by(patient_id, outpatient_date) %>%
+  slice(1) %>% 
   group_by(patient_id) %>% 
-  arrange(patient_id, outpatient_date) %>% 
   mutate(index = row_number()) %>% 
   ungroup()
 
@@ -151,13 +253,61 @@ data_gp = data_patient %>%
     values_to = "data",
     values_drop_na = TRUE
   ) %>% 
+  mutate(index = index %>% as.numeric())
+
+# Set column type in based on column name ----
+col_type_data_high_gp = tibble(
+  column_names = c(read_csv(
+    here::here("output", "input_high_gp.csv.gz"),
+    n_max = 1,
+    col_names = FALSE
+  ))) %>% 
+  mutate(column_type = case_when(
+    column_names == "patient_id" ~ "i",
+    str_detect(column_names, "_date") ~ "D",
+    TRUE ~ "c"
+  ))
+
+# Read high count GP contact data from csv ----
+data_high_gp = read_csv(
+  here::here("output", "input_high_gp.csv.gz"),
+  col_types = col_type_data_high_gp %>%
+    pull(column_type) %>%
+    paste(collapse = "")
+)
+
+# Pivot longer high count gp dataset ----
+data_high_gp = data_high_gp %>% 
+  select(patient_id, starts_with("gp_contact_date_")) %>%
+  pivot_longer(
+    cols = -patient_id,
+    names_to = c("variable", "index"),
+    names_pattern = "^(.*)_(\\d+)",
+    values_to = "data",
+    values_drop_na = TRUE
+  ) %>% 
+  mutate(index = index %>% as.numeric())
+
+# Filter out high_gp dataset ----
+#   First n_gp contacts already in data_gp
+#   Filtering on patient_id removes invalid rows for dummy data 
+data_high_gp = data_high_gp %>% 
+  filter(index > gbl_vars$n_gp) %>% 
+  filter(patient_id %in% data_patient$patient_id)
+
+# Bind gp datasets and pivot wider ----
+# Remove duplicate dates
+data_gp = data_gp %>% 
+  bind_rows(data_high_gp) %>% 
   pivot_wider(
     names_from = variable,
     values_from = data
   ) %>% 
   mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") %>% 
+  arrange(patient_id, gp_contact_date) %>%
+  group_by(patient_id, gp_contact_date) %>%
+  slice(1) %>% 
   group_by(patient_id) %>% 
-  arrange(patient_id, gp_contact_date) %>% 
   mutate(index = row_number()) %>% 
   ungroup()
 
@@ -218,26 +368,74 @@ data_patient = data_patient %>%
     ethnicity_comb = coalesce(ethnicity, ethnicity_6_sus) %>% 
       ff_label("Ethnicity"),
     
-    region = region %>%
+    region_2019 = region_2019 %>%
       factor() %>% 
       ff_label("Region"),
     
-    imd_Q5 = case_when(
-      (imd >=1)          & (imd < 32844*1/5) ~ "(most deprived) 1",
-      (imd >= 32844*1/5) & (imd < 32844*2/5) ~ "2",
-      (imd >= 32844*2/5) & (imd < 32844*3/5) ~ "3",
-      (imd >= 32844*3/5) & (imd < 32844*4/5) ~ "4",
-      (imd >= 32844*4/5)                     ~ "(least deprived) 5",
+    region_2020 = region_2020 %>%
+      factor() %>% 
+      ff_label("Region"),
+    
+    region_2021 = region_2021 %>%
+      factor() %>% 
+      ff_label("Region"),
+    
+    imd_Q5_2019 = case_when(
+      (imd_2019 >=1)          & (imd_2019 < 32844*1/5) ~ "(most deprived) 1",
+      (imd_2019 >= 32844*1/5) & (imd_2019 < 32844*2/5) ~ "2",
+      (imd_2019 >= 32844*2/5) & (imd_2019 < 32844*3/5) ~ "3",
+      (imd_2019 >= 32844*3/5) & (imd_2019 < 32844*4/5) ~ "4",
+      (imd_2019 >= 32844*4/5)                          ~ "(least deprived) 5",
       TRUE ~ NA_character_
-      ) %>% 
+    ) %>% 
       factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>% 
       ff_label("Multiple deprivation quintile"),
     
-    rural_urban_group = case_when(
-      rural_urban %in% c(1,2)     ~ "Urban conurbation",
-      rural_urban %in% c(3,4)     ~ "Urban city or town",
-      rural_urban %in% c(5,6,7,8) ~ "Rural town or village",
-      TRUE                        ~ NA_character_
+    imd_Q5_2020 = case_when(
+      (imd_2020 >=1)          & (imd_2020 < 32844*1/5) ~ "(most deprived) 1",
+      (imd_2020 >= 32844*1/5) & (imd_2020 < 32844*2/5) ~ "2",
+      (imd_2020 >= 32844*2/5) & (imd_2020 < 32844*3/5) ~ "3",
+      (imd_2020 >= 32844*3/5) & (imd_2020 < 32844*4/5) ~ "4",
+      (imd_2020 >= 32844*4/5)                          ~ "(least deprived) 5",
+      TRUE ~ NA_character_
+    ) %>% 
+      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>% 
+      ff_label("Multiple deprivation quintile"),
+    
+    imd_Q5_2021 = case_when(
+      (imd_2021 >=1)          & (imd_2021 < 32844*1/5) ~ "(most deprived) 1",
+      (imd_2021 >= 32844*1/5) & (imd_2021 < 32844*2/5) ~ "2",
+      (imd_2021 >= 32844*2/5) & (imd_2021 < 32844*3/5) ~ "3",
+      (imd_2021 >= 32844*3/5) & (imd_2021 < 32844*4/5) ~ "4",
+      (imd_2021 >= 32844*4/5)                          ~ "(least deprived) 5",
+      TRUE ~ NA_character_
+    ) %>% 
+      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>% 
+      ff_label("Multiple deprivation quintile"),
+    
+    rural_urban_2019 = case_when(
+      rural_urban_2019 %in% c(1,2)     ~ "Urban conurbation",
+      rural_urban_2019 %in% c(3,4)     ~ "Urban city or town",
+      rural_urban_2019 %in% c(5,6,7,8) ~ "Rural town or village",
+      TRUE                             ~ NA_character_
+    ) %>%
+      factor() %>% 
+      ff_label("Rural-urban classification"),
+    
+    rural_urban_2020 = case_when(
+      rural_urban_2020 %in% c(1,2)     ~ "Urban conurbation",
+      rural_urban_2020 %in% c(3,4)     ~ "Urban city or town",
+      rural_urban_2020 %in% c(5,6,7,8) ~ "Rural town or village",
+      TRUE                             ~ NA_character_
+    ) %>%
+      factor() %>% 
+      ff_label("Rural-urban classification"),
+    
+    rural_urban_2021 = case_when(
+      rural_urban_2021 %in% c(1,2)     ~ "Urban conurbation",
+      rural_urban_2021 %in% c(3,4)     ~ "Urban city or town",
+      rural_urban_2021 %in% c(5,6,7,8) ~ "Rural town or village",
+      TRUE                             ~ NA_character_
     ) %>%
       factor() %>% 
       ff_label("Rural-urban classification"),
@@ -285,7 +483,7 @@ data_patient = data_patient %>%
     )
 
 # Define potential nosocomial infection ----
-# Defined as a positive covid test on or after day 7 and on or before day of 
+# Defined as a positive covid test after day 7 in hospital and on or before day of 
 # discharge
 data_patient = data_patient %>% 
   left_join(
@@ -294,12 +492,15 @@ data_patient = data_patient %>%
                                         covid_positive_test_date_1),
                 by = "patient_id") %>% 
       mutate(covid_nosocomial = if_else(
-        (admission_date + days(7) <= covid_positive_test_date_1) &
+        (admission_date + days(7) < covid_positive_test_date_1) &
           (discharge_date >= covid_positive_test_date_1),
         "Yes", NA_character_) %>% 
           ff_label("Nosocomial infection")) %>%
       filter(covid_nosocomial == "Yes") %>% 
-      select(patient_id, covid_nosocomial),
+      select(patient_id, covid_nosocomial) %>%
+      group_by(patient_id) %>% 
+      slice(1) %>% 
+      ungroup(),
     by = "patient_id"
   )
 

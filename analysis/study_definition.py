@@ -114,12 +114,12 @@ with open("./analysis/global_variables.json") as f:
 
 # Define variables explicitly
 start_date = gbl_vars["start_date"]
-end_date = gbl_vars["end_date"] 
+end_date   = gbl_vars["end_date"] 
 
 # Number of hospital admissions, outpatient appointments, GP interactions, covid tests to query
-n_admission = gbl_vars["n_admission"]
-n_outpatient = gbl_vars["n_outpatient"]
-n_gp = gbl_vars["n_gp"]
+n_admission     = gbl_vars["n_admission"]
+n_outpatient    = gbl_vars["n_outpatient"]
+n_gp            = gbl_vars["n_gp"]
 n_positive_test = gbl_vars["n_positive_test"]
 n_negative_test = gbl_vars["n_negative_test"]
 
@@ -200,8 +200,50 @@ study = StudyDefinition(
     ),
 
     # NHS administrative region
-    region=patients.registered_practice_as_of(
-        "index_date",
+    region_2019=patients.registered_practice_as_of(
+        "2019-01-01",
+        returning="nuts1_region_name",
+        return_expectations={
+            "rate": "universal",
+            "category": {
+                "ratios": {
+                    "North East": 0.1,
+                    "North West": 0.2,
+                    "Yorkshire and the Humber": 0.2,
+                    "East Midlands": 0.1,
+                    "West Midlands": 0.1,
+                    "East of England": 0.1,
+                    "London": 0.1,
+                    "South East": 0.09,
+                    "": 0.01
+                },
+            },
+        },
+    ),
+
+    region_2020=patients.registered_practice_as_of(
+        "2020-01-01",
+        returning="nuts1_region_name",
+        return_expectations={
+            "rate": "universal",
+            "category": {
+                "ratios": {
+                    "North East": 0.1,
+                    "North West": 0.2,
+                    "Yorkshire and the Humber": 0.2,
+                    "East Midlands": 0.1,
+                    "West Midlands": 0.1,
+                    "East of England": 0.1,
+                    "London": 0.1,
+                    "South East": 0.09,
+                    "": 0.01
+                },
+            },
+        },
+    ),
+
+    region_2021=patients.registered_practice_as_of(
+        "2021-01-01",
         returning="nuts1_region_name",
         return_expectations={
             "rate": "universal",
@@ -222,8 +264,28 @@ study = StudyDefinition(
     ),
 
     # IMD - index of multiple deprivation
-    imd=patients.address_as_of(
-        "index_date",
+    imd_2019=patients.address_as_of(
+        "2019-01-01",
+        returning="index_of_multiple_deprivation",
+        round_to_nearest=100,
+        return_expectations={
+            "rate": "universal",
+            "category": {"ratios": {"3300": 0.2, "9900": 0.2, "16400": 0.2, "23000": 0.2, "30000": 0.2}},
+        },
+    ),
+
+    imd_2020=patients.address_as_of(
+        "2020-01-01",
+        returning="index_of_multiple_deprivation",
+        round_to_nearest=100,
+        return_expectations={
+            "rate": "universal",
+            "category": {"ratios": {"3300": 0.2, "9900": 0.2, "16400": 0.2, "23000": 0.2, "30000": 0.2}},
+        },
+    ),
+
+    imd_2021=patients.address_as_of(
+        "2021-01-01",
         returning="index_of_multiple_deprivation",
         round_to_nearest=100,
         return_expectations={
@@ -233,8 +295,48 @@ study = StudyDefinition(
     ),
 
     # Rural/Urban Classification
-    rural_urban=patients.address_as_of(
-        "index_date",
+    rural_urban_2019=patients.address_as_of(
+        "2019-01-01",
+        returning="rural_urban_classification",
+        return_expectations={
+            "rate": "universal",
+            "category": 
+                {"ratios": {
+                    "1": 0.1,
+                    "2": 0.1,
+                    "3": 0.1,
+                    "4": 0.1,
+                    "5": 0.1,
+                    "6": 0.1,
+                    "7": 0.2,
+                    "8": 0.2,
+                }
+            },
+        },
+    ),
+
+    rural_urban_2020=patients.address_as_of(
+        "2020-01-01",
+        returning="rural_urban_classification",
+        return_expectations={
+            "rate": "universal",
+            "category": 
+                {"ratios": {
+                    "1": 0.1,
+                    "2": 0.1,
+                    "3": 0.1,
+                    "4": 0.1,
+                    "5": 0.1,
+                    "6": 0.1,
+                    "7": 0.2,
+                    "8": 0.2,
+                }
+            },
+        },
+    ),
+
+    rural_urban_2021=patients.address_as_of(
+        "2021-01-01",
         returning="rural_urban_classification",
         return_expectations={
             "rate": "universal",
@@ -296,7 +398,7 @@ study = StudyDefinition(
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
         return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
+            "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
             "incidence": 0.05
         }
@@ -310,7 +412,7 @@ study = StudyDefinition(
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
         return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
+            "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
             "incidence": 0.05
         }

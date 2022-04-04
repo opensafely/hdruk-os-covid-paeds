@@ -1,12 +1,14 @@
 {
     "start_date": "2019-01-01",
     "end_date": "2022-05-01",
-    "n_admission": 5,
-    "n_admission_high": 10,
-    "n_outpatient": 5,
-    "n_outpatient_high": 10,
-    "n_gp": 5,
-    "n_gp_high": 10,
-    "n_positive_test": 1,
-    "n_negative_test": 5
+    "n_admission": 10,
+    "n_admission_high": 522,
+    "n_outpatient": 25,
+    "n_outpatient_high": 1366,
+    "n_gp": 35,
+    "n_gp_high": 896,
+    "n_positive_test": 5,
+    "n_positive_test_high": 51,
+    "n_negative_test": 25,
+    "n_negative_test_high": 354
   }
