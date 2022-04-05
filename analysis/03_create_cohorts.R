@@ -33,7 +33,8 @@ list_indexed_data = list_index_dates %>%
     data_index = data_patient %>% 
       mutate(
         
-        cohort_year = year(index_date) %>% 
+        cohort_year = year(index_date) %>%
+          as.character() %>% 
           ff_label("Cohort"),
         
         age = ((index_date - date_of_birth)/365.25) %>%
@@ -70,7 +71,7 @@ list_indexed_data = list_index_dates %>%
       ) %>% 
       rename(imd = paste0("imd_", year(index_date)),
              imd_Q5 = paste0("imd_Q5_", year(index_date)),
-             rurual_urban = paste0("rural_urban_", year(index_date)),
+             rural_urban = paste0("rural_urban_", year(index_date)),
              region = paste0("region_", year(index_date))
              ) %>% 
       select(-contains("_2019"), -contains("_2020"), -contains("_2021"))
