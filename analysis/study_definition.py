@@ -33,19 +33,19 @@ def admitted_to_hospital_X(n):
                      
     # Expections for admission dates
     return_expectations_date_adm={
-        "date": {"earliest": start_date, "latest": end_date},
+        "date": {"earliest": "index_date - 3 months", "latest": end_date},
         "rate": "uniform",
         "incidence": 0.5}
         
     # Expections for discharge dates
     return_expectations_date_dis={
-        "date": {"earliest": start_date, "latest": end_date},
+        "date": {"earliest": "index_date - 3 months", "latest": end_date},
         "rate": "uniform",
         "incidence": 0.5}
 
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("admission_date_1", "date_admitted", "index_date", return_expectations_date_adm)
+            variables = var_signature("admission_date_1", "date_admitted", "index_date - 3 months", return_expectations_date_adm)
             variables.update(var_signature("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
             variables.update(var_signature("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
         else:
