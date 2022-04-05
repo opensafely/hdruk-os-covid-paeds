@@ -5,6 +5,20 @@ expectations:
 
 actions:
 
+  generate_contact_counts:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_contact_counts --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_contact_counts.csv.gz
+
+  descriptives_count_data:
+    run: r:latest analysis/00_count_data.R
+    needs: [generate_contact_counts]
+    outputs:
+      moderately_sensitive:
+        plots: output/descriptive/counts/*.jpeg
+        tables: output/descriptive/counts/*.csv
+
   generate_study_population:
     run: cohortextractor:latest generate_cohort --study-definition study_definition --output-format csv.gz
     outputs:
