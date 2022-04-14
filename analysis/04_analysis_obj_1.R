@@ -71,11 +71,14 @@ tbl_summary_cohort_year = data_patient_2019 %>%
 # Define variables to stratify plots by ----
 #strat_var = c(NULL, "sex", "age_factor", "ethnicity_comb", "region", "imd_Q5",
 #              "rural_urban", "asthma", "diabetes")
-strat_var = c(NULL)
+strat_var = c(NA)
 
 # Outpatient appointments ----
 strat_var %>% 
   map(function(var){
+    
+    if(is.na(var)) {var = NULL}
+    
     outpatient_id = data_patient_2019 %>% 
       select(patient_id, cohort_year, all_of(var)) %>%
       bind_rows(
@@ -120,11 +123,13 @@ strat_var %>%
            fill   = vlabels[vlabels %>% names()== var])
     
     ggsave(paste0("obj1_outpatient_", var, ".jpeg"),
-           plot = last_plot(),
+           plot = plot_outpatient,
            device = "jpeg",
            path = here::here("output", "descriptive", "obj_1"))
     
   })
+
+
 
 # GP contact ----
 # strat_var %>% 
