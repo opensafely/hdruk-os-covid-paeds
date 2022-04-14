@@ -59,3 +59,17 @@ actions:
       moderately_sensitive:
         plots: output/descriptive/plots/*.jpeg
         tables: output/descriptive/tables/*.csv
+
+  create_cohorts:
+    run: r:latest analysis/03_create_cohorts.R
+    needs: [process_data]
+    outputs:
+      highly_sensitive:
+        data1: output/data/cohorts/*.rds
+
+  obj_1_analysis:
+    run: r:latest analysis/04_analysis_obj_1.R
+    needs: [process_data, create_cohorts]
+    outputs:
+      moderately_sensitive:
+        plots: output/descriptive/obj_1/*.jpeg

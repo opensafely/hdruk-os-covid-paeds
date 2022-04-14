@@ -8,11 +8,18 @@
 library("tidyverse")
 library("lubridate")
 library("finalfit")
-library("consort")
+#library("consort")
 
 # Read processed data  ----
 data_patient =    read_rds(here::here("output", "data", "data_patient.rds"))
 data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
+
+# Create output directories ----
+dir.create(here::here("output", "descriptive", "consort"),
+           showWarnings = FALSE, recursive=TRUE)
+
+dir.create(here::here("output", "data", "cohorts"),
+           showWarnings = FALSE, recursive=TRUE)
 
 # General exclusions for all cohorts ----
 data_patient = data_patient %>% 
@@ -77,22 +84,22 @@ list_indexed_data = list_index_dates %>%
       select(-contains("_2019"), -contains("_2020"), -contains("_2021"))
     
     # Create consort diagrams ----
-    consort_diagram = consort_plot(
-      data = data_index,
-      orders = c(patient_id       = "OpenSAFELY extract population: alive, registered with GP\n and age between 1 and 18 years on 01 January 2019",
-                 excl_general     = "Excluded",
-                 cohort_general   = "Extract population excluding probable nosocomial infection\n and discrepant same-day RT-PCR test results",
-                 excl_index       = "Excluded",
-                 cohort_index     = paste0(year(index_date), " cohort: Age between 4 and 18 years\n on ", format(index_date, "%d %B %Y"))),
-      side_box = c("excl_general", "excl_index"),
-      cex = 0.9)
+    # consort_diagram = consort_plot(
+    #   data = data_index,
+    #   orders = c(patient_id       = "OpenSAFELY extract population: alive, registered with GP\n and age between 1 and 18 years on 01 January 2019",
+    #              excl_general     = "Excluded",
+    #              cohort_general   = "Extract population excluding probable nosocomial infection\n and discrepant same-day RT-PCR test results",
+    #              excl_index       = "Excluded",
+    #              cohort_index     = paste0(year(index_date), " cohort: Age between 4 and 18 years\n on ", format(index_date, "%d %B %Y"))),
+    #   side_box = c("excl_general", "excl_index"),
+    #   cex = 0.9)
     
     # Save consort diagrams ----
-    ggsave(paste0("obj_1_consort_", year(index_date), ".jpeg"),
-           plot = consort_diagram,
-           width = 10, height = 4, units = "in",
-           device = "jpeg",
-           path = here::here("output", "descriptive", "plots"))
+    # ggsave(paste0("obj_1_consort_", year(index_date), ".jpeg"),
+    #        plot = consort_diagram,
+    #        width = 10, height = 4, units = "in",
+    #        device = "jpeg",
+    #        path = here::here("output", "descriptive", "consort"))
     
     # Filter out excluded patients ----
     data_index = data_index %>% 
@@ -100,7 +107,8 @@ list_indexed_data = list_index_dates %>%
     
     # Save indexed patient data as rds ----
     write_rds(data_index,
-              here::here("output", "data", paste0("data_patient_", year(index_date), ".rds")),
+              here::here("output", "data", "cohorts",
+                         paste0("data_patient_", year(index_date), ".rds")),
               compress="gz")
     
     return(data_index)
