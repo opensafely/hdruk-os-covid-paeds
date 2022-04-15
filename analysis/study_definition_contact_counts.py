@@ -44,16 +44,10 @@ study = StudyDefinition(
         has_died=patients.died_from_any_cause(
             on_or_before="index_date",
             returning="binary_flag",
-        )
-    ),
-
-    age=patients.age_as_of(
-        start_date,
-        return_expectations={
-            "rate": "universal",
-            "int": {"distribution": "normal", "mean": 12, "stddev": 2.5},
-            "incidence": 1
-        },
+        ),
+        age=patients.age_as_of(
+            start_date,
+        ),
     ),
 
     #######################
