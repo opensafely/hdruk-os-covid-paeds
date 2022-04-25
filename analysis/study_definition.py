@@ -7,103 +7,6 @@ import datetime
 # Import Codelists
 from codelists import *
 
-#############
-# FUNCTIONS #
-#############
-
-# admitted_to_hospital_X: Creates n columns for each consecutive event of hospital admission/discharge dates, admission method
-def admitted_to_hospital_X(n):
-    def var_signature(name, returning, on_or_after, return_expectations):
-        return {
-            name: patients.admitted_to_hospital(
-                    returning=returning,
-                    on_or_after=on_or_after,
-                    date_format="YYYY-MM-DD",
-                    find_first_match_in_period=True,
-                    return_expectations=return_expectations
-                    ),
-        }
-
-    # Expectation for admission method
-    return_expectations_method={
-        "category": {"ratios": {"11": 0.1, "12": 0.1, "13": 0.1, "21": 0.1, "22": 0.1, "23": 0.1,
-                                "24": 0.05, "25": 0.05, "2A": 0.05, "2B": 0.05, "2C": 0.05, "2D": 0.05, "28": 0.05,
-                                "31": 0.01, "32": 0.01, "82": 0.01, "83": 0.01, "81": 0.01}},
-                     "incidence": 1}
-                     
-    # Expections for admission dates
-    return_expectations_date_adm={
-        "date": {"earliest": "index_date - 3 months", "latest": end_date},
-        "rate": "uniform",
-        "incidence": 0.5}
-        
-    # Expections for discharge dates
-    return_expectations_date_dis={
-        "date": {"earliest": "index_date - 3 months", "latest": end_date},
-        "rate": "uniform",
-        "incidence": 0.5}
-
-    for i in range(1, n+1):
-        if i == 1:
-            variables = var_signature("admission_date_1", "date_admitted", "index_date - 3 months", return_expectations_date_adm)
-            variables.update(var_signature("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
-            variables.update(var_signature("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
-        else:
-            variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1} + 1 day", return_expectations_date_adm))
-            variables.update(var_signature(f"discharge_date_{i}", "date_discharged", f"admission_date_{i}", return_expectations_date_dis))
-            variables.update(var_signature(f"admission_method_{i}", "admission_method", f"admission_date_{i}", return_expectations_method))
-    return variables
-
-# outpatient_date_X: Creates n columns for each consecutive outpatient appointment
-def outpatient_date_X(n):
-    def var_signature(name, on_or_after):
-        return {
-            name: patients.outpatient_appointment_date(
-                    returning="date",
-                    attended=True,
-                    find_first_match_in_period=True,
-                    on_or_after="index_date",
-                    date_format="YYYY-MM-DD",
-                    return_expectations={
-                        "date": {"earliest": start_date, "latest": end_date},
-                        "rate": "uniform",
-                        "incidence": 0.2
-                        }
-                    ),
-        }
-     
-    for i in range(1, n+1):
-        if i == 1:
-            variables = var_signature("outpatient_date_1", "index_date")
-        else:
-            variables.update(var_signature(f"outpatient_date_{i}", f"outpatient_date_{i-1} + 1 day"))
-    return variables
-
-# gp_contact_date_X: Creates n columns for each consecutive GP consulation date
-def gp_contact_date_X(n):
-    def var_signature(name, on_or_after):
-        return {
-            name: patients.with_gp_consultations(
-                    returning="date",
-                    between=[on_or_after, end_date],
-                    date_format="YYYY-MM-DD",
-                    find_first_match_in_period=True,
-                    return_expectations={
-                        "date": {"earliest": start_date, "latest": end_date},
-                        "rate": "uniform",
-                        "incidence": 0.2
-                        }
-                    ),
-        }
-     
-    for i in range(1, n+1):
-        if i == 1:
-            variables = var_signature("gp_contact_date_1", "index_date")
-        else:
-            variables.update(var_signature(f"gp_contact_date_{i}", f"gp_contact_date_{i-1} + 1 day"))
-    return variables
-
-
 ####################
 # Study Definition #
 ####################
@@ -115,13 +18,6 @@ with open("./analysis/global_variables.json") as f:
 # Define variables explicitly
 start_date = gbl_vars["start_date"]
 end_date   = gbl_vars["end_date"] 
-
-# Number of hospital admissions, outpatient appointments, GP interactions, covid tests to query
-n_admission     = gbl_vars["n_admission"]
-n_outpatient    = gbl_vars["n_outpatient"]
-n_gp            = gbl_vars["n_gp"]
-n_positive_test = gbl_vars["n_positive_test"]
-n_negative_test = gbl_vars["n_negative_test"]
 
 # Study definition
 study = StudyDefinition(
@@ -417,63 +313,6 @@ study = StudyDefinition(
             "incidence": 0.05
         }
     ),
-
-    #######################
-    # Hospital Admissions #
-    #######################
-
-    # Number of hospital admissions in period
-    admission_count=patients.admitted_to_hospital(
-        returning="number_of_matches_in_period",
-        between=["index_date", end_date],
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 1},
-            "incidence": 1,
-        },
-    ),
-    
-    # Hospital admission X: n columns of date of admissions, date of discharge, admission method
-    **admitted_to_hospital_X(
-        n=n_admission
-    ),
-    
-    ###########################
-    # Outpatient appointments #
-    ###########################
-
-    outpatient_count=patients.outpatient_appointment_date(
-        returning="number_of_matches_in_period",
-        attended=True,
-        between=["index_date", end_date],
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 3},
-            "incidence": 1,
-        },
-    ),
-
-    # Oupatient appointments X: n columns of date of admissions, date of discharge, admission method
-    **outpatient_date_X(
-        n=n_outpatient
-    ),
-
-    ###################
-    # GP interactions #
-    ###################
-    
-    # Number of GP-patient interactions in period
-    gp_contact_count=patients.with_gp_consultations(
-        returning="number_of_matches_in_period",
-        between=["index_date", end_date],
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 3},
-            "incidence": 1,
-        },
-    ),
-
-    # GP contact X: n columns of date of GP consultations
-    **gp_contact_date_X(
-       n=n_gp
-    ),    
 
     #################
     # Covid Testing #

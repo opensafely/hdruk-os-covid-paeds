@@ -31,7 +31,7 @@ def outpatient_date_X(n):
      
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("outpatient_date_1", "index_date")
+            variables = var_signature("outpatient_date_1", outpatient_start_date)
         else:
             variables.update(var_signature(f"outpatient_date_{i}", f"outpatient_date_{i-1} + 1 day"))
     return variables
@@ -50,8 +50,8 @@ start_date = gbl_vars["start_date"]
 end_date   = gbl_vars["end_date"]
 
 # Define date range for GP appointments
-outpatient_start_date = "2019-01-01"
-outpatient_end_date   = "2019-12-31"
+outpatient_start_date = "2022-01-01"
+outpatient_end_date   = "2022-05-01"
 
 # Number of hospital admissions, outpatient appointments, GP interactions, covid tests to query
 n_outpatient      = gbl_vars["n_outpatient"]
