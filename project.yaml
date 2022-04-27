@@ -25,6 +25,30 @@ actions:
       highly_sensitive:
         cohort: output/input.csv.gz
 
+  generate_covid_tests_negative:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_covid_tests_negative --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_covid_tests_negative.csv.gz
+
+  generate_covid_tests_negative_high:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_covid_tests_negative_high --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_covid_tests_negative_high.csv.gz
+
+  generate_covid_tests_positive:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_covid_tests_positive --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_covid_tests_positive.csv.gz
+
+  generate_covid_tests_positive_high:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_covid_tests_positive_high --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_covid_tests_positive_high.csv.gz
+
   generate_admissions_2018:
     run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2018 --output-format csv.gz
     outputs:
@@ -183,7 +207,8 @@ actions:
 
   process_data:
     run: r:latest analysis/01_process_data.R
-    needs: [generate_study_population, 
+    needs: [generate_study_population,
+            generate_covid_tests_negative, generate_covid_tests_negative_high, generate_covid_tests_positive, generate_covid_tests_positive_high,
             generate_admissions_2018, generate_admissions_2019, generate_admissions_2020, generate_admissions_2021, generate_admissions_2022,
             generate_admissions_2018_high, generate_admissions_2019_high, generate_admissions_2020_high, generate_admissions_2021_high, generate_admissions_2022_high,
             generate_gp_2019, generate_gp_2020, generate_gp_2021, generate_gp_2022,

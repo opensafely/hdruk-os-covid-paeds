@@ -5,7 +5,7 @@ library(lubridate)
 library(finalfit)
 
 # Functions ----
-# read_column_type: read column name to determine data type
+# read_column_type: read column name to determine column data type
 read_column_type = function(file){
   
   first_row = read_csv(
