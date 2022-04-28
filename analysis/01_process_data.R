@@ -36,16 +36,57 @@ dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "diagnostics"), showWarnings = FALSE, recursive=TRUE)
 
 # Data Files ----
+files_testing    = list.files(path = "output", pattern = "input_covid_tests_")
 files_outpatient = list.files(path = "output", pattern = "input_outpatient_")
 files_gp         = list.files(path = "output", pattern = "input_gp_")
 files_admissions = list.files(path = "output", pattern = "input_admissions_")
 
-# Read patient data from csv ----
+# Patient data ----
 data_patient = here::here("output", "input.csv.gz") %>% 
   read_csv(col_types = read_column_type(.))
 
-# Outpatient data ----
+# Testing data ----
+data_testing = here::here("output", files_testing) %>%
+  map(function(file){
+    file %>% 
+      read_csv(col_types = read_column_type(.)) %>% 
+      as_tibble()
+  })
 
+extract_summary_testing = data_testing %>%
+  map(function(data){
+    n_row = nrow(data)
+    n_row_bad_id = data %>%
+      filter(!patient_id %in% data_patient$patient_id) %>%
+      nrow()
+    n_col = ncol(data)
+    n_col_empty = data %>%
+      select_if(~(all(is.na(.)))) %>%
+      ncol()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+  }) %>%
+  bind_rows() %>%
+  mutate(file = files_outpatient) %>%
+  relocate(file)
+
+data_testing = data_testing %>%
+  map(function(data){
+    data %>%
+      filter(patient_id %in% data_patient$patient_id) %>%
+      pivot_longer(
+        cols = -patient_id,
+        names_to = c("result", "index"),
+        names_pattern = "covid_(.*)_test_date_(\\d+)",
+        values_to = "test_date",
+        values_drop_na = TRUE
+      ) %>%
+      select(-index)
+  }) %>%
+  bind_rows() %>%
+  arrange(patient_id, test_date, result) %>%
+  distinct(patient_id, test_date, result)
+
+# Outpatient data ----
 data_outpatient = here::here("output", files_outpatient) %>%
   map(function(file){
     file %>% 
@@ -430,6 +471,10 @@ write_rds(data_patient,
           here::here("output", "data", "data_patient.rds"),
           compress="gz")
 
+write_rds(data_testing,
+          here::here("output", "data", "data_testing.rds"),
+          compress="gz")
+
 write_rds(data_admissions,
           here::here("output", "data", "data_admissions.rds"),
           compress="gz")
@@ -443,6 +488,9 @@ write_rds(data_gp,
           compress="gz")
 
 # Save diagnostic log files as csv ----
+write_csv(extract_summary_testing,
+          here::here("output", "diagnostics", "extract_summary_testing.csv"))
+
 write_csv(extract_summary_admissions,
           here::here("output", "diagnostics", "extract_summary_admissions.csv"))
 
