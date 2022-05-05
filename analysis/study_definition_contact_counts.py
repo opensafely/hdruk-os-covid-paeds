@@ -55,45 +55,135 @@ study = StudyDefinition(
     #######################
 
     # Number of hospital admissions between 2018-09-01 and 2019-12-31
-    admission_count_2018=patients.admitted_to_hospital(
+    admission_count_2018_Q4=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
-        between=["2018-09-01", "2018-12-31"],
+        between=["2018-10-01", "2018-12-31"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 1},
             "incidence": 1,
         },
     ),
 
-    admission_count_2019=patients.admitted_to_hospital(
+    admission_count_2019_Q1=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
-        between=["2019-01-01", "2019-12-31"],
+        between=["2019-01-01", "2019-03-31"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 1},
             "incidence": 1,
         },
     ),
 
-    admission_count_2020=patients.admitted_to_hospital(
+    admission_count_2019_Q2=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
-        between=["2020-01-01", "2020-12-31"],
+        between=["2019-04-01", "2019-06-30"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 1},
             "incidence": 1,
         },
     ),
 
-    admission_count_2021=patients.admitted_to_hospital(
+    admission_count_2019_Q3=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
-        between=["2021-01-01", "2021-12-31"],
+        between=["2019-07-01", "2019-09-30"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 1},
             "incidence": 1,
         },
     ),
 
-    admission_count_2022=patients.admitted_to_hospital(
+    admission_count_2019_Q4=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
-        between=["2022-01-01", end_date],
+        between=["2019-10-01", "2019-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2020_Q1=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2020-01-01", "2020-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2020_Q2=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2020-04-01", "2020-06-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2020_Q3=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2020-07-01", "2020-09-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2020_Q4=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2020-10-01", "2020-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2021_Q1=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2021-01-01", "2021-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2021_Q2=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2021-04-01", "2021-06-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2021_Q3=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2021-07-01", "2021-09-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2021_Q4=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2021-10-01", "2021-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2022_Q1=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2022-01-01", "2022-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    admission_count_2022_Q2=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["2022-04-01", end_date],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 1},
             "incidence": 1,
@@ -104,40 +194,180 @@ study = StudyDefinition(
     # Outpatient appointments #
     ###########################
 
-    outpatient_count_2019=patients.outpatient_appointment_date(
+    outpatient_count_2019_Q1=patients.outpatient_appointment_date(
         returning="number_of_matches_in_period",
         attended=True,
-        between=["2019-01-01", "2019-12-31"],
+        between=["2019-01-01", "2019-03-31"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
         },
     ),
 
-    outpatient_count_2020=patients.outpatient_appointment_date(
+    outpatient_count_2019_Q2=patients.outpatient_appointment_date(
         returning="number_of_matches_in_period",
         attended=True,
-        between=["2020-01-01", "2020-12-31"],
+        between=["2019-04-01", "2019-06-30"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
         },
     ),
 
-    outpatient_count_2021=patients.outpatient_appointment_date(
+    outpatient_count_2019_Q3=patients.outpatient_appointment_date(
         returning="number_of_matches_in_period",
         attended=True,
-        between=["2021-01-01", "2021-12-31"],
+        between=["2019-07-01", "2019-09-30"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
         },
     ),
 
-    outpatient_count_2022=patients.outpatient_appointment_date(
+    outpatient_count_2019_Q4=patients.outpatient_appointment_date(
         returning="number_of_matches_in_period",
         attended=True,
-        between=["2022-01-01", end_date],
+        between=["2019-10-01", "2019-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2020_Q1=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2020-01-01", "2020-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2020_Q2=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2020-04-01", "2020-06-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2020_Q3=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2020-07-01", "2020-09-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2020_Q4=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2020-10-01", "2020-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2020_Q1=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2020-01-01", "2020-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2020_Q2=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2020-04-01", "2020-06-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2020_Q3=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2020-07-01", "2020-09-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2020_Q4=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2020-10-01", "2020-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2021_Q1=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2021-01-01", "2021-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2021_Q2=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2021-04-01", "2021-06-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2021_Q3=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2021-07-01", "2021-09-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2021_Q4=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2021-10-01", "2021-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2022_Q1=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2022-01-01", "2022-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2022_Q2=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["2022-04-01", end_date],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
@@ -149,36 +379,126 @@ study = StudyDefinition(
     ###################
     
     # Number of GP-patient interactions in period
-    gp_contact_count_2019=patients.with_gp_consultations(
+    gp_contact_count_2019_Q1=patients.with_gp_consultations(
         returning="number_of_matches_in_period",
-        between=["2019-01-01", "2019-12-31"],
+        between=["2019-01-01", "2019-03-31"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
         },
     ),
 
-    gp_contact_count_2020=patients.with_gp_consultations(
+    gp_contact_count_2019_Q2=patients.with_gp_consultations(
         returning="number_of_matches_in_period",
-        between=["2020-01-01", "2020-12-31"],
+        between=["2019-04-01", "2019-06-30"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
         },
     ),
 
-    gp_contact_count_2021=patients.with_gp_consultations(
+    gp_contact_count_2019_Q3=patients.with_gp_consultations(
         returning="number_of_matches_in_period",
-        between=["2021-01-01", "2021-12-31"],
+        between=["2019-07-01", "2019-09-30"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
         },
     ),
 
-    gp_contact_count_2022=patients.with_gp_consultations(
+    gp_contact_count_2019_Q4=patients.with_gp_consultations(
         returning="number_of_matches_in_period",
-        between=["2022-01-01", end_date],
+        between=["2019-10-01", "2019-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2020_Q1=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2020-01-01", "2020-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2020_Q2=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2020-04-01", "2020-06-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2020_Q3=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2020-07-01", "2020-09-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2020_Q4=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2020-10-01", "2020-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2021_Q1=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2021-01-01", "2021-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2021_Q2=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2021-04-01", "2021-06-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2021_Q3=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2021-07-01", "2021-09-30"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2021_Q4=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2021-10-01", "2021-12-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2022_Q1=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2022-01-01", "2022-03-31"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 3},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2022_Q2=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["2022-04-01", end_date],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 3},
             "incidence": 1,
