@@ -49,6 +49,22 @@ data_contact_counts = read_csv(
 dir.create(here::here("output", "descriptive", "counts"),
            showWarnings = FALSE, recursive=TRUE)
 
+
+# Export maximum admissions, outpatient and GP counts ----
+max_counts = data_contact_counts %>%
+  summarise(across(matches(c("admission_count_\\d{4}_Q\\d",
+                             "outpatient_count_\\d{4}_Q\\d",
+                             "gp_contact_count_\\d{4}_Q\\d",
+                             "covid_negative_test_count",
+                             "covid_positive_test_count")),
+                   list(max = max))) %>% 
+  rownames_to_column() %>% 
+  pivot_longer(-rowname) %>% 
+  select(-rowname)
+
+# Save max counts ----
+write_csv(max_counts, here::here("output", "descriptive", "counts", "max_counts.csv"))
+
 # Cut counts and create factors
 data_contact_counts = data_contact_counts %>% 
   mutate(across(contains(c("admission_", "outpatient_", "gp_", "covid_")),
@@ -67,21 +83,8 @@ data_contact_counts = data_contact_counts %>%
 
 # Create summary table ----
 dependent = NULL
-explanatory = c("admission_count_2018_factor",
-                "admission_count_2019_factor",
-                "admission_count_2020_factor",
-                "admission_count_2021_factor",
-                "admission_count_2022_factor",
-                "outpatient_count_2019_factor",
-                "outpatient_count_2020_factor",
-                "outpatient_count_2021_factor",
-                "outpatient_count_2022_factor",
-                "gp_contact_count_2019_factor",
-                "gp_contact_count_2020_factor",
-                "gp_contact_count_2021_factor",
-                "gp_contact_count_2022_factor",
-                "covid_negative_test_count_factor",
-                "covid_positive_test_count_factor")
+explanatory = max_counts$name %>%
+  str_replace("_max", "_factor")
 
 count_summary_tbl = data_contact_counts %>%
   summary_factorlist(dependent, explanatory,
@@ -92,47 +95,10 @@ count_summary_tbl = data_contact_counts %>%
 write_csv(count_summary_tbl, 
           here::here("output", "descriptive", "counts", "count_summary_tbl.csv"))
 
-
-# Export maximum admissions and GP counts ----
-max_counts = data_contact_counts %>% 
-  summarise(n = n(),
-            max_admission_count_2018 = max(admission_count_2018),
-            max_admission_count_2019 = max(admission_count_2019),
-            max_admission_count_2020 = max(admission_count_2020),
-            max_admission_count_2021 = max(admission_count_2021),
-            max_admission_count_2022 = max(admission_count_2022),
-            max_outpatient_count_2019 = max(outpatient_count_2019),
-            max_outpatient_count_2020 = max(outpatient_count_2020),
-            max_outpatient_count_2021 = max(outpatient_count_2021),
-            max_outpatient_count_2022 = max(outpatient_count_2022),
-            max_gp_contact_count_2019 = max(gp_contact_count_2019),
-            max_gp_contact_count_2020 = max(gp_contact_count_2020),
-            max_gp_contact_count_2021 = max(gp_contact_count_2021),
-            max_gp_contact_count_2022 = max(gp_contact_count_2022),
-            max_covid_negative_test_count = max(covid_negative_test_count),
-            max_covid_positive_test_count = max(covid_positive_test_count))
-
-# Save max counts ----
-write_csv(max_counts, here::here("output", "descriptive", "counts", "max_counts.csv"))
-
-
-
 # Crete histogram plots ----
-list("admission_count_2018",
-     "admission_count_2019",
-     "admission_count_2020",
-     "admission_count_2021",
-     "admission_count_2022",
-     "outpatient_count_2019",
-     "outpatient_count_2020",
-     "outpatient_count_2021",
-     "outpatient_count_2022",
-     "gp_contact_count_2019",
-     "gp_contact_count_2020",
-     "gp_contact_count_2021",
-     "gp_contact_count_2022",
-     "covid_positive_test_count",
-     "covid_negative_test_count") %>% 
+max_counts$name %>%
+  str_replace("_max", "") %>%
+  as.list() %>% 
   lapply(function(x){
     plot_hist(data_contact_counts, x)
   })
