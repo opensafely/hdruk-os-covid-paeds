@@ -274,46 +274,6 @@ study = StudyDefinition(
         },
     ),
 
-    outpatient_count_2020_Q1=patients.outpatient_appointment_date(
-        returning="number_of_matches_in_period",
-        attended=True,
-        between=["2020-01-01", "2020-03-31"],
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 3},
-            "incidence": 1,
-        },
-    ),
-
-    outpatient_count_2020_Q2=patients.outpatient_appointment_date(
-        returning="number_of_matches_in_period",
-        attended=True,
-        between=["2020-04-01", "2020-06-30"],
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 3},
-            "incidence": 1,
-        },
-    ),
-
-    outpatient_count_2020_Q3=patients.outpatient_appointment_date(
-        returning="number_of_matches_in_period",
-        attended=True,
-        between=["2020-07-01", "2020-09-30"],
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 3},
-            "incidence": 1,
-        },
-    ),
-
-    outpatient_count_2020_Q4=patients.outpatient_appointment_date(
-        returning="number_of_matches_in_period",
-        attended=True,
-        between=["2020-10-01", "2020-12-31"],
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 3},
-            "incidence": 1,
-        },
-    ),
-
     outpatient_count_2021_Q1=patients.outpatient_appointment_date(
         returning="number_of_matches_in_period",
         attended=True,
