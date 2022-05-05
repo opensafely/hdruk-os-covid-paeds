@@ -419,10 +419,16 @@ data_patient = data_patient %>%
       left_join(data_patient %>% select(patient_id,
                                         covid_positive_test_date_1),
                 by = "patient_id") %>%
-      mutate(covid_nosocomial = if_else(
-        (admission_date + days(7) < covid_positive_test_date_1) &
-          (discharge_date + days(7)>= covid_positive_test_date_1),
-        "Yes", NA_character_) %>%
+      mutate(
+        covid_nosocomial = case_when(
+          # Length of stay less than 7 days: Not nosocomial 
+          (discharge_date - admission_date) < 7 ~ NA_character_,
+          # Length of stay 7+ days: Nosocomial if positive after day 7 in hospital
+          # and on or before day 7 following discharge, otherwise not nosocomial
+          (admission_date + days(7) < covid_positive_test_date_1) &
+            (discharge_date + days(7) >= covid_positive_test_date_1) ~ "Yes",
+          TRUE ~ NA_character_
+        ) %>%
           ff_label("Nosocomial infection")) %>%
       filter(covid_nosocomial == "Yes") %>%
       select(patient_id, covid_nosocomial) %>%
