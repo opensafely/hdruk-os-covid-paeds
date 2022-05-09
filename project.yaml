@@ -32,7 +32,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_admissions
-        --index-date-range "2018-10-01 to 2018-11-01 by month"
+        --index-date-range "2018-10-01 to 2022-02-01 by month"
         --output-format csv.gz
     outputs:
       highly_sensitive:
