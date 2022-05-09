@@ -79,12 +79,11 @@ start_date = gbl_vars["start_date"]
 end_date   = gbl_vars["end_date"] 
 
 # Define date range for hospital admissions
-admission_start_date = "2022-01-01"
-admission_end_date   = "2022-05-01"
+admission_start_date = "2019-07-01"
+admission_end_date   = "2019-09-30"
 
 # Number of hospital admissions, outpatient appointments, GP interactions, covid tests to query
-n_admission      = gbl_vars["n_admission"]
-n_admission_high = gbl_vars["n_admission_high"]
+n_admission  = gbl_vars["n_admission_low"]
 
 # Study definition
 study = StudyDefinition(

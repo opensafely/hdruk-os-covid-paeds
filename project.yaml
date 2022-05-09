@@ -22,6 +22,16 @@ actions:
         plots: output/descriptive/counts/*.jpeg
         tables: output/descriptive/counts/*.csv
 
+  generate_admissions:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_admissions
+        --index-date-range "2018-10-01 to 2018-11-01 by month"
+        --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_admissions_20*.csv.gz
+
   generate_study_population:
     run: cohortextractor:latest generate_cohort --study-definition study_definition --output-format csv.gz
     outputs:

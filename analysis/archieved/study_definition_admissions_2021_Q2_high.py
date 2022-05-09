@@ -17,6 +17,17 @@ def admitted_to_hospital_X(n):
         return {
             name: patients.admitted_to_hospital(
                     returning=returning,
+                    between=[on_or_after, admission_end_date],
+                    date_format="YYYY-MM-DD",
+                    find_first_match_in_period=True,
+                    return_expectations=return_expectations
+                    ),
+        }
+
+    def var_signature2(name, returning, on_or_after, return_expectations):
+        return {
+            name: patients.admitted_to_hospital(
+                    returning=returning,
                     on_or_after=on_or_after,
                     date_format="YYYY-MM-DD",
                     find_first_match_in_period=True,
@@ -33,25 +44,25 @@ def admitted_to_hospital_X(n):
                      
     # Expections for admission dates
     return_expectations_date_adm={
-        "date": {"earliest": "index_date - 3 months", "latest": end_date},
+        "date": {"earliest": admission_start_date, "latest": admission_end_date},
         "rate": "uniform",
         "incidence": 0.5}
         
     # Expections for discharge dates
     return_expectations_date_dis={
-        "date": {"earliest": "index_date - 3 months", "latest": end_date},
+        "date": {"earliest": admission_start_date, "latest": admission_end_date},
         "rate": "uniform",
         "incidence": 0.5}
 
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("admission_date_1", "date_admitted", "index_date - 3 months", return_expectations_date_adm)
-            variables.update(var_signature("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
-            variables.update(var_signature("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
+            variables = var_signature("admission_date_1", "date_admitted", admission_start_date, return_expectations_date_adm)
+            variables.update(var_signature2("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
+            variables.update(var_signature2("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
         else:
             variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1} + 1 day", return_expectations_date_adm))
-            variables.update(var_signature(f"discharge_date_{i}", "date_discharged", f"admission_date_{i}", return_expectations_date_dis))
-            variables.update(var_signature(f"admission_method_{i}", "admission_method", f"admission_date_{i}", return_expectations_method))
+            variables.update(var_signature2(f"discharge_date_{i}", "date_discharged", f"admission_date_{i}", return_expectations_date_dis))
+            variables.update(var_signature2(f"admission_method_{i}", "admission_method", f"admission_date_{i}", return_expectations_method))
     return variables
 
 
@@ -63,19 +74,21 @@ def admitted_to_hospital_X(n):
 with open("./analysis/global_variables.json") as f:
     gbl_vars = json.load(f)
 
-# Define variables explicitly
+# Define study date variables
 start_date = gbl_vars["start_date"]
 end_date   = gbl_vars["end_date"] 
 
+# Define date range for hospital admissions
+admission_start_date = "2021-04-01"
+admission_end_date   = "2021-06-30"
+
 # Number of hospital admissions, outpatient appointments, GP interactions, covid tests to query
-n_admission      = gbl_vars["n_admission"]
-n_admission_high = gbl_vars["n_admission_high"]
+n_admission  = gbl_vars["n_admission_high"]
 
 # Study definition
 study = StudyDefinition(
 
     index_date=start_date,
-    
 
     default_expectations={
         "date": {"earliest": start_date, "latest": end_date},
@@ -91,7 +104,7 @@ study = StudyDefinition(
         AND
         (NOT has_died)
         AND
-        (admission_count > 10)
+        (admission_count > 5)
         """,
         registered=patients.registered_as_of(
             "index_date",
@@ -105,7 +118,7 @@ study = StudyDefinition(
         ),
         admission_count=patients.admitted_to_hospital(
             returning="number_of_matches_in_period",
-            between=["index_date", end_date],
+            between=[admission_start_date, admission_end_date],
         ),
     ),
 
@@ -115,7 +128,7 @@ study = StudyDefinition(
     
     # Hospital admission X: n columns of date of admissions, date of discharge, admission method
     **admitted_to_hospital_X(
-        n=n_admission_high
+        n=n_admission
     ),
 
 )
