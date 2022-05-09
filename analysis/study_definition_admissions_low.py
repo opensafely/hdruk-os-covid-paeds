@@ -17,7 +17,7 @@ def admitted_to_hospital_X(n):
         return {
             name: patients.admitted_to_hospital(
                     returning=returning,
-                    between=[on_or_after, last_day_of_month(index_date)],
+                    between=[on_or_after, "last_day_of_month(index_date)"],
                     date_format="YYYY-MM-DD",
                     find_first_match_in_period=True,
                     return_expectations=return_expectations
@@ -44,19 +44,19 @@ def admitted_to_hospital_X(n):
                      
     # Expections for admission dates
     return_expectations_date_adm={
-        "date": {"earliest": index_date, "latest": last_day_of_month(index_date)},
+        "date": {"earliest": "index_date", "latest": "last_day_of_month(index_date)"},
         "rate": "uniform",
         "incidence": 0.5}
         
     # Expections for discharge dates
     return_expectations_date_dis={
-        "date": {"earliest": index_date, "latest": last_day_of_month(index_date)},
+        "date": {"earliest": "index_date", "latest": "last_day_of_month(index_date)"},
         "rate": "uniform",
         "incidence": 0.5}
 
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("admission_date_1", "date_admitted", index_date, return_expectations_date_adm)
+            variables = var_signature("admission_date_1", "date_admitted", "index_date", return_expectations_date_adm)
             variables.update(var_signature2("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
             variables.update(var_signature2("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
         else:
@@ -91,7 +91,8 @@ study = StudyDefinition(
         "rate": "uniform",
         "incidence": 0.5,
     },
-    # Study population: Registered as of study start, between ages 1 and 18, alive at study start, 
+
+    # Study population: Registered as of study start, between ages 1 and 18, alive at study start 
     population=patients.satisfying(
         """
         registered
@@ -114,7 +115,7 @@ study = StudyDefinition(
         ),
         admission_count=patients.admitted_to_hospital(
             returning="number_of_matches_in_period",
-            between=[index_date, last_day_of_month(index_date)],
+            between=["index_date", "last_day_of_month(index_date)"],
         ),
     ),
 

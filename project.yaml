@@ -6,7 +6,10 @@ expectations:
 actions:
 
   generate_contact_counts:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_contact_counts --output-format csv.gz
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_contact_counts
+        --output-format csv.gz
     outputs:
       highly_sensitive:
         cohort: output/input_contact_counts.csv.gz
@@ -48,6 +51,16 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/input_covid_tests_positive_high.csv.gz
+
+  generate_admissions_low:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_admissions_low
+        --index-date-range "2018-12-01 to 2022-05-01 by month"
+        --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_admissions_low_20*.csv.gz
 
   generate_admissions_2018:
     run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2018 --output-format csv.gz
