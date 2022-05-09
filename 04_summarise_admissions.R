@@ -61,7 +61,8 @@ extract_summary_admissions = data_admissions %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+    n_max_count = max(data %>% pull(admission_count))
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_admissions) %>%

@@ -112,10 +112,6 @@ study = StudyDefinition(
         age=patients.age_as_of(
             start_date,
         ),
-        admission_count=patients.admitted_to_hospital(
-            returning="number_of_matches_in_period",
-            between=["first_day_of_month(index_date)", "last_day_of_month(index_date)"],
-        ),
     ),
 
     #######################
@@ -125,6 +121,16 @@ study = StudyDefinition(
     # Hospital admission X: n columns of date of admissions, date of discharge, admission method
     **admitted_to_hospital_X(
         n=n_admission
+    ),
+
+    # Number of admissions during period
+    admission_count=patients.admitted_to_hospital(
+        returning="number_of_matches_in_period",
+        between=["first_day_of_month(index_date)", "last_day_of_month(index_date)"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
     ),
 
 )
