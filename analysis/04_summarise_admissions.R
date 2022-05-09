@@ -61,7 +61,8 @@ extract_summary_admissions = data_admissions %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+    n_max_count = max(data %>% pull(admission_count))
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_admissions) %>%
@@ -71,6 +72,7 @@ data_admissions = data_admissions %>%
   map(function(data){
     data %>%
       filter(patient_id %in% data_patient$patient_id) %>%
+      select(-admission_count) %>% 
       mutate_at(vars(starts_with(c("admission_date", "discharge_date"))),
                 as.character) %>%
       pivot_longer(
