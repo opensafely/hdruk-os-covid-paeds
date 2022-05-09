@@ -55,8 +55,8 @@ max_counts = data_contact_counts %>%
   summarise(across(matches(c("admission_count_\\d{4}_Q\\d",
                              "outpatient_count_\\d{4}_Q\\d",
                              "gp_contact_count_\\d{4}_Q\\d",
-                             "covid_negative_test_count",
-                             "covid_positive_test_count")),
+                             "covid_negative_test_count_\\d{4}",
+                             "covid_positive_test_count_\\d{4}")),
                    list(max = max))) %>% 
   rownames_to_column() %>% 
   pivot_longer(-rowname) %>% 
@@ -69,15 +69,14 @@ write_csv(max_counts, here::here("output", "descriptive", "counts", "max_counts.
 data_contact_counts = data_contact_counts %>% 
   mutate(across(contains(c("admission_", "outpatient_", "gp_", "covid_")),
                 .fns = list(
-                  factor = ~cut(., c(-Inf,0,5,10,25,50,100,250,Inf)) %>% 
+                  factor = ~cut(., c(-Inf,0,5,10,25,50,100,Inf)) %>% 
                     fct_recode("0"       = "(-Inf,0]",
                                "1-5"     = "(0,5]",
                                "6-10"    = "(5,10]",
                                "11-25"   = "(10,25]",
                                "26-50"   = "(25,50]",
                                "51-100"  = "(50,100]",
-                               "101-250" = "(100,250]",
-                               "250+"    = "(250, Inf]")
+                               "101+"    = "(100, Inf]")
                 )))
 
 

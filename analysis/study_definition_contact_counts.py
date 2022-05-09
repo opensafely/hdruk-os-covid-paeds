@@ -470,10 +470,34 @@ study = StudyDefinition(
     #################
 
     # Number of positive covid tests
-    covid_positive_test_count=patients.with_test_result_in_sgss(
+    covid_positive_test_count_2020=patients.with_test_result_in_sgss(
         pathogen="SARS-CoV-2",
         test_result="positive",
-        between=["index_date", end_date],
+        between=["2020-01-01", "2020-12-31"],
+        returning="number_of_matches_in_period",
+        restrict_to_earliest_specimen_date=False,
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    covid_positive_test_count_2021=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="positive",
+        between=["2021-01-01", "2021-12-31"],
+        returning="number_of_matches_in_period",
+        restrict_to_earliest_specimen_date=False,
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    covid_positive_test_count_2022=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="positive",
+        between=["2022-01-01", end_date],
         returning="number_of_matches_in_period",
         restrict_to_earliest_specimen_date=False,
         return_expectations={
@@ -483,10 +507,34 @@ study = StudyDefinition(
     ),
 
     # Number of negative covid tests
-    covid_negative_test_count=patients.with_test_result_in_sgss(
+    covid_negative_test_count_2020=patients.with_test_result_in_sgss(
         pathogen="SARS-CoV-2",
         test_result="negative",
-        between=["index_date", end_date],
+        between=["2020-01-01", "2020-12-31"],
+        returning="number_of_matches_in_period",
+        restrict_to_earliest_specimen_date=False,
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 2},
+            "incidence": 1,
+        },
+    ),
+
+    covid_negative_test_count_2021=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="negative",
+        between=["2021-01-01", "2021-12-31"],
+        returning="number_of_matches_in_period",
+        restrict_to_earliest_specimen_date=False,
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 2},
+            "incidence": 1,
+        },
+    ),
+
+    covid_negative_test_count_2022=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="negative",
+        between=["2022-01-01", end_date],
         returning="number_of_matches_in_period",
         restrict_to_earliest_specimen_date=False,
         return_expectations={
