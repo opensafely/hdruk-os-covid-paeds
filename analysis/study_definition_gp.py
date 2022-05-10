@@ -17,11 +17,11 @@ def gp_contact_date_X(n):
         return {
             name: patients.with_gp_consultations(
                     returning="date",
-                    between=[on_or_after, gp_end_date],
+                    between=[on_or_after, "last_day_of_month(index_date)"],
                     date_format="YYYY-MM-DD",
                     find_first_match_in_period=True,
                     return_expectations={
-                        "date": {"earliest": gp_start_date, "latest": gp_end_date},
+                        "date": {"earliest": start_date, "latest": end_date},
                         "rate": "uniform",
                         "incidence": 0.2
                         }
@@ -30,7 +30,7 @@ def gp_contact_date_X(n):
      
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("gp_contact_date_1", gp_start_date)
+            variables = var_signature("gp_contact_date_1", "first_day_of_month(index_date)")
         else:
             variables.update(var_signature(f"gp_contact_date_{i}", f"gp_contact_date_{i-1} + 1 day"))
     return variables
@@ -48,14 +48,8 @@ with open("./analysis/global_variables.json") as f:
 start_date = gbl_vars["start_date"]
 end_date   = gbl_vars["end_date"]
 
-# Define date range for GP appointments
-gp_start_date = "2019-01-01"
-gp_end_date   = "2019-12-31"
-
-
 # Number of hospital admissions, outpatient appointments, GP interactions, covid tests to query
 n_gp      = gbl_vars["n_gp"]
-n_gp_high = gbl_vars["n_gp_high"]
 
 # Study definition
 study = StudyDefinition(
@@ -76,21 +70,17 @@ study = StudyDefinition(
         AND
         (NOT has_died)
         AND
-        (gp_contact_count > 0) AND (gp_contact_count < 26)
+        (gp_contact_count > 0)
         """,
         registered=patients.registered_as_of(
-            "index_date",
+            start_date,
         ),
         has_died=patients.died_from_any_cause(
-            on_or_before="index_date",
+            on_or_before=start_date,
             returning="binary_flag",
         ),
         age=patients.age_as_of(
-            "index_date",
-        ),
-        gp_contact_count=patients.with_gp_consultations(
-            returning="number_of_matches_in_period",
-            between=[gp_start_date, gp_end_date],
+            start_date,
         ),
     ),
 
@@ -101,6 +91,16 @@ study = StudyDefinition(
     # GP contact X: n columns of date of GP consultations
     **gp_contact_date_X(
        n=n_gp
-    ),   
+    ),
+
+    # Number of GP contacts during period
+    gp_contact_count=patients.with_gp_consultations(
+        returning="number_of_matches_in_period",
+        between=["first_day_of_month(index_date)", "last_day_of_month(index_date)"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
 
 )

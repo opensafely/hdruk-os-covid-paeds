@@ -17,7 +17,7 @@ def admitted_to_hospital_X(n):
         return {
             name: patients.admitted_to_hospital(
                     returning=returning,
-                    between=["first_day_of_month(index_date)", "last_day_of_month(index_date)"],
+                    between=[on_or_after, "last_day_of_month(index_date)"],
                     date_format="YYYY-MM-DD",
                     find_first_match_in_period=True,
                     return_expectations=return_expectations
@@ -46,13 +46,13 @@ def admitted_to_hospital_X(n):
     return_expectations_date_adm={
         "date": {"earliest": start_date, "latest": end_date},
         "rate": "uniform",
-        "incidence": 0.5}
+        "incidence": 0.8}
         
     # Expections for discharge dates
     return_expectations_date_dis={
         "date": {"earliest": start_date, "latest": end_date},
         "rate": "uniform",
-        "incidence": 0.5}
+        "incidence": 0.8}
 
     for i in range(1, n+1):
         if i == 1:

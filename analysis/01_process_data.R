@@ -39,7 +39,7 @@ dir.create(here::here("output", "diagnostics"), showWarnings = FALSE, recursive=
 files_testing    = list.files(path = "output", pattern = "input_covid_tests_")
 files_outpatient = list.files(path = "output", pattern = "input_outpatient_")
 files_gp         = list.files(path = "output", pattern = "input_gp_")
-files_admissions = list.files(path = "output", pattern = "input_admissions_")
+files_admissions = list.files(path = "output", pattern = "input_admissions")
 
 # Patient data ----
 data_patient = here::here("output", "input.csv.gz") %>% 

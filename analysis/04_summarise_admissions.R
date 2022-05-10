@@ -4,32 +4,8 @@ library(tidyverse)
 library(lubridate)
 library(finalfit)
 
-# Functions ----
-# read_column_type: read column name to determine column data type
-read_column_type = function(file){
-  
-  first_row = read_csv(
-    file,
-    n_max = 1,
-    col_names = FALSE,
-    col_types = cols(.default = "c")
-  )
-  
-  type_string = tibble(
-    column_names = c(first_row)) %>% 
-    mutate(column_type = case_when(
-      column_names == "patient_id" ~ "i",
-      str_detect(column_names, "_date") ~ "D",
-      str_detect(column_names, "imd_") ~ "i",
-      str_detect(column_names, "age") ~ "d",
-      str_detect(column_names, "_count") ~ "i",
-      TRUE ~ "c"
-    )) %>%
-    pull(column_type) %>%
-    paste(collapse = "")
-  
-  return(type_string)
-}
+# Load custom functions ----
+source(here::here("analysis", "00_functions.R"))
 
 # Create directory for processed data and diagnostics ----
 dir.create(here::here("output", "admissions_table"), showWarnings = FALSE, recursive=TRUE)
@@ -51,6 +27,7 @@ data_admissions = here::here("output", files_admissions) %>%
       as_tibble()
   })
 
+## Record extract characteristics ----
 extract_summary_admissions = data_admissions %>%
   map(function(data){
     n_row = nrow(data)
@@ -68,6 +45,7 @@ extract_summary_admissions = data_admissions %>%
   mutate(file = files_admissions) %>%
   relocate(file)
 
+## Filter out patients not in cohort, pivot longer to one row per admission spell ----
 data_admissions = data_admissions %>%
   map(function(data){
     data %>%
@@ -86,16 +64,27 @@ data_admissions = data_admissions %>%
         names_from = variable,
         values_from = data
       )
-  })
-
-## Filter out rows with missing or bad dates ----
-data_admissions = data_admissions %>%
+  }) %>%
   bind_rows() %>%
-  mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") %>%
+  mutate_at(vars(contains("_date")), as.Date, format = "%Y-%m-%d") 
+
+## Record filtering out bad admission spells ----
+extract_summary_admissions = extract_summary_admissions %>% 
+  mutate(spells_missing_admission_date = sum(is.na(data_admissions$admission_date)),
+         spells_missing_discharge_date = sum(is.na(data_admissions$discharge_date)),
+         spells_discharge_before_admission =
+           sum(data_admissions$discharge_date < data_admissions$admission_date, na.rm = TRUE))
+
+## Filter out admission spells with missing or bad dates ----
+data_admissions = data_admissions %>%
   filter(admission_date <= discharge_date,
          !is.na(admission_date),
          !is.na(discharge_date)) %>%
   arrange(patient_id, admission_date)
+
+## Record rows to calculate number of overlapping spells ----
+extract_summary_admissions = extract_summary_admissions %>% 
+  mutate(spells_overlap = nrow(data_admissions))
 
 ## Fix overlapping admission spells ----
 data_admissions = data_admissions %>%
@@ -113,10 +102,15 @@ data_admissions = data_admissions %>%
            .keep_all = TRUE) %>%
   ungroup()
 
+## Calculate number of overlapping spells ----
+extract_summary_admissions = extract_summary_admissions %>% 
+  mutate(spells_overlap = spells_overlap - nrow(data_admissions))
 
+
+## Plot admission and discharge dates ----
 plot_admission_date = data_admissions %>% 
   ggplot(aes(admission_date)) +
-  geom_histogram()
+  geom_histogram(bins = 100)
 
 ggsave(filename = "admission_date.jpeg",
        plot = plot_admission_date,
@@ -124,12 +118,12 @@ ggsave(filename = "admission_date.jpeg",
 
 plot_discharge_date = data_admissions %>% 
   ggplot(aes(discharge_date)) +
-  geom_histogram()
+  geom_histogram(bins = 100)
 
 ggsave(filename = "discharge_date.jpeg",
        plot = plot_discharge_date,
        path = here::here("output", "admissions_plots"))
 
-
+# Save extract summary files ----
 write_csv(extract_summary_admissions,
           here::here("output", "admissions_table", "extract_summary_admissions.csv"))

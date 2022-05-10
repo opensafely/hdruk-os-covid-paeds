@@ -18,7 +18,7 @@ def covid_positive_test_date_X(n):
             name: patients.with_test_result_in_sgss(
                 pathogen="SARS-CoV-2",
                 test_result="positive",
-                between=[on_or_after, end_date],
+                between=[on_or_after, "last_day_of_month(index_date)"],
                 find_first_match_in_period=True,
                 returning="date",
                 date_format="YYYY-MM-DD",
@@ -32,7 +32,7 @@ def covid_positive_test_date_X(n):
      
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("covid_positive_test_date_1", start_date)
+            variables = var_signature("covid_positive_test_date_1", "first_day_of_month(index_date)")
         else:
             variables.update(var_signature(f"covid_positive_test_date_{i}", f"covid_positive_test_date_{i-1} + 1 day"))
     return variables
@@ -52,7 +52,6 @@ end_date   = gbl_vars["end_date"]
 
 # Number of hospital admissions, outpatient appointments, GP interactions, covid tests to query
 n_positive_test      = gbl_vars["n_positive_test"]
-n_positive_test_high = gbl_vars["n_positive_test_high"]
 
 # Study definition
 study = StudyDefinition(
@@ -73,28 +72,17 @@ study = StudyDefinition(
         AND
         (NOT has_died)
         AND
-        (covid_positive_test_count > 0) AND (covid_positive_test_count < 6)
+        (covid_positive_test_count > 0)
         """,
         registered=patients.registered_as_of(
-            "index_date",
+            start_date,
         ),
         has_died=patients.died_from_any_cause(
-            on_or_before="index_date",
+            on_or_before=start_date,
             returning="binary_flag",
         ),
         age=patients.age_as_of(
-            "index_date",
-        ),
-        covid_positive_test_count=patients.with_test_result_in_sgss(
-            pathogen="SARS-CoV-2",
-            test_result="positive",
-            between=["index_date", end_date],
-            returning="number_of_matches_in_period",
-            restrict_to_earliest_specimen_date=False,
-            return_expectations={
-                "int": {"distribution": "poisson", "mean": 2},
-                "incidence": 1,
-            },
+            start_date,
         ),
     ),
 
@@ -105,6 +93,19 @@ study = StudyDefinition(
     # Hospital admission X: n columns of date of admissions, date of discharge, admission method
     **covid_positive_test_date_X(
         n=n_positive_test
+    ),
+
+    # Number of positive covid tests during period
+    covid_positive_test_count=patients.with_test_result_in_sgss(
+        pathogen="SARS-CoV-2",
+        test_result="positive",
+        between=["first_day_of_month(index_date)", "last_day_of_month(index_date)"],
+        returning="number_of_matches_in_period",
+        restrict_to_earliest_specimen_date=False,
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
     ),
 
 )

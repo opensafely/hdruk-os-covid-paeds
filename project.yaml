@@ -38,6 +38,46 @@ actions:
       highly_sensitive:
         cohort: output/input_admissions_20*.csv.gz
 
+  generate_outpatient:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient
+        --index-date-range "2019-01-01 to 2019-04-01 by month"
+        --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_outpatient_20*.csv.gz
+
+  generate_gp:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp
+        --index-date-range "2019-01-01 to 2019-04-01 by month"
+        --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_gp_20*.csv.gz
+
+  generate_covid_tests_negative:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_covid_tests_negative
+        --index-date-range "2020-01-01 to 2020-04-01 by month"
+        --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_covid_tests_negative_20*.csv.gz
+
+  generate_covid_tests_positive:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_covid_tests_positive
+        --index-date-range "2020-01-01 to 2020-04-01 by month"
+        --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_covid_tests_positive_20*.csv.gz
+
   descriptives_admissions:
     run: r:latest analysis/04_summarise_admissions.R
     needs: [generate_study_population, generate_admissions]
@@ -45,216 +85,3 @@ actions:
       moderately_sensitive:
         plots: output/admissions_plots/*.jpeg
         tables: output/admissions_table/*.csv
-
-  generate_covid_tests_negative:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_covid_tests_negative --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_covid_tests_negative.csv.gz
-
-  generate_covid_tests_negative_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_covid_tests_negative_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_covid_tests_negative_high.csv.gz
-
-  generate_covid_tests_positive:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_covid_tests_positive --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_covid_tests_positive.csv.gz
-
-  generate_covid_tests_positive_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_covid_tests_positive_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_covid_tests_positive_high.csv.gz
-
-  generate_admissions_low:
-    run: >
-      cohortextractor:latest generate_cohort
-        --study-definition study_definition_admissions_low
-        --index-date-range "2018-12-01 to 2022-05-01 by month"
-        --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_low_20*.csv.gz
-
-  generate_admissions_2018:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2018 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2018.csv.gz
-
-  generate_admissions_2019:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2019 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2019.csv.gz
-
-  generate_admissions_2020:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2020 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2020.csv.gz
-
-  generate_admissions_2021:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2021 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2021.csv.gz
-
-  generate_admissions_2022:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2022 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2022.csv.gz
-
-  generate_admissions_2018_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2018_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2018_high.csv.gz
-
-  generate_admissions_2019_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2019_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2019_high.csv.gz
-
-  generate_admissions_2020_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2020_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2020_high.csv.gz
-
-  generate_admissions_2021_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2021_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2021_high.csv.gz
-
-  generate_admissions_2022_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_admissions_2022_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_admissions_2022_high.csv.gz
-
-  generate_gp_2019:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_gp_2019 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_gp_2019.csv.gz
-
-  generate_gp_2020:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_gp_2020 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_gp_2020.csv.gz
-
-  generate_gp_2021:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_gp_2021 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_gp_2021.csv.gz
-
-  generate_gp_2022:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_gp_2022 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_gp_2022.csv.gz
-
-  generate_gp_2019_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_gp_2019_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_gp_2019_high.csv.gz
-
-  generate_gp_2020_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_gp_2020_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_gp_2020_high.csv.gz
-
-  generate_gp_2021_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_gp_2021_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_gp_2021_high.csv.gz
-
-  generate_gp_2022_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_gp_2022_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_gp_2022_high.csv.gz
-
-  generate_outpatient_2019:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_outpatient_2019 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_outpatient_2019.csv.gz
-
-  generate_outpatient_2020:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_outpatient_2020 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_outpatient_2020.csv.gz
-
-  generate_outpatient_2021:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_outpatient_2021 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_outpatient_2021.csv.gz
-
-  generate_outpatient_2022:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_outpatient_2022 --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_outpatient_2022.csv.gz
-
-  generate_outpatient_2019_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_outpatient_2019_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_outpatient_2019_high.csv.gz
-
-  generate_outpatient_2020_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_outpatient_2020_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_outpatient_2020_high.csv.gz
-
-  generate_outpatient_2021_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_outpatient_2021_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_outpatient_2021_high.csv.gz
-
-  generate_outpatient_2022_high:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_outpatient_2022_high --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_outpatient_2022_high.csv.gz
-
-  process_data:
-    run: r:latest analysis/01_process_data.R
-    needs: [generate_study_population,
-            generate_covid_tests_negative, generate_covid_tests_negative_high, generate_covid_tests_positive, generate_covid_tests_positive_high,
-            generate_admissions_2018, generate_admissions_2019, generate_admissions_2020, generate_admissions_2021, generate_admissions_2022,
-            generate_admissions_2018_high, generate_admissions_2019_high, generate_admissions_2020_high, generate_admissions_2021_high, generate_admissions_2022_high,
-            generate_gp_2019, generate_gp_2020, generate_gp_2021, generate_gp_2022,
-            generate_gp_2019_high, generate_gp_2020_high, generate_gp_2021_high, generate_gp_2022_high,
-            generate_outpatient_2019, generate_outpatient_2020, generate_outpatient_2021, generate_outpatient_2022,
-            generate_outpatient_2019_high, generate_outpatient_2020_high, generate_outpatient_2021_high, generate_outpatient_2022_high]
-    outputs:
-      highly_sensitive:
-        data1: output/data/*.rds
-      moderately_sensitive:
-        diagnostics: output/diagnostics/*.csv
-    
-  descriptives:
-    run: r:latest analysis/02_summary.R
-    needs: [process_data]
-    outputs:
-      moderately_sensitive:
-        plots: output/descriptive/plots/*.jpeg

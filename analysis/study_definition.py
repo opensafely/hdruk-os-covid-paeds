@@ -266,22 +266,6 @@ study = StudyDefinition(
         },
     ),
 
-    # ONS death - covid mentioned on certificate
-    death_covid_flag_any=patients.with_these_codes_on_death_certificate(
-        covid_codelist,
-        on_or_after="index_date",
-        match_only_underlying_cause=False,
-        return_expectations={"incidence": 0.33},
-    ),
-
-    # ONS death - covid as underlying cause
-    death_covid_flag_underlying=patients.with_these_codes_on_death_certificate(
-        covid_codelist,
-        on_or_after="index_date",
-        match_only_underlying_cause=True,
-        return_expectations={"incidence": 0.33},
-    ),
-
     ##############
     # Conditions #
     ##############
@@ -312,81 +296,6 @@ study = StudyDefinition(
             "rate": "uniform",
             "incidence": 0.05
         }
-    ),
-
-    #################
-    # Covid Testing #
-    #################
-
-    # 1st positive covid test date
-    covid_positive_test_date_1=patients.with_test_result_in_sgss(
-        pathogen="SARS-CoV-2",
-        test_result="positive",
-        between=["index_date", end_date],
-        find_first_match_in_period=True,
-        returning="date",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "exponential_increase",
-            "incidence": 0.2
-        },
-    ),
-
-    # 1st negative covid test date
-    covid_negative_test_date_1=patients.with_test_result_in_sgss(
-        pathogen="SARS-CoV-2",
-        test_result="negative",
-        between=["index_date", end_date],
-        find_first_match_in_period=True,
-        returning="date",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "exponential_increase",
-            "incidence": 0.2
-        },
-    ),
-
-    # 1st negative covid test date on or before 1st positive covid test
-    covid_negative_test_date_before_positive=patients.with_test_result_in_sgss(
-        pathogen="SARS-CoV-2",
-        test_result="negative",
-        on_or_before="covid_positive_test_date_1",
-        find_last_match_in_period=True,
-        returning="date",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {"earliest": start_date, "latest": end_date},
-            "rate": "exponential_increase",
-            "incidence": 0.2
-        },
-    ),
-
-    # Number of positive covid tests
-    covid_positive_test_count=patients.with_test_result_in_sgss(
-        pathogen="SARS-CoV-2",
-        test_result="positive",
-        between=["index_date", end_date],
-        returning="number_of_matches_in_period",
-        restrict_to_earliest_specimen_date=False,
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 1},
-            "incidence": 1,
-        },
-    ),
-
-    # Number of negative covid tests
-    covid_negative_test_count=patients.with_test_result_in_sgss(
-        pathogen="SARS-CoV-2",
-        test_result="negative",
-        between=["index_date", end_date],
-        returning="number_of_matches_in_period",
-        restrict_to_earliest_specimen_date=False,
-        return_expectations={
-            "int": {"distribution": "poisson", "mean": 2},
-            "incidence": 1,
-        },
     ),
 
     ########################
