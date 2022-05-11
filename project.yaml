@@ -36,7 +36,7 @@ actions:
         --output-format csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/input_admissions_20*.csv.gz
+        data_admissions: output/input_admissions_20*.csv.gz
 
   generate_outpatient:
     run: >
@@ -46,7 +46,7 @@ actions:
         --output-format csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/input_outpatient_20*.csv.gz
+        data_outpatient: output/input_outpatient_20*.csv.gz
 
   generate_gp:
     run: >
@@ -56,7 +56,7 @@ actions:
         --output-format csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/input_gp_20*.csv.gz
+        data_gp_contacts: output/input_gp_20*.csv.gz
 
   generate_covid_tests_negative:
     run: >
@@ -66,7 +66,7 @@ actions:
         --output-format csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/input_covid_tests_negative_20*.csv.gz
+        data_negative_tests: output/input_covid_tests_negative_20*.csv.gz
 
   generate_covid_tests_positive:
     run: >
@@ -76,12 +76,15 @@ actions:
         --output-format csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/input_covid_tests_positive_20*.csv.gz
+        data_positive_tests: output/input_covid_tests_positive_20*.csv.gz
 
-  descriptives_admissions:
+  process_data:
     run: r:latest analysis/04_summarise_admissions.R
-    needs: [generate_study_population, generate_admissions]
+    needs: [generate_study_population, generate_admissions, generate_outpatient,
+            generate_gp, generate_covid_tests_negative, generate_covid_tests_positive]
     outputs:
+      highly_sensitive:
+        datasets: output/datasets/*.rds
       moderately_sensitive:
-        plots: output/admissions_plots/*.jpeg
-        tables: output/admissions_table/*.csv
+        plots: output/extract_descriptives/figures/*.jpeg
+        tables: output/extract_descriptives/tables/*.csv

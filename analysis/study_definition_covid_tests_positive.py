@@ -23,8 +23,8 @@ def covid_positive_test_date_X(n):
                 returning="date",
                 date_format="YYYY-MM-DD",
                 return_expectations={
-                    "date": {"earliest": "2020-03-01", "latest": end_date},
-                    "rate": "exponential_increase",
+                    "date": {"earliest": "2020-01-01", "latest": end_date},
+                    "rate": "uniform",
                     "incidence": 0.2
                 },
             ),
@@ -56,7 +56,7 @@ n_positive_test      = gbl_vars["n_positive_test"]
 # Study definition
 study = StudyDefinition(
 
-    index_date=start_date,
+    index_date="2020-01-01",
 
     default_expectations={
         "date": {"earliest": start_date, "latest": end_date},

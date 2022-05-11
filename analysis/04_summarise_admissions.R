@@ -7,13 +7,16 @@ library(finalfit)
 # Load custom functions ----
 source(here::here("analysis", "00_functions.R"))
 
-# Create directory for processed data and diagnostics ----
-dir.create(here::here("output", "admissions_table"), showWarnings = FALSE, recursive=TRUE)
-dir.create(here::here("output", "admissions_plots"), showWarnings = FALSE, recursive=TRUE)
+# Create directory for processed data, descriptive tables and plots ----
+dir.create(here::here("output", "datasets"), showWarnings = FALSE, recursive=TRUE)
+dir.create(here::here("output", "extract_descriptives", "tables"), showWarnings = FALSE, recursive=TRUE)
+dir.create(here::here("output", "extract_descriptives", "figures"), showWarnings = FALSE, recursive=TRUE)
 
-# Data Files ----
-files_admissions = list.files(path = "output",
-                              pattern = "input_admissions_\\d{4}-\\d{2}-\\d{2}.csv.gz")
+# Monthly data files ----
+files_admissions = list.files("output", "input_admissions_\\d{4}-\\d{2}-\\d{2}.csv.gz")
+files_outpatient = list.files("output", "input_outpatient_\\d{4}-\\d{2}-\\d{2}.csv.gz")
+files_gp         = list.files("output", "input_gp_\\d{4}-\\d{2}-\\d{2}.csv.gz")
+files_testing    = list.files("output", "input_covid_tests_[[:lower:]]+_\\d{4}-\\d{2}-\\d{2}.csv.gz")
 
 # Patient data ----
 data_patient = here::here("output", "input.csv.gz") %>% 
@@ -106,24 +109,174 @@ data_admissions = data_admissions %>%
 extract_summary_admissions = extract_summary_admissions %>% 
   mutate(spells_overlap = spells_overlap - nrow(data_admissions))
 
+# Outpatient data ----
+data_outpatient = here::here("output", files_outpatient) %>%
+  map(function(file){
+    file %>%
+      read_csv(col_types = read_column_type(.)) %>%
+      as_tibble()
+  })
 
-## Plot admission and discharge dates ----
-plot_admission_date = data_admissions %>% 
-  ggplot(aes(admission_date)) +
-  geom_histogram(bins = 100)
+## Record extract characteristics ----
+extract_summary_outpatient = data_outpatient %>%
+  map(function(data){
+    n_row = nrow(data)
+    n_row_bad_id = data %>%
+      filter(!patient_id %in% data_patient$patient_id) %>%
+      nrow()
+    n_col = ncol(data)
+    n_col_empty = data %>%
+      select_if(~(all(is.na(.)))) %>%
+      ncol()
+    n_max_count = max(data %>% pull(outpatient_count))
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_max_count)
+  }) %>%
+  bind_rows() %>%
+  mutate(file = files_outpatient) %>%
+  relocate(file)
 
-ggsave(filename = "admission_date.jpeg",
-       plot = plot_admission_date,
-       path = here::here("output", "admissions_plots"))
+## Filter out patients not in cohort, pivot longer to one row per outpatient appointment ----
+data_outpatient = data_outpatient %>%
+  map(function(data){
+    data %>%
+      filter(patient_id %in% data_patient$patient_id) %>%
+      select(-outpatient_count) %>%
+      pivot_longer(
+        cols = -patient_id,
+        names_to = c("variable", "index"),
+        names_pattern = "^(.*)_(\\d+)",
+        values_to = "outpatient_date",
+        values_drop_na = TRUE
+      ) %>%
+      select(-variable, -index)
+  }) %>%
+  bind_rows() %>%
+  arrange(patient_id, outpatient_date) %>%
+  distinct(patient_id, outpatient_date)
 
-plot_discharge_date = data_admissions %>% 
-  ggplot(aes(discharge_date)) +
-  geom_histogram(bins = 100)
 
-ggsave(filename = "discharge_date.jpeg",
-       plot = plot_discharge_date,
-       path = here::here("output", "admissions_plots"))
+# GP contact data ----
+data_gp = here::here("output", files_gp) %>%
+  map(function(file){
+    file %>%
+      read_csv(col_types = read_column_type(.)) %>%
+      as_tibble()
+  })
+
+## Record extract characteristics ----
+extract_summary_gp = data_gp %>%
+  map(function(data){
+    n_row = nrow(data)
+    n_row_bad_id = data %>%
+      filter(!patient_id %in% data_patient$patient_id) %>%
+      nrow()
+    n_col = ncol(data)
+    n_col_empty = data %>%
+      select_if(~(all(is.na(.)))) %>%
+      ncol()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+  }) %>%
+  bind_rows() %>%
+  mutate(file = files_gp) %>%
+  relocate(file)
+
+## Filter out patients not in cohort, pivot longer to one row per GP contact ----
+data_gp = data_gp %>%
+  map(function(data){
+    data %>%
+      filter(patient_id %in% data_patient$patient_id) %>%
+      select(-gp_contact_count) %>% 
+      pivot_longer(
+        cols = -patient_id,
+        names_to = c("variable", "index"),
+        names_pattern = "^(.*)_(\\d+)",
+        values_to = "gp_date",
+        values_drop_na = TRUE
+      ) %>%
+      select(-variable, -index)
+  }) %>%
+  bind_rows() %>%
+  arrange(patient_id, gp_date) %>%
+  distinct(patient_id, gp_date)
+
+# Testing data ----
+data_testing = here::here("output", files_testing) %>%
+  map(function(file){
+    file %>% 
+      read_csv(col_types = read_column_type(.)) %>% 
+      as_tibble()
+  })
+
+extract_summary_testing = data_testing %>%
+  map(function(data){
+    n_row = nrow(data)
+    n_row_bad_id = data %>%
+      filter(!patient_id %in% data_patient$patient_id) %>%
+      nrow()
+    n_col = ncol(data)
+    n_col_empty = data %>%
+      select_if(~(all(is.na(.)))) %>%
+      ncol()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+  }) %>%
+  bind_rows() %>%
+  mutate(file = files_testing) %>%
+  relocate(file)
+
+data_testing = data_testing %>%
+  map(function(data){
+    data %>%
+      filter(patient_id %in% data_patient$patient_id) %>%
+      select(-ends_with("_count")) %>% 
+      pivot_longer(
+        cols = -patient_id,
+        names_to = c("result", "index"),
+        names_pattern = "covid_(.*)_test_date_(\\d+)",
+        values_to = "test_date",
+        values_drop_na = TRUE
+      ) %>%
+      select(-index)
+  }) %>%
+  bind_rows() %>%
+  arrange(patient_id, test_date, result) %>%
+  distinct(patient_id, test_date, result)
+
+
+# Plot histograms ----
+plot_hist(data_admissions, "admission_date",  here::here("output", "extract_descriptives", "figures"))
+plot_hist(data_admissions, "discharge_date",  here::here("output", "extract_descriptives", "figures"))
+plot_hist(data_outpatient, "outpatient_date", here::here("output", "extract_descriptives", "figures"))
+plot_hist(data_gp,         "gp_date",         here::here("output", "extract_descriptives", "figures"))
+plot_hist(data_testing,    "test_date",       here::here("output", "extract_descriptives", "figures"), fill = "result")
+
 
 # Save extract summary files ----
 write_csv(extract_summary_admissions,
-          here::here("output", "admissions_table", "extract_summary_admissions.csv"))
+          here::here("output", "extract_descriptives", "tables", "extract_summary_admissions.csv"))
+write_csv(extract_summary_outpatient,
+          here::here("output", "extract_descriptives", "tables", "extract_summary_outpatient.csv"))
+write_csv(extract_summary_gp,
+          here::here("output", "extract_descriptives", "tables", "extract_summary_gp.csv"))
+write_csv(extract_summary_testing,
+          here::here("output", "extract_descriptives", "tables", "extract_summary_testing.csv"))
+
+# Save processed data as rds files ----
+write_rds(data_patient,
+          here::here("output", "datasets", "data_patient.rds"),
+          compress="gz")
+write_rds(data_admissions,
+          here::here("output", "datasets", "data_admissions.rds"),
+          compress="gz")
+
+write_rds(data_outpatient,
+          here::here("output", "datasets", "data_outpatient.rds"),
+          compress="gz")
+
+write_rds(data_gp,
+          here::here("output", "datasets", "data_gp.rds"),
+          compress="gz")
+
+write_rds(data_testing,
+          here::here("output", "datasets", "data_testing.rds"),
+          compress="gz")
+
