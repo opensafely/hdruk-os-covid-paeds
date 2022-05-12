@@ -38,6 +38,16 @@ actions:
       highly_sensitive:
         data_admissions: output/input_admissions_20*.csv.gz
 
+  generate_admissions_weekly:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_admissions_weekly
+        --index-date-range "2018-10-01 to 2018-11-30 by week"
+        --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        data_admissions_weekly: output/input_admissions_weekly_20*.csv.gz
+
   generate_outpatient:
     run: >
       cohortextractor:latest generate_cohort
