@@ -1,9 +1,9 @@
 {
     "start_date": "2019-01-01",
     "end_date": "2022-05-01",
-    "n_admission": 31,
+    "n_admission": 7,
     "n_outpatient": 31,
-    "n_gp": 31,
-    "n_positive_test": 10,
-    "n_negative_test": 31
+    "n_gp": 21,
+    "n_positive_test": 5,
+    "n_negative_test": 10
   }
