@@ -39,10 +39,10 @@ study = StudyDefinition(
         (NOT has_died)
         """,
         registered=patients.registered_as_of(
-            "index_date",
+            start_date,
         ),
         has_died=patients.died_from_any_cause(
-            on_or_before="index_date",
+            on_or_before=start_date,
             returning="binary_flag",
         )
     ),
