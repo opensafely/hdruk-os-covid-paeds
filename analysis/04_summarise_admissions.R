@@ -152,7 +152,11 @@ data_outpatient = data_outpatient %>%
   }) %>%
   bind_rows() %>%
   arrange(patient_id, outpatient_date) %>%
-  distinct(patient_id, outpatient_date)
+  distinct(patient_id, outpatient_date) %>% 
+  group_by(patient_id) %>% 
+  mutate(index = row_number()) %>% 
+  ungroup() %>% 
+  relocate(index, .after = patient_id)
 
 
 # GP contact data ----
@@ -174,7 +178,8 @@ extract_summary_gp = data_gp %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+    n_max_count = max(data %>% pull(gp_contact_count))
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_gp) %>%
@@ -197,7 +202,11 @@ data_gp = data_gp %>%
   }) %>%
   bind_rows() %>%
   arrange(patient_id, gp_date) %>%
-  distinct(patient_id, gp_date)
+  distinct(patient_id, gp_date) %>% 
+  group_by(patient_id) %>% 
+  mutate(index = row_number()) %>% 
+  ungroup() %>% 
+  relocate(index, .after = patient_id)
 
 # Testing data ----
 data_testing = here::here("output", files_testing) %>%
@@ -217,7 +226,8 @@ extract_summary_testing = data_testing %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+    n_max_count = max(data %>% select(ends_with("_count")) %>% pull())
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_testing) %>%
@@ -239,8 +249,11 @@ data_testing = data_testing %>%
   }) %>%
   bind_rows() %>%
   arrange(patient_id, test_date, result) %>%
-  distinct(patient_id, test_date, result)
-
+  distinct(patient_id, test_date, result) %>% 
+  group_by(patient_id) %>% 
+  mutate(index = row_number()) %>% 
+  ungroup() %>% 
+  relocate(index, .after = patient_id)
 
 # Plot histograms ----
 plot_hist(data_admissions, "admission_date",  here::here("output", "extract_descriptives", "figures"))
