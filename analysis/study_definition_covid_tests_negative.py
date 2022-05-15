@@ -18,7 +18,7 @@ def covid_negative_test_date_X(n):
             name: patients.with_test_result_in_sgss(
                 pathogen="SARS-CoV-2",
                 test_result="negative",
-                between=[on_or_after, "last_day_of_month(index_date)"],
+                between=[on_or_after, "index_date + 6 days"],
                 find_first_match_in_period=True,
                 returning="date",
                 date_format="YYYY-MM-DD",
@@ -32,7 +32,7 @@ def covid_negative_test_date_X(n):
      
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("covid_negative_test_date_1", "first_day_of_month(index_date)")
+            variables = var_signature("covid_negative_test_date_1", "index_date")
         else:
             variables.update(var_signature(f"covid_negative_test_date_{i}", f"covid_negative_test_date_{i-1} + 1 day"))
     return variables
@@ -63,22 +63,25 @@ study = StudyDefinition(
         "rate": "uniform",
         "incidence": 0.5,
     },
-    # Study population: Registered as of study start, between ages 1 and 18, alive at study start, 
+    # Study population: Alive and registered as of study start, registered at study end or died during study, age between 1 and 18 years
     population=patients.satisfying(
         """
-        registered
-        AND
-        (age < 18) AND (age > 1)
-        AND
-        (NOT has_died)
-        AND
-        (covid_negative_test_count > 0)
+        (NOT died_before_start_date) AND registered_at_start_date
+        AND (registered_at_end_date OR died_after_start_date)
+        AND (age > 1) AND (age < 18)
         """,
-        registered=patients.registered_as_of(
+        registered_at_start_date=patients.registered_as_of(
             start_date,
         ),
-        has_died=patients.died_from_any_cause(
+        registered_at_end_date=patients.registered_as_of(
+            end_date,
+        ),
+        died_before_start_date=patients.died_from_any_cause(
             on_or_before=start_date,
+            returning="binary_flag",
+        ),
+        died_after_start_date=patients.died_from_any_cause(
+            on_or_before=end_date,
             returning="binary_flag",
         ),
         age=patients.age_as_of(
@@ -99,7 +102,7 @@ study = StudyDefinition(
     covid_negative_test_count=patients.with_test_result_in_sgss(
         pathogen="SARS-CoV-2",
         test_result="negative",
-        between=["first_day_of_month(index_date)", "last_day_of_month(index_date)"],
+        between=["index_date", "index_date + 6 days"],
         returning="number_of_matches_in_period",
         restrict_to_earliest_specimen_date=False,
         return_expectations={

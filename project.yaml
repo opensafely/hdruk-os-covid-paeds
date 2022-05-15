@@ -5,88 +5,92 @@ expectations:
 
 actions:
 
-  generate_contact_counts:
-    run: >
-      cohortextractor:latest generate_cohort
-        --study-definition study_definition_contact_counts
-        --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        cohort: output/input_contact_counts.csv.gz
-
-  descriptives_count_data:
-    run: r:latest analysis/00_count_data.R
-    needs: [generate_contact_counts]
-    outputs:
-      moderately_sensitive:
-        plots: output/descriptive/counts/*.jpeg
-        tables: output/descriptive/counts/*.csv
-
   generate_study_population:
     run: cohortextractor:latest generate_cohort --study-definition study_definition --output-format csv.gz
     outputs:
       highly_sensitive:
         cohort: output/input.csv.gz
 
+  generate_dummy_data:
+    run: r:latest analysis/generate_dummy_data.R
+    needs: [generate_study_population]
+    outputs:
+      highly_sensitive:
+        dummy_data_admissions: output/dummy_data/dummy_data_admissions.csv.gz
+        dummy_data_outpatient: output/dummy_data/dummy_data_outpatient.csv.gz
+        dummy_data_gp: output/dummy_data/dummy_data_gp.csv.gz
+        dummy_data_testing_negative: output/dummy_data/dummy_data_testing_negative.csv.gz
+        dummy_data_testing_positive: output/dummy_data/dummy_data_testing_positive.csv.gz
+
   generate_admissions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_admissions
-        --index-date-range "2018-10-01 to 2018-11-01 by month"
+        --index-date-range "2018-10-01 to 2022-01-31 by week"
         --output-format csv.gz
+        --skip-existing 
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_admissions.csv.gz
+    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
-        data_admissions: output/input_admissions_20*.csv.gz
-
-  generate_admissions_weekly:
-    run: >
-      cohortextractor:latest generate_cohort
-        --study-definition study_definition_admissions_weekly
-        --index-date-range "2018-10-01 to 2018-11-30 by week"
-        --output-format csv.gz
-    outputs:
-      highly_sensitive:
-        data_admissions_weekly: output/input_admissions_weekly_20*.csv.gz
+        data_admissions: output/data_weekly/input_admissions_20*.csv.gz
 
   generate_outpatient:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_outpatient
-        --index-date-range "2019-01-01 to 2019-04-01 by month"
+        --index-date-range "2019-03-11 to 2022-01-31 by week"
         --output-format csv.gz
+        --skip-existing 
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
-        data_outpatient: output/input_outpatient_20*.csv.gz
+        data_outpatient: output/data_weekly/input_outpatient_20*.csv.gz
 
   generate_gp:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp
-        --index-date-range "2019-01-01 to 2019-04-01 by month"
+        --index-date-range "2018-12-31 to 2022-01-31 by week"
         --output-format csv.gz
+        --skip-existing 
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
-        data_gp_contacts: output/input_gp_20*.csv.gz
+        data_gp_contacts: output/data_weekly/input_gp_20*.csv.gz
 
   generate_covid_tests_negative:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_covid_tests_negative
-        --index-date-range "2021-01-01 to 2021-04-01 by month"
+        --index-date-range "2019-12-30 to 2022-01-31 by week"
         --output-format csv.gz
+        --skip-existing 
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_testing_negative.csv.gz
+    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
-        data_negative_tests: output/input_covid_tests_negative_20*.csv.gz
+        data_negative_tests: output/data_weekly/input_covid_tests_negative_20*.csv.gz
 
   generate_covid_tests_positive:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_covid_tests_positive
-        --index-date-range "2021-01-01 to 2021-04-01 by month"
+        --index-date-range "2019-12-30 to 2022-01-31 by week"
         --output-format csv.gz
+        --skip-existing 
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_testing_positive.csv.gz
+    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
-        data_positive_tests: output/input_covid_tests_positive_20*.csv.gz
+        data_positive_tests: output/data_weekly/input_covid_tests_positive_20*.csv.gz
 
   process_data:
     run: r:latest analysis/04_summarise_admissions.R

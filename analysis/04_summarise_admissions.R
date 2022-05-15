@@ -13,17 +13,18 @@ dir.create(here::here("output", "extract_descriptives", "tables"), showWarnings 
 dir.create(here::here("output", "extract_descriptives", "figures"), showWarnings = FALSE, recursive=TRUE)
 
 # Monthly data files ----
-files_admissions = list.files("output", "input_admissions_\\d{4}-\\d{2}-\\d{2}.csv.gz")
-files_outpatient = list.files("output", "input_outpatient_\\d{4}-\\d{2}-\\d{2}.csv.gz")
-files_gp         = list.files("output", "input_gp_\\d{4}-\\d{2}-\\d{2}.csv.gz")
-files_testing    = list.files("output", "input_covid_tests_[[:lower:]]+_\\d{4}-\\d{2}-\\d{2}.csv.gz")
+path_data_weekly = here::here("output", "data_weekly")
+files_admissions = list.files(path_data_weekly, "input_admissions_\\d{4}-\\d{2}-\\d{2}.csv.gz")
+files_outpatient = list.files(path_data_weekly, "input_outpatient_\\d{4}-\\d{2}-\\d{2}.csv.gz")
+files_gp         = list.files(path_data_weekly, "input_gp_\\d{4}-\\d{2}-\\d{2}.csv.gz")
+files_testing    = list.files(path_data_weekly, "input_covid_tests_[[:lower:]]+_\\d{4}-\\d{2}-\\d{2}.csv.gz")
 
 # Patient data ----
 data_patient = here::here("output", "input.csv.gz") %>% 
   read_csv(col_types = read_column_type(.))
 
 # Admission data ----
-data_admissions = here::here("output", files_admissions) %>%
+data_admissions = here::here("output", "data_weekly", files_admissions) %>%
   map(function(file){
     file %>%
       read_csv(col_types = read_column_type(.)) %>%
@@ -101,16 +102,21 @@ data_admissions = data_admissions %>%
   group_by(patient_id, index) %>%
   mutate(admission_date = min(admission_date),
          discharge_date = max(discharge_date)) %>%
+  ungroup() %>% 
+  select(-index) %>%
   distinct(patient_id, admission_date, discharge_date,
-           .keep_all = TRUE) %>%
-  ungroup()
+           .keep_all = TRUE) %>% 
+  group_by(patient_id) %>% 
+  mutate(index = row_number()) %>% 
+  ungroup() %>% 
+  relocate(index, .after = patient_id)
 
 ## Calculate number of overlapping spells ----
 extract_summary_admissions = extract_summary_admissions %>% 
   mutate(spells_overlap = spells_overlap - nrow(data_admissions))
 
 # Outpatient data ----
-data_outpatient = here::here("output", files_outpatient) %>%
+data_outpatient = here::here("output", "data_weekly", files_outpatient) %>%
   map(function(file){
     file %>%
       read_csv(col_types = read_column_type(.)) %>%
@@ -160,7 +166,7 @@ data_outpatient = data_outpatient %>%
 
 
 # GP contact data ----
-data_gp = here::here("output", files_gp) %>%
+data_gp = here::here("output", "data_weekly", files_gp) %>%
   map(function(file){
     file %>%
       read_csv(col_types = read_column_type(.)) %>%
@@ -209,7 +215,7 @@ data_gp = data_gp %>%
   relocate(index, .after = patient_id)
 
 # Testing data ----
-data_testing = here::here("output", files_testing) %>%
+data_testing = here::here("output", "data_weekly", files_testing) %>%
   map(function(file){
     file %>% 
       read_csv(col_types = read_column_type(.)) %>% 

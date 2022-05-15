@@ -29,20 +29,25 @@ study = StudyDefinition(
         "rate": "uniform",
         "incidence": 0.5,
     },
-    # Study population: Registered as of study start, under age of 19, male or female, not died prior to study start
+    # Study population: Alive and registered as of study start, registered at study end or died during study, age between 1 and 18 years
     population=patients.satisfying(
         """
-        registered
-        AND
-        (age < 18) AND (age > 1)
-        AND
-        (NOT has_died)
+        (NOT died_before_start_date) AND registered_at_start_date
+        AND (registered_at_end_date OR died_after_start_date)
+        AND (age > 1) AND (age < 18)
         """,
-        registered=patients.registered_as_of(
+        registered_at_start_date=patients.registered_as_of(
             start_date,
         ),
-        has_died=patients.died_from_any_cause(
+        registered_at_end_date=patients.registered_as_of(
+            end_date,
+        ),
+        died_before_start_date=patients.died_from_any_cause(
             on_or_before=start_date,
+            returning="binary_flag",
+        ),
+        died_after_start_date=patients.died_from_any_cause(
+            on_or_before=end_date,
             returning="binary_flag",
         )
     ),

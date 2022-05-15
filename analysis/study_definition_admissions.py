@@ -17,7 +17,7 @@ def admitted_to_hospital_X(n):
         return {
             name: patients.admitted_to_hospital(
                     returning=returning,
-                    between=[on_or_after, "last_day_of_month(index_date)"],
+                    between=[on_or_after, "index_date + 6 days"],
                     date_format="YYYY-MM-DD",
                     find_first_match_in_period=True,
                     return_expectations=return_expectations
@@ -56,7 +56,7 @@ def admitted_to_hospital_X(n):
 
     for i in range(1, n+1):
         if i == 1:
-            variables = var_signature("admission_date_1", "date_admitted", "first_day_of_month(index_date)", return_expectations_date_adm)
+            variables = var_signature("admission_date_1", "date_admitted", "index_date", return_expectations_date_adm)
             variables.update(var_signature2("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
             variables.update(var_signature2("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
         else:
@@ -91,22 +91,25 @@ study = StudyDefinition(
         "rate": "uniform",
         "incidence": 0.5,
     },
-    # Study population: Registered as of study start, between ages 1 and 18, alive at study start, 
+    # Study population: Alive and registered as of study start, registered at study end or died during study, age between 1 and 18 years
     population=patients.satisfying(
         """
-        registered
-        AND
-        (age < 18) AND (age > 1)
-        AND
-        (NOT has_died)
-        AND
-        (admission_count > 0)
+        (NOT died_before_start_date) AND registered_at_start_date
+        AND (registered_at_end_date OR died_after_start_date)
+        AND (age > 1) AND (age < 18)
         """,
-        registered=patients.registered_as_of(
+        registered_at_start_date=patients.registered_as_of(
             start_date,
         ),
-        has_died=patients.died_from_any_cause(
+        registered_at_end_date=patients.registered_as_of(
+            end_date,
+        ),
+        died_before_start_date=patients.died_from_any_cause(
             on_or_before=start_date,
+            returning="binary_flag",
+        ),
+        died_after_start_date=patients.died_from_any_cause(
+            on_or_before=end_date,
             returning="binary_flag",
         ),
         age=patients.age_as_of(
@@ -126,7 +129,7 @@ study = StudyDefinition(
     # Number of admissions during period
     admission_count=patients.admitted_to_hospital(
         returning="number_of_matches_in_period",
-        between=["first_day_of_month(index_date)", "last_day_of_month(index_date)"],
+        between=["index_date", "index_date + 6 days"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 1},
             "incidence": 1,

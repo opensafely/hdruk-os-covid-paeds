@@ -19,7 +19,7 @@ def outpatient_date_X(n):
                     returning="date",
                     attended=True,
                     find_first_match_in_period=True,
-                    between=[on_or_after, "index_date + 6 days"],
+                    between=[on_or_after, end_date],
                     date_format="YYYY-MM-DD",
                     return_expectations={
                         "date": {"earliest": start_date, "latest": end_date},
