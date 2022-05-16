@@ -6,12 +6,8 @@ library("finalfit")
 # Load custom functions ----
 source(here::here("analysis", "00_functions.R"))
 
-# Load json global variables
-# global_var = rjson::fromJSON(file = here::here("analysis", "global_variables.json"))
-global_var = list(
-  start_date = "2019-01-01",
-  end_date = "2022-05-01"
-)
+# Load global variables
+global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
 
 # Load patient data and sample ----
 data_patient = here::here("output", "input.csv.gz") %>% 
