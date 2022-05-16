@@ -261,6 +261,128 @@ data_testing = data_testing %>%
   ungroup() %>% 
   relocate(index, .after = patient_id)
 
+# Create factors and label variables -----
+data_patient = data_patient %>%
+  mutate(
+    
+    date_of_birth = if_else(is.na(date_of_birth),
+                            NA_character_,
+                            paste0(date_of_birth, "-15")) %>%
+      as.Date(),
+    
+    sex = case_when(
+      sex == "F" ~ "Female",
+      sex == "M" ~ "Male",
+      TRUE ~ NA_character_
+    ) %>%
+      factor() %>%
+      ff_label("Sex"),
+    
+    ethnicity = case_when(
+      ethnicity == "1" ~ "White",
+      ethnicity == "4" ~ "Black",
+      ethnicity == "3" ~ "South Asian",
+      ethnicity == "2" ~ "Mixed",
+      ethnicity == "5" ~ "Other",
+      TRUE ~ NA_character_
+    ) %>%
+      factor() %>%
+      ff_label("Ethnicity (primary care)"),
+    
+    ethnicity_6_sus = case_when(
+      ethnicity_6_sus == "1" ~ "White",
+      ethnicity_6_sus == "4" ~ "Black",
+      ethnicity_6_sus == "3" ~ "South Asian",
+      ethnicity_6_sus == "2" ~ "Mixed",
+      ethnicity_6_sus == "5" ~ "Other",
+      TRUE ~ NA_character_
+    ) %>%
+      factor() %>%
+      ff_label("Ethnicity (SUS)"),
+    
+    ethnicity_comb = coalesce(ethnicity, ethnicity_6_sus) %>%
+      ff_label("Ethnicity"),
+    
+    region_2019 = region_2019 %>%
+      factor() %>%
+      ff_label("Region"),
+    
+    region_2020 = region_2020 %>%
+      factor() %>%
+      ff_label("Region"),
+    
+    region_2021 = region_2021 %>%
+      factor() %>%
+      ff_label("Region"),
+    
+    imd_Q5_2019 = case_when(
+      (imd_2019 >=1)          & (imd_2019 < 32844*1/5) ~ "(most deprived) 1",
+      (imd_2019 >= 32844*1/5) & (imd_2019 < 32844*2/5) ~ "2",
+      (imd_2019 >= 32844*2/5) & (imd_2019 < 32844*3/5) ~ "3",
+      (imd_2019 >= 32844*3/5) & (imd_2019 < 32844*4/5) ~ "4",
+      (imd_2019 >= 32844*4/5)                          ~ "(least deprived) 5",
+      TRUE ~ NA_character_
+    ) %>%
+      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>%
+      ff_label("Multiple deprivation quintile"),
+    
+    imd_Q5_2020 = case_when(
+      (imd_2020 >=1)          & (imd_2020 < 32844*1/5) ~ "(most deprived) 1",
+      (imd_2020 >= 32844*1/5) & (imd_2020 < 32844*2/5) ~ "2",
+      (imd_2020 >= 32844*2/5) & (imd_2020 < 32844*3/5) ~ "3",
+      (imd_2020 >= 32844*3/5) & (imd_2020 < 32844*4/5) ~ "4",
+      (imd_2020 >= 32844*4/5)                          ~ "(least deprived) 5",
+      TRUE ~ NA_character_
+    ) %>%
+      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>%
+      ff_label("Multiple deprivation quintile"),
+    
+    imd_Q5_2021 = case_when(
+      (imd_2021 >=1)          & (imd_2021 < 32844*1/5) ~ "(most deprived) 1",
+      (imd_2021 >= 32844*1/5) & (imd_2021 < 32844*2/5) ~ "2",
+      (imd_2021 >= 32844*2/5) & (imd_2021 < 32844*3/5) ~ "3",
+      (imd_2021 >= 32844*3/5) & (imd_2021 < 32844*4/5) ~ "4",
+      (imd_2021 >= 32844*4/5)                          ~ "(least deprived) 5",
+      TRUE ~ NA_character_
+    ) %>%
+      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>%
+      ff_label("Multiple deprivation quintile"),
+    
+    rural_urban_2019 = case_when(
+      rural_urban_2019 %in% c(1,2)     ~ "Urban conurbation",
+      rural_urban_2019 %in% c(3,4)     ~ "Urban city or town",
+      rural_urban_2019 %in% c(5,6,7,8) ~ "Rural town or village",
+      TRUE                             ~ NA_character_
+    ) %>%
+      factor() %>%
+      ff_label("Rural-urban classification"),
+    
+    rural_urban_2020 = case_when(
+      rural_urban_2020 %in% c(1,2)     ~ "Urban conurbation",
+      rural_urban_2020 %in% c(3,4)     ~ "Urban city or town",
+      rural_urban_2020 %in% c(5,6,7,8) ~ "Rural town or village",
+      TRUE                             ~ NA_character_
+    ) %>%
+      factor() %>%
+      ff_label("Rural-urban classification"),
+    
+    rural_urban_2021 = case_when(
+      rural_urban_2021 %in% c(1,2)     ~ "Urban conurbation",
+      rural_urban_2021 %in% c(3,4)     ~ "Urban city or town",
+      rural_urban_2021 %in% c(5,6,7,8) ~ "Rural town or village",
+      TRUE                             ~ NA_character_
+    ) %>%
+      factor() %>%
+      ff_label("Rural-urban classification"),
+    
+    death_factor = case_when(
+      !is.na(death_date) ~ "Dead",
+      TRUE               ~ "Alive"
+    ) %>%
+      factor() %>%
+      ff_label("Death"),
+  )
+
 # Plot histograms ----
 plot_hist(data_admissions, "admission_date",  here::here("output", "extract_descriptives", "figures"))
 plot_hist(data_admissions, "discharge_date",  here::here("output", "extract_descriptives", "figures"))
