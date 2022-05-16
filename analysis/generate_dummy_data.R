@@ -6,8 +6,15 @@ library("finalfit")
 # Load custom functions ----
 source(here::here("analysis", "00_functions.R"))
 
-# Load global variables
+# Load global variables ----
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
+
+## Study dates ----
+start_date     = ymd(global_var$start_date)
+end_date       = ymd(global_var$end_date)
+tp_start_date  = ymd(global_var$tp_start_date)
+tp_end_date    = ymd(global_var$tp_end_date)
+fup_start_date = ymd(global_var$fup_start_date)
 
 # Load patient data and sample ----
 data_patient = here::here("output", "input.csv.gz") %>% 
@@ -19,8 +26,8 @@ dir.create(here::here("output", "dummy_data"), showWarnings = FALSE, recursive=T
 # Dummy data variables ----
 n_max = 1000
 incidence = 0.2
-date_range = seq(ymd(global_var$start_date), ymd(global_var$end_date), by="day")
-date_range_testing = seq(ymd("2020-01-01"), ymd(global_var$end_date), by="day")
+date_range = seq(start_date, end_date, by="day")
+date_range_testing = seq(tp_start_date, end_date, by="day")
 admission_method = c("11", "12", "13", "21", "22", "23", "24", "25", "2A", 
                      "2B", "2C", "2D", "28", "31", "32", "82", "83", "81")
 admission_method_prob = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 
@@ -152,13 +159,13 @@ dummy_data_outpatient = dummy_data_outpatient %>%
 # GP data ----
 dummy_data_gp = data_patient %>% 
   transmute(
-    gp_contact_date_1 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
-    gp_contact_date_2 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
-    gp_contact_date_3 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
-    gp_contact_date_4 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
-    gp_contact_date_5 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
-    gp_contact_date_6 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
-    gp_contact_date_7 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
+    gp_contact_date_1 = sample(date_range, nrow(data_patient), replace = TRUE),
+    gp_contact_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
+    gp_contact_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
+    gp_contact_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
+    gp_contact_date_5 = sample(date_range, nrow(data_patient), replace = TRUE),
+    gp_contact_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
+    gp_contact_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
     patient_id = patient_id,
   )
 
@@ -202,10 +209,10 @@ dummy_data_gp = dummy_data_gp %>%
 # Negative covid testing data ----
 dummy_data_testing_negative = data_patient %>% 
   transmute(
-    covid_negative_test_date_1 = sample(date_range, nrow(data_patient), replace = TRUE),
-    covid_negative_test_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
-    covid_negative_test_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
-    covid_negative_test_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
+    covid_negative_test_date_1 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
+    covid_negative_test_date_2 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
+    covid_negative_test_date_3 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
+    covid_negative_test_date_4 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
     patient_id = patient_id,
   )
 
@@ -238,7 +245,7 @@ dummy_data_testing_negative = tibble(
   left_join(dummy_data_testing_negative)%>% 
   pivot_wider(names_from = var_name, values_from = value) 
 
-## Add outpatient count, relocate patient_id to last row ----
+## Add covid_negative_test_count, relocate patient_id to last row ----
 dummy_data_testing_negative = dummy_data_testing_negative %>% 
   mutate(covid_negative_test_count = dummy_data_testing_negative %>%
            transmute(across(starts_with("covid_negative_test_date"), ~ !is.na(.x))) %>%
@@ -249,8 +256,8 @@ dummy_data_testing_negative = dummy_data_testing_negative %>%
 # Positive covid testing data ----
 dummy_data_testing_positive = data_patient %>% 
   transmute(
-    covid_positive_test_date_1 = sample(date_range, nrow(data_patient), replace = TRUE),
-    covid_positive_test_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
+    covid_positive_test_date_1 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
+    covid_positive_test_date_2 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
     patient_id = patient_id,
   )
 
@@ -283,7 +290,7 @@ dummy_data_testing_positive = tibble(
   left_join(dummy_data_testing_positive)%>% 
   pivot_wider(names_from = var_name, values_from = value) 
 
-## Add outpatient count, relocate patient_id to last row ----
+## Add covid_positive_test_count, relocate patient_id to last row ----
 dummy_data_testing_positive = dummy_data_testing_positive %>% 
   mutate(covid_positive_test_count = dummy_data_testing_positive %>%
            transmute(across(starts_with("covid_positive_test_date"), ~ !is.na(.x))) %>%
