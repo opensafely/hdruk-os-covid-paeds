@@ -7,6 +7,16 @@ library(finalfit)
 # Load custom functions ----
 source(here::here("analysis", "00_functions.R"))
 
+# Load global variables ----
+global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
+
+## Study dates ----
+start_date     = ymd(global_var$start_date)
+end_date       = ymd(global_var$end_date)
+tp_start_date  = ymd(global_var$tp_start_date)
+tp_end_date    = ymd(global_var$tp_end_date)
+fup_start_date = ymd(global_var$fup_start_date)
+
 # Create directory for processed data, descriptive tables and plots ----
 dir.create(here::here("output", "datasets"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "extract_descriptives", "tables"), showWarnings = FALSE, recursive=TRUE)
@@ -382,6 +392,81 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Death"),
   )
+
+## Covid test counts ----
+## Count the number of negative and positive tests during testing
+## and follow-up periods
+data_patient = data_patient %>% 
+  left_join(
+    data_testing %>% 
+      mutate(period = case_when(
+        (test_date >= tp_start_date) & (test_date <= tp_end_date) ~ "testing",
+        (test_date >= fup_start_date) & (test_date <= end_date) ~ "follow-up",
+        TRUE ~ NA_character_
+      )) %>% 
+      group_by(patient_id, result, period) %>% 
+      summarise(n = n()) %>%
+      ungroup() %>% 
+      filter(!is.na(period)) %>% 
+      mutate(var_name = case_when(
+        result == "negative" & period == "testing"   ~ "covid_test_neg_tp_count",
+        result == "positive" & period == "testing"   ~ "covid_test_pos_tp_count",
+        result == "negative" & period == "follow-up" ~ "covid_test_neg_fup_count",
+        result == "positive" & period == "follow-up" ~ "covid_test_pos_fup_count",
+      )) %>% 
+      pivot_wider(names_from = "var_name", values_from = "n") %>% 
+      select(-result, -period) %>% 
+      group_by(patient_id) %>% 
+      summarise(
+        covid_test_neg_tp_count  = mean(covid_test_neg_tp_count, na.rm = TRUE),
+        covid_test_pos_tp_count  = mean(covid_test_pos_tp_count, na.rm = TRUE),
+        covid_test_neg_fup_count = mean(covid_test_neg_fup_count, na.rm = TRUE),
+        covid_test_pos_fup_count = mean(covid_test_pos_fup_count, na.rm = TRUE)
+      )
+  ) %>% 
+  mutate(
+    covid_test_neg_tp_count = replace_na(covid_test_neg_tp_count, 0) %>% 
+      ff_label("Number of negative PCR tests (testing period)"),
+    covid_test_pos_tp_count = replace_na(covid_test_pos_tp_count, 0) %>% 
+      ff_label("Number of positive PCR tests (testing period)"),
+    covid_test_neg_fup_count = replace_na(covid_test_neg_fup_count, 0) %>% 
+      ff_label("Number of negative PCR tests (follow-up period)"),
+    covid_test_pos_fup_count = replace_na(covid_test_pos_fup_count, 0) %>% 
+      ff_label("Number of positive PCR tests (follow-up period)")
+  )
+
+## Covid status ----
+data_patient = data_patient %>% 
+  mutate(
+    covid_status_tp = case_when(
+      covid_test_pos_tp_count > 0 ~ "Positive",
+      covid_test_neg_tp_count > 0 ~ "Negative",
+      TRUE                        ~ "Untested"
+    ) %>% 
+      factor() %>% 
+      fct_relevel("Positive") %>% 
+      ff_label("SARS-CoV-2 status (testing period)"),
+    
+    covid_status_fup = case_when(
+      covid_test_pos_fup_count > 0 ~ "Positive",
+      covid_test_neg_fup_count > 0 ~ "Negative",
+      TRUE                         ~ "Untested"
+    ) %>% 
+      factor() %>% 
+      fct_relevel("Positive") %>% 
+      ff_label("SARS-CoV-2 status (follow-up period)")
+  )
+
+dep = "covid_status_tp"
+exp = c("covid_test_pos_tp_count",
+        "covid_test_neg_tp_count",
+        "covid_status_fup",
+        "covid_test_pos_fup_count",
+        "covid_test_neg_fup_count"
+        )
+
+data_patient %>% 
+  summary_factorlist(dependent = dep, explanatory = exp)
 
 # Plot histograms ----
 plot_hist(data_admissions, "admission_date",  here::here("output", "extract_descriptives", "figures"))
