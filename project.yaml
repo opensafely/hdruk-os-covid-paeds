@@ -26,7 +26,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_admissions
-        --index-date-range "2019-12-30 to 2020-12-28 by week"
+        --index-date-range "2020-12-28 to 2022-01-31 by week"
         --output-format csv.gz
         --skip-existing 
         --output-dir=output/data_weekly
