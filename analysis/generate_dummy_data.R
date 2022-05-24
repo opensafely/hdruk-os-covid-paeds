@@ -16,6 +16,14 @@ tp_start_date  = ymd(global_var$tp_start_date)
 tp_end_date    = ymd(global_var$tp_end_date)
 fup_start_date = ymd(global_var$fup_start_date)
 
+## Max counts ----
+n_admission = global_var$n_admission
+n_outpatient = global_var$n_outpatient
+n_gp = global_var$n_gp
+n_positive_test = global_var$n_positive_test
+n_negative_test = global_var$n_negative_test
+
+
 # Load patient data and sample ----
 data_patient = here::here("output", "input.csv.gz") %>% 
   read_csv(col_types = read_column_type(.)) 
@@ -90,9 +98,9 @@ dummy_data_admissions = dummy_data_admissions %>%
 
 ## Ensure valid number of rows and columns ----
 dummy_data_admissions = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = 21),
+  patient_id = unique(data_patient$patient_id) %>% rep(each = 3*n_admission),
   var_name = rep(paste0(rep(c("admission_date_", "discharge_date_", "admission_method_"), 7),
-                    rep(c(1:7), each =3)),
+                    rep(c(1:n_admission), each =3)),
                  length(unique(data_patient$patient_id)))
 ) %>% 
   left_join(dummy_data_admissions)%>% 
@@ -141,8 +149,8 @@ dummy_data_outpatient = dummy_data_outpatient %>%
 
 ## Ensure valid number of rows and columns ----
 dummy_data_outpatient = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = 7),
-  var_name = rep(paste0(rep("outpatient_date_", 7), c(1:7)),
+  patient_id = unique(data_patient$patient_id) %>% rep(each = n_outpatient),
+  var_name = rep(paste0(rep("outpatient_date_", n_outpatient), c(1:n_outpatient)),
                  length(unique(data_patient$patient_id)))
 ) %>% 
   left_join(dummy_data_outpatient)%>% 
@@ -164,8 +172,8 @@ dummy_data_gp = data_patient %>%
     gp_contact_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
     gp_contact_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
     gp_contact_date_5 = sample(date_range, nrow(data_patient), replace = TRUE),
-    gp_contact_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
-    gp_contact_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
+    #gp_contact_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
+    #gp_contact_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
     patient_id = patient_id,
   )
 
@@ -191,8 +199,8 @@ dummy_data_gp = dummy_data_gp %>%
 
 ## Ensure valid number of rows and columns ----
 dummy_data_gp = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = 7),
-  var_name = rep(paste0(rep("gp_contact_date_", 7), c(1:7)),
+  patient_id = unique(data_patient$patient_id) %>% rep(each = n_gp),
+  var_name = rep(paste0(rep("gp_contact_date_", n_gp), c(1:n_gp)),
                  length(unique(data_patient$patient_id)))
 ) %>% 
   left_join(dummy_data_gp)%>% 
@@ -212,7 +220,7 @@ dummy_data_testing_negative = data_patient %>%
     covid_negative_test_date_1 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
     covid_negative_test_date_2 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
     covid_negative_test_date_3 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
-    covid_negative_test_date_4 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
+    #covid_negative_test_date_4 = sample(date_range_testing, nrow(data_patient), replace = TRUE),
     patient_id = patient_id,
   )
 
@@ -238,8 +246,8 @@ dummy_data_testing_negative = dummy_data_testing_negative %>%
 
 ## Ensure valid number of rows and columns ----
 dummy_data_testing_negative = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = 4),
-  var_name = rep(paste0(rep("covid_negative_test_date_", 4), c(1:4)),
+  patient_id = unique(data_patient$patient_id) %>% rep(each = n_negative_test),
+  var_name = rep(paste0(rep("covid_negative_test_date_", n_negative_test), c(1:n_negative_test)),
                  length(unique(data_patient$patient_id)))
 ) %>% 
   left_join(dummy_data_testing_negative)%>% 
@@ -283,8 +291,8 @@ dummy_data_testing_positive = dummy_data_testing_positive %>%
 
 ## Ensure valid number of rows and columns ----
 dummy_data_testing_positive = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = 2),
-  var_name = rep(paste0(rep("covid_positive_test_date_", 2), c(1:2)),
+  patient_id = unique(data_patient$patient_id) %>% rep(each = n_positive_test),
+  var_name = rep(paste0(rep("covid_positive_test_date_", n_positive_test), c(1:n_positive_test)),
                  length(unique(data_patient$patient_id)))
 ) %>% 
   left_join(dummy_data_testing_positive)%>% 
