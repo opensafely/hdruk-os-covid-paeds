@@ -55,12 +55,12 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Sex"),
 
-    ethnicity = case_when(
-      ethnicity == "1" ~ "White",
-      ethnicity == "4" ~ "Black",
-      ethnicity == "3" ~ "South Asian",
-      ethnicity == "2" ~ "Mixed",
-      ethnicity == "5" ~ "Other",
+    ethnicity_gp = case_when(
+      ethnicity_gp == "1" ~ "White",
+      ethnicity_gp == "4" ~ "Black",
+      ethnicity_gp == "3" ~ "South Asian",
+      ethnicity_gp == "2" ~ "Mixed",
+      ethnicity_gp == "5" ~ "Other",
       TRUE ~ NA_character_
     ) %>%
       factor() %>%
@@ -77,7 +77,7 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Ethnicity (SUS)"),
 
-    ethnicity_comb = coalesce(ethnicity, ethnicity_6_sus) %>%
+    ethnicity = coalesce(ethnicity_gp, ethnicity_6_sus) %>%
       ff_label("Ethnicity"),
 
     region_2019 = region_2019 %>%

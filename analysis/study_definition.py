@@ -79,7 +79,7 @@ study = StudyDefinition(
     ),
 
     # Ethnicity in 6 categories
-    ethnicity=patients.with_these_clinical_events(
+    ethnicity_gp=patients.with_these_clinical_events(
         ethnicity_codes,
         returning="category",
         find_last_match_in_period=True,
