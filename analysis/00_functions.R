@@ -1,5 +1,5 @@
 # Functions ----
-# read_column_type: read first row of csv to determine column data type by name
+# read_column_type: read column name to determine column data type
 read_column_type = function(file){
   
   first_row = read_csv(
@@ -43,8 +43,8 @@ plot_hist = function(data, x, path = here::here("output"),
          path = path)
 }
 
-# weekly_count_date: weekly count of date variables in data  
-weekly_count_date = function(data, var, start_date = NULL, end_date = NULL, 
+# count_dates_by_period: count of date variables in data by period 
+count_dates_by_period = function(data, var, start_date = NULL, end_date = NULL, 
                         period = "week"){
   
   if(is.null(start_date)) {
@@ -65,7 +65,7 @@ weekly_count_date = function(data, var, start_date = NULL, end_date = NULL,
       rep(length(var)),
     name = rep(var, each = length(week)/length(var))) %>% 
     left_join(
-      data_admissions %>%
+      data %>%
         select(all_of(var)) %>% 
         rownames_to_column() %>% 
         pivot_longer(-rowname) %>% 
@@ -76,3 +76,4 @@ weekly_count_date = function(data, var, start_date = NULL, end_date = NULL,
     ) %>% 
     replace_na(list(n = 0))
 } 
+

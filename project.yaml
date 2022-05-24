@@ -92,13 +92,50 @@ actions:
       highly_sensitive:
         data_positive_tests: output/data_weekly/input_covid_tests_positive_20*.csv.gz
 
-  process_data:
-    run: r:latest analysis/04_summarise_admissions.R
-    needs: [generate_study_population, generate_admissions, generate_outpatient,
-            generate_gp, generate_covid_tests_negative, generate_covid_tests_positive]
+  process_patient_data:
+    run: r:latest analysis/01_process_patient_data.R
+    needs: [generate_study_population]
     outputs:
       highly_sensitive:
-        datasets: output/datasets/*.rds
+        data_patient: output/data/data_patient.rds
+        data_id: output/data/data_id.rds
+
+  process_admissions_data:
+    run: r:latest analysis/01_process_admissions_data.R
+    needs: [generate_admissions, process_patient_data]
+    outputs:
+      highly_sensitive:
+        data_admissions: output/data/data_admissions.rds
       moderately_sensitive:
-        plots: output/extract_descriptives/figures/*.jpeg
-        tables: output/extract_descriptives/tables/*.csv
+        diagnostics_admissions: output/diagnostics/diagnostics_admissions.csv
+        plots_admissions: output/descriptives/data_admissions/*.jpeg
+
+  process_outpatient_data:
+    run: r:latest analysis/01_process_outpatient_data.R
+    needs: [generate_outpatient, process_patient_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data/data_outpatient.rds
+      moderately_sensitive:
+        diagnostics_outpatient: output/diagnostics/diagnostics_outpatient.csv
+        plots_outpatient: output/descriptives/data_outpatient/*.jpeg
+
+  process_gp_data:
+    run: r:latest analysis/01_process_gp_data.R
+    needs: [generate_gp, process_patient_data]
+    outputs:
+      highly_sensitive:
+        data_gp: output/data/data_gp.rds
+      moderately_sensitive:
+        diagnostics_gp: output/diagnostics/diagnostics_gp.csv
+        plots_gp: output/descriptives/data_gp/*.jpeg
+
+  process_testing_data:
+    run: r:latest analysis/01_process_testing_data.R
+    needs: [generate_covid_tests_negative, generate_covid_tests_positive, process_patient_data]
+    outputs:
+      highly_sensitive:
+        data_testing: output/data/data_testing.rds
+      moderately_sensitive:
+        diagnostics_testing: output/diagnostics/diagnostics_testing.csv
+        plots_testing: output/descriptives/data_testing/*.jpeg
