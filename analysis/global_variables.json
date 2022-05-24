@@ -6,7 +6,7 @@
     "fup_start_date": "2021-05-01",
     "n_admission": 7,
     "n_outpatient": 7,
-    "n_gp": 7,
+    "n_gp": 5,
     "n_positive_test": 2,
-    "n_negative_test": 4
+    "n_negative_test": 3
   }
