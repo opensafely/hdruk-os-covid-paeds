@@ -236,7 +236,7 @@ dummy_data_testing_negative = dummy_data_testing_negative %>%
   mutate(value = sort(value) %>% as.character()) %>%
   ungroup() %>% 
   mutate(prob = rep(runif(n()))) %>% 
-  filter(prob <= incidence) %>% 
+  filter(prob <= 0.5) %>% 
   group_by(patient_id) %>% 
   mutate(index = rep(1:n()),
          var_name = paste(variable, index, sep = "_")) %>% 
@@ -281,7 +281,7 @@ dummy_data_testing_positive = dummy_data_testing_positive %>%
   mutate(value = sort(value) %>% as.character()) %>%
   ungroup() %>% 
   mutate(prob = rep(runif(n()))) %>% 
-  filter(prob <= incidence) %>% 
+  filter(prob <= 0.05) %>% 
   group_by(patient_id) %>% 
   mutate(index = rep(1:n()),
          var_name = paste(variable, index, sep = "_")) %>% 

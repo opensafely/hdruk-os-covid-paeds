@@ -26,9 +26,8 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_admissions
-        --index-date-range "2018-10-01 to 2022-01-31 by week"
+        --index-date-range "2018-10-01 to 2022-05-02 by week"
         --output-format csv.gz
-        --skip-existing 
         --output-dir=output/data_weekly
     dummy_data_file: output/dummy_data/dummy_data_admissions.csv.gz
     needs: [generate_dummy_data]
@@ -40,9 +39,8 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_outpatient
-        --index-date-range "2019-03-11 to 2022-01-31 by week"
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
         --output-format csv.gz
-        --skip-existing 
         --output-dir=output/data_weekly
     dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
     needs: [generate_dummy_data]
@@ -54,9 +52,8 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp
-        --index-date-range "2018-12-31 to 2022-01-31 by week"
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
-        --skip-existing 
         --output-dir=output/data_weekly
     dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
     needs: [generate_dummy_data]
@@ -64,13 +61,25 @@ actions:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_20*.csv.gz
 
+  generate_gp_clinical:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_clinical
+        --index-date-range "2018-12-31 to 2018-12-31 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_clinical_20*.csv.gz
+
   generate_covid_tests_negative:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_covid_tests_negative
-        --index-date-range "2019-12-30 to 2020-01-13 by week"
+        --index-date-range "2019-12-30 to 2022-05-02 by week"
         --output-format csv.gz
-        --skip-existing 
         --output-dir=output/data_weekly
     dummy_data_file: output/dummy_data/dummy_data_testing_negative.csv.gz
     needs: [generate_dummy_data]
@@ -82,9 +91,8 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_covid_tests_positive
-        --index-date-range "2019-12-30 to 2022-01-31 by week"
+        --index-date-range "2019-12-30 to 2022-05-02 by week"
         --output-format csv.gz
-        --skip-existing 
         --output-dir=output/data_weekly
     dummy_data_file: output/dummy_data/dummy_data_testing_positive.csv.gz
     needs: [generate_dummy_data]
@@ -92,17 +100,16 @@ actions:
       highly_sensitive:
         data_positive_tests: output/data_weekly/input_covid_tests_positive_20*.csv.gz
 
-  process_patient_data:
-    run: r:latest analysis/01_process_patient_data.R
+  process_patient_ids:
+    run: r:latest analysis/01_process_patient_ids.R
     needs: [generate_study_population]
     outputs:
       highly_sensitive:
-        data_patient: output/data/data_patient.rds
         data_id: output/data/data_id.rds
 
   process_admissions_data:
     run: r:latest analysis/01_process_admissions_data.R
-    needs: [generate_admissions, process_patient_data]
+    needs: [generate_admissions, process_patient_ids]
     outputs:
       highly_sensitive:
         data_admissions: output/data/data_admissions.rds
@@ -112,7 +119,7 @@ actions:
 
   process_outpatient_data:
     run: r:latest analysis/01_process_outpatient_data.R
-    needs: [generate_outpatient, process_patient_data]
+    needs: [generate_outpatient, process_patient_ids]
     outputs:
       highly_sensitive:
         data_outpatient: output/data/data_outpatient.rds
@@ -122,7 +129,7 @@ actions:
 
   process_gp_data:
     run: r:latest analysis/01_process_gp_data.R
-    needs: [generate_gp, process_patient_data]
+    needs: [generate_gp, process_patient_ids]
     outputs:
       highly_sensitive:
         data_gp: output/data/data_gp.rds
@@ -132,10 +139,17 @@ actions:
 
   process_testing_data:
     run: r:latest analysis/01_process_testing_data.R
-    needs: [generate_covid_tests_negative, generate_covid_tests_positive, process_patient_data]
+    needs: [generate_covid_tests_negative, generate_covid_tests_positive, process_patient_ids]
     outputs:
       highly_sensitive:
         data_testing: output/data/data_testing.rds
       moderately_sensitive:
         diagnostics_testing: output/diagnostics/diagnostics_testing.csv
         plots_testing: output/descriptives/data_testing/*.jpeg
+
+  process_patient_data:
+    run: r:latest analysis/01_process_patient_data.R
+    needs: [generate_study_population, process_admissions_data, process_testing_data]
+    outputs:
+      highly_sensitive:
+        data_patient: output/data/data_patient.rds
