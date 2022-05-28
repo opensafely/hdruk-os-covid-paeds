@@ -12,7 +12,7 @@ actions:
         cohort: output/input.csv.gz
 
   generate_dummy_data:
-    run: r:latest analysis/generate_dummy_data.R
+    run: r:latest analysis/01_generate_dummy_data.R
     needs: [generate_study_population]
     outputs:
       highly_sensitive:
@@ -61,19 +61,6 @@ actions:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_20*.csv.gz
 
-  generate_gp_clinical:
-    run: >
-      cohortextractor:latest generate_cohort
-        --study-definition study_definition_gp_clinical
-        --index-date-range "2018-12-31 to 2018-12-31 by week"
-        --output-format csv.gz
-        --output-dir=output/data_weekly
-    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
-    needs: [generate_dummy_data]
-    outputs:
-      highly_sensitive:
-        data_gp_contacts: output/data_weekly/input_gp_clinical_20*.csv.gz
-
   generate_covid_tests_negative:
     run: >
       cohortextractor:latest generate_cohort
@@ -101,14 +88,14 @@ actions:
         data_positive_tests: output/data_weekly/input_covid_tests_positive_20*.csv.gz
 
   process_patient_ids:
-    run: r:latest analysis/01_process_patient_ids.R
+    run: r:latest analysis/02_process_patient_ids.R
     needs: [generate_study_population]
     outputs:
       highly_sensitive:
         data_id: output/data/data_id.rds
 
   process_admissions_data:
-    run: r:latest analysis/01_process_admissions_data.R
+    run: r:latest analysis/02_process_admissions_data.R
     needs: [generate_admissions, process_patient_ids]
     outputs:
       highly_sensitive:
@@ -118,7 +105,7 @@ actions:
         plots_admissions: output/descriptives/data_admissions/*.jpeg
 
   process_outpatient_data:
-    run: r:latest analysis/01_process_outpatient_data.R
+    run: r:latest analysis/02_process_outpatient_data.R
     needs: [generate_outpatient, process_patient_ids]
     outputs:
       highly_sensitive:
@@ -128,7 +115,7 @@ actions:
         plots_outpatient: output/descriptives/data_outpatient/*.jpeg
 
   process_gp_data:
-    run: r:latest analysis/01_process_gp_data.R
+    run: r:latest analysis/02_process_gp_data.R
     needs: [generate_gp, process_patient_ids]
     outputs:
       highly_sensitive:
@@ -138,7 +125,7 @@ actions:
         plots_gp: output/descriptives/data_gp/*.jpeg
 
   process_testing_data:
-    run: r:latest analysis/01_process_testing_data.R
+    run: r:latest analysis/02_process_testing_data.R
     needs: [generate_covid_tests_negative, generate_covid_tests_positive, process_patient_ids]
     outputs:
       highly_sensitive:
@@ -148,7 +135,7 @@ actions:
         plots_testing: output/descriptives/data_testing/*.jpeg
 
   process_patient_data:
-    run: r:latest analysis/01_process_patient_data.R
+    run: r:latest analysis/02_process_patient_data.R
     needs: [generate_study_population, process_admissions_data, process_testing_data]
     outputs:
       highly_sensitive:

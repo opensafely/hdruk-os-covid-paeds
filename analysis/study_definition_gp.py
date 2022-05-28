@@ -4,6 +4,10 @@ from cohortextractor import StudyDefinition, patients, codelist, codelist_from_c
 import json
 import datetime
 
+############
+# Codelist #
+############
+
 # Import Codelists
 from codelists import *
 
@@ -15,7 +19,8 @@ from codelists import *
 def gp_contact_date_X(n):
     def var_signature(name, on_or_after):
         return {
-            name: patients.with_gp_consultations(
+            name: patients.with_these_clinical_events(
+                    codelist = snomed_clinical_finding,
                     returning="date",
                     between=[on_or_after, "index_date + 6 days"],
                     date_format="YYYY-MM-DD",
@@ -65,8 +70,8 @@ study = StudyDefinition(
     population=patients.satisfying(
         """
         (NOT died_before_start_date) AND registered_at_start_date
-        AND (registered_at_end_date OR died_after_start_date)
-        AND (age > 1) AND (age < 18)
+        AND (registered_at_end_date OR died_during_study)
+        AND (age_on_start_date > 1) AND (age_on_start_date < 18)
         AND (gp_contact_count > 0)
         """,
         registered_at_start_date=patients.registered_as_of(
@@ -79,11 +84,11 @@ study = StudyDefinition(
             on_or_before=start_date,
             returning="binary_flag",
         ),
-        died_after_start_date=patients.died_from_any_cause(
-            on_or_before=end_date,
+        died_during_study=patients.died_from_any_cause(
+            between=[start_date, end_date],
             returning="binary_flag",
         ),
-        age=patients.age_as_of(
+        age_on_start_date=patients.age_as_of(
             start_date,
         ),
     ),
@@ -98,7 +103,8 @@ study = StudyDefinition(
     ),
 
     # Number of GP contacts during period
-    gp_contact_count=patients.with_gp_consultations(
+    gp_contact_count=patients.with_these_clinical_events(
+        codelist = snomed_clinical_finding,
         returning="number_of_matches_in_period",
         between=["index_date", "index_date + 6 days"],
         return_expectations={

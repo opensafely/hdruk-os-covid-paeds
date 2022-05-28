@@ -67,8 +67,8 @@ study = StudyDefinition(
     population=patients.satisfying(
         """
         (NOT died_before_start_date) AND registered_at_start_date
-        AND (registered_at_end_date OR died_after_start_date)
-        AND (age > 1) AND (age < 18)
+        AND (registered_at_end_date OR died_during_study)
+        AND (age_on_start_date > 1) AND (age_on_start_date < 18)
         AND (covid_positive_test_count > 0)
         """,
         registered_at_start_date=patients.registered_as_of(
@@ -81,11 +81,11 @@ study = StudyDefinition(
             on_or_before=start_date,
             returning="binary_flag",
         ),
-        died_after_start_date=patients.died_from_any_cause(
-            on_or_before=end_date,
+        died_during_study=patients.died_from_any_cause(
+            between=[start_date, end_date],
             returning="binary_flag",
         ),
-        age=patients.age_as_of(
+        age_on_start_date=patients.age_as_of(
             start_date,
         ),
     ),
