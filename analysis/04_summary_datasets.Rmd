@@ -36,6 +36,14 @@ data_testing = here::here("output", "data_weekly", files_testing) %>%
       as_tibble()
   })
 
+print(data_testing[[1]], n = 50)
+print(data_testing[[2]], n = 50)
+print(data_testing[[3]], n = 50)
+
+```
+
+```{r}
+
 # Extract diagnostics data  ----
 diagnostics_testing = data_testing %>%
   map(function(data){
@@ -54,6 +62,33 @@ diagnostics_testing = data_testing %>%
   mutate(file = files_testing) %>%
   relocate(file)
 
-head(diagnostics_testing, n = 500)
+# Filter out bad patient IDs, pivot longer ----
+data_testing = data_testing %>%
+  map(function(data){
+    data %>%
+      filter(patient_id %in% data_id$patient_id) %>%
+      select(-ends_with("_count")) %>%
+      pivot_longer(
+        cols = -patient_id,
+        names_to = c("result", "index"),
+        names_pattern = "covid_(.*)_test_date_(\\d+)",
+        values_to = "test_date",
+        values_drop_na = TRUE
+      ) %>%
+      select(-index)
+  }) %>%
+  bind_rows() %>%
+  arrange(patient_id, test_date, result) %>%
+  distinct(patient_id, test_date, result)
+
+print(data_testing, n = 150)
+
+# Recode test results ----
+data_testing = data_testing %>% 
+  mutate(
+    result = result %>% 
+      fct_recode(Positive = "positive",
+                 Negative = "negative")
+  )
 ```
 
