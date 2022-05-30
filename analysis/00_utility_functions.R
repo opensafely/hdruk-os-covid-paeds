@@ -73,7 +73,7 @@ count_dates_by_period = function(data, var, start_date = NULL, end_date = NULL,
     date = seq(start_date, end_date, by=period) %>%
       floor_date(period) %>% 
       rep(length(var)),
-    name = rep(var, each = length(week)/length(var))) %>% 
+    name = var) %>% 
     left_join(
       data %>%
         select(all_of(var)) %>% 
@@ -87,3 +87,9 @@ count_dates_by_period = function(data, var, start_date = NULL, end_date = NULL,
     replace_na(list(n = 0))
 } 
 
+
+date_seq = function(dates, by = "month", week_start = 1){
+  seq(min(floor_date(dates, unit = by, week_start = week_start), na.rm = TRUE), 
+      max(floor_date(dates, unit = by, week_start = week_start), na.rm = TRUE),
+      by = by)
+}
