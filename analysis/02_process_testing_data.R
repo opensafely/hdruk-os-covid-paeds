@@ -63,6 +63,14 @@ data_testing = data_testing %>%
   arrange(patient_id, test_date, result) %>%
   distinct(patient_id, test_date, result)
 
+# Recode test results ----
+data_testing = data_testing %>% 
+  mutate(
+    result = result %>% 
+      fct_recode(Positive = "positive",
+                 Negative = "negative")
+  )
+
 # Save data as rds ----
 write_rds(data_testing,
           here::here("output", "data", "data_testing.rds"),
@@ -73,51 +81,57 @@ write_csv(diagnostics_testing,
           here::here("output", "diagnostics", "diagnostics_testing.csv"))
 
 # Create plots ----
-c("test_date") %>% 
-  map(function(var){
-    # Plot weekly ----
-    plot_weekly = data_testing %>% 
-      filter(result == "positive") %>% 
-      count_dates_by_period(var, period = "week") %>% 
-      ggplot(aes(x = date, y = n)) +
-      geom_line() +
-      theme_bw()
+
+## Plot weekly ----
+### Positive ----
+plot_pos_weekly = data_testing %>%
+  filter(result == "Positive") %>% 
+  ggplot(aes(test_date)) +
+  geom_histogram(breaks = date_seq(data_testing$test_date, by = "week")) +
+  scale_x_date(labels = scales::date_format("%b %Y"),
+               breaks = date_seq(data_testing$test_date, by = "month")) + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5))
+
+ggsave(filename = paste0("weekly_positive_test_date.jpeg"),
+       plot = plot_pos_weekly,
+       path = here::here("output", "descriptives", "data_testing"))
+
+### Negative ----
+plot_neg_weekly = data_testing %>%
+  filter(result == "Negative") %>% 
+  ggplot(aes(test_date)) +
+  geom_histogram(breaks = date_seq(data_testing$test_date, by = "week")) +
+  scale_x_date(labels = scales::date_format("%b %Y"),
+               breaks = date_seq(data_testing$test_date, by = "month")) + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5))
+
+ggsave(filename = paste0("weekly_negative_test_date.jpeg"),
+       plot = plot_neg_weekly,
+       path = here::here("output", "descriptives", "data_testing"))
     
-    ggsave(filename = paste0("weekly_positive_", var, ".jpeg"),
-           plot = plot_weekly,
-           path = here::here("output", "descriptives", "data_testing"))
-    
-    plot_weekly = data_testing %>% 
-      filter(result == "negative") %>% 
-      count_dates_by_period(var, period = "week") %>% 
-      ggplot(aes(x = date, y = n)) +
-      geom_line() +
-      theme_bw()
-    
-    ggsave(filename = paste0("weekly_negative_", var, ".jpeg"),
-           plot = plot_weekly,
-           path = here::here("output", "descriptives", "data_testing"))
-    
-    # Plot monthly ----
-    plot_monthly = data_testing %>% 
-      filter(result == "positive") %>% 
-      count_dates_by_period(var, period = "month") %>% 
-      ggplot(aes(x = date, y = n)) +
-      geom_line() +
-      theme_bw()
-    
-    ggsave(filename = paste0("monthly_positive_", var, ".jpeg"),
-           plot = plot_monthly,
-           path = here::here("output", "descriptives", "data_testing"))
-    
-    plot_monthly = data_testing %>% 
-      filter(result == "negative") %>% 
-      count_dates_by_period(var, period = "month") %>% 
-      ggplot(aes(x = date, y = n)) +
-      geom_line() +
-      theme_bw()
-    
-    ggsave(filename = paste0("monthly_negative_", var, ".jpeg"),
-           plot = plot_monthly,
-           path = here::here("output", "descriptives", "data_testing"))
-  })
+## Plot monthly ----
+### Positive ----
+plot_pos_weekly = data_testing %>%
+  filter(result == "Positive") %>% 
+  ggplot(aes(test_date)) +
+  geom_histogram(breaks = date_seq(data_testing$test_date, by = "month")) +
+  scale_x_date(labels = scales::date_format("%b %Y"),
+               breaks = date_seq(data_testing$test_date, by = "month")) + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5))
+
+ggsave(filename = paste0("monthly_positive_test_date.jpeg"),
+       plot = plot_pos_weekly,
+       path = here::here("output", "descriptives", "data_testing"))
+
+### Negative ----
+plot_neg_weekly = data_testing %>%
+  filter(result == "Negative") %>% 
+  ggplot(aes(test_date)) +
+  geom_histogram(breaks = date_seq(data_testing$test_date, by = "month")) +
+  scale_x_date(labels = scales::date_format("%b %Y"),
+               breaks = date_seq(data_testing$test_date, by = "month")) + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5))
+
+ggsave(filename = paste0("monthly_negative_test_date.jpeg"),
+       plot = plot_neg_weekly,
+       path = here::here("output", "descriptives", "data_testing"))
