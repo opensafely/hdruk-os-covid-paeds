@@ -26,7 +26,7 @@ data_id = read_rds(here::here("output", "data", "data_id.rds"))
 
 # Data Files ----
 files_testing = list.files(path = here::here("output", "data_weekly"),
-                           pattern = "input_covid_tests_[[:lower:]]+_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+                           pattern = "input_covid_tests_negative_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
 
 # Read in testing data ----
 data_testing = here::here("output", "data_weekly", files_testing) %>%
@@ -55,7 +55,7 @@ diagnostics_testing = data_testing %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    n_empty_col_1 = data %>% pull(1) %>% is.na() %>% sum()
+    n_empty_col_1 = data %>% pull(covid_negative_test_date_1) %>% is.na() %>% sum()
     tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_empty_col_1)
   }) %>%
   bind_rows() %>%
@@ -83,12 +83,6 @@ data_testing = data_testing %>%
 
 print(data_testing, n = 150)
 
-# Recode test results ----
-data_testing = data_testing %>% 
-  mutate(
-    result = result %>% 
-      fct_recode(Positive = "positive",
-                 Negative = "negative")
-  )
+
 ```
 
