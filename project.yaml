@@ -140,3 +140,10 @@ actions:
     outputs:
       highly_sensitive:
         data_patient: output/data/data_patient.rds
+
+  summary_datasets:
+    run: r:latest -e 'rmarkdown::render("analysis/04_summary_datasets.Rmd", output_dir = "output/descriptives")'
+    needs: [generate_covid_tests_negative, generate_covid_tests_positive, process_patient_ids]
+    outputs:
+      moderately_sensitive:
+        summary_datasets_html: output/descriptives/04_summary_datasets.html
