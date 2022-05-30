@@ -1,0 +1,59 @@
+---
+title: "Dataset Summary"
+author: "James Farrell"
+date: "30/05/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load packages ----
+library(tidyverse)
+library(lubridate)
+library(finalfit)
+
+# Load custom functions ----
+source(here::here("analysis", "00_utility_functions.R"))
+
+# Load patient IDs
+data_id = read_rds(here::here("output", "data", "data_id.rds"))
+
+```
+
+
+```{r load_datasets}
+
+# Data Files ----
+files_testing = list.files(path = here::here("output", "data_weekly"),
+                           pattern = "input_covid_tests_[[:lower:]]+_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+# Read in testing data ----
+data_testing = here::here("output", "data_weekly", files_testing) %>%
+  map(function(file){
+    file %>% 
+      read_csv(col_types = read_column_type(.)) %>% 
+      as_tibble()
+  })
+
+# Extract diagnostics data  ----
+diagnostics_testing = data_testing %>%
+  map(function(data){
+    n_row = nrow(data)
+    n_row_bad_id = data %>%
+      filter(!patient_id %in% data_id$patient_id) %>%
+      nrow()
+    n_col = ncol(data)
+    n_col_empty = data %>%
+      select_if(~(all(is.na(.)))) %>%
+      ncol()
+    n_empty_col_1 = data %>% pull(1) %>% is.na() %>% sum()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_empty_col_1)
+  }) %>%
+  bind_rows() %>%
+  mutate(file = files_testing) %>%
+  relocate(file)
+
+head(diagnostics_testing, n = 500)
+```
+
