@@ -38,7 +38,8 @@ diagnostics_testing = data_testing %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+    n_empty_col_1 = data %>% pull(1) %>% is.na() %>% sum()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_empty_col_1)
   }) %>%
   bind_rows() %>%
   mutate(file = files_testing) %>%
