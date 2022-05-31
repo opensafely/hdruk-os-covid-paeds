@@ -102,7 +102,7 @@ actions:
         data_admissions: output/data/data_admissions.rds
       moderately_sensitive:
         diagnostics_admissions: output/diagnostics/diagnostics_admissions.csv
-        diagnostics_admissions: output/diagnostics/overlap_admissions.csv
+        diagnostics_admissions2: output/diagnostics/overlap_admissions.csv
         plots_admissions: output/descriptives/data_admissions/*.jpeg
 
   process_outpatient_data:
