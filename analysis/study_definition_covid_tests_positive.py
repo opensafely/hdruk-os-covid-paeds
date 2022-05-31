@@ -22,6 +22,7 @@ def covid_positive_test_date_X(n):
                 find_first_match_in_period=True,
                 returning="date",
                 date_format="YYYY-MM-DD",
+                restrict_to_earliest_specimen_date=False,
                 return_expectations={
                     "date": {"earliest": "2020-01-01", "latest": end_date},
                     "rate": "uniform",
