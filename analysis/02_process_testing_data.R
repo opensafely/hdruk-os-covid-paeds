@@ -16,8 +16,9 @@ dir.create(here::here("output", "descriptives", "data_testing"), showWarnings = 
 data_id = read_rds(here::here("output", "data", "data_id.rds"))
 
 # Data Files ----
-files_testing = list.files(path = here::here("output", "data_weekly"),
-                           pattern = "input_covid_tests_[[:lower:]]+_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+files_testing = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_covid_tests_[[:lower:]]+_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
 
 # Read in testing data ----
 data_testing = here::here("output", "data_weekly", files_testing) %>%
@@ -38,8 +39,13 @@ diagnostics_testing = data_testing %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    n_empty_col_1 = data %>% pull(1) %>% is.na() %>% sum()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_empty_col_1)
+    n_empty_col_1 = data %>% 
+      select(contains("_date_1")) %>% 
+      pull() %>% is.na() %>% sum()
+    max_count = data %>%
+      select(ends_with("_count")) %>%
+      pull() %>% max()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_empty_col_1, max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_testing) %>%

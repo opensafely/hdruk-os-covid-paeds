@@ -38,7 +38,13 @@ diagnostics_gp = data_gp %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+    n_empty_gp_1 = data %>% 
+      select(gp_contact_date_1) %>% 
+      pull() %>% is.na() %>% sum()
+    max_count = data %>%
+      select(ends_with("_count")) %>%
+      pull() %>% max()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_empty_gp_1, max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_gp) %>%

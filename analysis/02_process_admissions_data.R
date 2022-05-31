@@ -38,7 +38,21 @@ diagnostics_admissions = data_admissions %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+    n_empty_admission_1 = data %>% 
+      select(admission_date_1) %>% 
+      pull() %>% is.na() %>% sum()
+    n_empty_discharge_1 = data %>% 
+      select(discharge_date_1) %>% 
+      pull() %>% is.na() %>% sum()
+    n_empty_method_1 = data %>% 
+      select(admission_method_1) %>% 
+      pull() %>% is.na() %>% sum()
+    max_count = data %>%
+      select(ends_with("_count")) %>%
+      pull() %>% max()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty,
+           n_empty_admission_1, n_empty_discharge_1, n_empty_method_1,
+           max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_admissions) %>%

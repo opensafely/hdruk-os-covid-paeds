@@ -38,7 +38,14 @@ diagnostics_outpatient = data_outpatient %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
+    n_empty_outpatient_1 = data %>% 
+      select(outpatient_date_1) %>% 
+      pull() %>% is.na() %>% sum()
+    max_count = data %>%
+      select(ends_with("_count")) %>%
+      pull() %>% max()
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_empty_outpatient_1,
+           max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_outpatient) %>%
