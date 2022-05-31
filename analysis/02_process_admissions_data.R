@@ -116,6 +116,10 @@ write_rds(data_admissions,
 write_csv(diagnostics_admissions,
           here::here("output", "diagnostics", "diagnostics_admissions.csv"))
 
+# Save diagnostics as csv ----
+write_csv(diagnostics_admissions,
+          here::here("output", "diagnostics", "overlap_admissions.csv"))
+
 # Create plots ----
 c("admission_date", "discharge_date") %>% 
   map(function(var){
