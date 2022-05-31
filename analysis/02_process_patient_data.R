@@ -172,7 +172,7 @@ data_patient = data_patient %>%
 data_patient = data_patient %>% 
   left_join(
     data_testing %>% 
-      filter(result == "positive") %>% 
+      filter(result == "Positive") %>% 
       group_by(patient_id) %>% 
       filter(row_number() == 1) %>% 
       select(patient_id, covid_pos_test_date_1 = test_date),
@@ -184,7 +184,7 @@ data_patient = data_patient %>%
   left_join(
     data_testing %>% 
       mutate(
-        result_abr = if_else(result == "positive", "pos", "neg"),
+        result_abr = if_else(result == "Positive", "pos", "neg"),
         test_period = case_when(
           test_date < tp_start_date ~ NA_character_,
           test_date <= tp_end_date  ~ "tp", # Testing period
@@ -266,10 +266,10 @@ data_patient = data_patient %>%
     data_testing %>%
       group_by(patient_id) %>%
       mutate(
-        covid_test_pos_1 = first(test_date[result == "positive"])
+        covid_test_pos_1 = first(test_date[result == "Positive"])
       ) %>%
       ungroup() %>% 
-      filter(test_date == covid_test_pos_1 & result == "negative") %>% 
+      filter(test_date == covid_test_pos_1 & result == "Negative") %>% 
       mutate(covid_discrepant_test = "Yes") %>% 
       select(patient_id, covid_discrepant_test),
     by = "patient_id"
