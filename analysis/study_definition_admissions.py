@@ -34,13 +34,6 @@ def admitted_to_hospital_X(n):
                     return_expectations=return_expectations
                     ),
         }
-
-    # Expectation for admission method
-    return_expectations_method={
-        "category": {"ratios": {"11": 0.1, "12": 0.1, "13": 0.1, "21": 0.1, "22": 0.1, "23": 0.1,
-                                "24": 0.05, "25": 0.05, "2A": 0.05, "2B": 0.05, "2C": 0.05, "2D": 0.05, "28": 0.05,
-                                "31": 0.01, "32": 0.01, "82": 0.01, "83": 0.01, "81": 0.01}},
-                     "incidence": 1}
                      
     # Expections for admission dates
     return_expectations_date_adm={
@@ -54,15 +47,36 @@ def admitted_to_hospital_X(n):
         "rate": "uniform",
         "incidence": 0.8}
 
+    # Expectation for admission method
+    return_expectations_method={
+        "category": {"ratios": {"11": 0.1, "12": 0.1, "13": 0.1, "21": 0.1, "22": 0.1, "23": 0.1,
+                                "24": 0.05, "25": 0.05, "2A": 0.05, "2B": 0.05, "2C": 0.05, "2D": 0.05, "28": 0.05,
+                                "31": 0.01, "32": 0.01, "82": 0.01, "83": 0.01, "81": 0.01}},
+                     "incidence": 0.95}
+
+    # Expectation for primary diagnosis
+    return_expectations_diagnosis={
+        "category": {"ratios": {"J45": 0.25, "E10": 0.25, "C91": 0.25, "I50": 0.25}},
+                     "incidence": 0.95}
+
+    # Expectation for admission treatment function code
+    return_expectations_diagnosis={
+        "category": {"ratios": {"100": 0.25, "173": 0.25, "212": 0.25, "I50": 0.25}},
+                     "incidence": 0.95}
+
     for i in range(1, n+1):
         if i == 1:
             variables = var_signature("admission_date_1", "date_admitted", "index_date", return_expectations_date_adm)
             variables.update(var_signature2("discharge_date_1", "date_discharged", "admission_date_1", return_expectations_date_dis))
             variables.update(var_signature2("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
+            variables.update(var_signature2("primary_diagnosis_1", "primary_diagnosis", "admission_date_1", return_expectations_diagnosis))
+            variables.update(var_signature2("treatment_function_1", "admission_treatment_function_code", "admission_date_1", return_expectations_diagnosis))
         else:
             variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1} + 1 day", return_expectations_date_adm))
             variables.update(var_signature2(f"discharge_date_{i}", "date_discharged", f"admission_date_{i}", return_expectations_date_dis))
             variables.update(var_signature2(f"admission_method_{i}", "admission_method", f"admission_date_{i}", return_expectations_method))
+            variables.update(var_signature2(f"primary_diagnosis_{i}", "primary_diagnosis", f"admission_date_{i}", return_expectations_diagnosis))
+            variables.update(var_signature2(f"treatment_function_{i}", "admission_treatment_function_code", f"admission_date_{i}", return_expectations_diagnosis))
     return variables
 
 

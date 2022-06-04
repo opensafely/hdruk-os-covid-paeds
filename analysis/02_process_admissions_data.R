@@ -47,12 +47,18 @@ diagnostics_admissions = data_admissions %>%
     n_empty_method_1 = data %>% 
       select(admission_method_1) %>% 
       pull() %>% is.na() %>% sum()
+    n_empty_primary_diagnosis_1 = data %>% 
+      select(admission_method_1) %>% 
+      pull() %>% is.na() %>% sum()
+    n_empty_treatment_function_1 = data %>% 
+      select(admission_method_1) %>% 
+      pull() %>% is.na() %>% sum()
     max_count = data %>%
       select(ends_with("_count")) %>%
       pull() %>% max()
     tibble(n_row, n_row_bad_id, n_col, n_col_empty,
            n_empty_admission_1, n_empty_discharge_1, n_empty_method_1,
-           max_count)
+           n_empty_primary_diagnosis_1, n_empty_treatment_function_1, max_count)
   }) %>%
   bind_rows() %>%
   mutate(file = files_admissions) %>%
@@ -106,6 +112,19 @@ data_admissions = data_admissions %>%
   group_by(patient_id) %>% 
   mutate(index = row_number()) %>% 
   ungroup()
+
+# 
+data_admissions = data_admissions %>% 
+  mutate(
+    admission_method.factor = admission_method %>% 
+      fct_collapse(
+        Elective = c("11", "12", "13"),
+        Emergency = c("21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"),
+        Other = c("31", "32", "82", "83", "81"),
+        other_level = "Unknown"
+      )
+  )
+
 
 # Save data as rds ----
 write_rds(data_admissions,
