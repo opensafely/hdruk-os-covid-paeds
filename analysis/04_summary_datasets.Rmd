@@ -19,6 +19,25 @@ source(here::here("analysis", "00_utility_functions.R"))
 # Load patient IDs
 data_id = read_rds(here::here("output", "data", "data_id.rds"))
 
+data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
+
 ```
 
+```{r}
+data_admissions_day = data_admissions %>% 
+  group_by(patient_id, index) %>% 
+  expand(date = seq(admission_date, discharge_date, by = 'day'),
+         admission_method = first(admission_method)) %>% 
+  ungroup() %>% 
+  mutate(
+    date_month = floor_date(date, unit = "month")
+  ) %>%
+  group_by(patient_id, admission_method) %>%
+  count(
+    date_month
+  )
+
+
+
+```
 
