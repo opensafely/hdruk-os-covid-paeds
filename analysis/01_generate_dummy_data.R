@@ -38,8 +38,14 @@ date_range = seq(start_date, end_date, by="day")
 date_range_testing = seq(tp_start_date, end_date, by="day")
 admission_method = c("11", "12", "13", "21", "22", "23", "24", "25", "2A", 
                      "2B", "2C", "2D", "28", "31", "32", "82", "83", "81")
-admission_method_prob = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 
-                          0.05, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01)
+primary_diagnosis = paste0(
+  sample(LETTERS, 50, replace = TRUE),
+  sample(0:9, 50, replace = TRUE),
+  sample(0:9, 50, replace = TRUE),
+  sample(0:9, 50, replace = TRUE)
+)
+treatment_function = c("100", "101", "102", "110", "242", "260", "280", "321",
+                       "180", "190", "192", "300", "301", "302", "361", "711")
 
 # Small sample from patient_data ----
 data_patient = data_patient %>% 
@@ -51,25 +57,39 @@ dummy_data_admissions = data_patient %>%
   transmute(
     admission_date_1 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_1 = sample(date_range, nrow(data_patient), replace = TRUE),
-    admission_method_1 = sample(admission_method, nrow(data_patient), replace = TRUE, prob = admission_method_prob),
+    admission_method_1 = sample(admission_method, nrow(data_patient), replace = TRUE),
+    primary_diagnosis_1 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
+    treatment_function_1 = sample(treatment_function, nrow(data_patient), replace = TRUE),
     admission_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
-    admission_method_2 = sample(admission_method, nrow(data_patient), replace = TRUE, prob = admission_method_prob),
+    admission_method_2 = sample(admission_method, nrow(data_patient), replace = TRUE),
+    primary_diagnosis_2 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
+    treatment_function_2 = sample(treatment_function, nrow(data_patient), replace = TRUE),
     admission_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
-    admission_method_3 = sample(admission_method, nrow(data_patient), replace = TRUE, prob = admission_method_prob),
+    admission_method_3 = sample(admission_method, nrow(data_patient), replace = TRUE),
+    primary_diagnosis_3 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
+    treatment_function_3 = sample(treatment_function, nrow(data_patient), replace = TRUE),
     admission_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
-    admission_method_4 = sample(admission_method, nrow(data_patient), replace = TRUE, prob = admission_method_prob),
+    admission_method_4 = sample(admission_method, nrow(data_patient), replace = TRUE),
+    primary_diagnosis_4 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
+    treatment_function_4 = sample(treatment_function, nrow(data_patient), replace = TRUE),
     admission_date_5 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_5 = sample(date_range, nrow(data_patient), replace = TRUE),
-    admission_method_5 = sample(admission_method, nrow(data_patient), replace = TRUE, prob = admission_method_prob),
+    admission_method_5 = sample(admission_method, nrow(data_patient), replace = TRUE),
+    primary_diagnosis_5 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
+    treatment_function_5 = sample(treatment_function, nrow(data_patient), replace = TRUE),
     admission_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
-    admission_method_6 = sample(admission_method, nrow(data_patient), replace = TRUE, prob = admission_method_prob),
+    admission_method_6 = sample(admission_method, nrow(data_patient), replace = TRUE),
+    primary_diagnosis_6 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
+    treatment_function_6 = sample(treatment_function, nrow(data_patient), replace = TRUE),
     admission_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
-    admission_method_7 = sample(admission_method, nrow(data_patient), replace = TRUE, prob = admission_method_prob),
+    admission_method_7 = sample(admission_method, nrow(data_patient), replace = TRUE),
+    primary_diagnosis_7 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
+    treatment_function_7 = sample(treatment_function, nrow(data_patient), replace = TRUE),
     patient_id = patient_id,
   )
 
@@ -78,32 +98,41 @@ dummy_data_admissions = dummy_data_admissions %>%
   mutate_at(vars(starts_with(c("admission_date", "discharge_date"))),
             as.character) %>%
   pivot_longer(-patient_id,
-               names_to = c("variable", "type", "index"),
-               names_pattern = "^(.*)_(.*)_(\\d+)") %>% 
-  pivot_wider(names_from = type) %>%
-  mutate(date = date %>% ymd()) %>% 
-  group_by(patient_id) %>%
-  mutate(date = sort(date) %>% as.character()) %>%
-  ungroup() %>% 
-  pivot_longer(-c(patient_id, variable, index),
-               names_to = "type", values_drop_na = TRUE) %>% 
-  mutate(prob = rep(runif(n()/3), each = 3)) %>% 
-  filter(prob <= incidence) %>% 
+               names_to = c("variable", "index"),
+               names_pattern = "^(.*)_(\\d+)") %>% 
+  pivot_wider(names_from = variable) %>% 
+  mutate(admission_date_temp = admission_date %>% ymd(),
+         discharge_date_temp = discharge_date %>% ymd()) %>% 
   group_by(patient_id) %>% 
-  mutate(index = rep(1:(n()/3), each = 3),
-         var_name = paste(variable, type, index, sep = "_")) %>% 
+  mutate(
+    admission_date = sort(c(admission_date_temp, discharge_date_temp)
+                          )[seq(1,2*n(), by = 2)] %>% 
+      as.character(),
+    discharge_date = sort(c(admission_date_temp, discharge_date_temp)
+                          )[seq(2,2*n(), by = 2)] %>% 
+      as.character(),
+    ) %>% 
   ungroup() %>% 
-  arrange(index, type, variable) %>% 
-  select(-c(prob, variable, index, type))
+  mutate(prob = runif(n())) %>% 
+  filter(prob <= incidence) %>%
+  select(-c(prob, admission_date_temp, discharge_date_temp)) %>% 
+  group_by(patient_id) %>% 
+  mutate(index = 1:n()) %>% 
+  pivot_longer(-c(patient_id, index)) %>% 
+  mutate(var_name = paste0(name, "_", index)) %>% 
+  select(-c(name, index))
+
+
 
 ## Ensure valid number of rows and columns ----
 dummy_data_admissions = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = 3*n_admission),
-  var_name = rep(paste0(rep(c("admission_date_", "discharge_date_", "admission_method_"), 7),
-                    rep(c(1:n_admission), each =3)),
+  patient_id = unique(data_patient$patient_id) %>% rep(each = 5*n_admission),
+  var_name = rep(paste0(rep(c("admission_date_", "discharge_date_", "admission_method_",
+                              "primary_diagnosis_", "treatment_function_"), 7),
+                    rep(c(1:n_admission), each = 5)),
                  length(unique(data_patient$patient_id)))
 ) %>% 
-  left_join(dummy_data_admissions)%>% 
+  left_join(dummy_data_admissions) %>% 
   pivot_wider(names_from = var_name, values_from = value) 
 
 ## Add admission count, relocate patient_id to last row ----
