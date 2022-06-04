@@ -12,32 +12,96 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(lubridate)
 library(finalfit)
+library(scales)
+library(knitr)
 
 # Load custom functions ----
 source(here::here("analysis", "00_utility_functions.R"))
 
-# Load patient IDs
-data_id = read_rds(here::here("output", "data", "data_id.rds"))
+```
 
+
+```{r load_data}
+# Load datasets
 data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
 
 ```
 
-```{r}
-data_admissions_day = data_admissions %>% 
-  group_by(patient_id, index) %>% 
-  expand(date = seq(admission_date, discharge_date, by = 'day'),
-         admission_method = first(admission_method)) %>% 
-  ungroup() %>% 
-  mutate(
-    date_month = floor_date(date, unit = "month")
-  ) %>%
-  group_by(patient_id, admission_method) %>%
-  count(
-    date_month
-  )
 
+```{r plot_setup}
 
+theme_set(theme_bw())
+
+plot_hist_date = function(.data, var, by = "week", breaks_by = "month", 
+                          week_start = 1, 
+                          fill = NULL){
+  .data %>% 
+    ggplot(aes_string(x = var, fill = fill)) + 
+    geom_histogram(breaks = date_seq(.data %>% pull(var), by = by)) +
+    scale_x_date(labels = scales::date_format("%b\n%Y"),
+                 breaks = date_seq(.data %>% pull(var), by = breaks_by)) + 
+    theme(axis.text.x = element_text(angle=0, vjust = 0.5, hjust = 0.5))
+}
 
 ```
 
+
+# Hospital Admissions {.tabset}
+
+## Admission date {.tabset}
+
+### Weekly (Total)
+
+```{r}
+
+plot_hist_date(data_admissions, "admission_date",
+               by = "week", breaks_by = "3 months") +
+  labs(x = NULL, y = "Weekly count")
+
+```
+
+### Weekly (Admission method)
+
+```{r}
+
+plot_hist_date(data_admissions, "admission_date",
+               by = "week", breaks_by = "3 months") +
+  labs(x = NULL, y = "Weekly count") +
+  facet_wrap(~ admission_method.factor, ncol = 1)
+
+```
+
+### Monthly
+
+```{r}
+
+plot_hist_date(data_admissions, "admission_date", 
+               by = "month", breaks_by = "3 months") +
+  labs(x = NULL, y = "Monthly count")
+
+```
+
+## Primary diagnosis
+
+```{r}
+
+data_admissions %>% 
+  mutate(
+    primary_diagnosis_chapter = str_sub(primary_diagnosis, end = 1)
+  ) %>% 
+  count(primary_diagnosis_chapter) %>%
+  mutate(perc = (n/sum(n)) %>% percent(accuracy = 0.1)) %>% 
+  kable()
+ 
+```
+
+## Treatment function
+
+```{r}
+
+data_admissions %>% 
+  count(treatment_function) %>%
+  mutate(perc = (n/sum(n)) %>% percent(accuracy = 0.1)) %>% 
+  kable()
+ 
+```
