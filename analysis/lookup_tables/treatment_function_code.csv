@@ -1,0 +1,203 @@
+﻿Code,Title,Category
+100,General Surgery Service,Surgical Specialties
+101,Urology Service,Surgical Specialties
+102,Transplant Surgery Service,Surgical Specialties
+103,Breast Surgery Service,Surgical Specialties
+104,Colorectal Surgery Service,Surgical Specialties
+105,Hepatobiliary and Pancreatic Surgery Service,Surgical Specialties
+106,Upper Gastrointestinal Surgery Service,Surgical Specialties
+107,Vascular Surgery Service,Surgical Specialties
+108,Spinal Surgery Service,Surgical Specialties
+109,Bariatric Surgery Service,Surgical Specialties
+110,Trauma and Orthopaedic Service,Surgical Specialties
+111,Orthopaedic Service,Surgical Specialties
+113,Endocrine Surgery Service,Surgical Specialties
+115,Trauma Surgery Service,Surgical Specialties
+120,Ear Nose and Throat Service,Surgical Specialties
+130,Ophthalmology Service,Surgical Specialties
+140,Oral Surgery Service,Surgical Specialties
+141,Restorative Dentistry Service,Surgical Specialties
+143,Orthodontic Service,Surgical Specialties
+144,Maxillofacial Surgery Service,Surgical Specialties
+145,Oral and Maxillofacial Surgery Service,Surgical Specialties
+149,not a Treatment Function,Surgical Specialties
+150,Neurosurgical Service,Surgical Specialties
+160,Plastic Surgery Service,Surgical Specialties
+161,Burns Care Service,Surgical Specialties
+170,Cardiothoracic Surgery Service,Surgical Specialties
+172,Cardiac Surgery Service,Surgical Specialties
+173,Thoracic Surgery Service,Surgical Specialties
+174,Cardiothoracic Transplantation Service,Surgical Specialties
+142,Paediatric Dentistry Service,Children's Specialist Services
+171,Paediatric Surgery Service,Children's Specialist Services
+211,Paediatric Urology Service,Children's Specialist Services
+212,Paediatric Transplantation Surgery Service,Children's Specialist Services
+213,Paediatric Gastrointestinal Surgery Service,Children's Specialist Services
+214,Paediatric Trauma and Orthopaedic Service,Children's Specialist Services
+215,Paediatric Ear Nose and Throat Service,Children's Specialist Services
+216,Paediatric Ophthalmology Service,Children's Specialist Services
+217,Paediatric Oral and Maxillofacial Surgery Service,Children's Specialist Services
+218,Paediatric Neurosurgery Service,Children's Specialist Services
+219,Paediatric Plastic Surgery Service,Children's Specialist Services
+220,Paediatric Burns Care Service,Children's Specialist Services
+221,Paediatric Cardiac Surgery Service,Children's Specialist Services
+222,Paediatric Thoracic Surgery Service,Children's Specialist Services
+223,Paediatric Epilepsy Service,Children's Specialist Services
+230,Paediatric Clinical Pharmacology Service,Children's Specialist Services
+240,Paediatric Palliative Medicine Service,Children's Specialist Services
+241,Paediatric Pain Management Service,Children's Specialist Services
+242,Paediatric Intensive Care Service,Children's Specialist Services
+250,Paediatric Hepatology Service,Children's Specialist Services
+251,Paediatric Gastroenterology Service,Children's Specialist Services
+252,Paediatric Endocrinology Service,Children's Specialist Services
+253,Paediatric Clinical Haematology Service,Children's Specialist Services
+254,Paediatric Audio Vestibular Medicine Service,Children's Specialist Services
+255,Paediatric Clinical Immunology and Allergy Service,Children's Specialist Services
+256,Paediatric Infectious Diseases Service,Children's Specialist Services
+257,Paediatric Dermatology Service,Children's Specialist Services
+258,Paediatric Respiratory Medicine Service,Children's Specialist Services
+259,Paediatric Nephrology Service,Children's Specialist Services
+260,Paediatric Medical Oncology Service,Children's Specialist Services
+261,Paediatric Inherited Metabolic Medicine Service,Children's Specialist Services
+262,Paediatric Rheumatology Service,Children's Specialist Services
+263,Paediatric Diabetes Service,Children's Specialist Services
+264,Paediatric Cystic Fibrosis Service,Children's Specialist Services
+270,Paediatric Emergency Medicine Service,Children's Specialist Services
+280,Paediatric Interventional Radiology Service,Children's Specialist Services
+290,Community Paediatric Service,Children's Specialist Services
+291,Paediatric Neurodisability Service,Children's Specialist Services
+321,Paediatric Cardiology Service,Children's Specialist Services
+421,Paediatric Neurology Service,Children's Specialist Services
+180,Emergency Medicine Service,Medical Specialties
+190,Anaesthetic Service,Medical Specialties
+191,Pain Management Service,Medical Specialties
+192,Intensive Care Medicine Service,Medical Specialties
+200,Aviation and Space Medicine Service,Medical Specialties
+300,General Internal Medicine Service,Medical Specialties
+301,Gastroenterology Service,Medical Specialties
+302,Endocrinology Service,Medical Specialties
+303,Clinical Haematology Service,Medical Specialties
+304,Clinical Physiology Service,Medical Specialties
+305,Clinical Pharmacology Service,Medical Specialties
+306,Hepatology Service,Medical Specialties
+307,Diabetes Service,Medical Specialties
+308,Blood and Marrow Transplantation Service,Medical Specialties
+309,Haemophilia Service,Medical Specialties
+310,Audio Vestibular Medicine Service,Medical Specialties
+311,Clinical Genetics Service,Medical Specialties
+312,not a Treatment Function,Medical Specialties
+313,Clinical Immunology and Allergy Service,Medical Specialties
+314,Rehabilitation Medicine Service,Medical Specialties
+315,Palliative Medicine Service,Medical Specialties
+316,Clinical Immunology Service,Medical Specialties
+317,Allergy Service,Medical Specialties
+318,Intermediate Care Service,Medical Specialties
+319,Respite Care Service,Medical Specialties
+320,Cardiology Service,Medical Specialties
+322,Clinical Microbiology Service,Medical Specialties
+323,Spinal Injuries Service,Medical Specialties
+324,Anticoagulant Service,Medical Specialties
+325,Sport and Exercise Medicine Service,Medical Specialties
+326,Acute Internal Medicine Service,Medical Specialties
+327,Cardiac Rehabilitation Service,Medical Specialties
+328,Stroke Medicine Service,Medical Specialties
+329,Transient Ischaemic Attack Service,Medical Specialties
+330,Dermatology Service,Medical Specialties
+331,Congenital Heart Disease Service,Medical Specialties
+333,Rare Disease Service,Medical Specialties
+335,Inherited Metabolic Medicine Service,Medical Specialties
+340,Respiratory Medicine Service,Medical Specialties
+341,Respiratory Physiology Service,Medical Specialties
+342,Pulmonary Rehabilitation Service,Medical Specialties
+343,Adult Cystic Fibrosis Service,Medical Specialties
+344,Complex Specialised Rehabilitation Service,Medical Specialties
+345,Specialist Rehabilitation Service,Medical Specialties
+346,Local Specialist Rehabilitation Service,Medical Specialties
+347,Sleep Medicine Service,Medical Specialties
+348,Post-COVID-19 Syndrome Service,Medical Specialties
+350,Infectious Diseases Service,Medical Specialties
+352,Tropical Medicine Service,Medical Specialties
+360,Genitourinary Medicine Service,Medical Specialties
+361,Renal Medicine Service,Medical Specialties
+370,Medical Oncology Service,Medical Specialties
+371,Nuclear Medicine Service,Medical Specialties
+400,Neurology Service,Medical Specialties
+401,Clinical Neurophysiology Service,Medical Specialties
+410,Rheumatology Service,Medical Specialties
+420,Paediatric Service,Medical Specialties
+422,Neonatal Critical Care Service,Medical Specialties
+424,Well Baby Service,Medical Specialties
+430,Elderly Medicine Service,Medical Specialties
+431,Orthogeriatric Medicine Service,Medical Specialties
+450,Dental Medicine Service,Medical Specialties
+451,Special Care Dentistry Service,Medical Specialties
+460,Medical Ophthalmology Service,Medical Specialties
+461,Ophthalmic and Vision Science Service,Medical Specialties
+500,not a Treatment Function,Medical Specialties
+501,Obstetrics Service,Medical Specialties
+502,Gynaecology Service,Medical Specialties
+503,Gynaecological Oncology Service,Medical Specialties
+504,Community Sexual and Reproductive Health Service,Medical Specialties
+505,Fetal Medicine Service,Medical Specialties
+510,Retired,Medical Specialties
+520,Retired,Medical Specialties
+600,not a Treatment Function,Medical Specialties
+610,Retired,Medical Specialties
+620,Retired,Medical Specialties
+834,Medical Virology Service,Medical Specialties
+656,Clinical Psychology Service,Mental Health Services
+700,Learning Disability Service,Mental Health Services
+710,Adult Mental Health Service,Mental Health Services
+711,Child and Adolescent Psychiatry Service,Mental Health Services
+712,Forensic Psychiatry Service,Mental Health Services
+713,Medical Psychotherapy Service,Mental Health Services
+715,Old Age Psychiatry Service,Mental Health Services
+720,Eating Disorders Service,Mental Health Services
+721,Addiction Service,Mental Health Services
+722,Liaison Psychiatry Service,Mental Health Services
+723,Psychiatric Intensive Care Service,Mental Health Services
+724,Perinatal Mental Health Service,Mental Health Services
+725,Mental Health Recovery and Rehabilitation Service,Mental Health Services
+726,Mental Health Dual Diagnosis Service,Mental Health Services
+727,Dementia Assessment Service,Mental Health Services
+730,Neuropsychiatry Service,Mental Health Services
+560,Midwifery Service,Other Services
+650,Physiotherapy Service,Other Services
+651,Occupational Therapy Service,Other Services
+652,Speech and Language Therapy Service,Other Services
+653,Podiatry Service,Other Services
+654,Dietetics Service,Other Services
+655,Orthoptics Service,Other Services
+657,Prosthetics Service,Other Services
+658,Orthotics Service,Other Services
+659,Dramatherapy Service,Other Services
+660,Art Therapy Service,Other Services
+661,Music Therapy Service,Other Services
+662,Optometry Service,Other Services
+663,Podiatric Surgery Service,Other Services
+670,Urological Physiology Service,Other Services
+673,Vascular Physiology Service,Other Services
+675,Cardiac Physiology Service,Other Services
+677,Gastrointestinal Physiology Service,Other Services
+800,Clinical Oncology Service,Other Services
+810,not a Treatment Function,Other Services
+811,Interventional Radiology Service,Other Services
+812,Diagnostic Imaging Service,Other Services
+820,not a Treatment Function,Other Services
+821,not a Treatment Function,Other Services
+822,Chemical Pathology Service,Other Services
+823,not a Treatment Function,Other Services
+824,not a Treatment Function,Other Services
+830,not a Treatment Function,Other Services
+831,not a Treatment Function,Other Services
+832,Retired,Other Services
+840,Audiology Service,Other Services
+900,not a Treatment Function,Other Services
+901,not a Treatment Function,Other Services
+902,not a Treatment Function,Other Services
+903,not a Treatment Function,Other Services
+904,not a Treatment Function,Other Services
+920,Diabetic Education Service,Other Services
+950,not a Treatment Function,Other Services
+960,not a Treatment Function,Other Services
+990,Retired,Other Services
