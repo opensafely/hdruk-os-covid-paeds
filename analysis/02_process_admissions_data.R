@@ -113,17 +113,6 @@ data_admissions = data_admissions %>%
   mutate(index = row_number()) %>% 
   ungroup()
 
-# 
-data_admissions = data_admissions %>% 
-  mutate(
-    admission_method.factor = admission_method %>% 
-      fct_collapse(
-        Elective = c("11", "12", "13"),
-        Emergency = c("21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"),
-        Other = c("31", "32", "82", "83", "81"),
-        other_level = "Unknown"
-      )
-  )
 
 
 # Save data as rds ----
