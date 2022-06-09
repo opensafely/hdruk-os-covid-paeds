@@ -142,7 +142,7 @@ actions:
       highly_sensitive:
         data_patient: output/data/data_patient.rds
 
-  summary_datasets:
+  summarise_datasets:
     run: r:latest -e 'rmarkdown::render("analysis/04_summary_datasets.Rmd", output_dir = "output/descriptives")'
     needs: [process_admissions_data]
     outputs:
