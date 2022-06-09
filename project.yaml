@@ -144,7 +144,7 @@ actions:
 
   summarise_datasets:
     run: r:latest -e 'rmarkdown::render("analysis/04_summary_datasets.Rmd", output_dir = "output/descriptives")'
-    needs: [process_admissions_data]
+    needs: [process_admissions_data, process_outpatient_data, process_gp_data]
     outputs:
       moderately_sensitive:
         summary_datasets_html: output/descriptives/04_summary_datasets.html
