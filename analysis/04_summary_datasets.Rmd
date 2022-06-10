@@ -82,7 +82,9 @@ data_admissions = data_admissions %>%
 
 ```
 
-# Hospital Admissions {.tabset}
+# Hospital Admission Spells {.tabset}
+
+Note: Same-day admission spells cannot be queried; the last hospital spell for patients who are readmitted on the same day will be missed. 
 
 ## Factor summary
 
@@ -240,15 +242,32 @@ data_admissions %>%
 
 data_admissions %>%  
   mutate(
-    length_of_stay = discharge_date - admission_date
+    length_of_stay = (discharge_date - admission_date) %>% 
+      as.numeric(),
+    length_of_stay.factor = length_of_stay %>% 
+      cut(breaks = c(-Inf, 0:6, 13, 29, Inf)) %>% 
+      fct_recode(
+        "0" = "(-Inf,0]",
+        "1" = "(0,1]",
+        "2" = "(1,2]",
+        "3" = "(2,3]",
+        "4" = "(3,4]",
+        "5" = "(4,5]",
+        "6" = "(5,6]",
+        "7-13" = "(6,13]",
+        "14-29" = "(13,29]",
+        "30+"   = "(29, Inf]",
+      )
   ) %>% 
-  ggplot(aes(length_of_stay)) +
-  geom_histogram() +
+  ggplot(aes(length_of_stay.factor)) +
+  geom_bar() +
   labs(x = "Length of stay (days)")
 
 ```
 
 # Outpatient Appointments
+
+Note: Sequential same-day appointments cannot be queried. Hence this data represents outpatient contact-days rather than number of outpatient appointments. It is estimated that 16.5% of outpatient contact-days consist of 2 or more outpatient appointments (details [here](https://github.com/opensafely-core/cohort-extractor/issues/492#issuecomment-872295921)).
 
 ```{r}
 
@@ -269,7 +288,18 @@ data_outpatient %>%
 
 ```
 
-# GP Contact
+# GP Records {.tabset}
+
+Definition: Dates corresponding to SNoMed codes within the following [hierarchy](https://itservices.midlandsandlancashirecsu.nhs.uk/media/1447/snomed-ct-glossary-hierarchy-and-semantic-tags_v1.pdf) (semantic tags):
+
+* Clinical finding (disorder, finding)
+* Procedure (procedure, regime/therapy)
+* Observable Entity (observable entity)
+* Specimen (specimen)
+
+Dates coinciding with secondary care (hospital spells and outpatient appointments) will be filtered out to avoid double counting.
+
+## All dates
 
 ```{r}
 
@@ -287,6 +317,86 @@ data_gp %>%
                breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "3 month")) +
   labs(y = "Weekly count", x = NULL, linetype = NULL) +
   theme(legend.position = "bottom")
+
+```
+
+## Secondary care double counting {.tabset}
+
+### All patients
+
+```{r}
+
+data_gp = data_gp %>% 
+  left_join(
+    data_outpatient %>%
+      mutate(outpatient_flag = 1) %>% 
+      select(patient_id, gp_date = outpatient_date, outpatient_flag),
+    by = c("patient_id", "gp_date")
+  ) %>% 
+  left_join(
+    data_admissions %>% 
+      group_by(patient_id, index) %>% 
+      expand(gp_date = seq(admission_date, discharge_date, by = "day")) %>% 
+      ungroup() %>% 
+      mutate(admission_flag = 1) %>% 
+      select(-index),
+    by = c("patient_id", "gp_date")
+  ) %>%
+  replace_na(list(outpatient_flag = 0, admission_flag = 0)) %>% 
+  mutate(
+    secondary_care_flag = if_else(
+      outpatient_flag == 1 | admission_flag == 1,
+      "Dates coinciding with secondary care",
+      "Dates unique to primary care"
+    ) %>%
+      factor()
+  )
+
+
+data_gp %>% 
+  mutate(
+    date = gp_date %>% cut(breaks = "week")
+  ) %>%
+  count(date, secondary_care_flag, .drop = FALSE) %>%
+  group_by(secondary_care_flag) %>% 
+  mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA)) %>% 
+  ungroup() %>% 
+  mutate(date = date %>% as_date()) %>% 
+  ggplot(aes(date, n)) +
+  geom_col() +
+  geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
+  scale_x_date(labels = date_format("%b\n%Y"),
+               breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "6 month")) +
+  labs(y = "Weekly count", x = NULL, linetype = NULL) +
+  theme(legend.position = "bottom") +
+  facet_wrap(~ secondary_care_flag)
+
+
+```
+
+### Patients in secondary care data
+
+```{r}
+
+data_gp %>%
+  filter(patient_id %in% data_admissions$patient_id |
+           patient_id %in% data_outpatient$patient_id) %>% 
+  mutate(
+    date = gp_date %>% cut(breaks = "week")
+  ) %>%
+  count(date, secondary_care_flag, .drop = FALSE) %>%
+  group_by(secondary_care_flag) %>% 
+  mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA)) %>% 
+  ungroup() %>% 
+  mutate(date = date %>% as_date()) %>% 
+  ggplot(aes(date, n)) +
+  geom_col() +
+  geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
+  scale_x_date(labels = date_format("%b\n%Y"),
+               breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "6 month")) +
+  labs(y = "Weekly count", x = NULL, linetype = NULL) +
+  theme(legend.position = "bottom") +
+  facet_wrap(~ secondary_care_flag)
 
 ```
 
