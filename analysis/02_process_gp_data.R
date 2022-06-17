@@ -12,8 +12,10 @@ dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "diagnostics"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "descriptives", "data_gp"), showWarnings = FALSE, recursive=TRUE)
 
-# Load patient IDs
+# Load patient IDs, admissions and outpatient data
 data_id = read_rds(here::here("output", "data", "data_id.rds"))
+data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
+data_outpatient = read_rds(here::here("output", "data", "data_outpatient.rds"))
 
 # Data Files ----
 files_gp = list.files(path = here::here("output", "data_weekly"),
@@ -69,6 +71,26 @@ data_gp = data_gp %>%
   arrange(patient_id, gp_date) %>%
   distinct(patient_id, gp_date)
 
+# Flag dates coinciding with secondary care ----
+data_gp = data_gp %>% 
+  left_join(
+    data_outpatient %>%
+      mutate(outpatient_flag = 1) %>% 
+      select(patient_id, gp_date = outpatient_date, outpatient_flag),
+    by = c("patient_id", "gp_date")
+  ) %>% 
+  left_join(
+    data_admissions %>%
+      select(patient_id, admission_date, discharge_date) %>% 
+      rowwise() %>% 
+      mutate(gp_date = list(seq(admission_date, discharge_date, by = "day"))) %>% 
+      unnest(gp_date) %>% 
+      mutate(admission_flag = 1) %>% 
+      select(patient_id, gp_date, admission_flag),
+    by = c("patient_id", "gp_date")
+  ) %>%
+  replace_na(list(outpatient_flag = 0, admission_flag = 0))
+
 # Save data as rds ----
 write_rds(data_gp,
           here::here("output", "data", "data_gp.rds"),
@@ -77,29 +99,3 @@ write_rds(data_gp,
 # Save diagnostics as csv ----
 write_csv(diagnostics_gp,
           here::here("output", "diagnostics", "diagnostics_gp.csv"))
-
-# Create plots ----
-c("gp_date") %>% 
-  map(function(var){
-    # Plot weekly ----
-    plot_weekly = data_gp %>% 
-      count_dates_by_period(var, period = "week") %>% 
-      ggplot(aes(x = date, y = n)) +
-      geom_line() +
-      theme_bw()
-    
-    ggsave(filename = paste0("weekly_", var, ".jpeg"),
-           plot = plot_weekly,
-           path = here::here("output", "descriptives", "data_gp"))
-    
-    # Plot monthly ----
-    plot_monthly = data_gp %>% 
-      count_dates_by_period(var, period = "month") %>% 
-      ggplot(aes(x = date, y = n)) +
-      geom_line() +
-      theme_bw()
-    
-    ggsave(filename = paste0("monthly_", var, ".jpeg"),
-           plot = plot_monthly,
-           path = here::here("output", "descriptives", "data_gp"))
-  })
