@@ -117,13 +117,12 @@ actions:
 
   process_gp_data:
     run: r:latest analysis/02_process_gp_data.R
-    needs: [generate_gp, process_patient_ids]
+    needs: [generate_gp, process_patient_ids, process_admissions_data, process_outpatient_data]
     outputs:
       highly_sensitive:
         data_gp: output/data/data_gp.rds
       moderately_sensitive:
         diagnostics_gp: output/diagnostics/diagnostics_gp.csv
-        plots_gp: output/descriptives/data_gp/*.jpeg
 
   process_testing_data:
     run: r:latest analysis/02_process_testing_data.R
@@ -144,7 +143,7 @@ actions:
 
   summarise_datasets:
     run: r:latest -e 'rmarkdown::render("analysis/04_summary_datasets.Rmd", output_dir = "output/descriptives")'
-    needs: [process_admissions_data, process_outpatient_data, process_gp_data]
+    needs: [process_patient_data, process_testing_data, process_admissions_data, process_outpatient_data, process_gp_data]
     outputs:
       moderately_sensitive:
         summary_datasets_html: output/descriptives/04_summary_datasets.html
