@@ -9,6 +9,31 @@ fct_case_when <- function(...) {
   factor(dplyr::case_when(...), levels=levels)
 }
 
+# ff_round_counts: Round counts from finalfit::summary_factorlist output
+ff_round_counts = function (.data, accuracy = 10, ignore = c("label", "levels", "p")){ 
+  if (!any(names(.data) == "label")) 
+    stop("summary_factorlist() must include: add_dependent_label = FALSE")
+  df.out = .data %>%
+    dplyr::mutate(label = dplyr::if_else(label == "", NA_character_, label)) %>% 
+    tidyr::fill(label) %>%
+    dplyr::group_by(label) %>% 
+    dplyr::mutate(across(-dplyr::any_of(ignore), 
+                         function(.){
+                           value_count = as.numeric(stringr::str_extract(., "[:digit:]+")) %>% 
+                             plyr::round_any(accuracy)
+                           value_perc = value_count/sum(value_count)*100
+                           
+                           dplyr::case_when(!levels %in% c("Mean (SD)", "Median (IQR)") ~ 
+                                              format_n_percent(value_count, value_perc, 1), 
+                                            TRUE ~ .)
+                           
+                         })) %>%
+    dplyr::mutate(label = dplyr::if_else(dplyr::row_number()==1, label, "")) %>% 
+    dplyr::ungroup()
+  class(df.out) = c("data.frame.ff", class(df.out))
+  return(df.out)
+}
+
 # read_column_type: read column name to determine column data type
 read_column_type = function(file){
   
