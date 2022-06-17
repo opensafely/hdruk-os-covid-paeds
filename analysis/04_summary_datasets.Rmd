@@ -4,6 +4,11 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
+# Disclosure controls
+
+* All tabulated counts are rounded to the nearest 10 (0 counts retained).
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, 
                       warning=FALSE)
@@ -28,12 +33,70 @@ theme_set(theme_bw())
 
 ```{r load_data}
 # Load datasets
+data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
 data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
 data_outpatient = read_rds(here::here("output", "data", "data_outpatient.rds"))
 data_gp = read_rds(here::here("output", "data", "data_gp.rds"))
 
 ```
 
+
+# Patient demographics
+
+```{r}
+
+dependent = "covid_status"
+explanatory = c(
+  "age_2019",
+  "age_2019_factor",
+  "sex",
+  "ethnicity",
+  "imd_Q5_2019",
+  "region_2019",
+  "rural_urban_2019",
+  
+  
+  
+  "asthma_diagnosis",
+  "current_asthma",
+  "cancer_excl_lung_and_haem",
+  "cancer_haem",
+  "cancer_lung",
+  "chronic_cardiac_disease",
+  "heart_disease_other",
+  "chronic_kidney_disease",
+  "chronic_liver_disease",
+  "chronic_respiratory_disease",
+  "diabetes",
+  "hiv",
+  "intellectual_disability",
+  "learning_disabilities",
+  "severe_mental_illness",
+  "neurological_diseases",
+  "other_neurological_conditions",
+  "cerebral_palsy",
+  "permanent_immunosuppression",
+  "pregnency_delivery",
+  "severe_obesity",
+  "sickle_cell_disease"
+)
+
+data_patient %>% 
+  summary_factorlist(
+    dependent = dependent,
+    explanatory = explanatory,
+    total_col = TRUE,
+    add_col_totals = TRUE,
+    na_include = TRUE
+  ) %>%
+  ff_round_counts() %>% 
+  kable(align = c("l", "r", "r", "r", "r", "r"))
+
+```
+
+# Hospital Admission Spells {.tabset}
+
+Note: Same-day admission spells cannot be queried; the last hospital spell for patients who are readmitted on the same day will be missed. 
 
 ```{r combine_lookup}
 # Combine with lookup table ----
@@ -82,10 +145,6 @@ data_admissions = data_admissions %>%
 
 ```
 
-# Hospital Admission Spells {.tabset}
-
-Note: Same-day admission spells cannot be queried; the last hospital spell for patients who are readmitted on the same day will be missed. 
-
 ## Factor summary
 
 ```{r factor_summary}
@@ -101,7 +160,8 @@ data_admissions %>%
     explanatory = explanatory,
     add_col_totals = TRUE,
     na_include = TRUE
-  ) %>% 
+  ) %>%
+  ff_round_counts() %>% 
   kable(align = c("l", "l", "r", "r", "r"))
 
 ```
@@ -327,22 +387,6 @@ data_gp %>%
 ```{r}
 
 data_gp = data_gp %>% 
-  left_join(
-    data_outpatient %>%
-      mutate(outpatient_flag = 1) %>% 
-      select(patient_id, gp_date = outpatient_date, outpatient_flag),
-    by = c("patient_id", "gp_date")
-  ) %>% 
-  left_join(
-    data_admissions %>% 
-      group_by(patient_id, index) %>% 
-      expand(gp_date = seq(admission_date, discharge_date, by = "day")) %>% 
-      ungroup() %>% 
-      mutate(admission_flag = 1) %>% 
-      select(-index),
-    by = c("patient_id", "gp_date")
-  ) %>%
-  replace_na(list(outpatient_flag = 0, admission_flag = 0)) %>% 
   mutate(
     secondary_care_flag = if_else(
       outpatient_flag == 1 | admission_flag == 1,
@@ -351,7 +395,6 @@ data_gp = data_gp %>%
     ) %>%
       factor()
   )
-
 
 data_gp %>% 
   mutate(
