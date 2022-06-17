@@ -11,6 +11,16 @@ import datetime
 # Import Codelists
 from codelists import *
 
+# Combine codelists
+gp_contact_codelist = combine_codelists(
+    snomed_disorder,
+    snomed_finding,
+    snomed_observable_entity,
+    snomed_procedure,
+    snomed_regime_therapy,
+    snomed_specimen
+)
+
 #############
 # Functions #
 #############
@@ -20,7 +30,7 @@ def gp_contact_date_X(n):
     def var_signature(name, on_or_after):
         return {
             name: patients.with_these_clinical_events(
-                    codelist = snomed_clinical_finding,
+                    codelist = gp_contact_codelist,
                     returning="date",
                     between=[on_or_after, "index_date + 6 days"],
                     date_format="YYYY-MM-DD",
@@ -104,7 +114,7 @@ study = StudyDefinition(
 
     # Number of GP contacts during period
     gp_contact_count=patients.with_these_clinical_events(
-        codelist = snomed_clinical_finding,
+        codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date", "index_date + 6 days"],
         return_expectations={
