@@ -165,54 +165,37 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Rural-urban classification"),
     
-    asthma_diagnosis = case_when(
+    asthma = case_when(
       !is.na(asthma_diagnosis_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Asthma diagnosis"),
-    
-    current_asthma = case_when(
       !is.na(current_asthma_date) ~ "Yes",
       TRUE ~ "No"
     ) %>% 
       factor() %>% 
-      ff_label("Current asthma"),
+      ff_label("Asthma"),
     
-    cancer_excl_lung_and_haem = case_when(
+    chronic_respiratory_disease = case_when(
+      !is.na(chronic_respiratory_disease_date) ~ "Yes",
+      TRUE ~ "No"
+    ) %>% 
+      factor() %>% 
+      ff_label("Chronic respiratory disease (not asthma)"),
+    
+    cancer = case_when(
       !is.na(cancer_excl_lung_and_haem_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Cancer (excluding lung or haematological)"),
-    
-    cancer_haem = case_when(
       !is.na(cancer_haem_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Cancer (haematological)"),
-    
-    cancer_lung = case_when(
       !is.na(cancer_lung_date) ~ "Yes",
       TRUE ~ "No"
     ) %>% 
       factor() %>% 
-      ff_label("Cancer (lung)"),
+      ff_label("Cancer"),
     
     chronic_cardiac_disease = case_when(
       !is.na(chronic_cardiac_disease_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Chronic cardiac disease"),
-    
-    heart_disease_other = case_when(
       !is.na(heart_disease_other_date) ~ "Yes",
       TRUE ~ "No"
     ) %>% 
       factor() %>% 
-      ff_label("Other heart disease"),
+      ff_label("Chronic cardiac disease"),
     
     chronic_kidney_disease = case_when(
       !is.na(chronic_kidney_disease_date) ~ "Yes",
@@ -228,13 +211,6 @@ data_patient = data_patient %>%
       factor() %>% 
       ff_label("Chronic liver disease"),
     
-    chronic_respiratory_disease = case_when(
-      !is.na(chronic_respiratory_disease_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Chronic respiratory disease"),
-    
     diabetes = case_when(
       !is.na(diabetes_date) ~ "Yes",
       TRUE ~ "No"
@@ -242,26 +218,29 @@ data_patient = data_patient %>%
       factor() %>% 
       ff_label("Diabetes"),
     
-    hiv = case_when(
+    severe_obesity = case_when(
+      !is.na(severe_obesity_date) ~ "Yes",
+      TRUE ~ "No"
+    ) %>% 
+      factor() %>% 
+      ff_label("Severe obesity"),
+    
+    permanent_immunodeficiency = case_when(
       !is.na(hiv_date) ~ "Yes",
+      !is.na(permanent_immunosuppression_date) ~ "Yes",
+      !is.na(sickle_cell_disease_date) ~ "Yes",
       TRUE ~ "No"
     ) %>% 
       factor() %>% 
-      ff_label("HIV"),
+      ff_label("Permanent immunodeficiency"),
     
-    intellectual_disability = case_when(
+    intellectual_learning_disability = case_when(
       !is.na(intellectual_disability_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Intellectual disability"),
-    
-    learning_disabilities = case_when(
       !is.na(learning_disabilities_date) ~ "Yes",
       TRUE ~ "No"
     ) %>% 
       factor() %>% 
-      ff_label("Learning disability"),
+      ff_label("Intellectual and learning disability"),
     
     severe_mental_illness = case_when(
       !is.na(severe_mental_illness_date) ~ "Yes",
@@ -272,31 +251,12 @@ data_patient = data_patient %>%
     
     neurological_diseases = case_when(
       !is.na(neurological_diseases_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Neurological disease"),
-    
-    other_neurological_conditions = case_when(
       !is.na(other_neurological_conditions_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Other neurological conditions"),
-    
-    cerebral_palsy = case_when(
       !is.na(cerebral_palsy_date) ~ "Yes",
       TRUE ~ "No"
     ) %>% 
       factor() %>% 
-      ff_label("Cerebral palsy"),
-    
-    permanent_immunosuppression = case_when(
-      !is.na(permanent_immunosuppression_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Permanent immunosuppression"),
+      ff_label("Neurological disease"),
     
     pregnency_delivery = case_when(
       !is.na(pregnency_delivery_date) ~ "Yes",
@@ -304,21 +264,6 @@ data_patient = data_patient %>%
     ) %>% 
       factor() %>% 
       ff_label("Pregnency and delivery"),
-    
-    severe_obesity = case_when(
-      !is.na(severe_obesity_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Severe obesity"),
-    
-    sickle_cell_disease = case_when(
-      !is.na(sickle_cell_disease_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Sickle cell disease"),
-  
   )
 
 # Covid status, counts and test dates ----
@@ -375,12 +320,19 @@ data_patient = data_patient %>%
 
 ## Assign covid status ----
 data_patient = data_patient %>% 
-  mutate(covid_status = case_when(
-    covid_test_pos_tp_count > 0 ~ "Positive",
-    covid_test_neg_tp_count > 0 ~ "Negative",
-    TRUE ~ "Untested") %>%
+  mutate(
+    covid_status_tp = case_when(
+      covid_test_pos_tp_count > 0 ~ "Positive",
+      covid_test_neg_tp_count > 0 ~ "Negative",
+      TRUE ~ "Untested") %>%
       factor() %>%
       ff_label("SARS-CoV-2 status (testing period)"),
+    covid_status_fup = case_when(
+      covid_test_pos_fup_count > 0 ~ "Positive",
+      covid_test_neg_fup_count > 0 ~ "Negative",
+      TRUE ~ "Untested") %>%
+      factor() %>%
+      ff_label("SARS-CoV-2 status (follow-up period)"),
   )
 
 # Exclusion criteria variables ----
