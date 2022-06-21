@@ -1,6 +1,6 @@
 ---
-title: "Healthcare Contact Summary"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+title: "Dataset Summary"
+date: "`r format(Sys.time(), '%d %B %Y')`"
 output: html_document
 ---
 
@@ -34,6 +34,7 @@ theme_set(theme_bw())
 ```{r load_data}
 # Load datasets
 data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
+data_testing = read_rds(here::here("output", "data", "data_testing.rds"))
 data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
 data_outpatient = read_rds(here::here("output", "data", "data_outpatient.rds"))
 data_gp = read_rds(here::here("output", "data", "data_gp.rds"))
@@ -45,7 +46,7 @@ data_gp = read_rds(here::here("output", "data", "data_gp.rds"))
 
 ```{r}
 
-dependent = "covid_status"
+dependent = "covid_status_tp"
 explanatory = c(
   "age_2019",
   "age_2019_factor",
@@ -55,30 +56,26 @@ explanatory = c(
   "region_2019",
   "rural_urban_2019",
   
+  "covid_status_fup",
+  "covid_test_neg_tp_count",
+  "covid_test_pos_tp_count",
+  "covid_test_neg_fup_count",
+  "covid_test_pos_fup_count",
   
   
-  "asthma_diagnosis",
-  "current_asthma",
-  "cancer_excl_lung_and_haem",
-  "cancer_haem",
-  "cancer_lung",
+  "asthma",
+  "chronic_respiratory_disease",
+  "cancer",
   "chronic_cardiac_disease",
-  "heart_disease_other",
   "chronic_kidney_disease",
   "chronic_liver_disease",
-  "chronic_respiratory_disease",
   "diabetes",
-  "hiv",
-  "intellectual_disability",
-  "learning_disabilities",
+  "severe_obesity",
+  "permanent_immunodeficiency",
+  "intellectual_learning_disability",
   "severe_mental_illness",
   "neurological_diseases",
-  "other_neurological_conditions",
-  "cerebral_palsy",
-  "permanent_immunosuppression",
-  "pregnency_delivery",
-  "severe_obesity",
-  "sickle_cell_disease"
+  "pregnency_delivery"
 )
 
 data_patient %>% 
@@ -93,6 +90,32 @@ data_patient %>%
   kable(align = c("l", "r", "r", "r", "r", "r"))
 
 ```
+
+# Covid-19 Testing
+
+```{r}
+
+data_testing %>% 
+  mutate(
+    date = test_date %>% cut(breaks = "week")
+  ) %>% 
+  count(date, result, .drop = FALSE) %>%
+  group_by(result) %>% 
+  mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
+         date = date %>% as_date()) %>%
+  ungroup() %>% 
+  ggplot(aes(date, n)) +
+  geom_col() +
+  geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
+  scale_x_date(labels = date_format("%b\n%Y"),
+               breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "6 month")) +
+  labs(y = "Weekly count", x = NULL, linetype = NULL) +
+  theme(legend.position = "bottom") +
+  facet_wrap(~ result)
+
+```
+
+
 
 # Hospital Admission Spells {.tabset}
 
