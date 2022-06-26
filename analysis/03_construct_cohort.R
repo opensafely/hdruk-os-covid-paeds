@@ -89,7 +89,7 @@ ymd(c("2019-01-01", "2020-01-01", "2021-01-01", "2022-01-01")) %>%
           crit == "c1" ~ "  is alive on 1st January 2019",
           crit == "c2" ~ "  with no probable nosocomial infection",
           crit == "c3" ~ "  with no same-day discrepent RT-PCR test result",
-          crit == "c4" ~ "  with age between 4 and 17 years",
+          crit == "c4" ~ "  with age between 4 and 17 years inclusive",
           TRUE ~ NA_character_
         )
       ) 
