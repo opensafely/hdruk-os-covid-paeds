@@ -52,7 +52,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp
-        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --index-date-range "2018-12-31 to 2020-12-28 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
     dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
