@@ -68,6 +68,13 @@ diagnostics_gp = data_gp %>%
     
     nonzero_counts = data %>%
       summarise(
+        sum_count_1 = gp_count_1 %>% sum(),
+        sum_count_2 = gp_count_2 %>% sum(),
+        sum_count_3 = gp_count_3 %>% sum(),
+        sum_count_4 = gp_count_4 %>% sum(),
+        sum_count_5 = gp_count_5 %>% sum(),
+        sum_count_6 = gp_count_6 %>% sum(),
+        sum_count_7 = gp_count_7 %>% sum(),
         nonzero_count_1 = (gp_count_1 > 0) %>% sum(),
         nonzero_count_2 = (gp_count_2 > 0) %>% sum(),
         nonzero_count_3 = (gp_count_3 > 0) %>% sum(),
