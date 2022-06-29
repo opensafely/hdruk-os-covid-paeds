@@ -91,7 +91,7 @@ study = StudyDefinition(
     gp_count_2=patients.with_these_clinical_events(
         codelist = gp_codelist,
         returning="number_of_matches_in_period",
-        between=["index_date + 1 day", "index_date + 1 day"],
+        between=["index_date", "index_date + 1 day"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 0.1},
             "incidence": 1,
@@ -101,7 +101,7 @@ study = StudyDefinition(
     gp_count_3=patients.with_these_clinical_events(
         codelist = gp_codelist,
         returning="number_of_matches_in_period",
-        between=["index_date + 2 day", "index_date + 2 day"],
+        between=["index_date", "index_date + 2 day"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 0.1},
             "incidence": 1,
@@ -111,7 +111,7 @@ study = StudyDefinition(
     gp_count_4=patients.with_these_clinical_events(
         codelist = gp_codelist,
         returning="number_of_matches_in_period",
-        between=["index_date + 3 day", "index_date + 3 day"],
+        between=["index_date", "index_date + 3 day"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 0.1},
             "incidence": 1,
@@ -121,7 +121,7 @@ study = StudyDefinition(
     gp_count_5=patients.with_these_clinical_events(
         codelist = gp_codelist,
         returning="number_of_matches_in_period",
-        between=["index_date + 4 day", "index_date + 4 day"],
+        between=["index_date", "index_date + 4 day"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 0.1},
             "incidence": 1,
@@ -131,7 +131,7 @@ study = StudyDefinition(
     gp_count_6=patients.with_these_clinical_events(
         codelist = gp_codelist,
         returning="number_of_matches_in_period",
-        between=["index_date + 5 day", "index_date + 5 day"],
+        between=["index_date", "index_date + 5 day"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 0.1},
             "incidence": 1,
@@ -141,7 +141,7 @@ study = StudyDefinition(
     gp_count_7=patients.with_these_clinical_events(
         codelist = gp_codelist,
         returning="number_of_matches_in_period",
-        between=["index_date + 6 day", "index_date + 6 day"],
+        between=["index_date", "index_date + 6 day"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 0.1},
             "incidence": 1,
