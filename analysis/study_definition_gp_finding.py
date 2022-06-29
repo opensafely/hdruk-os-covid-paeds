@@ -64,7 +64,7 @@ study = StudyDefinition(
             start_date,
         ),
         gp_weekly_count=patients.with_these_clinical_events(
-            codelist = snomed_disorder,
+            codelist = gp_codelist,
             returning="number_of_matches_in_period",
             between=["index_date", "index_date + 6 days"],
             return_expectations={
