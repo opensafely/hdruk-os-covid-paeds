@@ -12,14 +12,39 @@ dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "diagnostics"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "descriptives", "data_gp"), showWarnings = FALSE, recursive=TRUE)
 
-# Load patient IDs, admissions and outpatient data
+# Load patient IDs
 data_id = read_rds(here::here("output", "data", "data_id.rds"))
-data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
-data_outpatient = read_rds(here::here("output", "data", "data_outpatient.rds"))
 
 # Data Files ----
-files_gp = list.files(path = here::here("output", "data_weekly"),
-                           pattern = "input_gp_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+files_gp_disorder = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_disorder_20\\d{2}-\\d{2}-\\d{2}.csv.gz"
+)
+
+files_gp_finding = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_finding_20\\d{2}-\\d{2}-\\d{2}.csv.gz"
+)
+
+files_gp_procedure = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_procedure_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_gp_regime_therapy = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_regime_therapy_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_gp_observable_entity = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_observable_entity_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_gp_specimen = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_specimen_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_gp = c(files_gp_disorder, files_gp_finding, files_gp_procedure, 
+             files_gp_regime_therapy, files_gp_observable_entity, 
+             files_gp_specimen)
 
 # Read GP data from csv ----
 data_gp = here::here("output", "data_weekly", files_gp) %>%
@@ -40,56 +65,61 @@ diagnostics_gp = data_gp %>%
     n_col_empty = data %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
-    n_empty_gp_1 = data %>% 
-      select(gp_contact_date_1) %>% 
-      pull() %>% is.na() %>% sum()
-    max_count = data %>%
-      select(ends_with("_count")) %>%
-      pull() %>% max()
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty, n_empty_gp_1, max_count)
+    
+    nonzero_counts = data %>%
+      summarise(
+        nonzero_count_1 = (gp_count_1 > 0) %>% sum(),
+        nonzero_count_2 = (gp_count_2 > 0) %>% sum(),
+        nonzero_count_3 = (gp_count_3 > 0) %>% sum(),
+        nonzero_count_4 = (gp_count_4 > 0) %>% sum(),
+        nonzero_count_5 = (gp_count_5 > 0) %>% sum(),
+        nonzero_count_6 = (gp_count_6 > 0) %>% sum(),
+        nonzero_count_7 = (gp_count_7 > 0) %>% sum()
+      )
+    
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty) %>% 
+      bind_cols(nonzero_counts)
   }) %>%
   bind_rows() %>%
   mutate(file = files_gp) %>%
   relocate(file)
 
 # Filter out bad patient IDs, pivot longer ----
-data_gp = data_gp %>%
-  map(function(data){
-    data %>%
-      filter(patient_id %in% data_id$patient_id) %>%
-      select(-ends_with("_count")) %>%
-      pivot_longer(
-        cols = -patient_id,
-        names_to = c("variable", "index"),
-        names_pattern = "^(.*)_(\\d+)",
-        values_to = "gp_date",
-        values_drop_na = TRUE
-      ) %>%
-      select(-variable, -index)
+data_gp = map2(
+    .x = data_gp,
+    .y = files_gp,
+    .f = function(.data, .file_list){
+      .data %>%
+        filter(patient_id %in% data_id$patient_id) %>% 
+        pivot_longer(
+          cols = -patient_id,
+          names_to = c("index"),
+          names_pattern = "gp_count_(\\d+)",
+          values_to = "value",
+          values_drop_na = FALSE
+        ) %>% 
+        filter(value > 0) %>% 
+        mutate(
+          index = index %>% as.numeric(),
+          date = .file_list %>%
+            str_extract(
+              pattern = "20\\d{2}-\\d{2}-\\d{2}(?=\\.csv\\.gz)") %>% 
+            ymd() + (index - 1),
+          snomed_tag = .file_list %>%
+            str_extract(
+              pattern = "(?<=input_gp_)[a-z_]+(?=_20\\d{2}-\\d{2}-\\d{2}\\.csv\\.gz)") %>% 
+            str_replace("_", " ") %>% 
+            str_squish() %>% 
+            str_to_sentence(),
+          snomed_tag = case_when(
+            snomed_tag == "Regime therapy" ~ "Regime/therapy",
+            TRUE ~ snomed_tag
+            )
+        )
   }) %>%
-  bind_rows() %>%
-  arrange(patient_id, gp_date) %>%
-  distinct(patient_id, gp_date)
+  bind_rows() %>% 
+  select(-index)
 
-# Flag dates coinciding with secondary care ----
-data_gp = data_gp %>% 
-  left_join(
-    data_outpatient %>%
-      mutate(outpatient_flag = 1) %>% 
-      select(patient_id, gp_date = outpatient_date, outpatient_flag),
-    by = c("patient_id", "gp_date")
-  ) %>% 
-  left_join(
-    data_admissions %>%
-      select(patient_id, admission_date, discharge_date) %>% 
-      rowwise() %>% 
-      mutate(gp_date = list(seq(admission_date, discharge_date, by = "day"))) %>% 
-      unnest(gp_date) %>% 
-      mutate(admission_flag = 1) %>% 
-      select(patient_id, gp_date, admission_flag),
-    by = c("patient_id", "gp_date")
-  ) %>%
-  replace_na(list(outpatient_flag = 0, admission_flag = 0))
 
 # Save data as rds ----
 write_rds(data_gp,
