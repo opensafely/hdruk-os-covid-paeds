@@ -1,5 +1,5 @@
 ---
-title: 'Objective 1: Healthcare use 2019 to 2022'
+title: 'Objective 1: Healthcare utilisation 2019 to 2022'
 author: "SLICK"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: html_document
@@ -66,11 +66,11 @@ index_date = c("2019-01-01",
   ymd() %>% 
   as.list()
 
-data_cohort = map(.x = index_date,
+data_criteria = map(.x = index_date,
     .data_patient = data_patient,
     .f = function(.index_date, .data_patient){
-      .data_patient %>% 
-        mutate(
+      data_criteria = .data_patient %>% 
+        transmute(
           patient_id,
           index_date = .index_date,
           cohort = year(index_date),
@@ -85,19 +85,6 @@ data_cohort = map(.x = index_date,
               labels = c("Under 4", "4-6", "7-10", "11-14", "15-17", "18+")
             )%>%
             ff_label("Age group on 1st January (years)"),
-        )
-    })
-
-
-data_criteria = data_cohort %>% 
-  map(
-    function(.data_cohort){
-      ## Criteria for cohort inclusion ----
-      data_criteria = .data_cohort %>% 
-        transmute(
-          patient_id,
-          index_date,
-          cohort,
           is_alive = is.na(death_date) | death_date > index_date, 
           isnot_nosocomial = covid_nosocomial == "No",
           isnot_descrepant_result = covid_discrepant_test == "No",
@@ -111,16 +98,22 @@ data_criteria = data_cohort %>%
     }
   )
 
-data_cohort = map2(data_criteria, data_cohort,
-    function(.data_criteria, .data_cohort){
+data_cohort = data_criteria %>% 
+  map(
+    function(.data_criteria){
       data_cohort = .data_criteria %>%
         filter(include) %>%
-        select(patient_id) %>%
-        left_join(.data_cohort, by=c("patient_id"))
+        select(patient_id, cohort, index_date, age_indexed, age_group_indexed)
     }
-  ) %>% 
-  bind_rows() %>% 
-  relocate(index_date, patient_id)
+  )
+
+```
+
+# Cohorts
+
+## Inclusion flowchart
+
+```{r inclusion_flowchart}
 
 flowchart = data_criteria %>% 
   map(
@@ -172,15 +165,6 @@ flowchart = data_criteria %>%
   ) %>% 
   bind_rows()
 
-
-```
-
-# Cohorts
-
-## Inclusion flowchart
-
-```{r}
-
 flowchart %>% 
   select(cohort, criteria, n, n_exclude, pct_all, pct_exclude_step) %>%
   group_by(cohort) %>% 
@@ -194,7 +178,73 @@ flowchart %>%
 
 ```
 
+## Patient summary
 
+```{r}
+
+
+explanatory_var = c(
+  "age_indexed",
+  "age_group_indexed",
+  "sex",
+  "ethnicity",
+  "imd_Q5_2019",
+  "region_2019",
+  "rural_urban_2019",
+  
+  "covid_status_fup",
+  "covid_test_neg_tp_count",
+  "covid_test_pos_tp_count",
+  "covid_test_neg_fup_count",
+  "covid_test_pos_fup_count",
+  
+  
+  "asthma",
+  "chronic_respiratory_disease",
+  "cancer",
+  "chronic_cardiac_disease",
+  "chronic_kidney_disease",
+  "chronic_liver_disease",
+  "diabetes",
+  "severe_obesity",
+  "permanent_immunodeficiency",
+  "intellectual_learning_disability",
+  "severe_mental_illness",
+  "neurological_diseases",
+  "pregnency_delivery"
+)
+
+data_cohort %>% 
+  map(
+    .data_patient = data_patient,
+    .explanatory_var = explanatory_var,
+    .f = function(.data_cohort, .data_patient, .explanatory_var){
+      .data_cohort %>%
+        mutate(cohort = cohort %>% factor()) %>% 
+        left_join(
+          .data_patient,
+          by = "patient_id"
+        ) %>% 
+        summary_factorlist(
+          dependent = "cohort",
+          explanatory = .explanatory_var,
+          total_col = FALSE,
+          add_col_totals = TRUE,
+          na_include = TRUE
+          
+        ) %>% 
+        mutate(row_num = row_number())
+    }) %>% 
+  reduce(left_join, by = c("row_num", "label", "levels")) %>% 
+  select(-row_num) %>% 
+  ff_round_counts() %>% 
+  kable(align = c("l", "r", "r", "r", "r", "r"))
+
+
+
+
+
+```
 
 
 ```{r count_monthly_admission}
@@ -244,3 +294,6 @@ monthly_gp = data_patient %>%
   replace_na(list(n = 0))
 
 ```
+
+# Admissions
+
