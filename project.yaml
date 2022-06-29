@@ -48,19 +48,6 @@ actions:
       highly_sensitive:
         data_outpatient: output/data_weekly/input_outpatient_20*.csv.gz
 
-  generate_gp:
-    run: >
-      cohortextractor:latest generate_cohort
-        --study-definition study_definition_gp
-        --index-date-range "2018-12-31 to 2020-12-28 by week"
-        --output-format csv.gz
-        --output-dir=output/data_weekly
-    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
-    needs: [generate_dummy_data]
-    outputs:
-      highly_sensitive:
-        data_gp_contacts: output/data_weekly/input_gp_20*.csv.gz
-
   generate_gp_disorder:
     run: >
       cohortextractor:latest generate_cohort
@@ -68,8 +55,6 @@ actions:
         --index-date-range "2018-12-31 to 2018-12-31 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
-    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
-    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_disorder_20*.csv.gz
@@ -81,8 +66,6 @@ actions:
         --index-date-range "2018-12-31 to 2018-12-31 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
-    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
-    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_finding_20*.csv.gz
@@ -94,8 +77,6 @@ actions:
         --index-date-range "2018-12-31 to 2018-12-31 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
-    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
-    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_procedure_20*.csv.gz
@@ -107,8 +88,6 @@ actions:
         --index-date-range "2018-12-31 to 2018-12-31 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
-    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
-    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_regime_therapy_20*.csv.gz
@@ -120,8 +99,6 @@ actions:
         --index-date-range "2018-12-31 to 2018-12-31 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
-    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
-    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_observable_entity_20*.csv.gz
@@ -133,8 +110,6 @@ actions:
         --index-date-range "2018-12-31 to 2018-12-31 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
-    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
-    needs: [generate_dummy_data]
     outputs:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_specimen_20*.csv.gz
@@ -143,7 +118,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_covid_tests_negative
-        --index-date-range "2019-12-30 to 2022-05-02 by week"
+        --index-date-range "2019-12-30 to 2018-12-31 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
     dummy_data_file: output/dummy_data/dummy_data_testing_negative.csv.gz
@@ -195,7 +170,8 @@ actions:
 
   process_gp_data:
     run: r:latest analysis/02_process_gp_data.R
-    needs: [generate_gp, process_patient_ids, process_admissions_data, process_outpatient_data]
+    needs: [generate_gp_disorder, generate_gp_finding, generate_gp_procedure, generate_gp_regime_therapy,
+            generate_gp_observable_entity, generate_gp_observable_entity, process_patient_ids]
     outputs:
       highly_sensitive:
         data_gp: output/data/data_gp.rds
