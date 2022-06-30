@@ -52,7 +52,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp_disorder
-        --index-date-range "2018-12-31 to 2019-01-07 by week"
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
     outputs:
@@ -63,7 +63,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp_finding
-        --index-date-range "2018-12-31 to 2019-01-07 by week"
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
     outputs:
@@ -74,7 +74,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp_procedure
-        --index-date-range "2018-12-31 to 2019-01-07 by week"
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
     outputs:
@@ -85,7 +85,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp_regime_therapy
-        --index-date-range "2018-12-31 to 2019-01-07 by week"
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
     outputs:
@@ -96,7 +96,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp_observable_entity
-        --index-date-range "2018-12-31 to 2019-01-07 by week"
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
     outputs:
@@ -107,7 +107,7 @@ actions:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp_specimen
-        --index-date-range "2018-12-31 to 2019-01-07 by week"
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
     outputs:
