@@ -121,7 +121,8 @@ data_gp = map2(
           snomed_tag = case_when(
             snomed_tag == "Regime therapy" ~ "Regime/therapy",
             TRUE ~ snomed_tag
-            )
+            ) %>% 
+            ff_label("SNOMED semantic tag")
         )
   }) %>%
   bind_rows() %>% 
