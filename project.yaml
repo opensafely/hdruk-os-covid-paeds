@@ -48,6 +48,17 @@ actions:
       highly_sensitive:
         data_outpatient: output/data_weekly/input_outpatient_20*.csv.gz
 
+  generate_gp:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp
+        --index-date-range "2018-12-31 to 2018-12-31 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_20*.csv.gz
+
   generate_gp_disorder:
     run: >
       cohortextractor:latest generate_cohort
