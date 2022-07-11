@@ -6,7 +6,7 @@ output: html_document
 
 # Disclosure controls
 
-* All tabulated counts are rounded to the nearest 10 (0 counts retained).
+* All tabulated and figure counts are rounded to the nearest 10 (0 counts retained).
 
 
 ```{r setup, include=FALSE}
@@ -62,20 +62,23 @@ explanatory = c(
   "covid_test_neg_fup_count",
   "covid_test_pos_fup_count",
   
-  
   "asthma",
-  "chronic_respiratory_disease",
   "cancer",
-  "chronic_cardiac_disease",
-  "chronic_kidney_disease",
-  "chronic_liver_disease",
   "diabetes",
-  "severe_obesity",
-  "permanent_immunodeficiency",
-  "intellectual_learning_disability",
+  "epilepsy",
   "severe_mental_illness",
-  "neurological_diseases",
-  "pregnency_delivery"
+  
+  "cerebral_palsy",
+  "chronic_infections",
+  "devices_and_stomas",
+  "endocrine_disorders",
+  "gastrointestinal_disorders",
+  "haematological_disorders",
+  "immunological_disorders", 
+  "learning_and_behaviour_difficulties", 
+  "mental_illness",
+  "musculoskeletal_and_rheum",
+  "transplant"
 )
 
 data_patient %>% 
@@ -102,7 +105,8 @@ data_testing %>%
   count(date, result, .drop = FALSE) %>%
   group_by(result) %>% 
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
-         date = date %>% as_date()) %>%
+         date = date %>% as_date(),
+         n = n %>% plyr::round_any(10)) %>% 
   ungroup() %>% 
   ggplot(aes(date, n)) +
   geom_col() +
@@ -203,7 +207,8 @@ data_admissions %>%
   ) %>% 
   count(date, .drop = FALSE) %>%
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
-         date = date %>% as_date()) %>% 
+         date = date %>% as_date(),
+         n = n %>% plyr::round_any(10)) %>% 
   ggplot(aes(date, n)) +
   geom_col() +
   geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
@@ -226,7 +231,8 @@ data_admissions %>%
   group_by(admission_method.category) %>% 
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA)) %>% 
   ungroup() %>% 
-  mutate(date = date %>% as_date()) %>% 
+  mutate(date = date %>% as_date(),
+         n = n %>% plyr::round_any(10)) %>% 
   ggplot(aes(date, n)) +
   geom_col() +
   geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
@@ -251,7 +257,8 @@ data_admissions %>%
   group_by(treatment_function.category) %>% 
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA)) %>% 
   ungroup() %>% 
-  mutate(date = date %>% as_date()) %>% 
+  mutate(date = date %>% as_date(),
+         n = n %>% plyr::round_any(10)) %>% 
   ggplot(aes(date, n)) +
   geom_col() +
   geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
@@ -275,7 +282,8 @@ data_admissions %>%
   group_by(primary_diagnosis.chapter) %>% 
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA)) %>% 
   ungroup() %>% 
-  mutate(date = date %>% as_date()) %>% 
+  mutate(date = date %>% as_date(),
+         n = n %>% plyr::round_any(10)) %>% 
   ggplot(aes(date, n)) +
   geom_col() +
   geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
@@ -296,7 +304,9 @@ data_admissions %>%
                                      treatment_function.description)) %>% 
   count(treatment_function.description) %>% 
   arrange(desc(n)) %>%
-  mutate(n = paste0(n, " (", format(round(n/sum(n)*100, 1), nsmall = 1), ")")) %>% 
+  mutate(
+    n = n %>% plyr::round_any(10),
+    n = paste0(n, " (", format(round(n/sum(n)*100, 1), nsmall = 1), ")")) %>% 
   filter() %>% 
   kable(align = c("l", "r"),
         col.names = c("Specialty", "n (%)"))
@@ -312,7 +322,9 @@ data_admissions %>%
                                                 primary_diagnosis.description)) %>% 
   count(primary_diagnosis.description) %>% 
   arrange(desc(n)) %>%
-  mutate(n = paste0(n, " (", format(round(n/sum(n)*100, 1), nsmall = 1), ")")) %>% 
+  mutate(
+    n = n %>% plyr::round_any(10),
+    n = paste0(n, " (", format(round(n/sum(n)*100, 1), nsmall = 1), ")")) %>% 
   filter() %>% 
   kable(align = c("l", "r"),
         col.names = c("Primary diagnosis", "n (%)"))
@@ -342,15 +354,17 @@ data_admissions %>%
         "30+"   = "(29, Inf]",
       )
   ) %>% 
-  ggplot(aes(length_of_stay.factor)) +
-  geom_bar() +
+  count(length_of_stay.factor) %>% 
+  mutate(n = n %>% plyr::round_any(10)) %>%
+  ggplot(aes(length_of_stay.factor, n)) +
+  geom_col() +
   labs(x = "Length of stay (days)")
 
 ```
 
 # Outpatient Appointments
 
-Note: Sequential same-day appointments cannot be queried. Hence this data represents outpatient contact-days rather than number of outpatient appointments. It is estimated that 16.5% of outpatient contact-days consist of 2 or more outpatient appointments (details [here](https://github.com/opensafely-core/cohort-extractor/issues/492#issuecomment-872295921)).
+Note: This data represents outpatient contact-days rather than number of outpatient appointments. It is estimated that 16.5% of outpatient contact-days consist of 2 or more outpatient appointments (details [here](https://github.com/opensafely-core/cohort-extractor/issues/492#issuecomment-872295921)).
 
 ```{r}
 
@@ -360,7 +374,8 @@ data_outpatient %>%
   ) %>% 
   count(date, .drop = FALSE) %>%
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
-         date = date %>% as_date()) %>% 
+         date = date %>% as_date(),
+         n = n %>% plyr::round_any(10)) %>% 
   ggplot(aes(date, n)) +
   geom_col() +
   geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
@@ -380,5 +395,25 @@ Definition: Dates corresponding to SNoMed codes within the following [hierarchy]
 * Observable Entity (observable entity)
 * Specimen (specimen)
 
+```{r}
+
+data_gp %>% 
+  mutate(
+    date = date %>% cut(breaks = "week")
+  ) %>% 
+  count(date, .drop = FALSE) %>%
+  mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
+         date = date %>% as_date(),
+         n = n %>% plyr::round_any(10)) %>% 
+  ggplot(aes(date, n)) +
+  geom_col() +
+  geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
+  scale_x_date(labels = date_format("%b\n%Y"),
+               breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "3 month")) +
+  labs(y = "Weekly count", x = NULL, linetype = NULL) +
+  theme(legend.position = "bottom")
+
+
+```
 
 
