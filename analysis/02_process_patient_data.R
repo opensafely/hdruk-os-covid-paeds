@@ -165,105 +165,69 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Rural-urban classification"),
     
-    asthma = case_when(
-      !is.na(asthma_diagnosis_date) ~ "Yes",
-      !is.na(current_asthma_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
+    asthma = asthma %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
       ff_label("Asthma"),
     
-    chronic_respiratory_disease = case_when(
-      !is.na(chronic_respiratory_disease_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Chronic respiratory disease (not asthma)"),
-    
-    cancer = case_when(
-      !is.na(cancer_excl_lung_and_haem_date) ~ "Yes",
-      !is.na(cancer_haem_date) ~ "Yes",
-      !is.na(cancer_lung_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
+    cancer = cancer %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
       ff_label("Cancer"),
     
-    chronic_cardiac_disease = case_when(
-      !is.na(chronic_cardiac_disease_date) ~ "Yes",
-      !is.na(heart_disease_other_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Chronic cardiac disease"),
-    
-    chronic_kidney_disease = case_when(
-      !is.na(chronic_kidney_disease_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Chronic kidney disease"),
-    
-    chronic_liver_disease = case_when(
-      !is.na(chronic_liver_disease_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Chronic liver disease"),
-    
-    diabetes = case_when(
-      !is.na(diabetes_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
+    diabetes = diabetes %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
       ff_label("Diabetes"),
     
-    severe_obesity = case_when(
-      !is.na(severe_obesity_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Severe obesity"),
+    epilepsy = epilepsy %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Epilepsy"),
     
-    permanent_immunodeficiency = case_when(
-      !is.na(hiv_date) ~ "Yes",
-      !is.na(permanent_immunosuppression_date) ~ "Yes",
-      !is.na(sickle_cell_disease_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Permanent immunodeficiency"),
-    
-    intellectual_learning_disability = case_when(
-      !is.na(intellectual_disability_date) ~ "Yes",
-      !is.na(learning_disabilities_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Intellectual and learning disability"),
-    
-    severe_mental_illness = case_when(
-      !is.na(severe_mental_illness_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
+    severe_mental_illness = severe_mental_illness %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
       ff_label("Severe mental illness"),
     
-    neurological_diseases = case_when(
-      !is.na(neurological_diseases_date) ~ "Yes",
-      !is.na(other_neurological_conditions_date) ~ "Yes",
-      !is.na(cerebral_palsy_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Neurological disease"),
+    cerebral_palsy = cerebral_palsy %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Cerebral palsy"),
     
-    pregnency_delivery = case_when(
-      !is.na(pregnency_delivery_date) ~ "Yes",
-      TRUE ~ "No"
-    ) %>% 
-      factor() %>% 
-      ff_label("Pregnency and delivery"),
+    chronic_infections = chronic_infections %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Chronic infections"),
+    
+    devices_and_stomas = devices_and_stomas %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Devices and stomas"),
+    
+    endocrine_disorders = endocrine_disorders %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Endocrine disorders"),
+    
+    gastrointestinal_disorders = gastrointestinal_disorders %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Gastrointestinal disorders"),
+    
+    haematological_disorders = haematological_disorders %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Haematological disorders"),
+    
+    immunological_disorders = immunological_disorders %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Immunological disorders"),
+    
+    learning_and_behaviour_difficulties = learning_and_behaviour_difficulties %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Learning and behavioural difficulties"),
+    
+    mental_illness = mental_illness %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Mental illness"),
+    
+    musculoskeletal_and_rheum = musculoskeletal_and_rheum %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Musculoskeletal and rheumatic diseases"),
+    
+    transplant = transplant %>%
+      fct_recode("No" = "0", "Yes" = "1") %>%
+      ff_label("Transplant"),
   )
 
 # Covid status, counts and test dates ----
