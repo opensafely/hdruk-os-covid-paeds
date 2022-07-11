@@ -1,0 +1,1273 @@
+icd10_code,icd10_description,snomed_conceptId,snomed_term,read2_code,read2_term
+K20,Oesophagitis,16761005,Esophagitis (disorder),J101z00,Oesophagitis NOS
+K210,Gastro-oesophageal reflux disease with oesophagitis,53771000,Regurgitant esophagitis (disorder),J101.00,Oesophagitis
+K220,Achalasia of cardia,235598006,Non-reflux esophagitis (disorder),J101y00,Other specified oesophagitis
+K221,Ulcer of oesophagus,235599003,Eosinophilic esophagitis (disorder),J101700,Eosinophilic oesophagitis
+K222,Oesophageal obstruction,235605005,Radiation esophagitis (disorder),J101112,Gastro-oesophageal reflux with oesophagitis
+K223,Perforation of oesophagus,235606006,Nasogastric tube esophagitis (disorder),J101113,Oesophageal reflux with oesophagitis
+K224,Dyskinesia of oesophagus,409657002,Chronic esophagitis (disorder),J101100,Reflux oesophagitis
+K225,"Diverticulum of oesophagus, acquired",413225008,Esophagitis grade I (disorder),J101115,Regurgitant oesophagitis
+K227,Barrett oesophagus,413226009,Esophagitis grade II (disorder),J101114,Peptic oesophagitis
+K228,Other specified diseases of oesophagus,413227000,Esophagitis grade III (disorder),J101300,Postoperative oesophagitis
+K230,Tuberculous oesophagitis,413228005,Esophagitis grade IV (disorder),J101200,Chemical oesophagitis
+K231,Megaoesophagus in Chagas disease,430328004,Inflammation of esophagus due to chemotherapy (disorder),J101000,Abscess of oesophagus
+K25,Gastric ulcer,735455001,Eosinophilic esophagitis caused by food (disorder),J101400,Gangrenous oesophagitis
+K26,Duodenal ulcer,770592009,Proton pump inhibitor responsive eosinophilic esophagitis (disorder),J101500,Phlegmonous oesophagitis
+K27,"Peptic ulcer, site unspecified",860872005,Esophagitis due to human immunodeficiency virus disease (disorder),J120300,Acute duodenal ulcer with haemorrhage and perforation
+K28,Gastrojejunal ulcer,1027000,Alkaline reflux disease (disorder),J100.00,Achalasia of cardia
+K292,Alcoholic gastritis,35023000,Gastroesophagitis (disorder),J100.11,Cardiospasm - oesophagus
+K293,Chronic superficial gastritis,266433003,Gastroesophageal reflux disease with esophagitis (disorder),J102z00,Ulcer of oesophagus NOS
+K294,Chronic atrophic gastritis,717847008,Erosive gastro-esophageal reflux disease (disorder),J102.00,Ulcer of oesophagus
+K295,"Chronic gastritis, unspecified",717848003,Ulcer of esophagus due to gastro-esophageal reflux disease with complication (disorder),J102500,Barrett's ulcer of oesophagus
+K296,Other gastritis,717849006,Ulcer of esophagus due to gastro-esophageal reflux disease without complication (disorder),J10y300,Oesophageal erosions
+K297,"Gastritis, unspecified",45414006,Glucocorticoid deficiency with achalasia (disorder),J101600,Ulcerative oesophagitis
+K298,Duodenitis,45564002,Achalasia of esophagus (disorder),J103000,Compression of oesophagus
+K311,Adult hypertrophic pyloric stenosis,69686006,Aperistalsis of esophagus (disorder),J103.11,Stenosis of oesophagus
+K312,Hourglass stricture and stenosis of stomach,70257007,Chalasia of lower esophageal sphincter (disorder),J103.12,Stricture of oesophagus
+K313,"Pylorospasm, not elsewhere classified",715192004,Idiopathic achalasia of esophagus (disorder),J103.00,Oesophageal stricture and stenosis
+K314,Gastric diverticulum,717842002,Idiopathic megaesophagus (disorder),J103z00,Oesophageal stricture and stenosis NOS
+K315,Obstruction of duodenum,5.021E+12,Acquired achalasia of esophagus (disorder),J103300,Lower oesophageal mucosal ring
+K316,Fistula of stomach and duodenum,30811009,Ulcer of esophagus (disorder),J103311,Schatzki ring
+K317,Polyp of stomach and duodenum,40719004,Erosive esophagitis (disorder),J103400,Peptic stricture of oesophagus
+K318,Other specified diseases of stomach and duodenum,57748001,Bleeding ulcer of esophagus (disorder),J103100,Obstruction of oesophagus
+K319,"Disease of stomach and duodenum, unspecified",196609006,Barrett's ulcer of esophagus (disorder),J10y700,Boerhaave syndrome
+K50,Crohn disease [regional enteritis],196623008,Esophageal erosions (disorder),J104.00,Perforation of oesophagus
+K500,Crohn disease of small intestine,235608007,Eosinophilic ulcer of esophagus (disorder),J10y800,Rupture of oesophagus
+K501,Crohn disease of large intestine,235613006,Radiation ulcer of esophagus (disorder),J105.11,Corkscrew oesophagus
+K508,Other Crohn disease,245754007,Gastroesophageal reflux disease with ulceration (disorder),J105.14,Spasm of oesophagus
+K509,"Crohn disease, unspecified",439442003,Esophageal bleeding due to ulcerative esophagitis (disorder),J105.13,Oesophagospasm
+K51,Ulcerative colitis,439955006,Ulcerative esophagitis (disorder),J105.00,Dyskinesia of oesophagus
+K510,Ulcerative (chronic) pancolitis,724516001,Ulcer of esophagus caused by thermal agent (disorder),J105000,Nutcracker oesophagus
+K512,Ulcerative (chronic) proctitis,737189006,Ulcer of esophagus due to allergic disorder (disorder),J105.12,Curling oesophagus
+K513,Ulcerative (chronic) rectosigmoiditis,737190002,Ulcer of esophagus due to disorder of immune system (disorder),J105.15,Oesophageal dysmotility
+K514,Inflammatory polyps,738792004,Cushing ulcer of esophagus (disorder),J106200,Epiphrenic (pulsion) diverticulum
+K515,Left sided colitis,39392002,Compression of esophagus (disorder),J106300,Subdiaphragmatic oesophageal diverticulum
+K518,Other ulcerative colitis,52619009,Primary chronic pseudo-obstruction of esophagus (disorder),J106.00,Acquired oesophageal diverticulum
+K519,"Ulcerative colitis, unspecified",63305008,Stricture of esophagus (disorder),J106z00,Acquired oesophageal diverticulum NOS
+K520,Gastroenteritis and colitis due to radiation,66889002,Terminal esophageal web (disorder),J106500,Acquired oesophagocoele
+K522,Allergic and dietetic gastroenteritis and colitis,231719009,Dysphagia lusoria (disorder),J106400,Traction oesophageal diverticulum
+K523,Indeterminate colitis,235596005,Peptic stricture of esophagus (disorder),J106100,Zenker's hypopharyngeal diverticulum
+K528,Other specified noninfective gastroenteritis and colitis,235615004,Malignant esophageal stricture (disorder),J106000,Acquired pharyngoesophageal diverticulum
+K529,"Noninfective gastroenteritis and colitis, unspecified",235616003,Benign esophageal stricture (disorder),J10y600,Barrett's oesophagus
+K55,Vascular disorders of intestine,235617007,Non-reflux stricture (disorder),J101611,Megaoesophagus
+K550,Acute vascular disorders of intestine,235618002,Corrosive stricture of esophagus (disorder),J100.12,Leukoplakia of oesophagus
+K551,Chronic vascular disorders of intestine,235620004,Radiation-induced stricture of esophagus (disorder),J10y100,Benign oesophageal polyp
+K552,Angiodysplasia of colon,235623002,Lower esophageal ring (disorder),B710.11,Laryngopharyngeal reflux
+K553,Angiodysplasia of small intestine,235625009,Lower esophageal muscular ring (disorder),J10y500,Tuberculosis oesophagus
+K558,Other vascular disorders of intestine,405247003,Obstruction of esophagus (disorder),A178.00,Megaoesophagus in Chagas' disease
+K559,"Vascular disorder of intestine, unspecified",405248008,Thoracic choke (disorder),J100000,Alcoholic gastritis
+D57,Diverticular disease of intestine,724437007,Compression of trachea and esophagus co-occurrent and due to congenital anomaly of aortic arch (disorder),J153.00,Chronic superficial gastritis
+K570,Diverticular disease of small intestine with perforation and abscess,19995004,Spontaneous rupture of esophagus (disorder),J151200,Chronic atrophic gastritis
+K571,Diverticular disease of small intestine without perforation or abscess,23387001,Perforation of esophagus (disorder),J151000,Chronic inflammatory gastritis
+K572,Diverticular disease of large intestine with perforation and abscess,235626005,Rupture of esophagus (disorder),J151100,Chronic gastritis NOS
+K573,Diverticular disease of large intestine without perforation or abscess,45067001,Spastic disorder of smooth muscle segment of esophagus (disorder),J151z00,Chronic gastritis
+K574,Diverticular disease of both small and large intestine with perforation and abscess,79962008,Diffuse spasm of esophagus (disorder),J151.00,Allergic gastritis
+K575,Diverticular disease of both small and large intestine without perforation or abscess,235628006,Nutcracker esophagus (disorder),J154000,Irritant gastritis
+K578,"Diverticular disease of intestine, part unspecified, with perforation and abscess",235629003,Nonspecific esophageal motility disorder (disorder),J154200,Gastric mucosal hypertrophy
+K579,"Diverticular disease of intestine, part unspecified, without perforation or abscess",235630008,Hypertensive lower esophageal sphincter (disorder),J152.00,Biliary reflux
+K592,"Neurogenic bowel, not elsewhere classified",235635003,Palatoesophageal incoordination (disorder),J154111,Bile induced gastritis
+K630,Abscess of intestine,266434009,Esophageal dysmotility (disorder),J154100,Helicobacter gastritis
+K631,Perforation of intestine (nontraumatic),733146008,Esophageal dysmotility due to systemic disease (disorder),A074313,Corrosive gastritis
+K632,Fistula of intestine,5144008,Acquired pulsion diverticulum of esophagus (disorder),J154400,Radiation gastritis
+K633,Ulcer of intestine,30126008,Acquired supradiaphragmatic diverticulum of esophagus (disorder),J154300,Duodenitis
+K661,Haemoperitoneum,35563005,Acquired diverticulum of esophagus (disorder),J430000,Acquired pyloric constriction
+K668,Other specified disorders of peritoneum,38982006,Acquired esophagocele (disorder),J157.00,Acquired pyloric stricture
+K673,Tuberculous peritonitis,68480001,Intramural diverticulosis of esophagus (disorder),J170000,Gastric outlet obstruction
+K70,Alcoholic liver disease,75009007,Acquired traction diverticulum of esophagus (disorder),J170200,Adult hypertrophic pyloric stenosis
+K700,Alcoholic fatty liver,196617003,Traction esophageal diverticulum (disorder),J170.11,Adult hypertrophic pyloric stenosis NOS
+K701,Alcoholic hepatitis,235637006,Mid-esophageal diverticulum (disorder),J170.00,Acquired pyloric obstruction
+K702,Alcoholic fibrosis and sclerosis of liver,235638001,Mid-esophageal pulsion diverticulum (disorder),J170z00,Hourglass stomach contraction
+K703,Alcoholic cirrhosis of liver,302916008,Mid-esophageal traction diverticulum (disorder),J170100,Hourglass stricture of stomach
+K704,Alcoholic hepatic failure,399291005,Pharyngoesophageal diverticulum (disorder),J16y300,Pylorospasm
+K709,"Alcoholic liver disease, unspecified",717841009,Acquired diverticulum of esophagus without complication (disorder),J176.00,Gastric diverticulum
+K72,"Hepatic failure, not elsewhere classified",235597001,Barrett's esophagus with esophagitis (disorder),J17y000,Stricture of duodenum
+K720,Acute and subacute hepatic failure,302914006,Barrett's esophagus (disorder),J171.00,Chronic duodenal ulcer with haemorrhage and perforation
+K721,Chronic hepatic failure,1.08275E+15,Barretts esophagus with dysplasia (disorder),J173100,Chronic duodenal ileus
+K729,"Hepatic failure, unspecified",1.08276E+15,Barretts esophagus with high grade dysplasia (disorder),J121300,Gastroduodenal fistula
+K73,"Chronic hepatitis, not elsewhere classified",1.08277E+15,Barretts esophagus with low grade dysplasia (disorder),J172.00,Stomach and duodenal fistula
+K730,"Chronic persistent hepatitis, not elsewhere classified",17355002,Aorto-esophageal fistula (disorder),J174100,Stomach and duodenal fistula NOS
+K731,"Chronic lobular hepatitis, not elsewhere classified",30873000,Esophageal fistula (disorder),J174.00,Gastrojejunocolic fistula
+K732,"Chronic active hepatitis, not elsewhere classified",38397000,Gastroesophageal intussusception (disorder),J174z00,Gastrocolic fistula
+K738,"Other chronic hepatitis, not elsewhere classified",60698006,Hemorrhagic esophagitis (disorder),J174200,Gastrointestinal fistula
+K739,"Chronic hepatitis, unspecified",64151006,Esophagomalacia (disorder),J174400,Gastrocutaneous fistula
+K74,Fibrosis and cirrhosis of liver,70667005,Megaesophagus (disorder),J174300,Duodenal polyp
+K740,Hepatic fibrosis,78974003,Dilatation of esophagus (disorder),J174000,Polyp of duodenum
+K741,Hepatic sclerosis,89057003,Leukoplakia of esophagus (disorder),B712011,Gastric polyp
+K742,Hepatic fibrosis with hepatic sclerosis,235634004,Presbyesophagus (disorder),J178.11,Polyp of stomach
+K743,Primary biliary cirrhosis,235639009,Internal esophageal fistula (disorder),J178.00,Gastroptosis
+K744,Secondary biliary cirrhosis,235642003,External esophageal fistula (disorder),J177.00,Gastric prolapse
+K745,"Biliary cirrhosis, unspecified",236093004,Esophageal anastomotic hemorrhage (disorder),B711.11,Achylia gastrica
+K746,Other and unspecified cirrhosis of liver,254573006,Polyp of esophagus (disorder),J177.11,Passive congestion of stomach
+K751,Phlebitis of portal vein,255169005,Benign esophageal polyp (disorder),J175.00,Watermelon stomach
+K752,Nonspecific reactive hepatitis,308857008,Esophageal dysplasia (disorder),J17y100,Gastric antral vascular ectasia
+K753,"Granulomatous hepatitis, not elsewhere classified",308858003,Mild esophageal dysplasia (disorder),J16y000,Achlorhydria
+K754,Autoimmune hepatitis,308859006,Moderate esophageal dysplasia (disorder),J17y600,Gastric rupture
+K758,Other specified inflammatory liver diseases,308860001,Severe esophageal dysplasia (disorder),J577111,Hypochlorhydria
+K759,"Inflammatory liver disease, unspecified",405567008,Esophagoenteric fistula (disorder),J577100,Hyperchlorhydria
+K760,"Fatty (change of) liver, not elsewhere classified",414581006,Laryngopharyngeal reflux (disorder),J160.00,Hyperacidity
+K761,Chronic passive congestion of liver,427225008,Atony of esophagus (disorder),J17y200,Volvulus of the stomach
+K762,Central haemorrhagic necrosis of liver,699323007,Inflammatory esophagogastric polyp (disorder),J16y100,Intestinal metaplasia of gastric mucosa
+K763,Infarction of liver,713356005,Chronic esophageal scar (disorder),J16y200,Gastric atonia
+K764,Peliosis hepatis,717843007,Acquired fistula of esophagus (disorder),J16y211,Gastric spasm
+K765,Hepatic veno-occlusive disease,717845000,Disorder of esophageal peristalsis (disorder),J502000,Perforation of stomach
+K766,Portal hypertension,721179009,Intramural hemorrhage of esophagus (disorder),J17y500,Gastric dysmotility
+K767,Hepatorenal syndrome,724514003,Hypertensive esophageal peristalsis (disorder),J16y600,Deformed duodenal cap (bulb)
+K769,"Liver disease, unspecified",724515002,Hypotensive esophageal peristalsis (disorder),J16y700,Delayed gastric emptying
+K80,Cholelithiasis,735725007,Angiodysplasia of esophagus (disorder),J179.00,Gastric angiodysplasia
+K800,Calculus of gallbladder with acute cholecystitis,735726008,Arteriovenous malformation of esophagus (disorder),J16y800,Type 1 diabetes mellitus with gastroparesis
+K801,Calculus of gallbladder with other cholecystitis,860891005,Hyperplastic polyp of esophagus (disorder),J17y700,Type I diabetes mellitus with gastroparesis
+K802,Calculus of gallbladder without cholecystitis,15284007,Tuberculosis of esophagus (disorder),J16y900,Type II diabetes mellitus with gastroparesis
+K803,Calculus of bile duct with cholangitis,196599007,Megaesophagus in Chagas' disease (disorder),J17y900,Type 2 diabetes mellitus with gastroparesis
+K804,Calculus of bile duct with cholecystitis,NA,NA,C10EQ00,Crohn's disease of the ileum unspecified
+K805,Calculus of bile duct without cholangitis or cholecystitis,2043009,Alcoholic gastritis (disorder),C10EQ11,Crohn's disease of the ileum NOS
+K808,Other cholelithiasis,4.0241E+13,Gastric hemorrhage due to alcoholic gastritis (disorder),C10FR11,Regional enteritis of the duodenum
+K81,Cholecystitis,22304002,Superficial gastritis (disorder),C10FR00,Regional enteritis of the small bowel
+K810,Acute cholecystitis,196735001,Chronic superficial gastritis (disorder),J400300,Crohn's disease of the small bowel NOS
+K811,Chronic cholecystitis,1.08512E+15,Gastric hemorrhage due to chronic superficial gastritis (disorder),J400400,Regional enteritis of the jejunum
+K818,Other cholecystitis,3308008,Atrophic-hyperplastic gastritis (disorder),J400000,Crohn's disease of the terminal ileum
+K819,"Cholecystitis, unspecified",15445004,Atrophic nonerosive nonspecific gastritis (disorder),J400.00,Regional ileocolitis
+K820,Obstruction of gallbladder,42740008,Atrophic fundic gland gastritis (disorder),J400z00,Exacerbation of Crohn's disease of small intestine
+K821,Hydrops of gallbladder,84568007,Atrophic gastritis (disorder),J400100,Pouchitis
+K822,Perforation of gallbladder,1.50721E+14,Gastric hemorrhage due to atrophic gastritis (disorder),J400200,Regional enteritis of the rectum
+K823,Fistula of gallbladder,8493009,Chronic gastritis (disorder),J402.00,Regional enteritis of the large bowel
+K824,Cholesterolosis of gallbladder,89790007,Chronic antral gastritis (disorder),J400500,Crohn's disease of the large bowel NOS
+K828,Other specified diseases of gallbladder,235660003,Chronic follicular gastritis (disorder),J435.00,Regional enteritis of the colon
+K829,"Disease of gallbladder, unspecified",698352000,Chronic antral gastritis with hemorrhage (disorder),J401100,Crohn's colitis
+K830,Cholangitis,1824008,Allergic gastritis (disorder),J401.00,Exacerbation of Crohn's disease of large intestine
+K831,Obstruction of bile duct,7399006,Emphysematous gastritis (disorder),J401z00,Granulomatous enteritis
+K832,Perforation of bile duct,7475005,Postgastrectomy gastritis (disorder),J401000,Crohn's disease NOS
+K833,Fistula of bile duct,35223008,Superficial nonerosive nonspecific gastritis (disorder),J401z11,Regional enteritis NOS
+K834,Spasm of sphincter of Oddi,42541005,Irritant gastritis (disorder),J401200,Regional enteritis - Crohn's disease
+K835,Biliary cyst,46763001,Focal cystic hypertrophic gastropathy (disorder),J40..12,Crohn's disease
+K838,Other specified diseases of biliary tract,49781004,Phlegmonous gastritis (disorder),J40z.11,[X]Other Crohn's disease
+K839,"Disease of biliary tract, unspecified",57433008,Reflux gastritis (disorder),J40z.00,Orofacial Crohn's disease
+K851,Biliary acute pancreatitis,60002000,Hypertrophic gastritis (disorder),J40..00,Arthropathy in Crohn's disease
+K858,Other acute pancreatitis,63137003,Chronic erosive gastritis (disorder),J40..11,Juvenile arthritis in Crohn's disease
+K859,"Acute pancreatitis, unspecified",72950008,Bile-induced gastritis (disorder),Jyu4000,Ulcerative (chronic) enterocolitis
+K860,Alcohol-induced chronic pancreatitis,80018001,Hypertrophic glandular gastritis (disorder),J08z900,Ulcerative pancolitis
+K861,Other chronic pancreatitis,89538001,Helicobacter-associated gastritis (disorder),N031100,Ulcerative proctitis
+K862,Cyst of pancreas,196740009,Corrosive gastritis (disorder),N045300,Ulcerative rectosigmoiditis
+K863,Pseudocyst of pancreas,197012004,Radiation gastritis (disorder),J411.00,Ulcerative colitis and/or proctitis
+K868,Other specified diseases of pancreas,235656001,Reactive gastritis (disorder),J413.00,Ulcerative proctocolitis
+K869,"Disease of pancreas, unspecified",235659008,Uremic gastritis (disorder),J410300,Ulcerative proctocolitis NOS
+K900,Coeliac disease,235661004,Chronic cystic gastritis (disorder),J410200,Other idiopathic proctocolitis NOS
+K901,Tropical sprue,235662006,Chronic granulomatous gastritis (disorder),J41..12,Other idiopathic proctocolitis
+K902,"Blind loop syndrome, not elsewhere classified",235663001,Isolated granulomatous gastritis (disorder),J410.00,Ulcerative ileocolitis
+K903,Pancreatic steatorrhoea,360375007,Lymphocytic gastritis (disorder),J410z00,Ulcerative (chronic) ileocolitis
+K904,"Malabsorption due to intolerance, not elsewhere classified",413219009,Hypertrophic gastropathy (disorder),J41yz00,Ulcerative colitis
+K908,Other intestinal malabsorption,445965007,Hyperplasia of gastric foveola (disorder),J41y.00,[X]Other ulcerative colitis
+K930,"Tuberculous disorders of intestines, peritoneum and mesenteric glands",447432006,Focal foveolar hyperplasia (disorder),J410000,Idiopathic proctocolitis NOS
+K931,Megacolon in Chagas disease,708164002,Gastritis caused by Helicobacter pylori (disorder),J412.00,Idiopathic proctocolitis
+,,708165001,Gastritis caused by Helicobacter heilmannii (disorder),J410100,Arthropathy in ulcerative colitis
+,,708964003,Gastritis cystica profunda (disorder),Jyu4100,Juvenile arthritis in ulcerative colitis
+,,711499009,Collagenous gastritis (disorder),J41z.00,Exacerbation of ulcerative colitis
+,,717861003,Metaplastic gastritis (disorder),J41..00,Left sided colitis
+,,724521003,Ulcer of stomach due to lymphocytic gastritis (disorder),N031000,Radiation colitis
+,,773397000,Non-hypoproteinemic hypertrophic gastropathy (disorder),N045400,Radiation enteritis
+,,789697006,Mast cell gastritis (disorder),J410400,Radiation gastroenteritis NOS
+,,7.071E+12,Gastric hemorrhage due to erosive gastritis (disorder),J438.00,Radiation gastroenteritis
+,,2.1871E+13,Suppurative gastritis (disorder),J430300,Radiation enterocolitis
+,,2.18541E+14,Gastric hemorrhage co-occurrent with and due to idiopathic erosive gastritis (disorder),J430100,Allergic enteritis
+,,1.08263E+15,Gastric hemorrhage due to allergic gastritis (disorder),J430z00,Allergic gastroenteritis NOS
+,,1.08716E+15,Gastric hemorrhage due to hypertrophic gastritis (disorder),J430.00,Allergic gastroenteritis
+,,1.08781E+15,Gastric hemorrhage due to irritant gastritis (disorder),J430200,Allergic colitis
+,,720401009,Cystic fibrosis with gastritis and megaloblastic anemia syndrome (disorder),J432100,Dietetic enteritis
+,,1.08679E+15,Erosive gastritis (disorder),J432z00,Dietetic gastroenteritis NOS
+,,72007001,Duodenitis (disorder),J432000,Dietetic gastroenteritis
+,,235693007,Chronic duodenitis (disorder),J432300,Allergic diarrhoea
+,,717872008,Allergic duodenitis (disorder),J433100,Dietetic colitis
+,,717873003,Eosinophilic duodenitis (disorder),J433z00,Dietetic diarrhoea
+,,717874009,Lymphocytic duodenitis (disorder),J433.00,Allergic enterocolitis
+,,717877002,Granulomatous duodenitis (disorder),J432.11,Dietetic gastritis
+,,723882007,Duodenitis caused by ingestible alcohol (disorder),J433300,Dietetic enterocolitis
+,,723883002,Duodenitis caused by ionizing radiation (disorder),J433.11,Allergic gastroenteritis and colitis
+,,724525007,Duodenitis caused by Helicobacter pylori (disorder),J432200,Indeterminate colitis
+,,13483000,Acquired hypertrophic pyloric stenosis (disorder),J433000,Non-infective sigmoiditis NOS
+,,196760001,Acquired pyloric constriction (disorder),J433200,Collagenous colitis
+,,196761002,Acquired pyloric stricture (disorder),J432.00,Lymphocytic colitis
+,,244815007,Pyloric obstruction (disorder),J4z6.00,Microscopic colitis
+,,266438007,Adult hypertrophic pyloric stenosis (disorder),J4z4.00,Non-infective gastroenteritis NOS
+,,333952004,Acquired nonhypertrophic constriction of pylorus (disorder),J436000,Colitis - noninfective
+,,367403001,Pyloric stenosis (disorder),J436100,Non-infective colitis NOS
+,,416605008,Acquired obstruction of pylorus (disorder),J436.00,Inflammatory bowel disease
+,,25948008,Pyloric antral stenosis (disorder),J4z..00,Non-infective ileitis NOS
+,,53313006,Hourglass contraction of stomach (disorder),J4zz.00,Noninfective diarrhoea
+,,54051005,Cascade stomach (disorder),J4...11,Presumed noninfectious diarrhoea
+,,55860008,Stenosis of stomach (disorder),J4z3.00,Other non-infective inflammatory gastroenteritis and colitis
+,,335002,Pylorospasm (disorder),J4...12,Non-infective jejunitis NOS
+,,75198005,Gastric diverticulum (disorder),J4z2.00,Chronic diarrhoea
+,,717860002,Gastric diverticulum without complication (disorder),J4...13,Noninfective enteritis and colitis
+,,17755000,Acquired megaduodenum (disorder),J4z..11,[X]Noninfective enteritis and colitis
+,,33812003,Stricture of duodenum (disorder),J43..00,Exacerbation of non-infective colitis
+,,34021006,Chronic duodenal ulcer with hemorrhage AND obstruction (disorder),J4z1.00,Epiploic appendagitis
+,,36975000,Chronic duodenal ulcer with hemorrhage AND perforation (disorder),J43z.11,Bowel infarction
+,,52232007,Chronic duodenal ileus (disorder),J4...00,Mesenteric thrombosis
+,,60551006,Chronic duodenal ulcer with perforation AND obstruction (disorder),Jyu4.00,Mesenteric thrombus NOS
+,,73120006,Stenosis of duodenum (disorder),J4z5.00,Gangrene - intestine
+,,85836000,Congenital duodenal obstruction due to annular pancreas (disorder),J57A.00,Chronic ischaemic colitis
+,,86258000,"Chronic duodenal ulcer with hemorrhage, with perforation AND with obstruction (disorder)",J420.12,Chronic ischaemic enterocolitis
+,,235975009,Duodenal papillary stenosis (disorder),J420.18,Chronic ischaemic enteritis
+,,7780000,Duodenal fistula (disorder),J420y00,Chronic intestinal vascular insufficiency NOS
+,,16010007,Duodenocolic fistula (disorder),J420.13,Chronic intestinal vascular insufficiency
+,,17206008,Gastroduodenal fistula (disorder),J421300,Chronic ischaemic colitis and/or enteritis
+,,25335003,Gastrojejunocolic fistula (disorder),J421200,Superior mesenteric artery syndrome
+,,26289005,Low-output external gastrointestinal fistula (disorder),J421100,Angina - abdominal
+,,28756003,Gastrocolic fistula (disorder),J421z00,Angiodysplasia of colon
+,,32161008,Internal gastrointestinal fistula (disorder),J421.00,Intestinal vascular insufficiency NOS
+,,37831005,Gastrointestinal fistula (disorder),J421.12,Ischaemic colitis NOS
+,,45743004,Duodenorenal fistula (disorder),J421000,Vascular insufficiency of the intestine
+,,79615003,Internal duodenal fistula (disorder),J421.11,Vascular disorders of intestine
+,,80641008,External gastrointestinal fistula (disorder),J577000,[X]Other vascular disorders of intestine
+,,111342009,High-output external gastrointestinal fistula (disorder),J42z.00,Perforated diverticulum of duodenum
+,,196767003,External gastric fistula (disorder),J42z000,Perforated diverticulum of jejunum
+,,235671002,Gastric fistula (disorder),J42..00,Perforated diverticulum of ileum
+,,235672009,Internal gastric fistula (disorder),J577.00,Perforated diverticulum of small intestine NOS
+,,235673004,Gastrojejunal fistula (disorder),Jyu5000,Perforated diverticulum of small intestine unspecified
+,,235696004,Duodenoenteric fistula (disorder),J512000,Diverticulitis of the duodenum
+,,277540008,Duodenal stump fistula (disorder),J512100,Diverticulitis of the small intestine unspecified
+,,717858004,Acquired gastric fistula (disorder),J512200,Diverticulitis of the small intestine NOS
+,,73861008,Polyp of duodenum (disorder),J512400,Diverticulitis of the ileum
+,,78160009,Inflammatory fibroid polyps of stomach (disorder),J512300,Perforated diverticulum of colon
+,,78809005,Gastric polyp (disorder),J511000,Diverticular abscess
+,,87252009,Gastric polyposis (disorder),J511300,Perforated diverticulum of large intestine NOS
+,,235686008,Fundic gland polyposis of stomach (disorder),J511400,Perforated diverticulum of large intestine unspecified
+,,301797007,Duodenal polyposis (disorder),J511200,Diverticulitis of the large intestine unspecified
+,,399468008,Solitary fundic gland polyp (disorder),J512500,Diverticulitis of the large intestine NOS
+,,717883004,Hyperplastic duodenal polyp (disorder),J513.00,Diverticulitis of the colon
+,,724524006,Hamartomatous polyp of stomach (disorder),J512700,Bleeding diverticulosis
+,,771474005,Gastric adenocarcinoma and proximal polyposis of stomach (disorder),J512600,Diverticular disease of both small and large intestine with perforation and abscess
+,,6.82831E+14,Benign polyp of duodenum (disorder),J511600,Diverticular disease of both small and large intestine without perforation or abscess
+,,1208004,Gastroptosis (disorder),J511700,Perforated diverticulum
+,,11619008,Gastric dilatation-volvulus-torsion syndrome (disorder),J511500,Perforated diverticulum unspecified
+,,11672007,Organoaxial gastric volvulus (disorder),J510900,Perforated diverticulum of intestine NOS
+,,13267003,Gastric motor function disorder (disorder),J512800,Diverticulitis
+,,18935007,Isolated idiopathic granuloma of stomach (disorder),J510800,Diverticulitis NOS
+,,20754004,Achylia gastrica (disorder),J512.00,Diverticulitis unspecified
+,,23062000,Passive congestion of stomach (disorder),J512y00,"Neurogenic bowel, not elsewhere classified"
+,,23080009,Chronic gastric volvulus (disorder),J512z00,"[X]Neurogenic bowel, not elsewhere classified"
+,,28175004,Lymphoid hyperplasia of stomach (disorder),J511.00,Abscess of intestine
+,,30874006,Chronic hypertrophic pyloric gastropathy (disorder),J511z00,Rupture of rectum
+,,35865007,Mesenteroaxial gastric volvulus (disorder),J511y00,Perforation of colon
+,,43935004,Vascular ectasia of gastric antrum (disorder),J5X..00,Perforation of intestine
+,,47481007,Achlorhydria (disorder),Jyu5700,Enteroenteric fistula
+,,50598000,Gastric rupture (disorder),J575.00,Fistula of intestine
+,,55961006,Hypochlorhydria (disorder),J574A00,Fistula of intestine NOS
+,,56704004,Mixed gastric volvulus (disorder),J57yQ00,Intestinal fistula NOS excluding ano-rectal fistula
+,,60871005,Malakoplakia of stomach (disorder),J57yB00,Ileorectal fistula
+,,61627001,Hyperchlorhydria (disorder),J57y200,Enterocolic fistula
+,,71851009,Gastric volvulus (disorder),J57yL00,Umbilical fistula
+,,72519002,Intestinal metaplasia of gastric mucosa (disorder),J57y.11,Enterocutaneous fistula
+,,75994008,Nondiabetic gastroparesis (disorder),J57y700,Ileoumbilical fistula
+,,85985006,Chronic torsion of stomach (disorder),J57y500,Colonic fistula
+,,109558001,Dieulafoy's vascular malformation (disorder),J57y300,Faecal fistula
+,,123600006,Gastromalacia (disorder),J57y000,Abdominal wall fistula
+,,196753007,Gastric atonia (disorder),J57y100,Ulceration of colon
+,,196754001,Gastric spasm (disorder),J57y400,Ulceration of intestine NOS
+,,235674005,Perforation of stomach (disorder),J57y600,Haemoperitoneum - nontraumatic
+,,235675006,Gastroparesis (disorder),J57yN00,Retroperitoneal haematoma
+,,235683000,Gastric necrosis (disorder),J57yO00,Pneumoperitoneum
+,,235700007,Hyperplasia of Brunner glands of duodenum (disorder),J57y900,Peritoneal cyst
+,,236054008,Rolling hiatus hernia with gastric volvulus (disorder),J57yA00,Peritoneal granuloma
+,,253763002,Dysmotility of stomach (disorder),J56y000,Alcoholic fatty liver
+,,262837008,Delayed perforation of stomach (disorder),S780500,Acute alcoholic hepatitis
+,,262848001,Delayed perforation of duodenum (disorder),8744,Alcoholic hepatitis
+,,270909006,Duodenal perforation (disorder),J56y200,Chronic alcoholic hepatitis
+,,297164007,Cyst of duodenum (disorder),J56y300,Alcoholic fibrosis and sclerosis of liver
+,,303082009,Portal hypertensive gastropathy (disorder),J610.00,Oesophageal varices in alcoholic cirrhosis of the liver
+,,303086007,Duodenal varices (disorder),J611.00,Alcoholic cirrhosis of liver
+,,307227006,Gastric retention (disorder),J617.00,Alcoholic hepatic failure
+,,307421005,Periodic syndrome (disorder),J617000,Alcoholic liver damage unspecified
+,,308212008,Deformed duodenal cap (disorder),J612000,Subacute hepatitis - noninfective
+,,308853007,Mild stomach dysplasia (disorder),G852300,Acute and subacute liver necrosis
+,,314944001,Delayed gastric emptying (disorder),J612.00,Acute and subacute liver necrosis NOS
+,,353821005,Idiopathic gastric stasis (disorder),J613000,Acute necrosis of liver
+,,399379004,Reactive gastropathy (disorder),J613.00,Acute necrosis of liver NOS
+,,405574003,Nontraumatic gastric rupture (disorder),J601100,Acute yellow atrophy
+,,413210008,Congestive duodenopathy (disorder),J60..00,Acute hepatic failure
+,,413211007,Erosive duodenopathy (disorder),J60z.00,Acute liver failure
+,,413213005,Ulcerogenic deformed duodenum (disorder),J600.00,Acute hepatitis - noninfective
+,,413220003,Papulous gastropathy (disorder),J600z00,Subacute necrosis of liver
+,,413224007,Erythematous duodenopathy (disorder),J600200,Subacute hepatic failure
+,,421807004,Gastrointestinal hypomotility (disorder),J600000,Encephalopathy - hepatic
+,,424802006,Angiodysplasia of stomach (disorder),J600011,Hepatic failure
+,,447111007,Dieulafoy vascular malformation of stomach (disorder),J600100,Liver failure NOS
+,,703651000,Mucosal diaphragm of gastric antrum (disorder),J601.00,[X] Hepatic failure
+,,713702000,Gastroparesis due to type 1 diabetes mellitus (disorder),J601000,Hepatic failure NOS
+,,713703005,Gastroparesis due to type 2 diabetes mellitus (disorder),J622.11,[X] Liver failure
+,,713704004,Gastroparesis due to diabetes mellitus (disorder),J62y.13,Hepatic coma
+,,717864006,Vascular disorder of the stomach (disorder),J62y.12,Hepatic failure as a complication of care
+,,717867004,Vascular ectasia of stomach (disorder),J625.00,Liver failure as a complication of care
+,,717871001,Acquired deformity of duodenum (disorder),J62y.11,Chronic persistent hepatitis
+,,718346009,Intestinal metaplasia of gastric cardia (disorder),J625.11,Chronic lobular hepatitis
+,,1.08271E+15,Gastric hemorrhage due to angiodysplasia of stomach (disorder),J622.00,Autoimmune chronic active hepatitis
+,,1.08603E+15,Duodenal hemorrhage due to Dieulafoy vascular malformation of duodenum (disorder),SP14200,Chronic aggressive hepatitis
+,,1.08695E+15,Gastric hemorrhage due to vascular ectasia of gastric antrum (disorder),SP14211,Chronic active hepatitis
+,,2.06335E+17,Cyst of stomach (disorder),J614000,Childhood function cirrhosis
+,,315057000,Gastric xanthelasma (disorder),J614400,Chronic hepatitis
+,,413212000,Hemorrhagic duodenopathy (disorder),J614111,Chronic hepatitis NOS
+,,413216002,Erosive gastropathy (disorder),J614200,Chronic hepatitis unspecified
+,,413217006,Erythematous gastropathy (disorder),J614100,Hepatic fibrosis
+,,3.411E+12,Gastroduodenal disorder (disorder),J615811,Portal fibrosis without cirrhosis
+,,7.2701E+13,Functional disorder of stomach (disorder),J614.00,Hepatic sclerosis
+,,38106008,Crohn's disease of ileum (disorder),J614z00,Hepatic fibrosis with hepatic sclerosis
+,,56287005,Crohn's disease of duodenum (disorder),J614y00,Primary biliary cirrhosis
+,,56689002,Crohn's disease of small intestine (disorder),J615z15,Secondary biliary cirrhosis
+,,61424003,Crohn's disease of pylorus (disorder),J61y400,Biliary cirrhosis
+,,91390005,Crohn's disease of jejunum (disorder),J61y300,Biliary cirrhosis NOS
+,,196976000,Regional enteritis of the jejunum (disorder),J61y500,Biliary cirrhosis of children
+,,196977009,Crohn's disease of terminal ileum (disorder),J61y600,Xanthomatous portal cirrhosis
+,,196983007,Regional ileocolitis (disorder),J616000,Indian childhood cirrhosis
+,,235664007,Crohn's disease of stomach (disorder),J616100,Mixed portal cirrhosis
+,,235709008,Terminal ileitis (disorder),J616.00,[X]Other and unspecified cirrhosis of liver
+,,414154002,Exacerbation of Crohn's disease of small intestine (disorder),J616z00,Cirrhosis of liver NOS
+,,426508001,Ileal pouchitis (disorder),J616200,Hypertrophic portal cirrhosis
+,,1.08585E+15,Abscess of intestine co-occurrent and due to Crohn's disease of small intestine (disorder),J615C00,Postnecrotic cirrhosis of liver
+,,1.08586E+15,Complication due to Crohn's disease of small intestine (disorder),J615812,Macronodular cirrhosis of liver
+,,1.08587E+15,Fistula of small intestine due to Crohn's disease (disorder),J615200,Florid cirrhosis
+,,1.08588E+15,Intestinal obstruction due to Crohn's disease of small intestine (disorder),Jyu7100,Cryptogenic cirrhosis of liver
+,,1.08589E+15,Rectal hemorrhage due to Crohn's disease of small intestine (disorder),J615z13,Cirrhosis and chronic liver disease
+,,1.07432E+16,Stenosis of small intestine co-occurrent and due to Crohn's disease (disorder),J615500,Unilobular portal cirrhosis
+,,3815005,Crohn's disease of rectum (disorder),J615111,Diffuse nodular cirrhosis
+,,7620006,Crohn's disease of large bowel (disorder),J615z11,Fatty portal cirrhosis
+,,50440006,Crohn's disease of colon (disorder),J612.11,Capsular portal cirrhosis
+,,413276006,Crohn's stricture of colon (disorder),J615z12,Pigmentary portal cirrhosis
+,,414153008,Exacerbation of Crohn's disease of large intestine (disorder),J61..00,Pipe-stem portal cirrhosis
+,,721702009,Crohn disease of anal canal (disorder),J615000,"Laennec's cirrhosis, non-alcoholic"
+,,733157003,Crohn disease of appendix (disorder),J615300,Infectious cirrhosis NOS
+,,1.08575E+15,Abscess of intestine co-occurrent and due to Crohn's disease of large intestine (disorder),J615400,Cirrhosis - non alcoholic
+,,1.08576E+15,Complication due to Crohn's disease of large intestine (disorder),J615600,Non-alcoholic cirrhosis NOS
+,,1.08577E+15,Fistula of large intestine due to Crohn's disease (disorder),J615900,Multilobular portal cirrhosis
+,,1.08578E+15,Intestinal obstruction due to Crohn's disease of large intestine (disorder),J615A00,Juvenile portal cirrhosis
+,,1.08579E+15,Rectal hemorrhage due to Crohn's disease of large intestine (disorder),J615z14,Oesophageal varices in cirrhosis of the liver
+,,70622003,Crohn's disease of pyloric antrum (disorder),J615H00,Portal cirrhosis
+,,71833008,Crohn's disease of small AND large intestines (disorder),J615.00,Laennec's cirrhosis
+,,234999001,Crohn's disease of gingivae (disorder),J615z00,Portal cirrhosis unspecified
+,,235796008,Perianal Crohn's disease (disorder),J615100,Portal pyaemia
+,,402376005,Crohn's disease of penis (disorder),J615800,Phlebitis of portal vein
+,,426549001,Crohn's disease in remission (disorder),G852200,Nonspecific reactive hepatitis
+,,722850002,Crohn's disease of gastrointestinal anastomosis (disorder),J615.11,"Granulomatous hepatitis, not elsewhere classified"
+,,1.0858E+15,Abscess of intestine co-occurrent and due to Crohn's disease of small and large intestine (disorder),J612.12,"[X]Granulomatous hepatitis, not elsewhere classified"
+,,1.08581E+15,Complication due to Crohn's disease of small and large intestines (disorder),J615y00,Autoimmune hepatitis
+,,1.08582E+15,Fistula of intestine due to Crohn's disease of small and large intestine (disorder),J621.00,Nonalcoholic steatohepatitis
+,,1.08583E+15,Intestinal obstruction due to Crohn's disease of small and large intestine (disorder),J621.11,[X]Other specified inflammatory liver diseases
+,,1.08584E+15,Rectal hemorrhage due to Crohn's disease of small and large intestines (disorder),J63y100,Hepatitis unspecified
+,,34000006,Crohn's disease (disorder),J63X.00,Hepatitis unspecified NOS
+,,196578009,Crohn's disease of oral soft tissues (disorder),Jyu7700,Recurrent hepatitis
+,,201728006,Arthropathy in Crohn's disease (disorder),J63B.00,Hepatitis in other infectious diseases EC
+,,201805000,Juvenile arthritis in Crohn's disease (disorder),J61y800,Hepatitis in infectious diseases EC NOS
+,,235607002,Crohn's disease of esophagus (disorder),Jyu7200,Non-alcoholic fatty liver
+,,397172008,Gastrointestinal Crohn's disease (disorder),J633.00,Fatty change of liver
+,,397173003,Crohn's disease of intestine (disorder),J633z00,Fatty liver
+,,402378006,Metastatic Crohn's disease of skin (disorder),J614300,Steatosis of liver
+,,410485009,Iritis with Crohn's disease (disorder),J632.00,Chronic passive liver congestion
+,,733533008,Perianal fistula due to Crohn's disease (disorder),J632z00,Congestive cirrhosis
+,,737195007,Crohn disease of upper gastrointestinal tract (disorder),J61y100,Cardiac portal cirrhosis
+,,8.161E+12,Arthritis co-occurrent and due to Crohn's disease (disorder),J61y900,Central haemorrhagic necrosis of liver
+,,1.0859E+15,Abscess of intestine co-occurrent and due to Crohn's disease (disorder),J61y911,Hepatic infarction
+,,1.08591E+15,Complication due to Crohn's disease (disorder),J61y700,Peliosis hepatis
+,,1.08593E+15,Intestinal obstruction due to Crohn's disease (disorder),J630.00,Hepatic veno-occlusive disease
+,,1.08594E+15,Rectal hemorrhage due to Crohn's disease (disorder),J615711,Portal hypertension
+,,13470001,Chronic ulcerative ileocolitis (disorder),J615700,Bacterial portal cirrhosis
+,,15342002,Chronic ulcerative enterocolitis (disorder),J636.00,Hepatorenal syndrome
+,,235714007,Ulcerative enterocolitis (disorder),J634.00,Other non-alcoholic chronic liver disease
+,,442159003,Chronic ulcerative pancolitis (disorder),J638.00,Folate-deficiency anaemia due to liver disorders
+,,444548001,Ulcerative pancolitis (disorder),J637.00,Chronic liver disease NOS
+,,1.08513E+15,Abscess of intestine co-occurrent and due to chronic ulcerative pancolitis (disorder),J623.00,Other non-alcoholic chronic liver disease NOS
+,,1.08514E+15,Complication due to chronic ulcerative pancolitis (disorder),J615D00,Gallbladder calculus with acute cholecystitis and obstruction NOS
+,,1.08515E+15,Fistula of intestine due to chronic ulcerative pancolitis (disorder),J624.00,Gallbladder calculus with acute cholecystitis and no obstruction
+,,1.08516E+15,Intestinal obstruction due to chronic ulcerative pancolitis (disorder),J61y.00,Gallbladder calculus with acute cholecystitis and obstruction
+,,1.08517E+15,Rectal hemorrhage due to chronic ulcerative pancolitis (disorder),D012400,Gallbladder calculus with other cholecystitis
+,,52231000,Chronic ulcerative proctitis (disorder),J61z.00,Cystic duct calculus
+,,67038005,Nonspecific ulcerative proctitis (disorder),J61yz00,Cholelithiasis without obstruction NOS
+,,369446006,"Chronic proctocolitis, patchy (disorder)",J640z00,Gallbladder calculus without mention of cholecystitis and no obstruction
+,,1.08518E+15,Abscess of intestine co-occurrent and due to chronic ulcerative proctitis (disorder),J640000,Cholelithiasis with obstruction NOS
+,,1.08519E+15,Complication due to chronic ulcerative proctitis (disorder),J640100,Gallbladder calculus with other cholecystitis and no obstruction
+,,1.0852E+15,Fistula of intestine due to chronic ulcerative proctitis (disorder),J641.00,Gallbladder calculus with other cholecystitis and obstruction
+,,1.08521E+15,Intestinal obstruction due to chronic ulcerative proctitis (disorder),J64..13,Gallbladder calculus with other cholecystitis and obstruction NOS
+,,1.08522E+15,Rectal hemorrhage due to chronic ulcerative proctitis (disorder),J64z000,Cholelithiasis NOS
+,,52506002,Chronic ulcerative rectosigmoiditis (disorder),J642000,Gallbladder calculus without mention of cholecystitis and with obstruction
+,,295046003,Ulcerative proctocolitis (disorder),J64z100,Calculus of bile duct with cholangitis
+,,369445005,Chronic proctocolitis (disorder),J641000,Bile duct calculus with acute cholecystitis
+,,369447002,"Chronic proctocolitis, confluent (disorder)",J641100,Bile duct calculus with acute cholecystitis and obstruction NOS
+,,418130002,Proctocolitis (disorder),J641z00,Bile duct calculus + acute cholecystitis and obstruction
+,,1.08523E+15,Abscess of intestine co-occurrent and due to chronic ulcerative rectosigmoiditis (disorder),J64z.00,Bile duct calculus with no mention of cholecystitis and with obstruction
+,,1.08524E+15,Complication due to chronic ulcerative rectosigmoiditis (disorder),J642100,Chronic cholecystitis
+,,1.08525E+15,Fistula of large intestine due to chronic ulcerative rectosigmoiditis (disorder),J646.00,Stenosis of gallbladder
+,,1.08526E+15,Intestinal obstruction due to chronic ulcerative rectosigmoiditis (disorder),J643.00,Obstruction of gallbladder
+,,1.08527E+15,Rectal hemorrhage due to chronic ulcerative rectosigmoiditis (disorder),J643z00,Occlusion of gallbladder
+,,61400006,Inflammatory pseudotumor of colon (disorder),J643100,Occlusion of cystic duct
+,,721694007,Inflammatory fibroid polyp of large intestine (disorder),J645100,Stenosis of cystic duct
+,,1.08539E+15,Abscess of intestine co-occurrent and due to colonic inflammatory polyps (disorder),J651000,Hydrops of gallbladder
+,,1.08541E+15,Fistula of intestine due to inflammatory polyps of colon (disorder),J652100,Mucocele of gallbladder
+,,1.08542E+15,Intestinal obstruction due to colonic inflammatory polyps (disorder),J652.00,Rupture of gallbladder
+,,24829000,Eosinophilic ulcerative colitis (disorder),J652000,Rupture of cystic duct
+,,196987008,Ulcerative ileocolitis (disorder),J652200,Fistula of gallbladder NOS
+,,235712006,Ulcerative jejunitis (disorder),J652300,Fistula of gallbladder
+,,722849002,Cryptogenic multifocal ulcerous stenosing enteritis (disorder),J653.11,Cholecystoenteric fistula
+,,14311001,Severe chronic ulcerative colitis (disorder),J653.00,Cholecystoduodenal fistula
+,,64766004,Ulcerative colitis (disorder),J654000,Cholecystogastric fistula
+,,78324009,Mild chronic ulcerative colitis (disorder),J654100,Cholesterolosis of gallbladder
+,,78712000,Moderate chronic ulcerative colitis (disorder),J655z00,Strawberry gallbladder
+,,201727001,Arthropathy in ulcerative colitis (disorder),J655.00,Adhesions of gallbladder
+,,201807008,Juvenile arthritis in ulcerative colitis (disorder),J655300,Cyst of gallbladder
+,,359656003,Idiopathic diffuse ulcerative nongranulomatous enteritis (disorder),J655200,Adhesions of cystic duct
+,,404908004,Toxic megacolon due to ulcerative colitis (disorder),J655100,Ulcer of gallbladder
+,,410484008,Iritis with ulcerative colitis (disorder),J656.00,Atrophy of gallbladder
+,,414156000,Exacerbation of ulcerative colitis (disorder),J656.11,Ulcer of cystic duct
+,,441971007,Chronic left-sided ulcerative colitis (disorder),J65y000,Hypertrophy of cystic duct
+,,444546002,Chronic ulcerative colitis (disorder),J65y400,Atrophy of cystic duct
+,,445243001,Left sided ulcerative colitis (disorder),J65y100,Hypertrophy of gallbladder
+,,697969008,Ulcerative colitis in remission (disorder),J65y800,Cyst of cystic duct
+,,732966008,Secondary autoimmune hemolytic anemia co-occurrent and due to ulcerative colitis (disorder),J65y200,Biliary dyskinesia
+,,1.09284E+15,Abscess of intestine co-occurrent and due to ulcerative colitis (disorder),J65y900,Polyp of gallbladder
+,,1.09285E+15,Complication due to ulcerative colitis (disorder),J65y700,Recurrent cholangitis
+,,1.09286E+15,Fistula of intestine due to ulcerative colitis (disorder),J65y300,Suppurative cholangitis
+,,1.09287E+15,Intestinal obstruction due to ulcerative colitis (disorder),J65y600,Chronic cholangitis
+,,1.09288E+15,Rectal hemorrhage due to ulcerative colitis (disorder),J65y500,Cholangitis
+,,55809007,Colitis caused by radiation (disorder),J65yB00,Cholangitis NOS
+,,73817000,Enteritis caused by radiation (disorder),J65yC00,Other cholangitis
+,,197011006,Radiation gastroenteritis (disorder),J661200,Cholangitis lenta
+,,197013009,Radiation enterocolitis (disorder),J661300,Obliterative cholangitis
+,,235707005,Acute radiation enteritis (disorder),J661100,Primary sclerosing cholangitis
+,,235756006,Acute radiation colitis (disorder),J661.00,Secondary sclerosing cholangitis
+,,235757002,Chronic radiation colitis (disorder),J661z00,Sclerosing cholangitis unspecified
+,,721660005,Enteritis of small intestine caused by radiation (disorder),J661y00,Obstruction of bile duct NOS
+,,22231002,Allergic enteritis (disorder),J661500,Obstruction of bile duct
+,,25887009,Allergic sigmoiditis (disorder),J661600,Stricture of bile duct
+,,26006005,Allergic gastroenteritis (disorder),J661700,Obstructive jaundice NOS
+,,30304000,Allergic colitis (disorder),J661800,Occlusion of bile duct
+,,30719001,Dietetic enteritis (disorder),J661900,Cholestasis of pregnancy
+,,32295003,Allergic ileitis (disorder),J662z00,Fistula of bile duct
+,,33687004,Dietetic gastroenteritis (disorder),J662.00,Biliary fistula
+,,49237006,Allergic diarrhea (disorder),J662100,Fistula of bile duct NOS
+,,49464009,Dietetic sigmoiditis (disorder),J66y600,Choledochoduodenal fistula
+,,72547003,Dietetic colitis (disorder),J662000,Cyst of bile duct
+,,76118001,Dietetic ileitis (disorder),L18A000,Ulcer of bile duct
+,,83134002,Dietetic diarrhea (disorder),J664.00,Hypertrophy of bile duct
+,,95879001,Diarrheic shellfish poisoning (disorder),J655000,Atrophy of bile duct
+,,197024006,Allergic enterocolitis (disorder),J664z00,Stasis of bile duct
+,,197028009,Dietetic gastritis (disorder),J664000,Adhesions of bile duct
+,,197030006,Dietetic enterocolitis (disorder),J66y200,Post cholecystectomy bile leakage
+,,266451002,Allergic gastroenteritis and colitis (disorder),J66y500,Gallstone acute pancreatitis
+,,416389007,Gastrointestinal disorder due to food allergy (disorder),J66y300,Subacute pancreatitis
+,,420373003,Allergic disorder of digestive system (disorder),J66y100,Acute recurrent pancreatitis
+,,733155006,IgE mediated allergic enteritis of small intestine (disorder),J66y400,Alcohol-induced chronic pancreatitis
+,,735459007,Gastrointestinal hypersensitivity caused by food (disorder),J66y000,Chronic pancreatitis
+,,737193000,Allergic enteritis of small intestine (disorder),J66y700,[X]Other chronic pancreatitis
+,,737194006,Dietetic enteritis of small intestine (disorder),J670500,Gallstone chronic pancreatitis
+,,737315000,Allergic enterocolitis caused by food protein (disorder),J670400,Pancreatic cyst
+,,737316004,Allergic colitis caused by food protein in infant (disorder),J670100,Cyst and pseudocyst of pancreas
+,,737317008,Allergic proctitis caused by food protein in infant (disorder),J671000,Pancreatic cyst and pseudocyst NOS
+,,1.30088E+16,Allergic proctocolitis caused by food protein (disorder),J671.00,Pseudocyst of pancreas
+,,51290000,Diversion colitis (disorder),Jyu8400,Fat necrosis of pancreas
+,,235745006,Non-Crohn's granulomatous colitis (disorder),J671100,Fibrocalculous pancreatopathy
+,,235746007,Indeterminate colitis (disorder),J672000,Calculus of pancreas
+,,235765004,Sigmoiditis (disorder),J672.00,Fibrosis of pancreas
+,,404811004,Non-specific colitis (disorder),J672z00,Pancreatic insufficiency
+,,6382002,Chronic inflammatory small bowel disease (disorder),J672100,Aseptic necrosis of pancreas
+,,18805001,"Congenital secretory diarrhea, sodium type (disorder)",J672.00,Exocrine pancreatic insufficiency
+,,19311003,Collagenous colitis (disorder),J672z00,Atrophy of pancreas
+,,24412005,"Congenital secretory diarrhea, chloride type (disorder)",J67y400,Fibrocalculous pancreatopathy without complication
+,,25898005,Congenital secretory diarrhea (disorder),C10L.00,Secondary pancreatic diabetes mellitus
+,,29120000,Eosinophilic colitis (disorder),J67y100,Secondary pancreatic diabetes mellitus without complication
+,,31437008,Lymphocytic-plasmacytic colitis (disorder),J67y200,Coeliac rickets
+,,40663003,Colitis cystica profunda (disorder),J67y500,Coeliac disease
+,,51338006,Eosinophilic gastroenteropathy with food sensitivity (disorder),J67y300,Sprue - nontropical
+,,53954009,Eosinophilic gastroenteropathy with predominant subserosal disease (disorder),J67y600,Coeliac disease NOS
+,,55025003,Uremic colitis (disorder),J67y000,Gluten enteropathy
+,,63924002,Eosinophilic gastroenteropathy with predominant mucosal disease (disorder),C10L000,Tropical sprue
+,,66329006,Eosinophilic gastritis (disorder),C10G.00,Blind loop syndrome
+,,67375008,Eosinophilic gastroenteropathy with predominant muscle layer disease (disorder),C10G000,Pancreatic steatorrhoea
+,,89030000,Eosinophilic gastroenteropathy with collagen vascular disease (disorder),J690.11,Lipase deficiency
+,,95518006,Gastrointestinal mucositis (disorder),J690.00,Chronic steatorrhoea
+,,235753003,Microscopic colitis (disorder),J690.14,Protein-losing enteropathy
+,,235754009,Phlegmonous colitis (disorder),J690z00,Intestinal malabsorption of protein
+,,235758007,Behcet's colitis (disorder),J690.13,[X]Other disorders of intestinal carbohydrate absorption
+,,359804008,Eosinophilic gastroenteritis (disorder),J691.00,Intestinal malabsorption of carbohydrate
+,,449806001,Stercoral colitis (disorder),J692.00,Soya protein intolerance
+,,720820000,Cutaneous photosensitivity and lethal colitis syndrome (disorder),J694.00,Intestinal malabsorption of fat
+,,721686000,Inflammatory polyps co-occurrent and due to inflammatory bowel disease (disorder),C32y400,Fat intolerance NEC
+,,724520002,Ulcer of stomach due to eosinophilic gastritis (disorder),J69y000,Malabsorption due to intolerance to fat
+,,733156007,Eosinophilic enteritis (disorder),J69y100,"Lipodystrophy, intestinal"
+,,771333006,"Immune dysregulation, inflammatory bowel disease, arthritis, recurrent infection syndrome (disorder)",J69y200,Whipple's disease
+,,783185002,Focal active colitis (disorder),Cyu8500,Arthropathy in Whipple's disease
+,,870349001,Noninfectious enteritis due to immunoglobulin A vasculitis (disorder),J69y300,Tuberculosis of rectum
+,,1.23411E+14,Gastric hemorrhage due to eosinophilic gastritis (disorder),J69y500,Tuberculosis of small intestine
+,,242004,Noninfectious jejunitis (disorder),J69y600,"Tuberculosis of intestines, peritoneum and mesenteric glands"
+,,3899003,Neutropenic typhlitis (disorder),J69yz11,Tuberculosis of mesenteric lymph glands
+,,12574004,Noninfectious gastroenteritis (disorder),J69y011,[X]Other gastritis
+,,14066009,Noninfectious colitis (disorder),A3A2.11,Non-infective gastritis NOS
+,,17551007,Chronic diarrhea of unknown origin (disorder),A3A2.00,Gastritis and duodenitis
+,,20759009,Dietetic jejunitis (disorder),N014800,Gastritis and duodenitis NOS
+,,22207007,Chronic proliferative enteritis (disorder),N031200,Gastroduodenitis unspecified
+,,24526004,Inflammatory bowel disease (disorder),A14y400,Nonfunctioning gallbladder
+,,25319005,Chronic diarrhea of infants AND/OR young children (disorder),A14y200,[X]Other specified diseases of biliary tract
+,,25552000,Acute cecitis (disorder),A14..00,[X]Disorders of gallbladder and biliary tract in diseases classified elsewhere
+,,38205001,Diarrhea due to diabetes mellitus (disorder),A14y300,Other biliary tract disorders
+,,51151007,Noninfectious ileitis (disorder),Jyu1300,Other bile duct disorder NOS
+,,53372009,Noninfectious sigmoiditis (disorder),J4z0.00,Other bile duct disorders
+,,54597004,Chronic colitis (disorder),J15..00,Bile duct disorder NOS
+,,61564002,Typhlitis (disorder),J15z.00,Other specified gastritis NOS
+,,69980003,Non-infective diarrhea (disorder),J156.00,Other specified gastritis
+,,71207007,Noninfectious enteritis (disorder),J65yA00,Gastritis unspecified
+,,71913005,"Granulomatous enteritis, non-Crohn's disease (disorder)",Jyu8300,Infantile gastroenteritis
+,,72681001,Allergic jejunitis (disorder),Jyu8600,Abscess of gallbladder
+,,80805005,Jejunitis (disorder),J66..00,Acute emphysematous cholecystitis
+,,95544006,Inflammatory diarrhea (disorder),J66yz00,Acute suppurative cholecystitis
+,,236071009,Chronic diarrhea (disorder),J66y.00,Acute angiocholecystitis
+,,239809007,Juvenile arthritis of inflammatory bowel disease (disorder),J66z.00,Idiopathic acute pancreatitis
+,,239814006,Seronegative arthritis secondary to inflammatory bowel disease (disorder),J154z00,
+,,307418008,Non-infective enteritis and colitis (disorder),J154.00,
+,,359660000,Idiopathic colitis (disorder),J155.00,
+,,359664009,Idiopathic chronic inflammatory bowel disease (disorder),A083.12,
+,,396336000,Acute and chronic colitis (disorder),J650.11,
+,,414155001,Exacerbation of non-infective colitis (disorder),J650200,
+,,711497006,Chronic non-specific colitis (disorder),J650300,
+,,716277000,Chronic diarrhea due to glucoamylase deficiency (disorder),J650100,
+,,735731005,Chronic non-infectious enteritis of uncertain etiology (disorder),J670600,
+,,773662009,Neonatal inflammatory skin and bowel disease (disorder),,
+,,788718000,Iritis co-occurrent with inflammatory bowel disease (disorder),,
+,,870351002,Non-infective enteritis due to graft-versus-host disease (disorder),,
+,,3.5151E+13,Inflammation of ileoanal pouch (disorder),,
+,,1.47202E+16,Epiploic appendagitis (disorder),,
+,,3558002,Mesenteric infarction (disorder),,
+,,20335001,Fulminant enterocolitis (disorder),,
+,,22323009,Acute bowel infarction (disorder),,
+,,29451002,Intestinal gangrene (disorder),,
+,,31841001,Hemorrhagic necrosis of intestine (disorder),,
+,,57658009,Embolic mesenteric infarction (disorder),,
+,,72150009,Nonocclusive intestinal infarction (disorder),,
+,,75204008,Omental infarction (disorder),,
+,,78463001,Massive necrosis of intestine (disorder),,
+,,80475003,Thrombotic mesenteric infarction (disorder),,
+,,95446005,Thrombosis of mesenteric vein (disorder),,
+,,95536006,Ileal gangrene (disorder),,
+,,95537002,Jejunal gangrene (disorder),,
+,,95538007,Large bowel gangrene (disorder),,
+,,235842000,Occlusive mesenteric ischemia (disorder),,
+,,235843005,Non-occlusive mesenteric ischemia (disorder),,
+,,235846002,Infarction of small intestine (disorder),,
+,,235847006,Infarction of large intestine (disorder),,
+,,235848001,Mesenteric gangrene (disorder),,
+,,235849009,Small intestinal gangrene (disorder),,
+,,235851008,Hemorrhagic infarction of intestine (disorder),,
+,,235852001,Transmural infarction of intestine (disorder),,
+,,243410003,Thrombosis of mesenteric artery (disorder),,
+,,275508008,Colonic infarction (disorder),,
+,,763397001,Gangrenous ischemic colitis (disorder),,
+,,860596009,Gangrene of mesentery of small intestine (disorder),,
+,,860597000,Gangrene of mesentery of ileum (disorder),,
+,,860598005,Gangrene of mesentery of jejunum (disorder),,
+,,1.357E+16,Infarct of rectum (disorder),,
+,,1.6716E+16,Acute infarction of small intestine (disorder),,
+,,13026000,Ischemic stricture of intestine (disorder),,
+,,27241008,Chronic ischemic colitis (disorder),,
+,,46882000,Chronic ischemic enterocolitis (disorder),,
+,,73235004,Chronic ischemic enteritis (disorder),,
+,,111354009,Chronic vascular insufficiency of intestine (disorder),,
+,,197006009,Superior mesenteric artery syndrome (disorder),,
+,,241154007,Abdominal angina (disorder),,
+,,266520007,Chronic gastrointestinal tract vascular insufficiency (disorder),,
+,,405545007,Mesenteric artery stenosis (disorder),,
+,,734041006,Insufficiency of mesenteric artery (disorder),,
+,,1.33411E+14,Chronic thrombosis of mesenteric vein (disorder),,
+,,1.68993E+16,Atherosclerosis of superior mesenteric artery (disorder),,
+,,36304008,Vascular ectasia of cecum (disorder),,
+,,90858003,Vascular ectasia of colon (disorder),,
+,,197244008,Angiodysplasia of colon (disorder),,
+,,2.9731E+13,Intestinal hemorrhage due to angiodysplasia of intestine (disorder),,
+,,58358002,Vascular ectasia of small intestine (disorder),,
+,,235853006,Angiodysplasia of intestine (disorder),,
+,,312607004,Gastrointestinal tract vascular insufficiency (disorder),,
+,,427592000,Occlusion of superior mesenteric artery (disorder),,
+,,442267002,Angiodysplasia of duodenum (disorder),,
+,,717881002,Vascular ectasia of duodenum (disorder),,
+,,721662002,Angiodysplasia of small intestine (disorder),,
+,,722858009,Vasculitis of large intestine (disorder),,
+,,871901008,Acquired telangiectasia of small and large intestines (disorder),,
+,,1.0827E+15,Duodenal hemorrhage due to angiodysplasia of duodenum (disorder),,
+,,30588004,Ischemic colitis (disorder),,
+,,73665001,Ischemic enteritis (disorder),,
+,,75938008,Alimentary tract pain due to vascular insufficiency (disorder),,
+,,82196007,Vascular insufficiency of intestine (disorder),,
+,,90891007,Ischemic enterocolitis (disorder),,
+,,128321003,Vascular disorder of intestine (disorder),,
+,,235844004,Focal segmental ischemia of small intestine (disorder),,
+,,266519001,Acute gastrointestinal tract vascular insufficiency (disorder),,
+,,737191003,Disorder of vascular structure of duodenum (disorder),,
+,,737196008,Vascular disorder of small intestine (disorder),,
+,,737200003,Vascular disorder of large intestine (disorder),,
+,,763398006,Nongangrenous ischemic colitis (disorder),,
+,,197105006,Perforated diverticulum of duodenum (disorder),,
+,,197106007,Perforated diverticulum of jejunum (disorder),,
+,,197107003,Perforated diverticulum of ileum (disorder),,
+,,280993006,Perforated diverticulum of small intestine (disorder),,
+,,733150001,Perforation and abscess of small intestine co-occurrent and due to diverticulitis (disorder),,
+,,1.08619E+15,Abscess of duodenum co-occurrent and due to diverticulitis (disorder),,
+,,1.08623E+15,Perforation of duodenum due to diverticulitis (disorder),,
+,,1.08624E+15,Abscess of ileum co-occurrent and due to diverticulitis (disorder),,
+,,1.08628E+15,Perforation of ileum due to diverticulitis (disorder),,
+,,1.08629E+15,Abscess of jejunum co-occurrent and due to diverticulitis (disorder),,
+,,1.08633E+15,Perforation of jejunum co-occurrent and due to diverticulitis (disorder),,
+,,1.08648E+15,Perforation of small intestine co-occurrent with hemorrhage due to diverticulitis (disorder),,
+,,1.08649E+15,Perforation of small intestine due to diverticulitis (disorder),,
+,,33838003,Diverticulitis of duodenum (disorder),,
+,,56165008,Diverticulitis of small intestine (disorder),,
+,,67153004,Diverticulitis of ileum (disorder),,
+,,111358007,Diverticulitis of jejunum (disorder),,
+,,4.0271E+13,Hemorrhage of small intestine co-occurrent and due to diverticulosis (disorder),,
+,,1.08646E+15,Hemorrhage of small intestine due to diverticulitis (disorder),,
+,,1.08656E+15,Hemorrhage of duodenum co-occurrent and due to diverticulosis (disorder),,
+,,1.08657E+15,Hemorrhage of ileum co-occurrent and due to diverticulosis (disorder),,
+,,1.08658E+15,Hemorrhage of jejunum co-occurrent and due to diverticulosis (disorder),,
+,,5.89157E+17,Diverticulum of peri-ampullary tissue of hepatopancreatic ampulla (disorder),,
+,,48169002,Perforation co-occurrent and due to diverticular disease of colon (disorder),,
+,,76953007,Diverticulitis of colon with perforation (disorder),,
+,,235774002,Abscess of colon co-occurrent and due to diverticular disease of colon (disorder),,
+,,280992001,Perforated diverticulum of large intestine (disorder),,
+,,722855007,Perforation and abscess of large intestine co-occurrent and due to diverticulitis (disorder),,
+,,1.08611E+15,Abscess of cecum co-occurrent and due to diverticulitis (disorder),,
+,,1.08615E+15,Perforation of cecum due to diverticulitis (disorder),,
+,,1.08634E+15,Abscess of sigmoid colon co-occurrent and due to diverticulitis (disorder),,
+,,1.08638E+15,Perforation of sigmoid colon due to diverticulitis (disorder),,
+,,4494009,Diverticulitis of large intestine (disorder),,
+,,111359004,Diverticulitis of colon (disorder),,
+,,197092000,Hemorrhage of large intestine co-occurrent and due to diverticular disease of large intestine (disorder),,
+,,271960000,Complicated diverticular disease of large intestine (disorder),,
+,,427910000,Diverticulitis of sigmoid colon (disorder),,
+,,430347001,Diverticulitis of cecum (disorder),,
+,,430876009,Diverticulitis of rectosigmoid (disorder),,
+,,430877000,Diverticulitis of rectum (disorder),,
+,,733159000,Diverticulitis of large intestine with complication (disorder),,
+,,735729001,Diverticulum of large intestine co-occurrent with hemorrhage of large intestine (disorder),,
+,,1.90191E+14,Hemorrhage of colon due to diverticulosis (disorder),,
+,,1.08655E+15,Hemorrhage of cecum due to diverticulosis (disorder),,
+,,1.08659E+15,Hemorrhage of sigmoid colon co-occurrent and due to diverticulosis (disorder),,
+,,197112002,Perforation and abscess co-occurrent and due to diverticular disease of both small and large intestine (disorder),,
+,,1.08644E+15,Perforation of large and small intestine due to diverticulitis (disorder),,
+,,197091007,Diverticular disease of both small and large intestine without perforation or abscess (disorder),,
+,,721654005,Diverticular disease of small and large intestine (disorder),,
+,,197104005,Perforated diverticulum of intestine (disorder),,
+,,5.211E+12,Abscess of intestine co-occurrent and due to diverticular disease (disorder),,
+,,1.08654E+15,Perforation of intestine due to diverticulitis of gastrointestinal tract (disorder),,
+,,271366000,Diverticulitis of gastrointestinal tract (disorder),,
+,,307496006,Diverticulitis (disorder),,
+,,735593008,Diverticulitis of intestine (disorder),,
+,,1.0866E+15,Intestinal hemorrhage co-occurrent and due to diverticulosis (disorder),,
+,,425671009,Neurogenic bowel (disorder),,
+,,24557004,Abscess of intestine (disorder),,
+,,278486006,Abscess between intestinal loops (disorder),,
+,,712511006,Abscess of sigmoid colon (disorder),,
+,,721683008,Infection causing abscess of colon (disorder),,
+,,10825001,Perforation of rectum (disorder),,
+,,37502002,Rupture of rectum (disorder),,
+,,50257008,Perforation of colon (disorder),,
+,,56905009,Perforation of intestine (disorder),,
+,,235741002,Perforation of small intestine (disorder),,
+,,235742009,Rupture of small intestine (disorder),,
+,,235800002,Rupture of colon (disorder),,
+,,262874007,Delayed perforation of colon (disorder),,
+,,262880004,Delayed perforation of rectum (disorder),,
+,,282060009,Perforation of jejunum (disorder),,
+,,282061008,Rupture of jejunum (disorder),,
+,,282068002,Perforation of ileum (disorder),,
+,,282069005,Rupture of ileum (disorder),,
+,,303078007,Perforation of large intestine (disorder),,
+,,405578000,Nontraumatic perforation of small intestine (disorder),,
+,,405579008,Nontraumatic perforation of large intestine (disorder),,
+,,405589007,Inflammatory perforation of small intestine (disorder),,
+,,707578009,Perforation of intestine due to cystic fibrosis with meconium ileus (disorder),,
+,,712512004,Perforation of sigmoid colon (disorder),,
+,,713354008,Perforated ulcer of intestine (disorder),,
+,,3590007,Enteroenteric fistula (disorder),,
+,,29927001,Fistula of intestine to abdominal wall (disorder),,
+,,38851006,Fistula of intestine (disorder),,
+,,85968009,External duodenal fistula (disorder),,
+,,91448003,Ileorectal fistula (disorder),,
+,,111356006,Enterocolic fistula (disorder),,
+,,197246005,Umbilical fistula (disorder),,
+,,197247001,Enterocutaneous fistula (disorder),,
+,,197248006,Ileoumbilical fistula (disorder),,
+,,197250003,Colonic fistula (disorder),,
+,,197262004,Fecal fistula (disorder),,
+,,197263009,Abdominal wall fistula (disorder),,
+,,235734008,Small bowel fistula (disorder),,
+,,235735009,Internal small bowel fistula (disorder),,
+,,235736005,Jejunoenteric fistula (disorder),,
+,,235737001,Jejunocolic fistula (disorder),,
+,,235738006,External small bowel fistula (disorder),,
+,,235739003,Jejunocutaneous fistula (disorder),,
+,,235777009,Large bowel fistula (disorder),,
+,,235778004,Internal large bowel fistula (disorder),,
+,,235779007,Colocolic fistula (disorder),,
+,,235790002,External large bowel fistula (disorder),,
+,,304371002,Jejunal fistula (disorder),,
+,,307403007,Aortojejunal fistula (disorder),,
+,,405565000,Colovascular fistula (disorder),,
+,,799008,Sigmoid colon ulcer (disorder),,
+,,16101002,Ulcer of cecum (disorder),,
+,,46040000,Ulceration of colon (disorder),,
+,,50565005,Ileal ulcer (disorder),,
+,,55957000,Proximal colon ulcer (disorder),,
+,,61715008,Celiac disease with diffuse intestinal ulceration (disorder),,
+,,85942002,Ulceration of intestine (disorder),,
+,,235710003,Ulceration of small intestine (disorder),,
+,,235713001,Primary nonspecific ulceration of small intestine (disorder),,
+,,235766003,Ulceration of large intestine (disorder),,
+,,235767007,Stercoral ulcer of large intestine (disorder),,
+,,235768002,Traumatic ulcer of large intestine (disorder),,
+,,361141006,Idiopathic small intestinal ulcers (disorder),,
+,,415767003,Ulcerated mucosa of colon (disorder),,
+,,722534001,Non-infective ulceration of small intestine (disorder),,
+,,722537008,Ulcer of small intestine caused by radiation (disorder),,
+,,722538003,Traumatic ulcer of small intestine (disorder),,
+,,722848005,Chronic non-specific multiple ulcers of small intestine (disorder),,
+,,723107001,Ulcer of small intestine caused by foreign body (disorder),,
+,,871631000,Ulcer of intestine due to immunoglobulin A vasculitis (disorder),,
+,,871633002,Ulcer of intestine due to graft-versus-host disease (disorder),,
+,,45626005,Nontraumatic hemoperitoneum (disorder),,
+,,236002003,Retroperitoneal hematoma (disorder),,
+,,443826006,Hemorrhage into peritoneal cavity (disorder),,
+,,713727007,Hemoperitoneum as complication of peritoneal dialysis (disorder),,
+,,17204006,Pneumoperitoneum (disorder),,
+,,27970007,Cyst of mesentery (disorder),,
+,,54620002,Cyst of peritoneal cavity (disorder),,
+,,75965001,Peritoneal granuloma (disorder),,
+,,95550001,Peritoneal fibrosis (disorder),,
+,,95552009,Fibrosis of mesentery (disorder),,
+,,122449004,Pneumoretroperitoneum (disorder),,
+,,236011003,Cyst of retroperitoneal compartment (disorder),,
+,,236012005,Peritoneal pseudocyst (disorder),,
+,,236013000,Mesenteric pseudocyst (disorder),,
+,,236014006,Omental pseudocyst (disorder),,
+,,253802003,Embryonic cyst of mesentery (disorder),,
+,,446251006,Loose body in peritoneal cavity (disorder),,
+,,44047000,Zieve's syndrome (disorder),,
+,,50325005,Alcoholic fatty liver (disorder),,
+,,9953008,Acute alcoholic liver disease (disorder),,
+,,235875008,Alcoholic hepatitis (disorder),,
+,,307757001,Chronic alcoholic hepatitis (disorder),,
+,,765482002,Steatohepatitis caused by ingestible alcohol (disorder),,
+,,1.08261E+15,Ascites due to alcoholic hepatitis (disorder),,
+,,1.08502E+15,Hepatic ascites due to chronic alcoholic hepatitis (disorder),,
+,,235880004,Alcoholic fibrosis and sclerosis of liver (disorder),,
+,,721710005,Fibrosis of liver caused by alcohol (disorder),,
+,,309783001,Esophageal varices in alcoholic cirrhosis of the liver (disorder),,
+,,420054005,Alcoholic cirrhosis (disorder),,
+,,1.0826E+15,Ascites due to alcoholic cirrhosis (disorder),,
+,,235881000,Alcoholic hepatic failure (disorder),,
+,,1.08262E+15,Hepatic coma due to alcoholic liver failure (disorder),,
+,,41309000,Alcoholic liver damage (disorder),,
+,,713181003,Chronic alcoholic liver disease (disorder),,
+,,713370005,Acute on chronic alcoholic liver disease (disorder),,
+,,40912001,Acute red atrophy of liver (disorder),,
+,,72445008,Subacute noninfective hepatitis (disorder),,
+,,111369005,Parenchymatous degeneration of liver (disorder),,
+,,197268000,Acute and subacute liver necrosis (disorder),,
+,,197269008,Acute necrosis of liver (disorder),,
+,,197270009,Acute hepatic failure (disorder),,
+,,197271008,Acute hepatitis - non-infective (disorder),,
+,,197274000,Subacute necrosis of liver (disorder),,
+,,197275004,Subacute hepatic failure (disorder),,
+,,707167006,Acute multi-acinar necrosis of liver (disorder),,
+,,720461006,Acute infantile liver failure due to synthesis defect of mitochondrial deoxyribonucleic acid encoded protein (disorder),,
+,,774207004,Acute infantile liver failure with multisystemic involvement syndrome (disorder),,
+,,1.08251E+15,Hepatic coma due to acute hepatic failure (disorder),,
+,,1.09269E+15,Hepatic coma due to subacute liver failure (disorder),,
+,,235886005,Chronic hepatic failure (disorder),,
+,,863957008,Chronic necrosis of liver (disorder),,
+,,1.08509E+15,Hepatic coma due to chronic hepatic failure (disorder),,
+,,11350001,Diffuse hepatic necrosis (disorder),,
+,,13920009,Hepatic encephalopathy (disorder),,
+,,13923006,Centrilobular hepatic necrosis (disorder),,
+,,26485002,Sawdust liver (disorder),,
+,,53104002,Peripheral hepatic necrosis (disorder),,
+,,55294001,Focal hepatic necrosis (disorder),,
+,,59927004,Hepatic failure (disorder),,
+,,61250001,Midzonal hepatic necrosis (disorder),,
+,,72836002,Hepatic coma (disorder),,
+,,87248009,Hepatic necrosis (disorder),,
+,,89835009,Atrophy of liver (disorder),,
+,,213230009,Hepatic failure as a complication of care (disorder),,
+,,235884008,Fulminant hepatic failure (disorder),,
+,,235885009,Subfulminant hepatic failure (disorder),,
+,,447058001,Solitary necrotic nodule of liver (disorder),,
+,,449901005,Hepatic encephalopathy in fulminant hepatic failure (disorder),,
+,,449902003,Portal systemic encephalopathy (disorder),,
+,,708248004,End stage liver disease (disorder),,
+,,1.03931E+14,Hepatic coma due to hepatitis (disorder),,
+,,1.25921E+14,Hepatic coma due to acute hepatitis C (disorder),,
+,,1.46371E+14,Hepatic coma due to chronic hepatitis C (disorder),,
+,,1.53091E+14,Hepatic coma due to chronic hepatitis B with delta agent (disorder),,
+,,41889008,Chronic persistent hepatitis (disorder),,
+,,57339008,Chronic lobular hepatitis (disorder),,
+,,197284004,Chronic active hepatitis (disorder),,
+,,9843006,Chronic lymphocytic cholangitis-cholangiohepatitis (disorder),,
+,,76783007,Chronic hepatitis (disorder),,
+,,62484002,Hepatic fibrosis (disorder),,
+,,123607009,Septal fibrosis of liver (disorder),,
+,,197316009,Portal fibrosis without cirrhosis (disorder),,
+,,703866000,Chronic hepatitis C with stage 2 fibrosis (disorder),,
+,,870517000,Periportal fibrosis (disorder),,
+,,3.47891E+14,Chronic hepatitis C with stage 3 fibrosis (disorder),,
+,,1.06907E+16,Stage 3 hepatic fibrosis (disorder),,
+,,235899008,Hepatic sclerosis (disorder),,
+,,235900003,Portal and splenic vein sclerosis (disorder),,
+,,718096004,Hepatoportal sclerosis (disorder),,
+,,235901004,Hepatic fibrosis with hepatic sclerosis (disorder),,
+,,235902006,Intrahepatic phlebosclerosis and fibrosis (disorder),,
+,,31712002,Primary biliary cholangitis (disorder),,
+,,123606000,Cholangiolitic cirrhosis (disorder),,
+,,715401008,Primary biliary cirrhosis co-occurrent with systemic scleroderma (disorder),,
+,,12368000,Secondary biliary cirrhosis (disorder),,
+,,1761006,Biliary cirrhosis (disorder),,
+,,109819003,Obstructive biliary cirrhosis (disorder),,
+,,197310003,Biliary cirrhosis of children (disorder),,
+,,271440004,Cirrhosis secondary to cholestasis (disorder),,
+,,536002,Glissonian cirrhosis (disorder),,
+,,6183001,Indian childhood cirrhosis (disorder),,
+,,15999000,Mixed micro and macronodular cirrhosis (disorder),,
+,,19943007,Cirrhosis of liver (disorder),,
+,,21861000,Micronodular cirrhosis (disorder),,
+,,27156006,Posthepatitic cirrhosis (disorder),,
+,,33144001,Parasitic cirrhosis (disorder),,
+,,43904005,Macronodular cirrhosis (disorder),,
+,,45256007,Cruveilhier-Baumgarten syndrome (disorder),,
+,,76301009,Florid cirrhosis (disorder),,
+,,78208005,Pigment cirrhosis (disorder),,
+,,86454000,Postnecrotic cirrhosis (disorder),,
+,,89580002,Cryptogenic cirrhosis (disorder),,
+,,123604002,Toxic cirrhosis (disorder),,
+,,123605001,Nutritional cirrhosis (disorder),,
+,,123716002,Latent cirrhosis (disorder),,
+,,123717006,Advanced cirrhosis (disorder),,
+,,128072003,Acquired portal-systemic shunt due to cirrhosis (disorder),,
+,,197279005,Cirrhosis and chronic liver disease (disorder),,
+,,197291001,Unilobular portal cirrhosis (disorder),,
+,,197293003,Diffuse nodular cirrhosis (disorder),,
+,,197294009,Fatty portal cirrhosis (disorder),,
+,,197296006,Capsular portal cirrhosis (disorder),,
+,,197299004,Pigmentary portal cirrhosis (disorder),,
+,,197300007,Pipestem portal cirrhosis (disorder),,
+,,235895002,"Laennec's cirrhosis, non-alcoholic (disorder)",,
+,,235896001,Infectious cirrhosis (disorder),,
+,,235897005,Hypoxia-associated cirrhosis (disorder),,
+,,266468003,Cirrhosis - non-alcoholic (disorder),,
+,,266469006,Multilobular portal cirrhosis (disorder),,
+,,266471006,Juvenile portal cirrhosis (disorder),,
+,,308129003,Esophageal varices in cirrhosis of the liver (disorder),,
+,,371139006,Early cirrhosis (disorder),,
+,,419728003,Portal cirrhosis (disorder),,
+,,699189004,North American Indian childhood cirrhosis (disorder),,
+,,715864007,Non-Wilsonian hepatic copper toxicosis of infancy and childhood (disorder),,
+,,716203000,Decompensated cirrhosis of liver (disorder),,
+,,725416005,Cardiomyopathy co-occurrent and due to cirrhosis of liver (disorder),,
+,,735733008,Cirrhosis of liver co-occurrent and due to primary sclerosing cholangitis (disorder),,
+,,871619002,Cirrhosis of liver due to and following cardiac procedure (disorder),,
+,,8.31E+11,Cirrhosis of liver due to chronic hepatitis C (disorder),,
+,,1.03611E+14,Cirrhosis of liver due to hepatitis B (disorder),,
+,,24805007,Portal thrombophlebitis (disorder),,
+,,67656006,Portal pyemia (disorder),,
+,,85514005,Phlebitis of portal vein (disorder),,
+,,235858002,Nonspecific reactive hepatitis (disorder),,
+,,86514004,Granulomatous hepatitis (disorder),,
+,,714253009,Hepatic granuloma (disorder),,
+,,723108006,Idiopathic granulomatous hepatitis (disorder),,
+,,19682006,Lupus hepatitis (disorder),,
+,,408335007,Autoimmune hepatitis (disorder),,
+,,721711009,Autoimmune hepatitis type 1 (disorder),,
+,,721712002,Autoimmune hepatitis type 2 (disorder),,
+,,721713007,Autoimmune hepatitis type 3 (disorder),,
+,,1.60985E+16,Chronic autoimmune hepatitis (disorder),,
+,,17349007,Portal triaditis (disorder),,
+,,95556007,Cholestatic hepatitis (disorder),,
+,,235877000,Ischemic hepatitis (disorder),,
+,,276554009,Parenteral nutrition-related hepatitis (disorder),,
+,,370492003,Copper storage associated hepatitis (disorder),,
+,,370889009,Lymphocytic portal hepatitis (disorder),,
+,,442191002,Steatohepatitis (disorder),,
+,,442685003,Nonalcoholic steatohepatitis (disorder),,
+,,717329009,Inflammatory pseudotumor of liver (disorder),,
+,,3.18191E+14,Hepatitis caused by bacteria (disorder),,
+,,53476006,Radiation hepatitis (disorder),,
+,,128241005,Inflammatory disease of liver (disorder),,
+,,197286002,Recurrent hepatitis (disorder),,
+,,235862008,Hepatitis due to infection (disorder),,
+,,370489002,Cholangiohepatitis (disorder),,
+,,4.1271E+13,Viral arthritis co-occurrent with hepatitis (disorder),,
+,,197315008,Non-alcoholic fatty liver (disorder),,
+,,197321007,Steatosis of liver (disorder),,
+,,713529007,Steatosis of liver caused by retroviral protease inhibitor (disorder),,
+,,722866000,Non-alcoholic fatty liver disease without non-alcoholic steatohepatitis (disorder),,
+,,773649005,Transient infantile hypertriglyceridemia and hepatosteatosis (disorder),,
+,,34736002,Chronic passive congestion of liver (disorder),,
+,,74669004,Cardiac cirrhosis (disorder),,
+,,76281005,Hepatic congestion (disorder),,
+,,266470007,Cardiac portal cirrhosis (disorder),,
+,,197364000,Central hemorrhagic necrosis of liver (disorder),,
+,,17890003,Hepatic infarction (disorder),,
+,,58008004,Peliosis hepatis (disorder),,
+,,65617004,Veno-occlusive disease of the liver (disorder),,
+,,724361001,Hepatic veno-occlusive disease with immunodeficiency syndrome (disorder),,
+,,34742003,Portal hypertension (disorder),,
+,,197303009,Bacterial portal cirrhosis (disorder),,
+,,445237003,Portopulmonary hypertension (disorder),,
+,,707420003,Portal hypertension due to cystic fibrosis (disorder),,
+,,722867009,Idiopathic portal hypertension (disorder),,
+,,42927005,Cholemic nephrosis (disorder),,
+,,51292008,Hepatorenal syndrome (disorder),,
+,,28193003,Hepatic osteodystrophy (disorder),,
+,,36631002,Hepatomphalocele (disorder),,
+,,75689006,Pleural effusion associated with hepatic disorder (disorder),,
+,,79720007,Chronic nonalcoholic liver disease (disorder),,
+,,191150003,Folate deficiency anemia due to liver disorders (disorder),,
+,,235890007,Autoimmune liver disease (disorder),,
+,,243978007,Liver damage (disorder),,
+,,248413004,Liver palms (disorder),,
+,,328383001,Chronic liver disease (disorder),,
+,,396460000,Hepatocellular dysplasia (disorder),,
+,,702399004,Compensated liver disease (disorder),,
+,,59771005,Calculus of gallbladder with acute cholecystitis (disorder),,
+,,81115009,Calculus of common bile duct with acute cholecystitis with obstruction (disorder),,
+,,197377009,Gallbladder calculus with acute cholecystitis and no obstruction (disorder),,
+,,197378004,Gallbladder calculus with acute cholecystitis and obstruction (disorder),,
+,,699050007,Calculus of gallbladder with acute and chronic cholecystitis (disorder),,
+,,3.8871E+13,Acute and chronic cholecystitis co-occurrent and due to calculus of gallbladder and bile duct (disorder),,
+,,12932003,Calculus of common bile duct with chronic cholecystitis with obstruction (disorder),,
+,,25924004,Calculus of gallbladder with cholecystitis (disorder),,
+,,29484002,Cholelithiasis AND cholecystitis without obstruction (disorder),,
+,,50450007,Cholelithiasis AND cholecystitis with obstruction (disorder),,
+,,95559000,Chronic cholecystitis with calculus (disorder),,
+,,314949006,Perforated calculous chronic cholecystitis (disorder),,
+,,1.08493E+15,Chronic cholecystitis due to cholelithiasis co-occurrent with choledocholithiasis (disorder),,
+,,1.08497E+15,Chronic cholecystitis due to gallbladder calculus with obstruction (disorder),,
+,,7290007,Impacted gallstone of cystic duct (disorder),,
+,,55479002,Impacted gallstone of gallbladder (disorder),,
+,,62809003,Calculus of cystic duct with obstruction (disorder),,
+,,65082000,Calculus of cystic duct (disorder),,
+,,70342003,Cholelithiasis without obstruction (disorder),,
+,,77528005,Cholelithiasis with obstruction (disorder),,
+,,235919008,Gallbladder calculus (disorder),,
+,,266474003,Calculus in biliary tract (disorder),,
+,,312110005,Gallbladder and bile duct calculi (disorder),,
+,,711564007,Cholecystolithiasis with obstruction (disorder),,
+,,735467004,Cholangitis co-occurrent and due to calculus of gallbladder (disorder),,
+,,830074003,Cholesterol calculus of gallbladder (disorder),,
+,,830075002,Pigment calculus of gallbladder (disorder),,
+,,197402000,Calculus of bile duct with cholangitis (disorder),,
+,,1.08483E+15,Acute cholangitis due to bile duct calculus (disorder),,
+,,1.08484E+15,Acute cholangitis due to bile duct calculus with obstruction (disorder),,
+,,1.08489E+15,Cholangitis due to bile duct calculus with obstruction (disorder),,
+,,1.0849E+15,Chronic cholangitis due to bile duct calculus (disorder),,
+,,1.08491E+15,Chronic cholangitis due to bile duct calculus with obstruction (disorder),,
+,,15082003,Calculus of bile duct with chronic cholecystitis with obstruction (disorder),,
+,,19335008,Calculus of cystic duct with acute cholecystitis (disorder),,
+,,36483003,Calculus of bile duct with cholecystitis (disorder),,
+,,49341008,Calculus of cystic duct with cholecystitis (disorder),,
+,,60127009,Calculus of bile duct with acute cholecystitis without obstruction (disorder),,
+,,68368005,Calculus of common bile duct with chronic cholecystitis (disorder),,
+,,71745007,Calculus of bile duct with chronic cholecystitis without obstruction (disorder),,
+,,72053008,Calculus of common bile duct with acute cholecystitis without obstruction (disorder),,
+,,74091007,Calculus of common bile duct with chronic cholecystitis without obstruction (disorder),,
+,,89251007,Calculus of common bile duct with acute cholecystitis (disorder),,
+,,91316003,Calculus of bile duct with chronic cholecystitis (disorder),,
+,,197389006,Bile duct calculus with acute cholecystitis (disorder),,
+,,197391003,Bile duct calculus with acute cholecystitis and obstruction (disorder),,
+,,4.0331E+13,Acute cholecystitis due to biliary calculus (disorder),,
+,,1356007,Calculus of common duct with obstruction (disorder),,
+,,4661003,Calculus of bile duct with obstruction (disorder),,
+,,6087002,Calculus of hepatic duct with obstruction (disorder),,
+,,27697003,Calculus of hepatic duct without obstruction (disorder),,
+,,59049008,Calculus of hepatic duct (disorder),,
+,,59192001,Osler's syndrome (disorder),,
+,,68394001,Calculus of bile duct without obstruction (disorder),,
+,,68601009,Calculus of cystic duct without obstruction (disorder),,
+,,235923000,Retained bile duct stone (disorder),,
+,,297288000,Liver calculus (disorder),,
+,,307132003,Common bile duct calculus (disorder),,
+,,413197000,Calculus of cystic stump (disorder),,
+,,718309005,Calculus of common bile duct without obstruction (disorder),,
+,,735734002,Calculus of bile duct without inflammation of biliary tract (disorder),,
+,,715577009,Low phospholipid associated cholelithiasis (disorder),,
+,,111372003,Gangrene of gallbladder (disorder),,
+,,20824003,Chronic cholecystitis (disorder),,
+,,53928001,Chronic cholecystitis without calculus (disorder),,
+,,396335001,Acute and chronic cholecystitis (disorder),,
+,,46341007,Cholecystitis glandularis proliferans (disorder),,
+,,64534006,Hyperplastic cholecystitis (disorder),,
+,,95558008,Pneumocholecystitis (disorder),,
+,,448286002,Xanthogranulomatous cholecystitis (disorder),,
+,,19968009,Cholecystitis without calculus (disorder),,
+,,17970006,Stricture of gallbladder (disorder),,
+,,38712009,Stenosis of gallbladder (disorder),,
+,,75726005,Obstruction of gallbladder (disorder),,
+,,197416005,Occlusion of gallbladder (disorder),,
+,,197418006,Occlusion of cystic duct (disorder),,
+,,197419003,Stenosis of cystic duct (disorder),,
+,,47312008,Hydrops of gallbladder (disorder),,
+,,78793006,Mucocele of gallbladder (disorder),,
+,,22788004,Rupture of gallbladder (disorder),,
+,,197422001,Rupture of cystic duct (disorder),,
+,,721717008,Perforation of cystic duct (disorder),,
+,,16957005,Fistula of gallbladder (disorder),,
+,,20306009,Cholecystoenteric fistula (disorder),,
+,,39170005,Cholecystoduodenal fistula (disorder),,
+,,197426003,Cholecystogastric fistula (disorder),,
+,,307295007,Cholecystojejunal fistula (disorder),,
+,,61565001,Cholesterolosis of gallbladder (disorder),,
+,,13516000,Adhesion of gallbladder (disorder),,
+,,19286001,Cyst of gallbladder (disorder),,
+,,22149007,Aschoff-Rokitansky sinuses (disorder),,
+,,22711000,Adhesion of cystic duct (disorder),,
+,,47932002,Cystic mucinous hypertrophy of gallbladder (disorder),,
+,,59612001,Ulcer of gallbladder (disorder),,
+,,62188005,Biliary achalasia (disorder),,
+,,64664008,Atrophy of gallbladder (disorder),,
+,,65018008,Ulcer of cystic duct (disorder),,
+,,67968004,Hypertrophy of cystic duct (disorder),,
+,,74434009,Atrophy of cystic duct (disorder),,
+,,76875008,Hypertrophy of gallbladder (disorder),,
+,,78900008,Nonfunctioning cystic duct (disorder),,
+,,80527006,Nonfunctioning gallbladder (disorder),,
+,,87551003,Cyst of cystic duct (disorder),,
+,,95560005,Hemocholecyst (disorder),,
+,,110995008,Intramural calcification of gallbladder (disorder),,
+,,134402008,Cholesterol polyp of gallbladder (disorder),,
+,,197432008,Biliary dyskinesia (disorder),,
+,,197433003,Polyp of gallbladder (disorder),,
+,,287326003,Atony of gallbladder (disorder),,
+,,721721001,Dyskinesia of gallbladder (disorder),,
+,,721723003,Adenomyomatosis of gallbladder (disorder),,
+,,1.38561E+14,Gallbladder mass (disorder),,
+,,289999003,Poorly functioning gallbladder (disorder),,
+,,10184002,Recurrent cholangitis (disorder),,
+,,17266006,Primary cholangitis (disorder),,
+,,18028001,Secondary cholangitis (disorder),,
+,,35571009,Cholangiolitis (disorder),,
+,,43823002,Bacterial cholangitis (disorder),,
+,,65001009,Recurrent pyogenic cholangitis (disorder),,
+,,69850007,Suppurative cholangitis (disorder),,
+,,71801004,Stenosing cholangitis (disorder),,
+,,71912000,Chronic cholangitis (disorder),,
+,,82403002,Cholangitis (disorder),,
+,,197438007,Cholangitis lenta (disorder),,
+,,197439004,Obliterative cholangitis (disorder),,
+,,197441003,Primary sclerosing cholangitis (disorder),,
+,,197442005,Secondary sclerosing cholangitis (disorder),,
+,,235917005,Sclerosing cholangitis (disorder),,
+,,281388009,Human immunodeficiency virus-related sclerosing cholangitis (disorder),,
+,,370490006,Acute cholangiohepatitis (disorder),,
+,,399525009,Inflammation of ampulla of Vater (disorder),,
+,,449805002,Eosinophilic cholangitis (disorder),,
+,,713654004,Autoimmune cholangitis (disorder),,
+,,722870008,Immunoglobulin G4-related sclerosing cholangitis (disorder),,
+,,724278007,"Neonatal sclerosing cholangitis, ichthyosis, hypotrichosis syndrome (disorder)",,
+,,736147006,Acute obstructive cholangitis (disorder),,
+,,771446000,Follicular cholangitis and pancreatitis (disorder),,
+,,866077005,Infection of bile duct caused by parasite (disorder),,
+,,4283007,Mirizzi's syndrome (disorder),,
+,,8262006,Extrahepatic obstructive biliary disease (disorder),,
+,,15770003,Acute cholestatic jaundice syndrome (disorder),,
+,,30144000,Obstruction of bile duct (disorder),,
+,,43030007,Stenosis of bile duct (disorder),,
+,,43797002,Stricture of bile duct (disorder),,
+,,44018007,Cholestatic jaundice syndrome (disorder),,
+,,59848001,Obstructive hyperbilirubinemia (disorder),,
+,,74162007,Progressive intrahepatic cholestasis (disorder),,
+,,75066002,Chronic cholestatic jaundice syndrome (disorder),,
+,,197446008,Occlusion of bile duct (disorder),,
+,,235888006,Cholestasis of pregnancy (disorder),,
+,,235921003,Biliary stricture (disorder),,
+,,239104000,Pruritic folliculitis of pregnancy (disorder),,
+,,307000000,Stricture of hepatic duct (disorder),,
+,,359793002,Ampulla of Vater obstruction syndrome (disorder),,
+,,359797001,Courvoisier-Terrier syndrome (disorder),,
+,,371090009,Cholestasis of parenteral nutrition (disorder),,
+,,427380004,Vanishing bile duct syndrome (disorder),,
+,,433237003,Cholestasis in newborn (disorder),,
+,,473281000,Obstruction of common bile duct (disorder),,
+,,707150004,Cholestatic pruritus (disorder),,
+,,56512009,Rupture of bile duct (disorder),,
+,,53206008,Fistula of bile duct (disorder),,
+,,66367009,Choledochoduodenal fistula (disorder),,
+,,67600007,Vascular-biliary fistula (disorder),,
+,,95561009,Bronchobiliary fistula (disorder),,
+,,235931005,Leakage of bile (disorder),,
+,,253809007,Tracheobiliary fistula (disorder),,
+,,430887001,Dysfunction of sphincter of Oddi (disorder),,
+,,9484001,Cyst of bile duct (disorder),,
+,,235924006,Cyst of biliary tract (disorder),,
+,,235925007,Cyst of intrahepatic bile ducts (disorder),,
+,,440471007,Cystic dilatation of common bile duct (disorder),,
+,,441285006,Acquired cystic dilatation of common bile duct (disorder),,
+,,1698001,Ulcer of bile duct (disorder),,
+,,10518000,North American Indian intrahepatic cholestasis (disorder),,
+,,20239009,Bile duct proliferation (disorder),,
+,,26874005,Hypertrophy of bile duct (disorder),,
+,,27123005,Biliary sludge (disorder),,
+,,31155007,Benign recurrent intrahepatic cholestasis (disorder),,
+,,48124008,Fibrosis of bile duct (disorder),,
+,,51854002,Atrophy of bile duct (disorder),,
+,,53192009,Stasis of bile duct (disorder),,
+,,55955008,Oriental cholangiohepatitis (disorder),,
+,,66556007,Hemobilia (disorder),,
+,,77972001,Adhesion of bile duct (disorder),,
+,,123608004,Cholangiectasis (disorder),,
+,,197453004,Post-cholecystectomy bile leakage (disorder),,
+,,235918000,Obstruction of biliary tree (disorder),,
+,,235927004,Adhesions of biliary tree (disorder),,
+,,235928009,Atrophy of biliary tree (disorder),,
+,,235929001,Hypertrophy of biliary tract (disorder),,
+,,235930006,Ulceration of biliary tree (disorder),,
+,,235932003,Bile duct leakage (disorder),,
+,,235976005,Familial hypertrophy of sphincter of Oddi (disorder),,
+,,255174002,Benign polyp of biliary tract (disorder),,
+,,307133008,Cystic dilation of intrahepatic duct (disorder),,
+,,446673009,Leakage of bile from accessory bile duct (disorder),,
+,,721720000,Hemorrhage of bile duct (disorder),,
+,,721722008,Dyskinesia of sphincter of Oddi (disorder),,
+,,722882004,Functional biliary sphincter of Oddi disorder (disorder),,
+,,722883009,Functional pancreatic sphincter of Oddi disorder (disorder),,
+,,838305005,Benign intrahepatic cholestasis type 1 (disorder),,
+,,111373008,Pericholangitis (disorder),,
+,,95563007,Gallstone pancreatitis (disorder),,
+,,235941008,Gallstone acute pancreatitis (disorder),,
+,,9.6081E+13,Acute pancreatitis due to common bile duct calculus (disorder),,
+,,24407009,Suppurative pancreatitis (disorder),,
+,,59329007,Metabolic pancreatitis (disorder),,
+,,448542008,Autoimmune pancreatitis (disorder),,
+,,303002,Apoplectic pancreatitis (disorder),,
+,,7881005,Acute necrotizing pancreatitis (disorder),,
+,,15528006,Acute necrosis of pancreas (disorder),,
+,,19742005,Relapsing pancreatic necrosis (disorder),,
+,,23587002,Phlegmon of pancreas (disorder),,
+,,53616007,Subacute pancreatic necrosis (disorder),,
+,,59154002,Subacute pancreatitis (disorder),,
+,,68072000,Hereditary pancreatitis (disorder),,
+,,69643006,Abscess of pancreas (disorder),,
+,,197458008,Acute recurrent pancreatitis (disorder),,
+,,235960001,Infected pancreatic necrosis (disorder),,
+,,413566007,Aplastic anemia associated with pancreatitis (disorder),,
+,,721724009,Acute on chronic pancreatitis (disorder),,
+,,722544004,Pancreatitis due to pancreatic duct obstruction (disorder),,
+,,863978006,Pleural effusion due to pancreatitis (disorder),,
+,,235952002,Alcohol-induced chronic pancreatitis (disorder),,
+,,767291004,Chronic pancreatitis due to acute alcohol intoxication (disorder),,
+,,1.54211E+14,Chronic pancreatitis due to chronic alcoholism (disorder),,
+,,39205007,Infectious pancreatitis (disorder),,
+,,74973004,Chronic fibrosing pancreatitis (disorder),,
+,,233870001,Recurrent pancreatitis (disorder),,
+,,234689009,Relapsing pancreatitis (disorder),,
+,,235494005,Chronic pancreatitis (disorder),,
+,,235951009,Gallstone chronic pancreatitis (disorder),,
+,,235953007,Idiopathic chronic pancreatitis (disorder),,
+,,235954001,Obstructive chronic pancreatitis (disorder),,
+,,235956004,Familial chronic pancreatitis (disorder),,
+,,301009006,Calcific chronic pancreatitis (disorder),,
+,,722871007,Groove pancreatitis (disorder),,
+,,722872000,Autoimmune pancreatitis type 1 (disorder),,
+,,724540009,Tropical calcific chronic pancreatitis (disorder),,
+,,838375006,Chronic infectious pancreatitis (disorder),,
+,,31258000,Cyst of pancreas (disorder),,
+,,197464001,Cyst and pseudocyst of pancreas (disorder),,
+,,235962009,Retention cyst of pancreas (disorder),,
+,,111374002,Pseudocyst of pancreas (disorder),,
+,,370488005,Perirenal pseudocyst (disorder),,
+,,405563007,Infected pancreatic pseudocyst (disorder),,
+,,1835003,Necrosis of pancreas (disorder),,
+,,2307008,Fat necrosis of pancreas (disorder),,
+,,2751001,Fibrocalculous pancreatic diabetes (disorder),,
+,,3549009,Pancreatic acinar atrophy (disorder),,
+,,3571004,Megaloblastic anemia due to pancreatic insufficiency (disorder),,
+,,15402006,Calculus of pancreas (disorder),,
+,,20678000,"Extreme insulin resistance with acanthosis nigricans, hirsutism AND autoantibodies to the insulin receptors (disorder)",,
+,,25803005,Pancreatic fistula (disorder),,
+,,25942009,Fibrosis of pancreas (disorder),,
+,,37992001,Pancreatic insufficiency (disorder),,
+,,38079004,Aseptic necrosis of pancreas (disorder),,
+,,44636008,Interstitial pancreatitis (disorder),,
+,,46626002,Subcutaneous nodular fat necrosis in pancreatitis (disorder),,
+,,47367009,Exocrine pancreatic insufficiency (disorder),,
+,,53067009,Pancreatic ascites (disorder),,
+,,61221008,Baggenstoss change of pancreas (disorder),,
+,,88281007,Atrophy of pancreas (disorder),,
+,,95562002,Hemorrhage of pancreas (disorder),,
+,,95564001,Pancreatemphraxis (disorder),,
+,,235957008,Pancreatic collection (disorder),,
+,,235958003,Acute pancreatic fluid collection (disorder),,
+,,235959006,Pancreatic and peripancreatic necrosis (disorder),,
+,,235971000,Pancreatic duct leakage (disorder),,
+,,235972007,Pancreatic duct stricture (disorder),,
+,,235973002,Pancreatic duct obstruction (disorder),,
+,,235974008,Pancreatic duct calculus (disorder),,
+,,235979003,Disorder of pancreatic duct anastomosis (disorder),,
+,,237600004,Malnutrition-related diabetes mellitus - fibrocalculous (disorder),,
+,,308866007,Mild pancreatic duct dysplasia (disorder),,
+,,308867003,Moderate pancreatic duct dysplasia (disorder),,
+,,413184002,Fibrocalculous pancreatopathy without complication (disorder),,
+,,413258004,Pancreatic duct obstruction by calculus (disorder),,
+,,446915006,Leakage from pancreatic tail (disorder),,
+,,609201007,Hemorrhage of pancreatic duct (disorder),,
+,,707450006,Pancreatic insufficiency due to cystic fibrosis of pancreas (disorder),,
+,,722207000,"Pancreatic insufficiency, dyserythropoietic anemia, calvarial hyperostosis syndrome (disorder)",,
+,,722873005,Secondary pancreatic insufficiency (disorder),,
+,,766944008,Complete obstruction of pancreatic duct (disorder),,
+,,773200006,Fatty pancreas (disorder),,
+,,2.1321E+13,Pancreatic acinar fistula (disorder),,
+,,51002006,Diabetes mellitus associated with pancreatic disease (disorder),,
+,,91352004,Diabetes mellitus due to structurally abnormal insulin (disorder),,
+,,235969000,Pancreatic duct disorder (disorder),,
+,,308868008,Severe pancreatic duct dysplasia (disorder),,
+,,403416005,Panniculitis secondary to pancreatic disease (disorder),,
+,,863977001,Pleural effusion due to disorder of pancreas (disorder),,
+,,6659005,Megaloblastic anemia due to nontropical sprue (disorder),,
+,,91867008,Adult form of celiac disease (disorder),,
+,,275404008,Celiac rickets (disorder),,
+,,396330006,Celiac crisis (disorder),,
+,,396331005,Celiac disease (disorder),,
+,,722386009,Celiac disease with epilepsy and cerebral calcification syndrome (disorder),,
+,,770593004,Refractory celiac disease (disorder),,
+,,47384003,Tropical sprue (disorder),,
+,,81704009,Sprue (disorder),,
+,,87806008,Megaloblastic anemia due to tropical sprue (disorder),,
+,,359653006,Unclassified sprue (disorder),,
+,,60164003,Megaloblastic anemia due to blind loop syndrome (disorder),,
+,,77225009,Blind loop syndrome (disorder),,
+,,54576000,Pancreatic steatorrhea (disorder),,
+,,78960005,Pancreatic triacylglycerol lipase deficiency (disorder),,
+,,235733002,Postprocedural pancreatic steatorrhea (disorder),,
+,,763212006,Combined pancreatic lipase and colipase deficiency (disorder),,
+,,27868004,Chronic steatorrhea (disorder),,
+,,29736007,Syndrome of carbohydrate intolerance (disorder),,
+,,66972006,Protein-losing enteropathy (disorder),,
+,,197490003,Intestinal malabsorption of protein (disorder),,
+,,197491004,Intestinal malabsorption of carbohydrate (disorder),,
+,,197493001,Malabsorption caused by intolerance to soy protein (disorder),,
+,,197494007,Intestinal malabsorption of fat (disorder),,
+,,235720008,Malabsorption due to intolerance to carbohydrate (disorder),,
+,,302921006,Malabsorption due to intolerance to protein (disorder),,
+,,303062005,Malabsorption due to intolerance to fat (disorder),,
+,,328313007,Protein malabsorption (disorder),,
+,,41545003,Whipple's disease (disorder),,
+,,44332000,Bile acid malabsorption syndrome (disorder),,
+,,56661000,Intestinal enteropeptidase deficiency (disorder),,
+,,59285001,Bile acid malabsorption syndrome type II (disorder),,
+,,61738006,Non-gluten sensitive enteropathy syndrome (disorder),,
+,,86941000,Bile acid malabsorption syndrome type I (disorder),,
+,,91465007,Bile acid malabsorption syndrome type III (disorder),,
+,,201517005,Seronegative arthritis secondary to Whipple's disease (disorder),,
+,,235723005,Chemically-induced malabsorption (disorder),,
+,,235725003,Malabsorption caused by infective agent (disorder),,
+,,235728001,Autoimmune enteropathy (disorder),,
+,,717186009,Intestinal malabsorption due to bile acid synthesis defect (disorder),,
+,,7444001,Tuberculosis of rectum (disorder),,
+,,12137005,Tuberculous enteritis (disorder),,
+,,186225008,"Tuberculosis of intestines, peritoneum and mesenteric glands (disorder)",,
+,,234090004,Tuberculous mesenteric adenitis (disorder),,
+,,235694001,Tuberculous duodenitis (disorder),,
+,,447330002,Tuberculosis of abdomen (disorder),,
+,,447371008,Tuberculosis of ileum (disorder),,
+,,698733009,Intestinal obstruction due to tuberculosis (disorder),,
+,,735518003,Infection of digestive system caused by Mycobacterium tuberculosis (disorder),,
+,,734884008,Diarrhea co-occurrent and due to carcinoid syndrome (disorder),,
+,,697965002,Cholangitis associated with acquired immunodeficiency syndrome (disorder),,

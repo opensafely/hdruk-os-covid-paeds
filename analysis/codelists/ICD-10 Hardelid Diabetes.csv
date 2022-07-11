@@ -1,0 +1,56 @@
+ICD-10,Description
+E10,Type 1 diabetes mellitus
+E100,With coma
+E101,With ketoacidosis
+E102,With renal complications
+E103,With ophthalmic complications
+E104,With neurological complications
+E105,With peripheral circulatory complications
+E106,With other specified complications
+E107,With multiple complications
+E108,With unspecified complications
+E109,Without complications
+E11,Type 2 diabetes mellitus
+E110,With coma
+E111,With ketoacidosis
+E112,With renal complications
+E113,With ophthalmic complications
+E114,With neurological complications
+E115,With peripheral circulatory complications
+E116,With other specified complications
+E117,With multiple complications
+E118,With unspecified complications
+E119,Without complications
+E12,Malnutrition-related diabetes mellitus
+E120,With coma
+E121,With ketoacidosis
+E122,With renal complications
+E123,With ophthalmic complications
+E124,With neurological complications
+E125,With peripheral circulatory complications
+E126,With other specified complications
+E127,With multiple complications
+E128,With unspecified complications
+E129,Without complications
+E13,Other specified diabetes mellitus
+E130,With coma
+E131,With ketoacidosis
+E132,With renal complications
+E133,With ophthalmic complications
+E134,With neurological complications
+E135,With peripheral circulatory complications
+E136,With other specified complications
+E137,With multiple complications
+E138,With unspecified complications
+E139,Without complications
+E14,Unspecified diabetes mellitus
+E140,With coma
+E141,With ketoacidosis
+E142,With renal complications
+E143,With ophthalmic complications
+E144,With neurological complications
+E145,With peripheral circulatory complications
+E146,With other specified complications
+E147,With multiple complications
+E148,With unspecified complications
+E149,Without complications
