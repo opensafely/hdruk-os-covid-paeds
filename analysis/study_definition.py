@@ -276,307 +276,209 @@ study = StudyDefinition(
     ##############
 
     # ASTHMA
-    asthma_diagnosis_date=patients.with_these_clinical_events(
-        asthma_diagnosis_codelist,
+    asthma=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_asthma
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
-
-    current_asthma_date=patients.with_these_clinical_events(
-        current_asthma_codelist,
-        on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.05
-        }
-    ),
-    
 
     # CANCER
-    cancer_excl_lung_and_haem_date=patients.with_these_clinical_events(
-        cancer_excl_lung_and_haem_codelist,
+    cancer=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_cancer
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    cancer_haem_date=patients.with_these_clinical_events(
-        cancer_haem_codelist,
+    #CYSTIC FIBROSIS
+    cystic_fibrosis=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_cystic_fibrosis
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.05
-        }
-    ),
-
-    cancer_lung_date=patients.with_these_clinical_events(
-        cancer_lung,
-        on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.05
-        }
-    ),
-
-    # CHRONIC CARDIAC DISEASE
-    chronic_cardiac_disease_date=patients.with_these_clinical_events(
-        chronic_cardiac_disease_codelist,
-        on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.05
-        }
-    ),
-
-    heart_disease_other_date=patients.with_these_clinical_events(
-        heart_disease_other_codelist,
-        on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.05
-        }
-    ),
-
-
-    # CHRONIC KIDNEY DISEASE
-    chronic_kidney_disease_date=patients.with_these_clinical_events(
-        chronic_kidney_disease_codelist,
-        on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.05
-        }
-    ),
-
-    # CHRONIC LIVER DISEASE
-    chronic_liver_disease_date=patients.with_these_clinical_events(
-        chronic_liver_disease_codelist,
-        on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.05
-        }
-    ),
-
-    # CHRONIC RESPIRATORY DIESASE
-    chronic_respiratory_disease_date=patients.with_these_clinical_events(
-        chronic_respiratory_disease_codelist,
-        on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
-        return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
     # DIABETES
-    diabetes_date=patients.with_these_clinical_events(
-        diabetes_codelist,
+    diabetes=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_diabetes
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    # HIV
-    hiv_date=patients.with_these_clinical_events(
-        hiv_codelist,
+    # EPILEPSY
+    epilepsy=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_epilepsy
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    # INTELLECTUAL AND LEARNING DISABILITY
-    intellectual_disability_date=patients.with_these_clinical_events(
-        intellectual_disability_codelist,
+    # SEVERE METNAL ILLNESS
+    severe_mental_illness=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_severe_mental_illness
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    learning_disabilities_date=patients.with_these_clinical_events(
-        learning_disabilities_codelist,
+    # CEREBRAL PALSY
+    cerebral_palsy=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_cerebral_palsy
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    # SEVERE MENTAL ILLNESS
-    severe_mental_illness_date=patients.with_these_clinical_events(
-        severe_mental_illness_codelist,
+    # CHRONIC INFECTIONS
+    chronic_infections=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_chronic_infections
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    # NEUROLOGICAL DISEASES
-    neurological_diseases_date=patients.with_these_clinical_events(
-        neurological_diseases_codelist,
+    # DEVICES AND STOMAS
+    devices_and_stomas=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_devices_and_stomas
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    other_neurological_conditions_date=patients.with_these_clinical_events(
-        other_neurological_conditions_codelist,
+    # ENDOCRINE 
+    endocrine_disorders=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_endocrine
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    cerebral_palsy_date=patients.with_these_clinical_events(
-        cerebral_palsy_codelist,
+    # GASTROINTESTINAL DISORDERS 
+    gastrointestinal_disorders=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_gastrointestinal
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    # PERMANENT IMMUNOSUPPRESSION
-    permanent_immunosuppression_date=patients.with_these_clinical_events(
-        permanent_immunosuppression_codelist,
+    # HAEMATOLOGICAL DISORDERS 
+    haematological_disorders=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_haematology
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    # PREGNENCY OR DELIVERY (INCLUDING MISCARRIAGE AND TERMINATION)
-    pregnency_delivery_date=patients.with_these_clinical_events(
-        pregnency_delivery_codelist,
+    # IMMUNOLOGICAL DISORDERS 
+    immunological_disorders=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_immunological
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    # SEVERE OBESITY
-    severe_obesity_date=patients.with_these_clinical_events(
-        severe_obesity_codelist,
+    # LEARNING AND BEHAVIOUR DIFFICULTIES 
+    learning_and_behaviour_difficulties=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_learning_difficulties_and_behaviour
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
 
-    # SICKLE CELL DISEASE
-    sickle_cell_disease_date=patients.with_these_clinical_events(
-        sickle_cell_disease_codelist,
+    # MENTAL ILLNESS
+    mental_illness=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_mental_illness
+        ),
         on_or_before=end_date,
-        returning = "date",
-        date_format = "YYYY-MM-DD",
-        find_first_match_in_period=True,
+        returning = "binary_flag",
         return_expectations={
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
             "incidence": 0.05
         }
     ),
+
+    # MUSCOLOKELETAL AND RHEUMATIC DISEASES
+    musculoskeletal_and_rheum=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_musculoskeletal_and_rheum
+        ),
+        on_or_before=end_date,
+        returning = "binary_flag",
+        return_expectations={
+            "incidence": 0.05
+        }
+    ),
+
+    # TRANSPLANT
+    transplant=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_transplant
+        ),
+        on_or_before=end_date,
+        returning = "binary_flag",
+        return_expectations={
+            "incidence": 0.05
+        }
+    ),
+
 
     ########################
     # Covid-19 Vaccination #
