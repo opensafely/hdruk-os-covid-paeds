@@ -66,26 +66,8 @@ diagnostics_gp = data_gp %>%
       select_if(~(all(is.na(.)))) %>%
       ncol()
     
-    nonzero_counts = data %>%
-      summarise(
-        sum_count_1 = gp_count_1 %>% sum(),
-        sum_count_2 = gp_count_2 %>% sum(),
-        sum_count_3 = gp_count_3 %>% sum(),
-        sum_count_4 = gp_count_4 %>% sum(),
-        sum_count_5 = gp_count_5 %>% sum(),
-        sum_count_6 = gp_count_6 %>% sum(),
-        sum_count_7 = gp_count_7 %>% sum(),
-        nonzero_count_1 = (gp_count_1 > 0) %>% sum(),
-        nonzero_count_2 = (gp_count_2 > 0) %>% sum(),
-        nonzero_count_3 = (gp_count_3 > 0) %>% sum(),
-        nonzero_count_4 = (gp_count_4 > 0) %>% sum(),
-        nonzero_count_5 = (gp_count_5 > 0) %>% sum(),
-        nonzero_count_6 = (gp_count_6 > 0) %>% sum(),
-        nonzero_count_7 = (gp_count_7 > 0) %>% sum()
-      )
+    tibble(n_row, n_row_bad_id, n_col, n_col_empty)
     
-    tibble(n_row, n_row_bad_id, n_col, n_col_empty) %>% 
-      bind_cols(nonzero_counts)
   }) %>%
   bind_rows() %>%
   mutate(file = files_gp) %>%
@@ -98,36 +80,21 @@ data_gp = map2(
     .f = function(.data, .file_list){
       .data %>%
         filter(patient_id %in% data_id$patient_id) %>% 
+        select(-gp_contact_count) %>% 
         pivot_longer(
           cols = -patient_id,
           names_to = c("index"),
-          names_pattern = "gp_count_(\\d+)",
-          values_to = "value",
-          values_drop_na = FALSE
-        ) %>% 
-        filter(value > 0) %>% 
+          names_pattern = "gp_contact_date_(\\d+)",
+          values_to = "date",
+          values_drop_na = TRUE
+        ) %>%
+        select(-index) %>% 
         mutate(
-          index = index %>% as.numeric(),
-          date = .file_list %>%
-            str_extract(
-              pattern = "20\\d{2}-\\d{2}-\\d{2}(?=\\.csv\\.gz)") %>% 
-            ymd() + (index - 1),
-          snomed_tag = .file_list %>%
-            str_extract(
-              pattern = "(?<=input_gp_)[a-z_]+(?=_20\\d{2}-\\d{2}-\\d{2}\\.csv\\.gz)") %>% 
-            str_replace("_", " ") %>% 
-            str_squish() %>% 
-            str_to_sentence(),
-          snomed_tag = case_when(
-            snomed_tag == "Regime therapy" ~ "Regime/therapy",
-            TRUE ~ snomed_tag
-            ) %>% 
-            ff_label("SNOMED semantic tag")
+          date = date %>% ymd()
         )
   }) %>%
   bind_rows() %>% 
-  select(-index)
-
+  distinct(patient_id, date)
 
 # Save data as rds ----
 write_rds(data_gp,
