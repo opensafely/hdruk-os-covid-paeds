@@ -399,7 +399,7 @@ Definition: Dates corresponding to SNoMed codes within the following [hierarchy]
 
 data_gp %>% 
   mutate(
-    date = date %>% cut(breaks = "week")
+    date = gp_date %>% cut(breaks = "week")
   ) %>% 
   count(date, .drop = FALSE) %>%
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
