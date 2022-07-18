@@ -43,7 +43,8 @@ files_gp_specimen = list.files(
   pattern = "input_gp_specimen_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
 
 files_gp = c(files_gp_disorder, files_gp_finding, files_gp_procedure, 
-             files_gp_regime_therapy, files_gp_observable_entity, 
+             files_gp_regime_therapy, 
+             #files_gp_observable_entity, # Temporarily remove
              files_gp_specimen)
 
 # Read GP data from csv ----
@@ -85,16 +86,16 @@ data_gp = map2(
           cols = -patient_id,
           names_to = c("index"),
           names_pattern = "gp_contact_date_(\\d+)",
-          values_to = "date",
+          values_to = "gp_date",
           values_drop_na = TRUE
         ) %>%
         select(-index) %>% 
         mutate(
-          date = date %>% ymd()
+          gp_date = gp_date %>% ymd()
         )
   }) %>%
   bind_rows() %>% 
-  distinct(patient_id, date)
+  distinct(patient_id, gp_date)
 
 # Save data as rds ----
 write_rds(data_gp,
