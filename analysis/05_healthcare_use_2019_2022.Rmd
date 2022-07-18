@@ -195,6 +195,7 @@ explanatory_var = c(
   "region_2019",
   "rural_urban_2019",
   
+  "covid_status_tp",
   "covid_status_fup",
   "covid_test_neg_tp_count",
   "covid_test_pos_tp_count",
@@ -247,126 +248,135 @@ data_cohort %>%
 
 ```
 
+```{r monthly_counts}
+
+admission_counts = data_admissions %>%
+  rowwise() %>% 
+  mutate(dates = list(seq(admission_date, discharge_date, by = "day"))) %>% 
+  unnest(dates) %>% 
+  mutate(date_period = floor_date(dates, unit = "month")) %>% 
+  count(patient_id, date_period)
+
+outpatient_counts = data_outpatient %>% 
+  mutate(date_period = floor_date(outpatient_date, unit = "month")) %>% 
+  count(patient_id, date_period)
+
+gp_counts = data_gp %>% 
+  mutate(date_period = floor_date(gp_date, unit = "month")) %>% 
+  count(patient_id, date_period)
+
+```
+
+```{r bootstrap_functions}
+
+boot_admissions = function(.data_patient, .admission_counts,
+                           start_date, end_date, unit = "month",
+                           .group = NULL, B = 10){
+  
+  periods = seq(start_date, end_date, by = unit)
+  
+  map_df(
+    .x = periods,
+    .data_patient = .data_patient,
+    .admission_counts = .admission_counts,
+    B = B, .group = .group,
+    .f = function(.x, .data_patient, .admission_counts, B, .group){
+      .data_patient %>%
+        select(patient_id, all_of(.group)) %>% 
+        mutate(
+          date_period = .x,
+        ) %>% 
+        left_join(
+          .admission_counts,
+          by = c("patient_id", "date_period")
+        ) %>% 
+        replace_na(list(n = 0)) %>%
+        group_by(across(all_of(.group))) %>% 
+        summarise(
+          date = .x,
+          n_count = n(),
+          x_boot = list(Hmisc::smean.cl.boot(n, B = B))
+        ) %>% 
+        unnest_wider(x_boot)
+    }
+  )
+}
+
+
+boot_outpatient = function(.data_patient, .outpatient_counts,
+                           start_date, end_date, unit = "month",
+                           .group = NULL, B = 10){
+  
+  periods = seq(start_date, end_date, by = unit)
+  
+  map_df(
+    .x = periods,
+    .data_patient = .data_patient,
+    .outpatient_counts = .outpatient_counts,
+    B = B, .group = .group,
+    .f = function(.x, .data_patient, .outpatient_counts, B, .group){
+      .data_patient %>%
+        select(patient_id, all_of(.group)) %>% 
+        mutate(
+          date_period = .x,
+        ) %>% 
+        left_join(
+          .outpatient_counts,
+          by = c("patient_id", "date_period")
+        ) %>% 
+        replace_na(list(n = 0)) %>%
+        group_by(across(all_of(.group))) %>% 
+        summarise(
+          date = .x,
+          n_count = n(),
+          x_boot = list(Hmisc::smean.cl.boot(n, B = B))
+        ) %>% 
+        unnest_wider(x_boot)
+    }
+  )
+}
+
+boot_gp = function(.data_patient, .gp_counts,
+                   start_date, end_date, unit = "month",
+                   .group = NULL, B = 10){
+  
+  periods = seq(start_date, end_date, by = unit)
+  
+  map_df(
+    .x = periods,
+    .data_patient = .data_patient,
+    .gp_counts = .gp_counts,
+    B = B, .group = .group,
+    .f = function(.x, .data_patient, .gp_counts, B, .group){
+      .data_patient %>%
+        select(patient_id, all_of(.group)) %>% 
+        mutate(
+          date_period = .x,
+        ) %>% 
+        left_join(
+          .gp_counts,
+          by = c("patient_id", "date_period")
+        ) %>% 
+        replace_na(list(n = 0)) %>%
+        group_by(across(all_of(.group))) %>% 
+        summarise(
+          date = .x,
+          n_count = n(),
+          x_boot = list(Hmisc::smean.cl.boot(n, B = B))
+        ) %>% 
+        unnest_wider(x_boot)
+    }
+  )
+}
+
+```
+
+
 
 ```{r count_monthly_admission}
 
-
-boot_admissions = function(.data_patient, .data_admissions,
-                           start_date, end_date, unit = "month",
-                           .group = NULL, B = 10){
-  
-  periods = seq(start_date, end_date, by = unit)
-  
-  admission_counts = .data_admissions %>%
-      rowwise() %>% 
-      mutate(dates = list(seq(admission_date, discharge_date, by = "day"))) %>% 
-      unnest(dates) %>% 
-      mutate(date_period = floor_date(dates, unit = unit)) %>% 
-      count(patient_id, date_period)
-  
-    map_df(
-      .x = periods,
-      .data_patient = .data_patient,
-      .admission_counts = admission_counts,
-      B = B, .group = .group,
-      .f = function(.x, .data_patient, .admission_counts, B, .group){
-        .data_patient %>%
-          select(patient_id, all_of(.group)) %>% 
-          mutate(
-            date_period = .x,
-          ) %>% 
-          left_join(
-            .admission_counts,
-            by = c("patient_id", "date_period")
-          ) %>% 
-          replace_na(list(n = 0)) %>%
-          group_by(across(all_of(.group))) %>% 
-          summarise(
-            date = .x,
-            n_count = n(),
-            x_boot = list(Hmisc::smean.cl.boot(n, B = B))
-          ) %>% 
-          unnest_wider(x_boot)
-      }
-    )
-}
-
-boot_outpatient = function(.data_patient, .data_outpatient,
-                           start_date, end_date, unit = "month",
-                           .group = NULL, B = 10){
-  
-  periods = seq(start_date, end_date, by = unit)
-  
-  outpatient_counts = .data_outpatient %>% 
-      mutate(date_period = floor_date(outpatient_date, unit = unit)) %>% 
-      count(patient_id, date_period)
-  
-    map_df(
-      .x = periods,
-      .data_patient = .data_patient,
-      .outpatient_counts = outpatient_counts,
-      B = B, .group = .group,
-      .f = function(.x, .data_patient, .outpatient_counts, B, .group){
-        .data_patient %>%
-          select(patient_id, all_of(.group)) %>% 
-          mutate(
-            date_period = .x,
-          ) %>% 
-          left_join(
-            .outpatient_counts,
-            by = c("patient_id", "date_period")
-          ) %>% 
-          replace_na(list(n = 0)) %>%
-          group_by(across(all_of(.group))) %>% 
-          summarise(
-            date = .x,
-            n_count = n(),
-            x_boot = list(Hmisc::smean.cl.boot(n, B = B))
-          ) %>% 
-          unnest_wider(x_boot)
-      }
-    )
-}
-
-boot_gp = function(.data_patient, .data_gp,
-                           start_date, end_date, unit = "month",
-                           .group = NULL, B = 10){
-  
-  periods = seq(start_date, end_date, by = unit)
-  
-  gp_counts = .data_gp %>% 
-      mutate(date_period = floor_date(gp_date, unit = unit)) %>% 
-      count(patient_id, date_period)
-  
-    map_df(
-      .x = periods,
-      .data_patient = .data_patient,
-      .gp_counts = gp_counts,
-      B = B, .group = .group,
-      .f = function(.x, .data_patient, .gp_counts, B, .group){
-        .data_patient %>%
-          select(patient_id, all_of(.group)) %>% 
-          mutate(
-            date_period = .x,
-          ) %>% 
-          left_join(
-            .gp_counts,
-            by = c("patient_id", "date_period")
-          ) %>% 
-          replace_na(list(n = 0)) %>%
-          group_by(across(all_of(.group))) %>% 
-          summarise(
-            date = .x,
-            n_count = n(),
-            x_boot = list(Hmisc::smean.cl.boot(n, B = B))
-          ) %>% 
-          unnest_wider(x_boot)
-      }
-    )
-}
-
 plot_admissions = function(.index_date, .data_cohort, 
-                           .data_admissions, .group = NULL,
+                           .admission_counts, .group = NULL,
                            group_lab = NULL){
   if(is.null(.group)){
     group_lab = NULL
@@ -378,16 +388,17 @@ plot_admissions = function(.index_date, .data_cohort,
   plot_data = map2(
     .x = .index_date,
     .y = .data_cohort,
-    .data_admissions = .data_admissions,
+    .admission_counts = .admission_counts,
     .group = .group,
-    .f = function(.x, .y, .data_admissions, .group = .group){
+    .f = function(.x, .y, .admission_counts, .group = .group){
       boot_admissions(
         start_date = .x,
-        end_date = min(ceiling_date(.x, "year") - days(1), study_end_date) - days(1),
+        end_date = min(ceiling_date(.x, "year") - days(1),
+                       study_end_date - days(1)),
         unit = "month",
         .group = .group,
         .data_patient = .y,
-        .data_admissions = .data_admissions
+        .admission_counts = .admission_counts
       )
     }
   ) %>% 
@@ -408,7 +419,7 @@ plot_admissions = function(.index_date, .data_cohort,
 }
 
 plot_outpatient = function(.index_date, .data_cohort, 
-                           .data_outpatient, .group = NULL,
+                           .outpatient_counts, .group = NULL,
                            group_lab = NULL){
   if(is.null(.group)){
     group_lab = NULL
@@ -420,16 +431,17 @@ plot_outpatient = function(.index_date, .data_cohort,
   plot_data = map2(
     .x = .index_date,
     .y = .data_cohort,
-    .data_outpatient = .data_outpatient,
+    .outpatient_counts = .outpatient_counts,
     .group = .group,
-    .f = function(.x, .y, .data_outpatient, .group = .group){
+    .f = function(.x, .y, .outpatient_counts, .group = .group){
       boot_outpatient(
         start_date = .x,
-        end_date = min(ceiling_date(.x, "year") - days(1), study_end_date) - days(1),
+        end_date = min(ceiling_date(.x, "year") - days(1),
+                       study_end_date - days(1)),
         unit = "month",
         .group = .group,
         .data_patient = .y,
-        .data_outpatient = .data_outpatient
+        .outpatient_counts = .outpatient_counts
       )
     }
   ) %>% 
@@ -450,7 +462,7 @@ plot_outpatient = function(.index_date, .data_cohort,
 }
 
 plot_gp = function(.index_date, .data_cohort, 
-                   .data_gp, .group = NULL,
+                   .gp_counts, .group = NULL,
                    group_lab = NULL){
   
   if(is.null(.group)){
@@ -463,16 +475,17 @@ plot_gp = function(.index_date, .data_cohort,
   plot_data = map2(
     .x = .index_date,
     .y = .data_cohort,
-    .data_gp = .data_gp,
+    .gp_counts = .gp_counts,
     .group = .group,
-    .f = function(.x, .y, .data_gp, .group = .group){
+    .f = function(.x, .y, .gp_counts, .group = .group){
       boot_gp(
         start_date = .x,
-        end_date = min(ceiling_date(.x, "year") - days(1), study_end_date) - days(1),
+        end_date = min(ceiling_date(.x, "year") - days(1),
+                       study_end_date - days(1)),
         unit = "month",
         .group = .group,
         .data_patient = .y,
-        .data_gp = .data_gp
+        .gp_counts = .gp_counts
       )
     }
   ) %>% 
@@ -494,6 +507,16 @@ plot_gp = function(.index_date, .data_cohort,
 
 ```
 
+
+
+```{r}
+
+```
+
+
+
+
+
 # Healthcare resource use
 
 ## Overall {.tabset}
@@ -503,7 +526,7 @@ plot_gp = function(.index_date, .data_cohort,
 ```{r}
 plot_admissions(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
+                .admission_counts = admission_counts,
                 .group = NULL)
 ```
 
@@ -512,7 +535,7 @@ plot_admissions(.index_date = index_date,
 ```{r}
 plot_outpatient(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
+                .outpatient_counts = outpatient_counts,
                 .group = NULL)
 ```
 
@@ -521,7 +544,7 @@ plot_outpatient(.index_date = index_date,
 ```{r}
 plot_gp(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_gp = data_gp,
+                .gp_counts = gp_counts,
                 .group = NULL)
 ```
 
@@ -533,7 +556,7 @@ plot_gp(.index_date = index_date,
 ```{r}
 plot_admissions(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
+                .admission_counts = admission_counts,
                 .group = "covid_status_tp")
 ```
 
@@ -542,7 +565,7 @@ plot_admissions(.index_date = index_date,
 ```{r}
 plot_outpatient(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
+                .outpatient_counts = outpatient_counts,
                 .group = "covid_status_tp")
 ```
 
@@ -551,7 +574,7 @@ plot_outpatient(.index_date = index_date,
 ```{r}
 plot_gp(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_gp = data_gp,
+                .gp_counts = gp_counts,
                 .group = "covid_status_tp")
 ```
 
@@ -563,7 +586,7 @@ plot_gp(.index_date = index_date,
 ```{r}
 plot_admissions(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
+                .admission_counts = admission_counts,
                 .group = "age_group_indexed")
 ```
 
@@ -572,7 +595,7 @@ plot_admissions(.index_date = index_date,
 ```{r}
 plot_outpatient(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
+                .outpatient_counts = outpatient_counts,
                 .group = "age_group_indexed")
 ```
 
@@ -581,578 +604,577 @@ plot_outpatient(.index_date = index_date,
 ```{r}
 plot_gp(.index_date = index_date, 
                 .data_cohort = data_cohort, 
-                .data_gp = data_gp,
+                .gp_counts = gp_counts,
                 .group = "age_group_indexed")
 ```
 
 
-## Sex {.tabset}
+<!-- ## Sex {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "sex")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "sex") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient =  data_outpatient,
-                .group = "sex")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "sex") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "sex")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "sex") -->
+<!-- ``` -->
 
 
-## Ethnicity {.tabset}
+<!-- ## Ethnicity {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "ethnicity")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "ethnicity") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "ethnicity")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "ethnicity") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "ethnicity")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "ethnicity") -->
+<!-- ``` -->
 
 
-## IMD {.tabset}
+<!-- ## IMD {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "imd_Q5_2019")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "imd_Q5_2019") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "imd_Q5_2019")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "imd_Q5_2019") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "imd_Q5_2019")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "imd_Q5_2019") -->
+<!-- ``` -->
 
 
-## Region {.tabset}
+<!-- ## Region {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "region_2019")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "region_2019") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "region_2019")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "region_2019") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "region_2019")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "region_2019") -->
+<!-- ``` -->
 
 
-## Asthma {.tabset}
+<!-- ## Asthma {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "asthma")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "asthma") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "asthma")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "asthma") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "asthma")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "asthma") -->
+<!-- ``` -->
 
 
-## Cancer {.tabset}
+<!-- ## Cancer {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "cancer")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "cancer") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "cancer")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "cancer") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "cancer")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "cancer") -->
+<!-- ``` -->
 
 
-## Epilepsy {.tabset}
+<!-- ## Epilepsy {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "epilepsy")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "epilepsy") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "epilepsy")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "epilepsy") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "epilepsy")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "epilepsy") -->
+<!-- ``` -->
 
 
-## Mental illness {.tabset}
+<!-- ## Mental illness {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "mental_illness")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "mental_illness") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "mental_illness")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "mental_illness") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "mental_illness")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "mental_illness") -->
+<!-- ``` -->
 
 
-## Severe mental illness {.tabset}
+<!-- ## Severe mental illness {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "severe_mental_illness")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "severe_mental_illness") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "severe_mental_illness")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "severe_mental_illness") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "severe_mental_illness")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "severe_mental_illness") -->
+<!-- ``` -->
 
 
-## Cerebral palsy {.tabset}
+<!-- ## Cerebral palsy {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "cerebral_palsy")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "cerebral_palsy") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "cerebral_palsy")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "cerebral_palsy") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "cerebral_palsy")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "cerebral_palsy") -->
+<!-- ``` -->
 
 
-## Chronic infections {.tabset}
+<!-- ## Chronic infections {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "chronic_infections")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "chronic_infections") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "chronic_infections")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "chronic_infections") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "chronic_infections")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "chronic_infections") -->
+<!-- ``` -->
 
 
-## Devices and stomas {.tabset}
+<!-- ## Devices and stomas {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "devices_and_stomas")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "devices_and_stomas") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "devices_and_stomas")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "devices_and_stomas") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "devices_and_stomas")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "devices_and_stomas") -->
+<!-- ``` -->
 
 
-## Endocrine disorders {.tabset}
+<!-- ## Endocrine disorders {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "endocrine_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "endocrine_disorders") -->
+<!-- ``` -->
 
-### Outpatient
+<!-- ### Outpatient -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "endocrine_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "endocrine_disorders") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "endocrine_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "endocrine_disorders") -->
+<!-- ``` -->
 
 
-## Gastrointestinal disorders {.tabset}
+<!-- ## Gastrointestinal disorders {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "gastrointestinal_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "gastrointestinal_disorders") -->
+<!-- ``` -->
 
-### Outpatient
+<!-- ### Outpatient -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "gastrointestinal_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "gastrointestinal_disorders") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "gastrointestinal_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "gastrointestinal_disorders") -->
+<!-- ``` -->
 
 
-## Haematological disorders {.tabset}
+<!-- ## Haematological disorders {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "haematological_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "haematological_disorders") -->
+<!-- ``` -->
 
-### Outpatient
+<!-- ### Outpatient -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "haematological_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "haematological_disorders") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "haematological_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "haematological_disorders") -->
+<!-- ``` -->
 
 
-## Immunological disorders {.tabset}
+<!-- ## Immunological disorders {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "immunological_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "immunological_disorders") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "immunological_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "immunological_disorders") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "immunological_disorders")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "immunological_disorders") -->
+<!-- ``` -->
 
 
-## Learning and behaviour difficulties {.tabset}
+<!-- ## Learning and behaviour difficulties {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "learning_and_behaviour_difficulties")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "learning_and_behaviour_difficulties") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "learning_and_behaviour_difficulties")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "learning_and_behaviour_difficulties") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "learning_and_behaviour_difficulties")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "learning_and_behaviour_difficulties") -->
+<!-- ``` -->
 
 
-## Musculoskeletal and rheumatic diseases {.tabset}
+<!-- ## Musculoskeletal and rheumatic diseases {.tabset} -->
 
-### Admissions
+<!-- ### Admissions -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "musculoskeletal_and_rheum")
-```
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "musculoskeletal_and_rheum") -->
+<!-- ``` -->
 
-### Outpatient 
+<!-- ### Outpatient  -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "musculoskeletal_and_rheum")
-```
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "musculoskeletal_and_rheum") -->
+<!-- ``` -->
 
-### GP records
+<!-- ### GP records -->
 
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "musculoskeletal_and_rheum")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "musculoskeletal_and_rheum") -->
+<!-- ``` -->
 
 
-## Transplant {.tabset}
+<!-- ## Transplant {.tabset} -->
 
+<!-- ### Admissions -->
 
-### Admissions
+<!-- ```{r} -->
+<!-- plot_admissions(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .admission_counts = admission_counts, -->
+<!--                 .group = "transplant") -->
+<!-- ``` -->
 
-```{r}
-plot_admissions(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_admissions = data_admissions,
-                .group = "transplant")
-```
+<!-- ### Outpatient  -->
 
-### Outpatient 
+<!-- ```{r} -->
+<!-- plot_outpatient(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .outpatient_counts = outpatient_counts, -->
+<!--                 .group = "transplant") -->
+<!-- ``` -->
 
-```{r}
-plot_outpatient(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_outpatient = data_outpatient,
-                .group = "transplant")
-```
+<!-- ### GP records -->
 
-### GP records
-
-```{r}
-plot_gp(.index_date = index_date, 
-                .data_cohort = data_cohort, 
-                .data_gp = data_gp,
-                .group = "transplant")
-```
+<!-- ```{r} -->
+<!-- plot_gp(.index_date = index_date,  -->
+<!--                 .data_cohort = data_cohort,  -->
+<!--                 .gp_counts = gp_counts, -->
+<!--                 .group = "transplant") -->
+<!-- ``` -->
 
