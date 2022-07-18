@@ -1,5 +1,6 @@
 ---
 title: "Dataset Summary"
+author: "SLICK"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: html_document
 ---
