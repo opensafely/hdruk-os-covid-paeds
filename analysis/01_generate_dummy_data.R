@@ -32,7 +32,7 @@ data_patient = here::here("output", "input.csv.gz") %>%
 dir.create(here::here("output", "dummy_data"), showWarnings = FALSE, recursive=TRUE)
 
 # Dummy data variables ----
-n_max = 1000
+n_max = data_patient %>% nrow()
 incidence = 0.2
 date_range = seq(start_date, end_date, by="day")
 date_range_testing = seq(tp_start_date, end_date, by="day")
