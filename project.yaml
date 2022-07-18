@@ -213,3 +213,10 @@ actions:
     outputs:
       moderately_sensitive:
         summary_datasets_html: output/descriptives/04_summary_datasets.html
+
+  healthcare_use_2019_2022:
+    run: r:latest -e 'rmarkdown::render("analysis/05_healthcare_use_2019_2022.Rmd", output_dir = "output/descriptives")'
+    needs: [process_patient_data, process_testing_data, process_admissions_data, process_outpatient_data, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        summary_datasets_html: output/descriptives/05_healthcare_use_2019_2022.html
