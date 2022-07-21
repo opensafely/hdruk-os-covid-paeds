@@ -10,7 +10,7 @@ fct_case_when <- function(...) {
 }
 
 # ff_round_counts: Round counts from finalfit::summary_factorlist output
-ff_round_counts = function (.data, accuracy = 10, ignore = c("label", "levels", "p")){ 
+ff_round_counts = function (.data, accuracy = 15, ignore = c("label", "levels", "p")){ 
   if (!any(names(.data) == "label")) 
     stop("summary_factorlist() must include: add_dependent_label = FALSE")
   df.out = .data %>%
