@@ -208,11 +208,10 @@ actions:
         data_patient: output/data/data_patient.rds
 
   summarise_datasets:
-    run: r:latest -e 'rmarkdown::render("analysis/04_summary_datasets.Rmd", output_dir = "output/descriptives")'
+    run: r:latest analysis/04_summary_datasets.R
     needs: [process_patient_data, process_testing_data, process_admissions_data, process_outpatient_data, process_gp_data]
     outputs:
       moderately_sensitive:
-        summary_datasets_html: output/descriptives/04_summary_datasets.html
         summary_datasets_tables: output/descriptives/summary_datasets/*.csv
         summary_datasets_plots: output/descriptives/summary_datasets/*.jpeg
 
