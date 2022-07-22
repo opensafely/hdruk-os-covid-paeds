@@ -169,7 +169,8 @@ tbl_summary_admissions = data_admissions %>%
     explanatory = explanatory,
     add_col_totals = TRUE,
     na_include = TRUE
-  ) 
+  ) %>%
+  ff_round_counts(accuracy = count_round)
 
 write_csv(tbl_summary_admissions, 
           here::here("output", "descriptives", "summary_datasets",  "tbl_summary_admissions.csv"))
