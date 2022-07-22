@@ -221,4 +221,5 @@ actions:
     needs: [process_patient_data, process_testing_data, process_admissions_data, process_outpatient_data, process_gp_data]
     outputs:
       moderately_sensitive:
-        summary_datasets_html: output/descriptives/05_healthcare_use_2019_2022.html
+        healthcare_use_2019_2022_html: output/descriptives/05_healthcare_use_2019_2022.html
+        healthcare_use_2019_2022_tables: output/descriptives/healthcare_use_2019_2022/*.csv
