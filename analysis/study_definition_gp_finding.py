@@ -47,7 +47,7 @@ study = StudyDefinition(
         (NOT died_before_start_date) AND registered_at_start_date
         AND (registered_at_end_date OR died_during_study)
         AND (age_on_start_date > 1) AND (age_on_start_date < 18)
-        AND (gp_contact_count_week > 0)
+        AND (gp_count_week > 0)
         """,
         registered_at_start_date=patients.registered_as_of(
             start_date,
@@ -73,7 +73,7 @@ study = StudyDefinition(
     ##############
 
     # Number of weekly GP codes
-    gp_contact_count_week=patients.with_these_clinical_events(
+    gp_count_week=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date", "index_date + 6 days"],
@@ -84,7 +84,7 @@ study = StudyDefinition(
     ),
 
     # Number of daily GP codes
-    gp_contact_count_1=patients.with_these_clinical_events(
+    gp_count_1=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date", "index_date"],
@@ -94,7 +94,7 @@ study = StudyDefinition(
         },
     ),
 
-    gp_contact_count_2=patients.with_these_clinical_events(
+    gp_count_2=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date + 1 days", "index_date + 1 days"],
@@ -104,7 +104,7 @@ study = StudyDefinition(
         },
     ),
 
-    gp_contact_count_3=patients.with_these_clinical_events(
+    gp_count_3=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date + 2 days", "index_date + 2 days"],
@@ -114,7 +114,7 @@ study = StudyDefinition(
         },
     ),
 
-    gp_contact_count_4=patients.with_these_clinical_events(
+    gp_count_4=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date + 3 days", "index_date + 3 days"],
@@ -124,7 +124,7 @@ study = StudyDefinition(
         },
     ),
 
-    gp_contact_count_5=patients.with_these_clinical_events(
+    gp_count_5=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date + 4 days", "index_date + 4 days"],
@@ -134,7 +134,7 @@ study = StudyDefinition(
         },
     ),
 
-    gp_contact_count_6=patients.with_these_clinical_events(
+    gp_count_6=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date + 5 days", "index_date + 5 days"],
@@ -144,7 +144,7 @@ study = StudyDefinition(
         },
     ),
 
-    gp_contact_count_7=patients.with_these_clinical_events(
+    gp_count_7=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date + 6 days", "index_date + 6 days"],
