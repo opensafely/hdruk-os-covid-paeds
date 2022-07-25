@@ -44,7 +44,7 @@ files_gp_specimen = list.files(
 
 files_gp = c(files_gp_disorder, files_gp_finding, files_gp_procedure, 
              files_gp_regime_therapy, 
-             #files_gp_observable_entity, # Temporarily remove
+             files_gp_observable_entity,
              files_gp_specimen)
 
 # Read GP data from csv ----
@@ -81,11 +81,11 @@ data_gp = map2(
     .f = function(.data, .file_list){
       .data %>%
         filter(patient_id %in% data_id$patient_id) %>% 
-        select(-gp_contact_count) %>% 
+        select(-gp_contact_count_week) %>% 
         pivot_longer(
           cols = -patient_id,
           names_to = c("index"),
-          names_pattern = "gp_contact_date_(\\d+)",
+          names_pattern = "gp_contact_count_(\\d+)",
           values_to = "gp_date",
           values_drop_na = TRUE
         ) %>%
