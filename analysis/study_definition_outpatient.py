@@ -7,36 +7,6 @@ import datetime
 # Import Codelists
 from codelists import *
 
-#############
-# Functions #
-#############
-
-# outpatient_date_X: Creates n columns for each consecutive outpatient appointment
-def outpatient_date_X(n):
-    def var_signature(name, on_or_after):
-        return {
-            name: patients.outpatient_appointment_date(
-                    returning="date",
-                    attended=True,
-                    find_first_match_in_period=True,
-                    between=[on_or_after, "index_date + 6 days"],
-                    date_format="YYYY-MM-DD",
-                    return_expectations={
-                        "date": {"earliest": start_date, "latest": end_date},
-                        "rate": "uniform",
-                        "incidence": 0.2
-                        }
-                    ),
-        }
-     
-    for i in range(1, n+1):
-        if i == 1:
-            variables = var_signature("outpatient_date_1", "index_date")
-        else:
-            variables.update(var_signature(f"outpatient_date_{i}", f"outpatient_date_{i-1} + 1 day"))
-    return variables
-
-
 ####################
 # Study Definition #
 ####################
@@ -68,7 +38,7 @@ study = StudyDefinition(
         (NOT died_before_start_date) AND registered_at_start_date
         AND (registered_at_end_date OR died_during_study)
         AND (age_on_start_date > 1) AND (age_on_start_date < 18)
-        AND (outpatient_count > 0)
+        AND (outpatient_count_week > 0)
         """,
         registered_at_start_date=patients.registered_as_of(
             start_date,
@@ -93,13 +63,8 @@ study = StudyDefinition(
     # Outpatient appointments #
     ###########################
 
-    # Oupatient appointments X: n columns of date of admissions, date of discharge, admission method
-    **outpatient_date_X(
-        n=n_outpatient
-    ),
-
-    # Number of outpatient appointments during period
-    outpatient_count=patients.outpatient_appointment_date(
+    # Number of weekly outpatient appointments
+    outpatient_count_week=patients.outpatient_appointment_date(
         returning="number_of_matches_in_period",
         attended=True,
         between=["index_date", "index_date + 6 days"],
@@ -108,4 +73,76 @@ study = StudyDefinition(
             "incidence": 1,
         },
     ),
+
+    # Number of daily outpatient appointments
+    outpatient_count_1=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["index_date", "index_date"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_2=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["index_date + 1 days", "index_date + 1 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_3=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["index_date + 2 days", "index_date + 2 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_4=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["index_date + 3 days", "index_date + 3 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_5=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["index_date + 4 days", "index_date + 4 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_6=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["index_date + 5 days", "index_date + 5 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    outpatient_count_7=patients.outpatient_appointment_date(
+        returning="number_of_matches_in_period",
+        attended=True,
+        between=["index_date + 6 days", "index_date + 6 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
 )

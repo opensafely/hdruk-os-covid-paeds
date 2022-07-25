@@ -16,36 +16,6 @@ gp_contact_codelist = combine_codelists(
     snomed_specimen
 )
 
-#############
-# Functions #
-#############
-
-# gp_contact_date_X: Creates n columns for each consecutive GP consulation date
-def gp_contact_date_X(n):
-    def var_signature(name, on_or_after):
-        return {
-            name: patients.with_these_clinical_events(
-                    codelist = gp_contact_codelist,
-                    returning="date",
-                    between=[on_or_after, "index_date + 6 days"],
-                    date_format="YYYY-MM-DD",
-                    find_first_match_in_period=True,
-                    return_expectations={
-                        "date": {"earliest": start_date, "latest": end_date},
-                        "rate": "uniform",
-                        "incidence": 0.2
-                        }
-                    ),
-        }
-     
-    for i in range(1, n+1):
-        if i == 1:
-            variables = var_signature("gp_contact_date_1", "index_date")
-        else:
-            variables.update(var_signature(f"gp_contact_date_{i}", f"gp_contact_date_{i-1} + 1 day"))
-    return variables
-
-
 ####################
 # Study Definition #
 ####################
@@ -77,7 +47,7 @@ study = StudyDefinition(
         (NOT died_before_start_date) AND registered_at_start_date
         AND (registered_at_end_date OR died_during_study)
         AND (age_on_start_date > 1) AND (age_on_start_date < 18)
-        AND (gp_contact_count > 0)
+        AND (gp_contact_count_week > 0)
         """,
         registered_at_start_date=patients.registered_as_of(
             start_date,
@@ -102,16 +72,82 @@ study = StudyDefinition(
     # GP Contact #
     ##############
 
-    # GP contact X: n columns of date of GP consultations
-    **gp_contact_date_X(
-       n=n_gp
-    ),
-
-    # Number of GP contacts during period
-    gp_contact_count=patients.with_these_clinical_events(
+    # Number of weekly GP codes
+    gp_contact_count_week=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
         between=["index_date", "index_date + 6 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 5},
+            "incidence": 1,
+        },
+    ),
+
+    # Number of daily GP codes
+    gp_contact_count_1=patients.with_these_clinical_events(
+        codelist = gp_contact_codelist,
+        returning="number_of_matches_in_period",
+        between=["index_date", "index_date"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_2=patients.with_these_clinical_events(
+        codelist = gp_contact_codelist,
+        returning="number_of_matches_in_period",
+        between=["index_date + 1 days", "index_date + 1 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_3=patients.with_these_clinical_events(
+        codelist = gp_contact_codelist,
+        returning="number_of_matches_in_period",
+        between=["index_date + 2 days", "index_date + 2 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_4=patients.with_these_clinical_events(
+        codelist = gp_contact_codelist,
+        returning="number_of_matches_in_period",
+        between=["index_date + 3 days", "index_date + 3 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_5=patients.with_these_clinical_events(
+        codelist = gp_contact_codelist,
+        returning="number_of_matches_in_period",
+        between=["index_date + 4 days", "index_date + 4 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_6=patients.with_these_clinical_events(
+        codelist = gp_contact_codelist,
+        returning="number_of_matches_in_period",
+        between=["index_date + 5 days", "index_date + 5 days"],
+        return_expectations={
+            "int": {"distribution": "poisson", "mean": 1},
+            "incidence": 1,
+        },
+    ),
+
+    gp_contact_count_7=patients.with_these_clinical_events(
+        codelist = gp_contact_codelist,
+        returning="number_of_matches_in_period",
+        between=["index_date + 6 days", "index_date + 6 days"],
         return_expectations={
             "int": {"distribution": "poisson", "mean": 1},
             "incidence": 1,

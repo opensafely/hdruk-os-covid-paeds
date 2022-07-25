@@ -122,8 +122,6 @@ dummy_data_admissions = dummy_data_admissions %>%
   mutate(var_name = paste0(name, "_", index)) %>% 
   select(-c(name, index))
 
-
-
 ## Ensure valid number of rows and columns ----
 dummy_data_admissions = tibble(
   patient_id = unique(data_patient$patient_id) %>% rep(each = 5*n_admission),
@@ -146,102 +144,34 @@ dummy_data_admissions = dummy_data_admissions %>%
 # Outpatient data ----
 dummy_data_outpatient = data_patient %>% 
   transmute(
-    outpatient_date_1 = sample(date_range, nrow(data_patient), replace = TRUE),
-    outpatient_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
-    outpatient_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
-    outpatient_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
-    outpatient_date_5 = sample(date_range, nrow(data_patient), replace = TRUE),
-    outpatient_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
-    outpatient_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
+    outpatient_count_1 = rpois(nrow(data_patient), lambda = 0.25),
+    outpatient_count_2 = rpois(nrow(data_patient), lambda = 0.25),
+    outpatient_count_3 = rpois(nrow(data_patient), lambda = 0.25),
+    outpatient_count_4 = rpois(nrow(data_patient), lambda = 0.25),
+    outpatient_count_5 = rpois(nrow(data_patient), lambda = 0.25),
+    outpatient_count_6 = rpois(nrow(data_patient), lambda = 0.25),
+    outpatient_count_7 = rpois(nrow(data_patient), lambda = 0.25),
+    outpatient_count_week = outpatient_count_1 + outpatient_count_2 +
+      outpatient_count_3 + outpatient_count_4 + outpatient_count_5 +
+      outpatient_count_6 + outpatient_count_7,
     patient_id = patient_id,
   )
-
-## Make dates consecutive, create missing values based on incidence ----
-dummy_data_outpatient = dummy_data_outpatient %>%
-  mutate_at(vars(starts_with(c("outpatient_date"))),
-            as.character) %>%
-  pivot_longer(-patient_id,
-               names_to = c("variable", "index"),
-               names_pattern = "^(.*)_(\\d+)") %>% 
-  mutate(value = value %>% ymd()) %>% 
-  group_by(patient_id) %>%
-  mutate(value = sort(value) %>% as.character()) %>%
-  ungroup() %>% 
-  mutate(prob = rep(runif(n()))) %>% 
-  filter(prob <= incidence) %>% 
-  group_by(patient_id) %>% 
-  mutate(index = rep(1:n()),
-         var_name = paste(variable, index, sep = "_")) %>% 
-  ungroup() %>% 
-  arrange(index, variable) %>% 
-  select(-c(prob, variable, index))
-
-## Ensure valid number of rows and columns ----
-dummy_data_outpatient = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = n_outpatient),
-  var_name = rep(paste0(rep("outpatient_date_", n_outpatient), c(1:n_outpatient)),
-                 length(unique(data_patient$patient_id)))
-) %>% 
-  left_join(dummy_data_outpatient)%>% 
-  pivot_wider(names_from = var_name, values_from = value) 
-
-## Add outpatient count, relocate patient_id to last row ----
-dummy_data_outpatient = dummy_data_outpatient %>% 
-  mutate(outpatient_count = dummy_data_outpatient %>%
-           transmute(across(starts_with("outpatient_date"), ~ !is.na(.x))) %>%
-           mutate(outpatient_count = reduce(select(., starts_with("outpatient_date")), `+`)) %>% 
-           pull(outpatient_count)) %>% 
-  relocate(patient_id, .after = last_col())
 
 # GP data ----
 dummy_data_gp = data_patient %>% 
   transmute(
-    gp_contact_date_1 = sample(date_range, nrow(data_patient), replace = TRUE),
-    gp_contact_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
-    gp_contact_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
-    gp_contact_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
-    gp_contact_date_5 = sample(date_range, nrow(data_patient), replace = TRUE),
-    #gp_contact_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
-    #gp_contact_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
+    gp_contact_count_1 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_contact_count_2 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_contact_count_3 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_contact_count_4 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_contact_count_5 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_contact_count_6 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_contact_count_7 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_contact_count_week = gp_contact_count_1 + gp_contact_count_2 +
+      gp_contact_count_3 + gp_contact_count_4 + gp_contact_count_5 +
+      gp_contact_count_6 + gp_contact_count_7,
     patient_id = patient_id,
   )
-
-## Make dates consecutive, create missing values based on incidence ----
-dummy_data_gp = dummy_data_gp %>%
-  mutate_at(vars(starts_with(c("gp_contact_date"))),
-            as.character) %>%
-  pivot_longer(-patient_id,
-               names_to = c("variable", "index"),
-               names_pattern = "^(.*)_(\\d+)") %>% 
-  mutate(value = value %>% ymd()) %>% 
-  group_by(patient_id) %>%
-  mutate(value = sort(value) %>% as.character()) %>%
-  ungroup() %>% 
-  mutate(prob = rep(runif(n()))) %>% 
-  filter(prob <= incidence) %>% 
-  group_by(patient_id) %>% 
-  mutate(index = rep(1:n()),
-         var_name = paste(variable, index, sep = "_")) %>% 
-  ungroup() %>% 
-  arrange(index, variable) %>% 
-  select(-c(prob, variable, index))
-
-## Ensure valid number of rows and columns ----
-dummy_data_gp = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = n_gp),
-  var_name = rep(paste0(rep("gp_contact_date_", n_gp), c(1:n_gp)),
-                 length(unique(data_patient$patient_id)))
-) %>% 
-  left_join(dummy_data_gp)%>% 
-  pivot_wider(names_from = var_name, values_from = value) 
-
-## Add outpatient count, relocate patient_id to last row ----
-dummy_data_gp = dummy_data_gp %>% 
-  mutate(gp_contact_count = dummy_data_gp %>%
-           transmute(across(starts_with("gp_contact_date"), ~ !is.na(.x))) %>%
-           mutate(gp_contact_count = reduce(select(., starts_with("gp_contact_date")), `+`)) %>% 
-           pull(gp_contact_count)) %>% 
-  relocate(patient_id, .after = last_col())
 
 # Negative covid testing data ----
 dummy_data_testing_negative = data_patient %>% 

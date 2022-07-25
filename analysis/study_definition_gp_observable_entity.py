@@ -72,7 +72,7 @@ study = StudyDefinition(
     # GP Contact #
     ##############
 
-    # Number of weekly GP contacts
+    # Number of weekly GP codes
     gp_contact_count_week=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
@@ -83,7 +83,7 @@ study = StudyDefinition(
         },
     ),
 
-    # Number of daily GP contacts
+    # Number of daily GP codes
     gp_contact_count_1=patients.with_these_clinical_events(
         codelist = gp_contact_codelist,
         returning="number_of_matches_in_period",
