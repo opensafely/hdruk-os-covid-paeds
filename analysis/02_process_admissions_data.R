@@ -113,8 +113,6 @@ data_admissions = data_admissions %>%
   mutate(index = row_number()) %>% 
   ungroup()
 
-
-
 # Save data as rds ----
 write_rds(data_admissions,
           here::here("output", "data", "data_admissions.rds"),
@@ -123,33 +121,3 @@ write_rds(data_admissions,
 # Save diagnostics as csv ----
 write_csv(diagnostics_admissions,
           here::here("output", "diagnostics", "diagnostics_admissions.csv"))
-
-# Save diagnostics as csv ----
-write_csv(diagnostics_admissions,
-          here::here("output", "diagnostics", "overlap_admissions.csv"))
-
-# Create plots ----
-c("admission_date", "discharge_date") %>% 
-  map(function(var){
-    # Plot weekly ----
-    plot_weekly = data_admissions %>% 
-      count_dates_by_period(var, period = "week") %>% 
-      ggplot(aes(x = date, y = n)) +
-      geom_line() +
-      theme_bw()
-    
-    ggsave(filename = paste0("weekly_", var, ".jpeg"),
-           plot = plot_weekly,
-           path = here::here("output", "descriptives", "data_admissions"))
-    
-    # Plot monthly ----
-    plot_monthly = data_admissions %>% 
-      count_dates_by_period(var, period = "month") %>% 
-      ggplot(aes(x = date, y = n)) +
-      geom_line() +
-      theme_bw()
-    
-    ggsave(filename = paste0("monthly_", var, ".jpeg"),
-           plot = plot_monthly,
-           path = here::here("output", "descriptives", "data_admissions"))
-  })
