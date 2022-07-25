@@ -42,6 +42,7 @@ actions:
         --index-date-range "2019-03-11 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
+        --with-end-date-fix
     dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
     needs: [generate_dummy_data]
     outputs:
@@ -69,6 +70,7 @@ actions:
         --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
+        --with-end-date-fix
     dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
     needs: [generate_dummy_data]
     outputs:
@@ -82,6 +84,7 @@ actions:
         --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
+        --with-end-date-fix
     dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
     needs: [generate_dummy_data]
     outputs:
@@ -95,6 +98,7 @@ actions:
         --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
+        --with-end-date-fix
     dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
     needs: [generate_dummy_data]
     outputs:
@@ -109,6 +113,7 @@ actions:
         --output-format csv.gz
         --output-dir=output/data_weekly
         --with-end-date-fix
+        --with-end-date-fix
     dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
     needs: [generate_dummy_data]
     outputs:
@@ -122,6 +127,7 @@ actions:
         --index-date-range "2018-12-31 to 2022-05-02 by week"
         --output-format csv.gz
         --output-dir=output/data_weekly
+        --with-end-date-fix
     dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
     needs: [generate_dummy_data]
     outputs:
@@ -169,8 +175,6 @@ actions:
         data_admissions: output/data/data_admissions.rds
       moderately_sensitive:
         diagnostics_admissions: output/diagnostics/diagnostics_admissions.csv
-        diagnostics_admissions2: output/diagnostics/overlap_admissions.csv
-        plots_admissions: output/descriptives/data_admissions/*.jpeg
 
   process_outpatient_data:
     run: r:latest analysis/02_process_outpatient_data.R
@@ -180,7 +184,6 @@ actions:
         data_outpatient: output/data/data_outpatient.rds
       moderately_sensitive:
         diagnostics_outpatient: output/diagnostics/diagnostics_outpatient.csv
-        plots_outpatient: output/descriptives/data_outpatient/*.jpeg
 
   process_gp_data:
     run: r:latest analysis/02_process_gp_data.R
