@@ -160,16 +160,15 @@ dummy_data_outpatient = data_patient %>%
 # GP data ----
 dummy_data_gp = data_patient %>% 
   transmute(
-    gp_contact_count_1 = rpois(nrow(data_patient), lambda = 0.25),
-    gp_contact_count_2 = rpois(nrow(data_patient), lambda = 0.25),
-    gp_contact_count_3 = rpois(nrow(data_patient), lambda = 0.25),
-    gp_contact_count_4 = rpois(nrow(data_patient), lambda = 0.25),
-    gp_contact_count_5 = rpois(nrow(data_patient), lambda = 0.25),
-    gp_contact_count_6 = rpois(nrow(data_patient), lambda = 0.25),
-    gp_contact_count_7 = rpois(nrow(data_patient), lambda = 0.25),
-    gp_contact_count_week = gp_contact_count_1 + gp_contact_count_2 +
-      gp_contact_count_3 + gp_contact_count_4 + gp_contact_count_5 +
-      gp_contact_count_6 + gp_contact_count_7,
+    gp_count_1 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_count_2 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_count_3 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_count_4 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_count_5 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_count_6 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_count_7 = rpois(nrow(data_patient), lambda = 0.25),
+    gp_count_week = gp_count_1 + gp_count_2 + gp_count_3 + gp_count_4 + 
+      gp_count_5 + gp_count_6 + gp_count_7,
     patient_id = patient_id,
   )
 
