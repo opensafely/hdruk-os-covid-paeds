@@ -113,7 +113,6 @@ actions:
         --output-format csv.gz
         --output-dir=output/data_weekly
         --with-end-date-fix
-        --with-end-date-fix
     dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
     needs: [generate_dummy_data]
     outputs:
