@@ -165,67 +165,67 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Rural-urban classification"),
     
-    asthma = if_else(is.na(asthma_date), "No", "Yes") %>%
+    asthma = if_else(is.na(asthma_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Asthma"),
     
-    cancer = if_else(is.na(cancer_date), "No", "Yes") %>%
+    cancer = if_else(is.na(cancer_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Cancer"),
     
-    diabetes = if_else(is.na(diabetes_date), "No", "Yes") %>%
+    diabetes = if_else(is.na(diabetes_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Diabetes"),
     
-    epilepsy = if_else(is.na(epilepsy_date), "No", "Yes") %>%
+    epilepsy = if_else(is.na(epilepsy_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Epilepsy"),
     
-    severe_mental_illness = if_else(is.na(severe_mental_illness_date), "No", "Yes") %>%
+    severe_mental_illness = if_else(is.na(severe_mental_illness_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Severe mental illness"),
     
-    cerebral_palsy = if_else(is.na(cerebral_palsy_date), "No", "Yes") %>%
+    cerebral_palsy = if_else(is.na(cerebral_palsy_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Cerebral palsy"),
     
-    chronic_infections = if_else(is.na(chronic_infections_date), "No", "Yes") %>%
+    chronic_infections = if_else(is.na(chronic_infections_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Chronic infections"),
     
-    devices_and_stomas = if_else(is.na(devices_and_stomas_date), "No", "Yes") %>%
+    devices_and_stomas = if_else(is.na(devices_and_stomas_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Devices and stomas"),
     
-    endocrine_disorders = if_else(is.na(endocrine_disorders_date), "No", "Yes") %>%
+    endocrine_disorders = if_else(is.na(endocrine_disorders_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Endocrine disorders"),
     
-    gastrointestinal_disorders = if_else(is.na(gastrointestinal_disorders_date), "No", "Yes") %>%
+    gastrointestinal_disorders = if_else(is.na(gastrointestinal_disorders_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Gastrointestinal disorders"),
     
-    haematological_disorders = if_else(is.na(haematological_disorders_date), "No", "Yes") %>%
+    haematological_disorders = if_else(is.na(haematological_disorders_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Haematological disorders"),
     
-    immunological_disorders = if_else(is.na(immunological_disorders_date), "No", "Yes") %>%
+    immunological_disorders = if_else(is.na(immunological_disorders_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Immunological disorders"),
     
-    learning_and_behaviour_difficulties = if_else(is.na(learning_and_behaviour_difficulties_date), "No", "Yes") %>%
+    learning_and_behaviour_difficulties = if_else(is.na(learning_and_behaviour_difficulties_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Learning and behavioural difficulties"),
     
-    mental_illness = if_else(is.na(mental_illness_date), "No", "Yes") %>%
+    mental_illness = if_else(is.na(mental_illness_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Mental illness"),
     
-    musculoskeletal_and_rheum = if_else(is.na(musculoskeletal_and_rheum_date), "No", "Yes") %>%
+    musculoskeletal_and_rheum = if_else(is.na(musculoskeletal_and_rheum_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Musculoskeletal and rheumatic diseases"),
     
-    transplant = if_else(is.na(transplant_date), "No", "Yes") %>%
+    transplant = if_else(is.na(transplant_first_date), "No", "Yes") %>%
       factor() %>%
       ff_label("Transplant"),
   )
