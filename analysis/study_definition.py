@@ -276,7 +276,7 @@ study = StudyDefinition(
     ##############
 
     # ASTHMA
-    asthma_date=patients.with_these_clinical_events(
+    asthma_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_asthma
         ),
@@ -291,8 +291,23 @@ study = StudyDefinition(
         }
     ),
 
+    asthma_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_asthma
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # CANCER
-    cancer_date=patients.with_these_clinical_events(
+    cancer_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_cancer
         ),
@@ -307,8 +322,23 @@ study = StudyDefinition(
         }
     ),
 
+    cancer_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_cancer
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # CYSTIC FIBROSIS
-    cystic_fibrosis_date=patients.with_these_clinical_events(
+    cystic_fibrosis_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_cystic_fibrosis
         ),
@@ -323,8 +353,23 @@ study = StudyDefinition(
         }
     ),
 
+    cystic_fibrosis_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_cystic_fibrosis
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # DIABETES
-    diabetes_date=patients.with_these_clinical_events(
+    diabetes_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_diabetes
         ),
@@ -339,8 +384,23 @@ study = StudyDefinition(
         }
     ),
 
+    diabetes_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_diabetes
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # EPILEPSY
-    epilepsy_date=patients.with_these_clinical_events(
+    epilepsy_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_epilepsy
         ),
@@ -355,8 +415,23 @@ study = StudyDefinition(
         }
     ),
 
+    epilepsy_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_epilepsy
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # SEVERE METNAL ILLNESS
-    severe_mental_illness_date=patients.with_these_clinical_events(
+    severe_mental_illness_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_severe_mental_illness
         ),
@@ -371,8 +446,23 @@ study = StudyDefinition(
         }
     ),
 
+    severe_mental_illness_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_severe_mental_illness
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # CEREBRAL PALSY
-    cerebral_palsy_date=patients.with_these_clinical_events(
+    cerebral_palsy_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_cerebral_palsy
         ),
@@ -387,8 +477,23 @@ study = StudyDefinition(
         }
     ),
 
+    cerebral_palsy_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_cerebral_palsy
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # CHRONIC INFECTIONS
-    chronic_infections_date=patients.with_these_clinical_events(
+    chronic_infections_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_chronic_infections
         ),
@@ -403,8 +508,23 @@ study = StudyDefinition(
         }
     ),
 
+    chronic_infections_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_chronic_infections
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # DEVICES AND STOMAS
-    devices_and_stomas_date=patients.with_these_clinical_events(
+    devices_and_stomas_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_devices_and_stomas
         ),
@@ -419,8 +539,23 @@ study = StudyDefinition(
         }
     ),
 
+    devices_and_stomas_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_devices_and_stomas
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # ENDOCRINE 
-    endocrine_disorders_date=patients.with_these_clinical_events(
+    endocrine_disorders_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_endocrine
         ),
@@ -435,8 +570,23 @@ study = StudyDefinition(
         }
     ),
 
+    endocrine_disorders_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_endocrine
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # GASTROINTESTINAL DISORDERS 
-    gastrointestinal_disorders_date=patients.with_these_clinical_events(
+    gastrointestinal_disorders_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_gastrointestinal
         ),
@@ -451,8 +601,23 @@ study = StudyDefinition(
         }
     ),
 
+    gastrointestinal_disorders_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_gastrointestinal
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # HAEMATOLOGICAL DISORDERS 
-    haematological_disorders_date=patients.with_these_clinical_events(
+    haematological_disorders_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_haematology
         ),
@@ -467,8 +632,23 @@ study = StudyDefinition(
         }
     ),
 
+    haematological_disorders_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_haematology
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # IMMUNOLOGICAL DISORDERS 
-    immunological_disorders_date=patients.with_these_clinical_events(
+    immunological_disorders_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_immunological
         ),
@@ -483,8 +663,23 @@ study = StudyDefinition(
         }
     ),
 
+    immunological_disorders_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_immunological
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # LEARNING AND BEHAVIOUR DIFFICULTIES 
-    learning_and_behaviour_difficulties_date=patients.with_these_clinical_events(
+    learning_and_behaviour_difficulties_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_learning_difficulties_and_behaviour
         ),
@@ -499,8 +694,23 @@ study = StudyDefinition(
         }
     ),
 
+    learning_and_behaviour_difficulties_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_learning_difficulties_and_behaviour
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # MENTAL ILLNESS
-    mental_illness_date=patients.with_these_clinical_events(
+    mental_illness_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_mental_illness
         ),
@@ -515,8 +725,23 @@ study = StudyDefinition(
         }
     ),
 
+    mental_illness_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_mental_illness
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # MUSCOLOKELETAL AND RHEUMATIC DISEASES
-    musculoskeletal_and_rheum_date=patients.with_these_clinical_events(
+    musculoskeletal_and_rheum_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_musculoskeletal_and_rheum
         ),
@@ -531,8 +756,23 @@ study = StudyDefinition(
         }
     ),
 
+    musculoskeletal_and_rheum_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_musculoskeletal_and_rheum
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     # TRANSPLANT
-    transplant_date=patients.with_these_clinical_events(
+    transplant_first_date=patients.with_these_clinical_events(
         combine_codelists(
             snomed_transplant
         ),
@@ -540,6 +780,21 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
+    transplant_last_date=patients.with_these_clinical_events(
+        combine_codelists(
+            snomed_transplant
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_last_match_in_period=True,
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
