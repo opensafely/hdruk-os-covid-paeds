@@ -19,11 +19,13 @@ dir.create(here::here("output", "descriptives", "healthcare_use_2019_2022"),
 # Plot theme
 theme_set(theme_bw())
 
-# Disclosure control parameters
-count_round = 15
+
 
 # Load global variables ----
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
+
+# Disclosure control parameters ----
+count_round = global_var$disclosure_count_round
 
 ## Study dates ----
 study_start_date = ymd(global_var$start_date)
