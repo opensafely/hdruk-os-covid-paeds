@@ -220,7 +220,7 @@ actions:
         summary_datasets_plots: output/descriptives/summary_datasets/*.jpeg
 
   calculate_epi_stats:
-    run: r:latest analysis/04_summary_datasets.R
+    run: r:latest analysis/04_epidemiology.R
     needs: [process_patient_data]
     outputs:
       moderately_sensitive:
