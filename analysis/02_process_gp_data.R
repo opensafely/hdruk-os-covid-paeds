@@ -72,7 +72,8 @@ diagnostics_gp = data_gp %>%
         nonzero_count_4 = (gp_count_4 > 0) %>% sum(),
         nonzero_count_5 = (gp_count_5 > 0) %>% sum(),
         nonzero_count_6 = (gp_count_6 > 0) %>% sum(),
-        nonzero_count_7 = (gp_count_7 > 0) %>% sum()
+        nonzero_count_7 = (gp_count_7 > 0) %>% sum(),
+        nonzero_count_week = (gp_count_week > 0) %>% sum()
       )
     
     tibble(n_row, n_row_bad_id, n_col, n_col_empty) %>% 
@@ -83,20 +84,21 @@ diagnostics_gp = data_gp %>%
   relocate(file)
 
 # Filter out bad patient IDs, pivot longer ----
-data_gp = map2(
+data_gp2 = map2(
   .x = data_gp,
   .y = files_gp,
   .f = function(.data, .file_list){
     .data %>%
-      filter(patient_id %in% data_id$patient_id) %>% 
+      filter(patient_id %in% data_id$patient_id) %>%
+      select(-gp_count_week) %>% 
       pivot_longer(
         cols = -patient_id,
         names_to = c("index"),
         names_pattern = "gp_count_(\\d+)",
-        values_to = "value",
+        values_to = "gp_count",
         values_drop_na = FALSE
       ) %>% 
-      filter(value > 0) %>% 
+      filter(gp_count > 0) %>% 
       mutate(
         index = index %>% as.numeric(),
         date = .file_list %>%
@@ -105,19 +107,11 @@ data_gp = map2(
           ymd() + (index - 1),
         snomed_tag = .file_list %>%
           str_extract(
-            pattern = "(?<=input_gp_)[a-z_]+(?=_20\\d{2}-\\d{2}-\\d{2}\\.csv\\.gz)") %>% 
-          str_replace("_", " ") %>% 
-          str_squish() %>% 
-          str_to_sentence(),
-        snomed_tag = case_when(
-          snomed_tag == "Regime therapy" ~ "Regime/therapy",
-          TRUE ~ snomed_tag
-        )
-      )
-  }) %>%
-  bind_rows() %>% 
-  select(-index)
-
+            pattern = "(?<=input_gp_)[a-z_]+(?=_20\\d{2}-\\d{2}-\\d{2}\\.csv\\.gz)")
+      ) %>% 
+      select(-index)
+  }) %>% 
+  bind_rows()
 
 # Save data as rds ----
 write_rds(data_gp,
