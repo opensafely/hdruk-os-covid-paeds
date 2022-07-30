@@ -374,14 +374,19 @@ ggsave("plot_length_of_stay.jpeg",
 tbl_weekly_outpatient = data_outpatient %>% 
   mutate(
     date = outpatient_date %>% cut(breaks = "week")
-  ) %>% 
-  count(date, .drop = FALSE) %>%
+  ) %>%
+  group_by(date) %>% 
+  summarise(
+    n = sum(outpatient_count)
+  ) %>%
+  ungroup() %>% 
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
          date = date %>% as_date(),
          n = n %>% plyr::round_any(count_round))
 
 write_csv(tbl_weekly_outpatient, 
-          here::here("output", "descriptives", "summary_datasets",  "tbl_weekly_outpatient.csv"))
+          here::here("output", "descriptives", "summary_datasets",
+                     "tbl_weekly_outpatient.csv"))
 
 plot_weekly_outpatient = tbl_weekly_outpatient %>% 
   ggplot(aes(date, n)) +
@@ -399,7 +404,9 @@ ggsave("plot_weekly_outpatient.jpeg",
 
 
 # GP Records ----
-tbl_weekly_gp = data_gp %>% 
+# Weekly contact-day count ----
+tbl_weekly_gp = data_gp %>%
+  distinct(patient_id, gp_date) %>% 
   mutate(
     date = gp_date %>% cut(breaks = "week")
   ) %>% 
@@ -425,4 +432,41 @@ ggsave("plot_weekly_gp.jpeg",
        path = here::here("output", "descriptives", "summary_datasets"),
        height = 5, width = 7)
 
+# Weekly contact-day count by Snomed tag ----
+tbl_weekly_gp_by_snomed_tag = data_gp %>% 
+  mutate(
+    date = gp_date %>% cut(breaks = "week")
+  ) %>% 
+  count(date, snomed_tag, .drop = FALSE) %>%
+  group_by(snomed_tag) %>% 
+  mutate(
+    roll_mean = rollmean(n, 4, align = "right", fill = NA)
+  ) %>% 
+  ungroup() %>% 
+  mutate(date = date %>% as_date(),
+         snomed_tag = snomed_tag %>% 
+           str_replace_all("_", " ") %>% 
+           str_to_sentence(),
+         snomed_tag = if_else(snomed_tag == "Regime therapy",
+                              "Regime/therapy",
+                              snomed_tag),
+         n = n %>% plyr::round_any(count_round))
 
+write_csv(tbl_weekly_gp, 
+          here::here("output", "descriptives", "summary_datasets",
+                     "tbl_weekly_gp_by_snomed_tag.csv"))
+
+plot_weekly_gp_by_snomed_tag = tbl_weekly_gp_by_snomed_tag %>% 
+  ggplot(aes(date, n)) +
+  geom_col() +
+  facet_wrap(~snomed_tag) +
+  geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
+  scale_x_date(labels = date_format("%b\n%Y"),
+               breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-01-01"), by = "6 month")) +
+  labs(y = "Weekly count", x = NULL, linetype = NULL) +
+  theme(legend.position = "bottom")
+
+ggsave("plot_weekly_gp_by_snomed_tag.jpeg",
+       plot_weekly_gp_by_snomed_tag,
+       path = here::here("output", "descriptives", "summary_datasets"),
+       height = 7, width = 10)
