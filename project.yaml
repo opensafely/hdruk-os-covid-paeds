@@ -212,12 +212,20 @@ actions:
         data_patient: output/data/data_patient.rds
 
   summarise_datasets:
-    run: r:latest analysis/04_summary_datasets.R
+    run: r:latest analysis/03_summary_datasets.R
     needs: [process_patient_data, process_testing_data, process_admissions_data, process_outpatient_data, process_gp_data]
     outputs:
       moderately_sensitive:
         summary_datasets_tables: output/descriptives/summary_datasets/*.csv
         summary_datasets_plots: output/descriptives/summary_datasets/*.jpeg
+
+  calculate_epi_stats:
+    run: r:latest analysis/04_summary_datasets.R
+    needs: [process_patient_data]
+    outputs:
+      moderately_sensitive:
+        summary_datasets_tables: output/descriptives/epidemiology/*.csv
+        summary_datasets_plots: output/descriptives/epidemiology/*.jpeg
 
   healthcare_use_2019_2022:
     run: r:latest analysis/05_healthcare_use_2019_2022.R
