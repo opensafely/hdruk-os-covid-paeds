@@ -22,8 +22,10 @@ fup_start_date   = ymd(global_var$fup_start_date)
 # Disclosure control parameters ----
 count_round = global_var$disclosure_count_round
 
-# Plot themes
+# Plot settings ----
 theme_set(theme_bw())
+fig_width = 10
+fig_height = 8
 
 # Load datasets ----
 data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
@@ -154,7 +156,7 @@ plot_prevelance_by_condition = epi_stats_by_condition   %>%
 ggsave("plot_prevelance_by_condition.jpeg",
        plot_prevelance_by_condition,
        path = here::here("output", "descriptives", "epidemiology"),
-       width = 10, height = 7)
+       width = fig_width, height = fig_height)
 
 
 ## Cumulative incidence ----
@@ -171,7 +173,7 @@ plot_cuminc_by_condition = epi_stats_by_condition   %>%
 ggsave("plot_cuminc_by_condition.jpeg",
        plot_cuminc_by_condition,
        path = here::here("output", "descriptives", "epidemiology"),
-       width = 10, height = 7)
+       width = fig_width, height = fig_height)
 
 ## Incidence rate ----
 plot_inc_rate_by_condition = epi_stats_by_condition   %>% 
@@ -187,7 +189,7 @@ plot_inc_rate_by_condition = epi_stats_by_condition   %>%
 ggsave("plot_inc_rate_by_condition.jpeg",
        plot_inc_rate_by_condition,
        path = here::here("output", "descriptives", "epidemiology"),
-       width = 10, height = 7)
+       width = fig_width, height = fig_height)
 
 
 # Plot epi stats by condition and age group ----
@@ -200,14 +202,15 @@ plot_prevelance_by_condition_age = epi_stats_by_condition_age   %>%
               alpha = 0.2, linetype = "dashed", size = 0.1) +
   facet_wrap(~condition, ncol = 3, scales = "free_y") +
   labs(
-    y = "Prevelance (%)", x = NULL
+    y = "Prevelance (%)", x = NULL,
+    fill = "Age group", colour = "Age group"
   ) +
   theme(legend.position="bottom")
 
 ggsave("plot_prevelance_by_condition_age.jpeg",
        plot_prevelance_by_condition_age,
        path = here::here("output", "descriptives", "epidemiology"),
-       width = 10, height = 7)
+       width = fig_width, height = fig_height)
 
 
 ## Cumulative incidence ----
@@ -219,14 +222,15 @@ plot_cuminc_by_condition_age = epi_stats_by_condition_age %>%
               alpha = 0.2, linetype = "dashed", size = 0.1) +
   facet_wrap(~condition, ncol = 3, scales = "free_y") +
   labs(
-    y = "Monthly cumulative incidence (%)", x = NULL
+    y = "Monthly cumulative incidence (%)", x = NULL,
+    fill = "Age group", colour = "Age group"
   ) +
   theme(legend.position="bottom")
 
 ggsave("plot_cuminc_by_condition_age.jpeg",
        plot_cuminc_by_condition_age,
        path = here::here("output", "descriptives", "epidemiology"),
-       width = 10, height = 7)
+       width = fig_width, height = fig_height)
 
 ## Incidence rate ----
 plot_inc_rate_by_condition_age = epi_stats_by_condition_age %>% 
@@ -237,12 +241,13 @@ plot_inc_rate_by_condition_age = epi_stats_by_condition_age %>%
               alpha = 0.2, linetype = "dashed", size = 0.1) +
   facet_wrap(~condition, ncol = 3, scales = "free_y") +
   labs(
-    y = "Incidence rate (new cases per 1,000 person-years)", x = NULL
+    y = "Incidence rate (new cases per 1,000 person-years)", x = NULL,
+    fill = "Age group", colour = "Age group"
   ) +
   theme(legend.position="bottom")
 
 ggsave("plot_inc_rate_by_condition_age.jpeg",
        plot_inc_rate_by_condition_age,
        path = here::here("output", "descriptives", "epidemiology"),
-       width = 10, height = 7)
+       width = fig_width, height = fig_height)
 
