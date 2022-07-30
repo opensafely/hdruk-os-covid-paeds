@@ -70,20 +70,20 @@ data_outpatient = map2(
         cols = -patient_id,
         names_to = c("index"),
         names_pattern = "outpatient_count_(\\d+)",
-        values_to = "value",
+        values_to = "outpatient_count",
         values_drop_na = FALSE
       ) %>% 
-      filter(value > 0) %>% 
+      filter(outpatient_count > 0) %>% 
       mutate(
         index = index %>% as.numeric(),
-        date = .file_list %>%
+        outpatient_date = .file_list %>%
           str_extract(
             pattern = "20\\d{2}-\\d{2}-\\d{2}(?=\\.csv\\.gz)") %>% 
           ymd() + days(index - 1)
-      )
+      ) %>% 
+      select(-index)
   }) %>%
-  bind_rows() %>% 
-  select(-index)
+  bind_rows() 
 
 # Save data as rds ----
 write_rds(data_outpatient,
