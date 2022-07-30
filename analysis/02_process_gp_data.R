@@ -84,7 +84,7 @@ diagnostics_gp = data_gp %>%
   relocate(file)
 
 # Filter out bad patient IDs, pivot longer ----
-data_gp2 = map2(
+data_gp = map2(
   .x = data_gp,
   .y = files_gp,
   .f = function(.data, .file_list){
@@ -101,7 +101,7 @@ data_gp2 = map2(
       filter(gp_count > 0) %>% 
       mutate(
         index = index %>% as.numeric(),
-        date = .file_list %>%
+        gp_date = .file_list %>%
           str_extract(
             pattern = "20\\d{2}-\\d{2}-\\d{2}(?=\\.csv\\.gz)") %>% 
           ymd() + (index - 1),
