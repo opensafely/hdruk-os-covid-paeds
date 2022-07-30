@@ -8,5 +8,6 @@
     "n_outpatient": 7,
     "n_gp": 5,
     "n_positive_test": 2,
-    "n_negative_test": 3
+    "n_negative_test": 3,
+    "disclosure_count_round": 15
   }
