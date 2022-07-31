@@ -24,7 +24,7 @@ count_round = global_var$disclosure_count_round
 
 # Plot settings ----
 theme_set(theme_bw())
-fig_width = 10
+fig_width = 12
 fig_height = 8
 
 # Load datasets ----
@@ -39,8 +39,7 @@ calc_epi_stats = function(index_date, data, condition, group = NULL, ...){
       age_index = time_length(
         interval(date_of_birth, index_date),
         unit = "years"
-      ) %>% 
-        ff_label("Age on 1st January (years)"),
+      ),
       age_group_index = age_index %>%
         cut(
           breaks = c(-Inf, 4, 7, 11, 15, 18, Inf),
@@ -83,7 +82,7 @@ calc_epi_stats = function(index_date, data, condition, group = NULL, ...){
 }
 
 
-comorbidity_list = c("cancer", "diabetes", "epilepsy", "severe_mental_illness",
+comorbidity_list = c("asthma", "cancer", "diabetes", "epilepsy", "severe_mental_illness",
                      "cerebral_palsy", "chronic_infections", "devices_and_stomas",
                      "endocrine_disorders", "gastrointestinal_disorders",
                      "haematological_disorders", "immunological_disorders",
@@ -107,7 +106,10 @@ epi_stats_by_condition =  comorbidity_list %>%
       str_to_sentence(),
     condition = if_else(condition == "Musculoskeletal and rheum",
                         "Musculoskeletal and rheumatological disorders",
-                        condition)
+                        condition),
+    n_new_cases = n_new_cases %>% plyr::round_any(count_round),
+    n_exg_cases = n_exg_cases %>% plyr::round_any(count_round),
+    n_pop_total = n_pop_total %>% plyr::round_any(count_round)
   )
 
 ## Save .csv ----
@@ -133,7 +135,10 @@ epi_stats_by_condition_age =  comorbidity_list %>%
       str_to_sentence(),
     condition = if_else(condition == "Musculoskeletal and rheum",
                         "Musculoskeletal and rheumatological disorders",
-                        condition)
+                        condition),
+    n_new_cases = n_new_cases %>% plyr::round_any(count_round),
+    n_exg_cases = n_exg_cases %>% plyr::round_any(count_round),
+    n_pop_total = n_pop_total %>% plyr::round_any(count_round)
   )
 
 ## Save .csv ----
@@ -148,7 +153,7 @@ plot_prevelance_by_condition = epi_stats_by_condition   %>%
   geom_line() + geom_point(size = 0.5) +
   geom_ribbon(aes(ymin = prev_LL*100, ymax = prev_UL*100),
               alpha = 0.2) +
-  facet_wrap(~condition, ncol = 3, scales = "free_y") +
+  facet_wrap(~condition, ncol = 4, scales = "free_y") +
   labs(
     y = "Prevelance (%)", x = NULL
   )
@@ -165,7 +170,7 @@ plot_cuminc_by_condition = epi_stats_by_condition   %>%
   geom_line() + geom_point(size = 0.5) +
   geom_ribbon(aes(ymin = cum_inc_LL*100, ymax = cum_inc_UL*100),
               alpha = 0.2) +
-  facet_wrap(~condition, ncol = 3, scales = "free_y") +
+  facet_wrap(~condition, ncol = 4, scales = "free_y") +
   labs(
     y = "Monthly cumulative incidence (%)", x = NULL
   )
@@ -181,7 +186,7 @@ plot_inc_rate_by_condition = epi_stats_by_condition   %>%
   geom_line() + geom_point(size = 0.5) +
   geom_ribbon(aes(ymin = inc_rate_LL*1000, ymax = inc_rate_UL*1000),
               alpha = 0.2) +
-  facet_wrap(~condition, ncol = 3, scales = "free_y") +
+  facet_wrap(~condition, ncol = 4, scales = "free_y") +
   labs(
     y = "Incidence rate (new cases per 1,000 person-years)", x = NULL
   )
@@ -200,7 +205,7 @@ plot_prevelance_by_condition_age = epi_stats_by_condition_age   %>%
   geom_line() + geom_point(size = 0.5) +
   geom_ribbon(aes(ymin = prev_LL*100, ymax = prev_UL*100),
               alpha = 0.2, linetype = "dashed", size = 0.1) +
-  facet_wrap(~condition, ncol = 3, scales = "free_y") +
+  facet_wrap(~condition, ncol = 4, scales = "free_y") +
   labs(
     y = "Prevelance (%)", x = NULL,
     fill = "Age group", colour = "Age group"
@@ -220,7 +225,7 @@ plot_cuminc_by_condition_age = epi_stats_by_condition_age %>%
   geom_line() + geom_point(size = 0.5) +
   geom_ribbon(aes(ymin = cum_inc_LL*100, ymax = cum_inc_UL*100),
               alpha = 0.2, linetype = "dashed", size = 0.1) +
-  facet_wrap(~condition, ncol = 3, scales = "free_y") +
+  facet_wrap(~condition, ncol = 4, scales = "free_y") +
   labs(
     y = "Monthly cumulative incidence (%)", x = NULL,
     fill = "Age group", colour = "Age group"
@@ -239,7 +244,7 @@ plot_inc_rate_by_condition_age = epi_stats_by_condition_age %>%
   geom_line() + geom_point(size = 0.5) +
   geom_ribbon(aes(ymin = inc_rate_LL*1000, ymax = inc_rate_UL*1000),
               alpha = 0.2, linetype = "dashed", size = 0.1) +
-  facet_wrap(~condition, ncol = 3, scales = "free_y") +
+  facet_wrap(~condition, ncol = 4, scales = "free_y") +
   labs(
     y = "Incidence rate (new cases per 1,000 person-years)", x = NULL,
     fill = "Age group", colour = "Age group"
