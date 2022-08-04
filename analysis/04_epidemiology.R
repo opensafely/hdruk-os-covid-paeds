@@ -59,12 +59,16 @@ calc_epi_stats = function(index_date, data, condition, group = NULL, ...){
       index_date,
       n_new_cases = sum((condition_date >= index_date) &
                           (condition_date < (index_date + months(1))),
-                        na.rm = TRUE),
+                        na.rm = TRUE) %>%
+        plyr::round_any(count_round),
       n_exg_cases = sum((condition_date < index_date),
-                        na.rm = TRUE),
+                        na.rm = TRUE) %>%
+        plyr::round_any(count_round),
       n_pop_total = n() - sum(death_date < index_date,
-                              na.rm = TRUE),
-      n_pop_at_risk = n_pop_total - n_exg_cases,
+                              na.rm = TRUE) %>%
+        plyr::round_any(count_round),
+      n_pop_at_risk = (n_pop_total - n_exg_cases) %>%
+        plyr::round_any(count_round),
       person_years = (pmin(death_date, condition_date, index_date + months(1), na.rm = TRUE) - 
                         pmin(death_date, condition_date, index_date, na.rm = TRUE)) %>%
         as.numeric() %>% 
@@ -106,10 +110,7 @@ epi_stats_by_condition =  comorbidity_list %>%
       str_to_sentence(),
     condition = if_else(condition == "Musculoskeletal and rheum",
                         "Musculoskeletal and rheumatological disorders",
-                        condition),
-    n_new_cases = n_new_cases %>% plyr::round_any(count_round),
-    n_exg_cases = n_exg_cases %>% plyr::round_any(count_round),
-    n_pop_total = n_pop_total %>% plyr::round_any(count_round)
+                        condition)
   )
 
 ## Save .csv ----
