@@ -19,8 +19,6 @@ dir.create(here::here("output", "descriptives", "healthcare_use_2019_2022"),
 # Plot theme
 theme_set(theme_bw())
 
-
-
 # Load global variables ----
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
 
@@ -40,8 +38,6 @@ data_testing = read_rds(here::here("output", "data", "data_testing.rds"))
 data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
 data_outpatient = read_rds(here::here("output", "data", "data_outpatient.rds"))
 data_gp = read_rds(here::here("output", "data", "data_gp.rds"))
-
-
 
 # Cohort construction ----
 index_date = c("2019-01-01",
@@ -219,5 +215,89 @@ write_csv(tbl_cohort_summary,
                      "tbl_cohort_summary.csv"))
 
 
+# Calculate resource use ----
+time_seq = seq(study_start_date, study_end_date - months(1), by = "month")
+group_variable_list = c("overall", "asthma")
 
+## Bed-days ----
+### Create bed-days dataset ----
+admission_counts = data_admissions %>%
+  rowwise() %>% 
+  mutate(dates = list(seq(admission_date, discharge_date, by = "day"))) %>% 
+  unnest(dates) %>% 
+  mutate(date_period = floor_date(dates, unit = "month")) %>%
+  group_by(patient_id, index) %>% 
+  mutate(
+    daily_count = case_when(
+      (admission_date == discharge_date) ~ 0.5, # Day-case
+      row_number() == 1 ~ 0, 
+      TRUE ~ 1
+    )
+  ) %>% 
+  group_by(patient_id, date_period) %>% 
+  summarise(
+    bed_days = sum(daily_count)
+  ) %>% 
+  ungroup()
+           
+### Calculate bed-day incidence rate ----
+bedday_rate = time_seq %>% 
+  map(
+    function(index_date, .data_patient, .data_bed_days,
+             group_variable = "overall"){
+      
+      .data_patient = .data_patient %>% 
+        calc_indexed_variables(index_date) %>% 
+        apply_exclusion_criteria() %>% 
+        mutate(
+          overall = "Overall"
+        )
+      
+      map(
+        group_variable,
+        function(group_variable, index_date,
+                 .data_patient, .data_bed_days){
+          mean_bed_days = .data_patient %>% 
+            select(patient_id, death_date, group = all_of(group_variable)) %>%
+            mutate(
+              date_period = index_date,
+              patient_years = (pmin(death_date, index_date + months(1), na.rm = TRUE) - 
+                                 pmin(death_date, index_date, na.rm = TRUE)) %>%
+                as.numeric() / 365.25
+            ) %>% 
+            left_join(
+              admission_counts,
+              by = c("patient_id", "date_period")
+            ) %>% 
+            replace_na(list(bed_days = 0)) %>% 
+            group_by(group) %>%
+            summarise(
+              index_date,
+              group_variable,
+              n_patient = n(),
+              bed_days_total = round(sum(bed_days)),
+              patient_years_total = sum(patient_years),
+              bedday_rate = bed_days_total/patient_years_total,
+              bedday_LL = poisson.test(bed_days_total, patient_years_total)$conf.int[1],
+              bedday_UL = poisson.test(bed_days_total, patient_years_total)$conf.int[2]
+            )
+        },
+        .data_patient = .data_patient,
+        .data_bed_days = .data_bed_days,
+        index_date = index_date
+      ) %>% 
+        bind_rows()
+    },
+    .data_patient = data_patient,
+    .data_bed_days = data_bed_days,
+    group_variable = group_variable_list
+  ) %>% 
+  bind_rows()
+
+### Format table ----
+bedday_rate %>% 
+  relocate(group_variable, index_date, group) %>% 
+  mutate(group_variable = group_variable %>%
+           factor(levels = group_variable_list)) %>% 
+  arrange(group_variable, index_date)
 
