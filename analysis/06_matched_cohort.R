@@ -41,7 +41,7 @@ data_inclusion = data_patient %>%
       covid_test_date_pos_tp < covid_test_date_neg_tp ~ "Positive",
       covid_test_date_neg_tp < covid_test_date_pos_tp ~ "Negative (will test Positive)",
       is.na(covid_test_date_neg_tp) & is.na(covid_test_date_pos_tp) ~ "Untested",
-      TRUE ~ "Error"
+      TRUE ~ "Discrepant test result"
     ),
     not_nosocomial = covid_nosocomial == "No",
     no_discrepant_results = covid_discrepant_test == "No"
@@ -60,7 +60,7 @@ data_inclusion = data_inclusion %>%
       covid_status == "Negative (will test Positive)" ~ "Negative",
       covid_status == "Positive (prior Negative)" ~ "Positive",
       covid_status == "Untested" ~ "Untested",
-      TRUE ~ "Error"
+      TRUE ~ "Discrepant test result"
     ))
 
 # Only consider test data within testing period ----
@@ -254,7 +254,9 @@ data_inclusion = data_inclusion %>%
       covid_status == "Untested" & is.na(alive_matched_date) ~ FALSE,
       TRUE ~ TRUE
     ),
-    matched = if_else(matched == TRUE, TRUE, FALSE)
+    matched = case_when(
+      matched == TRUE ~ TRUE,
+      TRUE ~ FALSE)
   )
 
 flowchart = data_inclusion %>% 
