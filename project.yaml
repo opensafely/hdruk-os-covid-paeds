@@ -233,3 +233,10 @@ actions:
     outputs:
       moderately_sensitive:
         healthcare_use_2019_2022_tables: output/descriptives/healthcare_use_2019_2022/*.csv
+
+  create_matched_cohort:
+    run: r:latest analysis/06_matched_cohort.R
+    needs: [process_patient_data, process_testing_data]
+    outputs:
+      moderately_sensitive:
+        create_matched_cohort_tables: output/descriptives/matched_cohort/*.csv
