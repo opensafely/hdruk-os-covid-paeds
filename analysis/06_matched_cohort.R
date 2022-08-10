@@ -9,6 +9,7 @@ source(here::here("analysis", "00_utility_functions.R"))
 source(here::here("analysis", "00_lookup_tables.R"))
 
 # Output directories ----
+dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "descriptives", "matched_cohort"), showWarnings = FALSE, recursive=TRUE)
 
 # Plot theme ----
@@ -216,7 +217,7 @@ match_pos_untested = matchit(result ~ test_date,
   ungroup()
 
 # Combine the two matches (pos-neg, pos-untested) ----
-matched_cohort = match_pos_neg %>% 
+data_matched = match_pos_neg %>% 
   bind_rows(match_pos_untested %>%
               filter(!result == "Positive")) %>% 
   select(match_id, patient_id, result, covid_status, test_date) %>% 
@@ -226,13 +227,19 @@ matched_cohort = match_pos_neg %>%
   ungroup()
 
 # Filter out incomplete match sets ----
-matched_cohort = matched_cohort %>% 
-  filter(n_matches == (match_ratio*2 +1))
+data_matched = data_matched %>% 
+  filter(n_matches == (match_ratio*2 +1)) %>% 
+  select(-n_matches)
+
+# Save data as rds ----
+write_rds(data_matched,
+          here::here("output", "data", "data_matched.rds"),
+          compress="gz")
 
 ## Log sucessful matches ----
 data_inclusion = data_inclusion %>%
   left_join(
-    matched_cohort %>%
+    data_matched %>%
       transmute(
         patient_id, covid_status, matched = TRUE
       ) %>% 
