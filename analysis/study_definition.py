@@ -34,7 +34,7 @@ study = StudyDefinition(
         """
         (NOT died_before_start_date) AND registered_at_start_date
         AND (registered_at_end_date OR died_during_study)
-        AND (age > 1) AND (age < 18)
+        AND (age > 0) AND (age < 18)
         """,
         registered_at_start_date=patients.registered_as_of(
             start_date,

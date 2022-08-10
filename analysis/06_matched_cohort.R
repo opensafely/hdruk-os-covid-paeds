@@ -288,7 +288,7 @@ flowchart = data_inclusion %>%
     pct_exclude_step = (n_exclude/lag(n)) %>% scales::percent(0.1),
     crit = str_extract(criteria, "^c\\d+"),
     criteria = fct_case_when(
-      crit == "c0" ~ "OpenSAFELY extract: Registered with GP, alive, with age >1 and <18 years on 01 January 2019",
+      crit == "c0" ~ "OpenSAFELY extract: Registered with GP, alive, with age >0 and <18 years on 01 January 2019",
       crit == "c1" ~ "-  with no probable nosocomial infection",
       crit == "c2" ~ "-  with no same-day discrepent RT-PCR test result",
       crit == "c3" ~ "-  is alive on test/matched date",
