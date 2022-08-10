@@ -238,5 +238,7 @@ actions:
     run: r:latest analysis/06_matched_cohort.R
     needs: [process_patient_data, process_testing_data]
     outputs:
+      highly_sensitive:
+        data_matched: output/data/data_matched.rds
       moderately_sensitive:
         create_matched_cohort_tables: output/descriptives/matched_cohort/*.csv
