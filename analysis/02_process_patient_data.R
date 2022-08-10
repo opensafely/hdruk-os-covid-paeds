@@ -299,6 +299,49 @@ data_patient = data_patient %>%
       ff_label("SARS-CoV-2 status (follow-up period)"),
   )
 
+# 1st covid test dates (testing period and follow up) ----
+data_patient = data_patient %>% 
+  left_join(
+    data_testing %>%
+      filter(test_date >= tp_start_date, test_date <= tp_end_date) %>% 
+      filter(result == "Positive") %>%
+      group_by(patient_id) %>% 
+      slice(1) %>%
+      ungroup() %>% 
+      select(patient_id, covid_test_date_pos_tp = test_date),
+    by = "patient_id"
+  ) %>% 
+  left_join(
+    data_testing %>%
+      filter(test_date >= tp_start_date, test_date <= tp_end_date) %>% 
+      filter(result == "Negative") %>% 
+      group_by(patient_id) %>% 
+      slice(1) %>%
+      ungroup() %>% 
+      select(patient_id, covid_test_date_neg_tp = test_date),
+    by = "patient_id"
+  ) %>% 
+  left_join(
+    data_testing %>%
+      filter(test_date >= fup_start_date, test_date <= study_end_date) %>% 
+      filter(result == "Positive") %>% 
+      group_by(patient_id) %>% 
+      slice(1) %>% 
+      ungroup() %>% 
+      select(patient_id, covid_test_date_pos_fup = test_date),
+    by = "patient_id"
+  ) %>% 
+  left_join(
+    data_testing %>%
+      filter(test_date >= fup_start_date, test_date <= study_end_date) %>% 
+      filter(result == "Negative") %>% 
+      group_by(patient_id) %>% 
+      slice(1) %>% 
+      ungroup() %>% 
+      select(patient_id, covid_test_date_neg_fup = test_date),
+    by = "patient_id"
+  )
+
 # Exclusion criteria variables ----
 ## Potential nosocomial infection ----
 ## Defined as a positive covid test after day 7 in hospital and on or before 7th
