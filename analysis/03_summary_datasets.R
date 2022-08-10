@@ -49,21 +49,21 @@ explanatory = c(
   
   "asthma",
   "cancer",
-  "diabetes",
-  "epilepsy",
-  "severe_mental_illness",
-  
   "cerebral_palsy",
   "chronic_infections",
   "devices_and_stomas",
+  "diabetes",
   "endocrine_disorders",
+  "epilepsy",
   "gastrointestinal_disorders",
   "haematological_disorders",
-  "immunological_disorders", 
-  "learning_and_behaviour_difficulties", 
+  "immunological_disorders",
+  "learning_and_behaviour_difficulties",
   "mental_illness",
   "musculoskeletal_and_rheum",
+  "severe_mental_illness",
   "transplant"
+  
 )
 
 tbl_patient_summary = data_patient %>% 
