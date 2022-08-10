@@ -51,40 +51,40 @@ calc_comorbidity_status = function(.data_patient, index_date){
   .data_patient %>% 
     mutate(
       asthma = case_when(
-        asthma_first_date < index_date ~ "Yes",
-        is.na(asthma_first_date) ~ "No",
+        (asthma_first_date < index_date) &
+          ((asthma_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Asthma"),
       
       cancer = case_when(
-        cancer_first_date < index_date ~ "Yes",
-        is.na(cancer_first_date) ~ "No",
+        (cancer_first_date < index_date) &
+          ((cancer_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Cancer"),
       
       diabetes = case_when(
-        diabetes_first_date < index_date ~ "Yes",
-        is.na(diabetes_first_date) ~ "No",
+        (diabetes_first_date < index_date) &
+          ((diabetes_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Diabetes"),
       
       epilepsy = case_when(
-        epilepsy_first_date < index_date ~ "Yes",
-        is.na(epilepsy_first_date) ~ "No",
+        (epilepsy_first_date < index_date) &
+          ((epilepsy_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Epilepsy"),
       
       severe_mental_illness = case_when(
-        severe_mental_illness_first_date < index_date ~ "Yes",
-        is.na(severe_mental_illness_first_date) ~ "No",
+        (severe_mental_illness_first_date < index_date) &
+          ((severe_mental_illness_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
@@ -92,79 +92,78 @@ calc_comorbidity_status = function(.data_patient, index_date){
       
       cerebral_palsy = case_when(
         cerebral_palsy_first_date < index_date ~ "Yes",
-        is.na(cerebral_palsy_first_date) ~ "No",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Cerebral palsy"),
       
       chronic_infections = case_when(
-        chronic_infections_first_date < index_date ~ "Yes",
-        is.na(chronic_infections_first_date) ~ "No",
+        (chronic_infections_first_date < index_date) &
+          ((chronic_infections_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Chronic infections"),
       
       devices_and_stomas = case_when(
-        devices_and_stomas_first_date < index_date ~ "Yes",
-        is.na(devices_and_stomas_first_date) ~ "No",
+        (devices_and_stomas_first_date < index_date) &
+          ((devices_and_stomas_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Devices and stomas"),
       
       endocrine_disorders = case_when(
-        endocrine_disorders_first_date < index_date ~ "Yes",
-        is.na(endocrine_disorders_first_date) ~ "No",
+        (endocrine_disorders_first_date < index_date) &
+          ((endocrine_disorders_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Endocrine disorders"),
       
       gastrointestinal_disorders = case_when(
-        gastrointestinal_disorders_first_date < index_date ~ "Yes",
-        is.na(gastrointestinal_disorders_first_date) ~ "No",
+        (gastrointestinal_disorders_first_date < index_date) &
+          ((gastrointestinal_disorders_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Gastrointestinal disorders"),
       
       haematological_disorders = case_when(
-        haematological_disorders_first_date < index_date ~ "Yes",
-        is.na(haematological_disorders_first_date) ~ "No",
+        (haematological_disorders_first_date < index_date) &
+          ((haematological_disorders_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Haematological disorders"),
       
       immunological_disorders = case_when(
-        immunological_disorders_first_date < index_date ~ "Yes",
-        is.na(immunological_disorders_first_date) ~ "No",
+        (immunological_disorders_first_date < index_date) &
+          ((immunological_disorders_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Immunological disorders"),
       
       learning_and_behaviour_difficulties = case_when(
-        learning_and_behaviour_difficulties_first_date < index_date ~ "Yes",
-        is.na(learning_and_behaviour_difficulties_first_date) ~ "No",
+        (learning_and_behaviour_difficulties_first_date < index_date) &
+          ((learning_and_behaviour_difficulties_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Learning and behavioural difficulties"),
       
       mental_illness = case_when(
-        mental_illness_first_date < index_date ~ "Yes",
-        is.na(mental_illness_first_date) ~ "No",
+        (mental_illness_first_date < index_date) &
+          ((mental_illness_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Mental illness"),
       
       musculoskeletal_and_rheum = case_when(
-        musculoskeletal_and_rheum_first_date < index_date ~ "Yes",
-        is.na(musculoskeletal_and_rheum_first_date) ~ "No",
+        (musculoskeletal_and_rheum_first_date < index_date) &
+          ((musculoskeletal_and_rheum_last_date + years(5)) >= index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
@@ -172,12 +171,33 @@ calc_comorbidity_status = function(.data_patient, index_date){
       
       transplant = case_when(
         transplant_first_date < index_date ~ "Yes",
-        is.na(transplant_first_date) ~ "No",
         TRUE ~ "No"
       ) %>%
         factor() %>%
-        ff_label("Transplant")
-    ) 
+        ff_label("Transplant"),
+    ) %>% 
+    mutate(
+      comorbidity_count = rowSums(
+        select(.,
+               asthma, cancer, cerebral_palsy, chronic_infections,
+               devices_and_stomas, diabetes, endocrine_disorders,
+               epilepsy, gastrointestinal_disorders,
+               haematological_disorders, immunological_disorders,
+               learning_and_behaviour_difficulties, mental_illness,
+               musculoskeletal_and_rheum, severe_mental_illness,
+               transplant) == "Yes") %>% 
+        ff_label("Number of comorbidities"),
+      
+      comorbidity_count.factor = case_when(
+        comorbidity_count == 0 ~ "0",
+        comorbidity_count == 1 ~ "1",
+        comorbidity_count <  6 ~ "2-5",
+        comorbidity_count >= 6 ~ "6+",
+        TRUE ~ NA_character_
+      ) %>%
+        factor() %>% 
+        ff_label("Comorbidity count")
+    )
 }
 
 # Calculate death status at index date
