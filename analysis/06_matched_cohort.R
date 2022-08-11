@@ -36,33 +36,10 @@ data_testing = read_rds(here::here("output", "data", "data_testing.rds"))
 data_inclusion = data_patient %>% 
   transmute(
     patient_id,
-    covid_status = case_when(
-      is.na(covid_test_date_neg_tp) & !is.na(covid_test_date_pos_tp) ~ "Positive",
-      is.na(covid_test_date_pos_tp) & !is.na(covid_test_date_neg_tp) ~ "Negative",
-      covid_test_date_pos_tp < covid_test_date_neg_tp ~ "Positive",
-      covid_test_date_neg_tp < covid_test_date_pos_tp ~ "Negative (will test Positive)",
-      is.na(covid_test_date_neg_tp) & is.na(covid_test_date_pos_tp) ~ "Untested",
-      TRUE ~ "Discrepant test result"
-    ),
+    covid_status_tp,
     not_nosocomial = covid_nosocomial == "No",
     no_discrepant_results = covid_discrepant_test == "No"
   )
-
-# Create duplicate rows for patients testing positive after negative ----
-data_inclusion = data_inclusion %>% 
-  bind_rows(data_inclusion %>% 
-              filter(covid_status == "Negative (will test Positive)") %>%
-              mutate(covid_status = "Positive (prior Negative)")
-              ) %>%
-  mutate(
-    result = case_when(
-      covid_status == "Positive" ~ "Positive",
-      covid_status == "Negative" ~ "Negative",
-      covid_status == "Negative (will test Positive)" ~ "Negative",
-      covid_status == "Positive (prior Negative)" ~ "Positive",
-      covid_status == "Untested" ~ "Untested",
-      TRUE ~ "Discrepant test result"
-    ))
 
 # Only consider test data within testing period ----
 data_testing_tp = data_testing %>% 
@@ -74,38 +51,25 @@ data_patient = data_patient %>%
   filter(covid_nosocomial == "No", covid_discrepant_test == "No")
 
 data_testing_tp = data_testing_tp %>%
-  filter(patient_id %in% data_patient$patient_id) 
+  filter(patient_id %in% data_patient$patient_id) %>% 
+  left_join(data_patient %>% 
+              select(patient_id, covid_status_tp, date_of_birth),
+            by = "patient_id") %>% 
+  drop_na()
 
-## Include only 1st positive or negatives before 1st positive ----
+# Filter test dates ----
+# Include only:
+#  - 1st positive test date from positive patients, 
+#  - negatives test dates from patients who only tested negative
+
 data_testing_tp = data_testing_tp %>%
-  left_join(
-    data_testing_tp %>%
-      group_by(patient_id, result) %>% 
-      filter(result == "Positive" & row_number() == 1) %>%
-      ungroup() %>% 
-      select(patient_id, test_date_1st_pos_tp = test_date) ,
-    by = "patient_id"
-  ) %>% 
-  filter((result == "Positive" & test_date == test_date_1st_pos_tp) | 
-           (result == "Negative" & is.na(test_date_1st_pos_tp)) |
-           (result == "Negative" & (test_date < test_date_1st_pos_tp))
-         )
-
-## Append covid_status to dataset ----
-data_testing_tp = data_testing_tp %>% 
-  left_join(
-    data_inclusion %>% 
-      select(patient_id, covid_status, result),
-    by = c("patient_id", "result")
-  )
+  group_by(patient_id, result) %>% 
+  filter(covid_status_tp == "Positive" & result == "Positive" & row_number() == 1 |
+           covid_status_tp == "Negative" & result == "Negative") %>% 
+  ungroup()
 
 ## Calculate age on test date ----
 data_testing_tp = data_testing_tp %>% 
-  left_join(
-    data_patient %>%
-      select(patient_id, date_of_birth),
-    by = "patient_id"
-  ) %>% 
   mutate(
     age_test_date = time_length(difftime(test_date, date_of_birth), "years")
   ) %>%
@@ -118,47 +82,76 @@ data_inclusion = data_inclusion %>%
               slice(1) %>% 
               ungroup() %>% 
               mutate(age_criteria_test_date = TRUE) %>% 
-              select(patient_id, age_criteria_test_date, covid_status),
-            by = c("patient_id", "covid_status"))
+              select(patient_id, age_criteria_test_date),
+            by = c("patient_id"))
 
 ## Make results factor, remove columns ----
 data_testing_tp = data_testing_tp %>% 
   mutate(result = result %>%
            factor() %>% 
            fct_relevel("Negative", "Positive")) %>% 
-  select(patient_id, result, covid_status, test_date)
+  select(patient_id, result, covid_status_tp, test_date)
 
-# Match positives with negatvies ----
+# Match positives with negatives ----
 ## Matching set up ----
 match_ratio = 10
+matched = vector()
 
-## Perform matching ----
-match_pos_neg = matchit(result ~ test_date,
-                        data = data_testing_tp,
-                        exact = ~ test_date,
-                        ratio = match_ratio,
-                        replace = FALSE) %>% 
-  match.data() %>% 
+match_pos_neg = data_testing_tp %>% 
+  group_by(test_date) %>% 
+  group_map(
+    function(.x, .y){
+      
+      # Remove matched controls from last iteration
+      df_in = .x %>%
+        filter(!patient_id %in% matched)
+      
+      # Count number of tests ----
+      n_positive = sum(df_in$result == "Positive")
+      n_negative = sum(df_in$result == "Negative")
+      
+      # If insufficient numbers, skip matching.
+      if(n_positive == 0 | n_negative < match_ratio){
+        df_out = NULL
+      } else{
+        
+        # Reduce positives if insufficient negative potential matches ----
+        if(n_negative < n_positive*match_ratio){
+          df_in = df_in %>%
+            group_by(result) %>% 
+            filter(!(result == "Positive" & 
+                       (row_number() > floor(n_negative/match_ratio)))) %>% 
+            ungroup()
+        }
+        
+        # Match
+        df_out = matchit(result ~ test_date,
+                         data = df_in,
+                         exact = ~ test_date,
+                         ratio = match_ratio,
+                         replace = FALSE)
+        
+        # Unique ID for subclasses (date pasted with subclass)
+        df_out = match.data(df_out) %>% 
+          mutate(subclass = paste0(.y, subclass))
+        
+        # Update remove vector
+        matched_iter = df_out %>%
+          pull(patient_id)
+        matched <<- c(matched, matched_iter)
+      }
+      return(df_out)
+    },
+    .keep = TRUE
+  ) %>% 
+  map_df(bind_rows) %>% 
   rename(match_id = subclass)
-
-## Filter out incomplete sets ----
-match_pos_neg = match_pos_neg %>%
-  arrange(match_id, desc(result)) %>% 
-  group_by(match_id) %>% 
-  mutate(n_match = n()) %>% 
-  ungroup() %>% 
-  filter(n_match == match_ratio + 1)
 
 # Match positive cases with untested ----
 ## Create dataset of untested ----
-data_untested = data_inclusion %>% 
-  filter(result == "Untested") %>% 
-  select(patient_id, result, covid_status) %>%
-  left_join(
-    data_patient %>% 
-      select(patient_id, date_of_birth, death_date),
-    by = "patient_id"
-  ) %>% 
+data_untested = data_patient %>% 
+  filter(covid_status_tp == "Untested") %>% 
+  select(patient_id, covid_status_tp, date_of_birth, death_date) %>% 
   mutate(test_date = sample(
     match_pos_neg %>% 
       filter(result == "Positive") %>%
@@ -181,8 +174,9 @@ data_inclusion = data_inclusion %>%
 ### Calculate age on matched test date ----
 data_untested = data_untested %>% 
   mutate(
-    age_test_date = time_length(difftime(test_date, date_of_birth), "years")
-) %>% 
+    age_test_date = time_length(difftime(test_date, date_of_birth), "years"),
+    result = "Untested"
+    ) %>% 
   filter(age_test_date >= 4, age_test_date < 18)
 
 ### Log number of patients satisfying age criteria ----
@@ -220,7 +214,7 @@ match_pos_untested = matchit(result ~ test_date,
 data_matched = match_pos_neg %>% 
   bind_rows(match_pos_untested %>%
               filter(!result == "Positive")) %>% 
-  select(match_id, patient_id, result, covid_status, test_date) %>% 
+  select(match_id, patient_id, result, covid_status_tp, test_date) %>% 
   arrange(match_id, result) %>% 
   group_by(match_id) %>% 
   mutate(n_matches = n()) %>% 
@@ -241,12 +235,9 @@ data_inclusion = data_inclusion %>%
   left_join(
     data_matched %>%
       transmute(
-        patient_id, covid_status, matched = TRUE
-      ) %>% 
-      group_by(patient_id, covid_status) %>% 
-      slice(1) %>% 
-      ungroup(),
-    by = c("patient_id", "covid_status")
+        patient_id, matched = TRUE
+      ),
+    by = c("patient_id")
   )
   
 # Clean-up inclusion data ----
@@ -258,7 +249,7 @@ data_inclusion = data_inclusion %>%
       TRUE ~ FALSE
     ),
     alive_matched_date = case_when(
-      covid_status == "Untested" & is.na(alive_matched_date) ~ FALSE,
+      covid_status_tp == "Untested" & is.na(alive_matched_date) ~ FALSE,
       TRUE ~ TRUE
     ),
     matched = case_when(
@@ -266,10 +257,11 @@ data_inclusion = data_inclusion %>%
       TRUE ~ FALSE)
   )
 
+# Create inclusion flowchart ----
 flowchart = data_inclusion %>% 
   transmute(
     patient_id,
-    covid_status,
+    covid_status_tp,
     c0 = TRUE,
     c1 = c0 & not_nosocomial,
     c2 = c1 & no_discrepant_results,
@@ -278,16 +270,16 @@ flowchart = data_inclusion %>%
     c5 = c4 & matched
   ) %>%
   select(-patient_id) %>%
-  group_by(covid_status) %>%
+  group_by(covid_status_tp) %>%
   summarise(
     across(.fns=sum)
   ) %>%
   pivot_longer(
-    cols=-covid_status,
+    cols=-covid_status_tp,
     names_to="criteria",
     values_to="n"
   ) %>%
-  group_by(covid_status) %>%
+  group_by(covid_status_tp) %>%
   mutate(
     n = n #%>% plyr::round_any(count_round)
   ) %>% 
@@ -311,11 +303,16 @@ flowchart = data_inclusion %>%
     list(n_exclude = "-", pct_exclude_step = "-")
   )
 
+## Format flowchart table ----
 tbl_flowchart = flowchart %>% 
-  select(covid_status, criteria, n, n_exclude, pct_all, pct_exclude_step) %>%
-  group_by(covid_status) %>% 
-  mutate(covid_status = if_else(row_number() == 1, covid_status, ""))
+  select(covid_status_tp, criteria, n, n_exclude, pct_all, pct_exclude_step) %>%
+  group_by(covid_status_tp) %>% 
+  mutate(
+    covid_status_tp = covid_status_tp %>% as.character(),
+    covid_status_tp = if_else(row_number() == 1,covid_status_tp, "")
+    )
 
+## Save flowchart table ----
 write_csv(tbl_flowchart, 
           here::here("output", "descriptives", "matched_cohort",
                      "tbl_flowchart.csv"))
