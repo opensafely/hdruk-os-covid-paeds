@@ -28,6 +28,10 @@ tp_start_date    = ymd(global_var$tp_start_date)
 tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
+# Matching parameters ----
+match_ratio = 10
+test_period_span = "1 week"
+
 # Load datasets ----
 data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
 data_testing = read_rds(here::here("output", "data", "data_testing.rds"))
@@ -89,16 +93,16 @@ data_inclusion = data_inclusion %>%
 data_testing_tp = data_testing_tp %>% 
   mutate(result = result %>%
            factor() %>% 
-           fct_relevel("Negative", "Positive")) %>% 
-  select(patient_id, result, covid_status_tp, test_date)
+           fct_relevel("Negative", "Positive"),
+         test_period = floor_date(test_date, test_period_span)) %>% 
+  select(patient_id, result, covid_status_tp, test_date, test_period)
 
 # Match positives with negatives ----
 ## Matching set up ----
-match_ratio = 10
 matched = vector()
 
 match_pos_neg = data_testing_tp %>% 
-  group_by(test_date) %>% 
+  group_by(test_period) %>% 
   group_map(
     function(.x, .y){
       
@@ -125,9 +129,9 @@ match_pos_neg = data_testing_tp %>%
         }
         
         # Match
-        df_out = matchit(result ~ test_date,
+        df_out = matchit(result ~ test_period,
                          data = df_in,
-                         exact = ~ test_date,
+                         exact = ~ test_period,
                          ratio = match_ratio,
                          replace = FALSE)
         
@@ -152,12 +156,15 @@ match_pos_neg = data_testing_tp %>%
 data_untested = data_patient %>% 
   filter(covid_status_tp == "Untested") %>% 
   select(patient_id, covid_status_tp, date_of_birth, death_date) %>% 
-  mutate(test_date = sample(
-    match_pos_neg %>% 
-      filter(result == "Positive") %>%
-      pull(test_date),
-    size = n(),
-    replace = TRUE))
+  mutate(
+    test_date = sample(
+      match_pos_neg %>% 
+        filter(result == "Positive") %>%
+        pull(test_date),
+      size = n(),
+      replace = TRUE),
+    test_period = floor_date(test_date, test_period_span)
+    )
 
 ## Filter out dead patients on matched test date ----
 data_untested = data_untested %>% 
@@ -191,7 +198,7 @@ data_untested = data_untested %>%
   bind_rows(
     match_pos_neg %>% 
       filter(result == "Positive") %>% 
-      select(patient_id, result, test_date, match_id)
+      select(patient_id, result, covid_status_tp, test_date, test_period, match_id)
   ) %>% 
   mutate(
     result = result %>% 
@@ -199,10 +206,27 @@ data_untested = data_untested %>%
       fct_relevel("Untested", "Positive")
   ) 
 
+
+data_untested = data_untested %>% 
+  left_join(
+    data_untested %>% 
+      count(result, test_period) %>% 
+      pivot_wider(names_from = "result",
+                  values_from = "n",
+                  names_prefix = "n_"),
+    by = "test_period"
+  ) %>%
+  group_by(result, test_period) %>% 
+  filter(
+    ((result == "Positive") & (row_number() <= n_Untested/match_ratio)) |
+      ((result == "Untested") & (row_number() <= n_Positive*match_ratio))
+  )
+
+  
 ## Perform matching, fill in match_id ----
-match_pos_untested = matchit(result ~ test_date,
+match_pos_untested = matchit(result ~ test_period,
                              data = data_untested,
-                             exact = ~ test_date,
+                             exact = ~ test_period,
                              ratio = match_ratio,
                              replace = FALSE) %>% 
   match.data() %>% 
@@ -210,11 +234,12 @@ match_pos_untested = matchit(result ~ test_date,
   fill(match_id, .direction = "downup") %>% 
   ungroup()
 
+
 # Combine the two matches (pos-neg, pos-untested) ----
 data_matched = match_pos_neg %>% 
   bind_rows(match_pos_untested %>%
               filter(!result == "Positive")) %>% 
-  select(match_id, patient_id, result, covid_status_tp, test_date) %>% 
+  select(match_id, patient_id, result, covid_status_tp, test_date, test_period) %>% 
   arrange(match_id, result) %>% 
   group_by(match_id) %>% 
   mutate(n_matches = n()) %>% 
