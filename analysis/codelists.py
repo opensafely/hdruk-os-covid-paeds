@@ -20,7 +20,7 @@ snomed_disorder = codelist_from_csv(
 )
 
 snomed_finding = codelist_from_csv(
-    "analysis/codelists/snomed-finding.csv",
+    "analysis/codelists/snomed-finding_no_vacc.csv",
     system="snomed",
     column="code",
 )
