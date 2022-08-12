@@ -1,4 +1,19 @@
+# ISARIC WHO CCP-UK study: 4C Mortality Score
+# Create matched cohort
+# 06_matched_cohort.R
+# Centre for Medical Informatics, Usher Institute, University of Edinburgh 2022
+#
+# This script matches COVID-positive patients with COVID-negative and 
+# untested patients during the testing period of interest. Positive-negative
+# matching is performed iteratively between the 1st positive test date
+# and negative test dates with patients being removed from the pool of
+# potential matches once matched. Untested patients are randomly assigned
+# a test date based on the distribution of matched test dates and matched
+# with a positive patient. The final matched dataset consists of sets of
+# matched patients with a positive:negative:untested ratio of 1:m:m
+# (m = 10).
 
+# Load packages ----
 library(tidyverse)
 library(lubridate)
 library(MatchIt)
@@ -30,13 +45,13 @@ fup_start_date   = ymd(global_var$fup_start_date)
 
 # Matching parameters ----
 match_ratio = 10
-test_period_span = "1 week"
+test_period_span = "1 month"
 
 # Load datasets ----
 data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
 data_testing = read_rds(here::here("output", "data", "data_testing.rds"))
 
-# Define groups ----
+# Create dataset to log inclusion for inclusion flowchart ----
 data_inclusion = data_patient %>% 
   transmute(
     patient_id,
@@ -65,7 +80,6 @@ data_testing_tp = data_testing_tp %>%
 # Include only:
 #  - 1st positive test date from positive patients, 
 #  - negatives test dates from patients who only tested negative
-
 data_testing_tp = data_testing_tp %>%
   group_by(patient_id, result) %>% 
   filter(covid_status_tp == "Positive" & result == "Positive" & row_number() == 1 |
@@ -245,12 +259,12 @@ data_matched = match_pos_neg %>%
   mutate(n_matches = n()) %>% 
   ungroup()
 
-# Filter out incomplete match sets ----
+## Filter out incomplete match sets ----
 data_matched = data_matched %>% 
   filter(n_matches == (match_ratio*2 +1)) %>% 
   select(-n_matches)
 
-# Save data as rds ----
+## Save data as rds ----
 write_rds(data_matched,
           here::here("output", "data", "data_matched.rds"),
           compress="gz")
@@ -316,10 +330,10 @@ flowchart = data_inclusion %>%
     criteria = fct_case_when(
       crit == "c0" ~ "OpenSAFELY extract: Registered with GP, alive, with age >0 and <18 years on 01 January 2019",
       crit == "c1" ~ "-  with no probable nosocomial infection",
-      crit == "c2" ~ "-  with no same-day discrepent RT-PCR test result",
+      crit == "c2" ~ "-  with no same-day discrepant RT-PCR test result",
       crit == "c3" ~ "-  is alive on test/matched date",
       crit == "c4" ~ "-  with age between 4 and 17 years inclusive on test/matched date",
-      crit == "c5" ~ "-  sucessfully matched with negative:untested:positive of 10:10:1",
+      crit == "c5" ~ "-  successfully  matched with negative:untested:positive of 10:10:1",
       TRUE ~ NA_character_
     )
   ) %>%
