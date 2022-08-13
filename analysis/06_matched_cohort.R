@@ -122,7 +122,10 @@ match_pos_neg = data_testing_tp %>%
       
       # Remove matched controls from last iteration
       df_in = .x %>%
-        filter(!patient_id %in% matched)
+        filter(!patient_id %in% matched) %>% 
+        group_by(patient_id) %>% 
+        slice(1) %>% 
+        ungroup()
       
       # Count number of tests ----
       n_positive = sum(df_in$result == "Positive")
