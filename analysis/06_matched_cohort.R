@@ -44,8 +44,8 @@ tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
 # Matching parameters ----
-match_ratio = 10
-test_period_span = "1 month"
+match_ratio = 5
+test_period_span = "1 day"
 
 # Load datasets ----
 data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
@@ -220,7 +220,6 @@ data_untested = data_untested %>%
       fct_relevel("Untested", "Positive")
   ) 
 
-
 data_untested = data_untested %>% 
   left_join(
     data_untested %>% 
@@ -234,9 +233,9 @@ data_untested = data_untested %>%
   filter(
     ((result == "Positive") & (row_number() <= n_Untested/match_ratio)) |
       ((result == "Untested") & (row_number() <= n_Positive*match_ratio))
-  )
+  ) %>% 
+  ungroup()
 
-  
 ## Perform matching, fill in match_id ----
 match_pos_untested = matchit(result ~ test_period,
                              data = data_untested,
@@ -247,7 +246,6 @@ match_pos_untested = matchit(result ~ test_period,
   group_by(subclass) %>% 
   fill(match_id, .direction = "downup") %>% 
   ungroup()
-
 
 # Combine the two matches (pos-neg, pos-untested) ----
 data_matched = match_pos_neg %>% 
