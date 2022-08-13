@@ -32,7 +32,7 @@ data_patient = here::here("output", "input.csv.gz") %>%
 dir.create(here::here("output", "dummy_data"), showWarnings = FALSE, recursive=TRUE)
 
 # Dummy data variables ----
-n_max = 5000
+n_max = 10000
 incidence = 0.2
 date_range = seq(start_date, end_date, by="day")
 date_range_testing = seq(tp_start_date, end_date, by="day")
@@ -194,7 +194,7 @@ dummy_data_testing_negative = dummy_data_testing_negative %>%
   mutate(value = sort(value) %>% as.character()) %>%
   ungroup() %>% 
   mutate(prob = rep(runif(n()))) %>% 
-  filter(prob <= 0.5) %>% 
+  filter(prob <= 0.3) %>% 
   group_by(patient_id) %>% 
   mutate(index = rep(1:n()),
          var_name = paste(variable, index, sep = "_")) %>% 
