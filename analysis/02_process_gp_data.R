@@ -31,18 +31,43 @@ files_gp_procedure = list.files(
 files_gp_regime_therapy = list.files(
   path = here::here("output", "data_weekly"),
   pattern = "input_gp_regime_therapy_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
-
+      
 files_gp_observable_entity = list.files(
   path = here::here("output", "data_weekly"),
   pattern = "input_gp_observable_entity_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
-
+                
 files_gp_specimen = list.files(
   path = here::here("output", "data_weekly"),
   pattern = "input_gp_specimen_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
 
-files_gp = c(files_gp_disorder, files_gp_finding, files_gp_procedure, 
-             files_gp_regime_therapy, files_gp_observable_entity, 
-             files_gp_specimen)
+files_gp_presentation_cancer = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_presentation_cancer_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_gp_presentation_infectious_disease = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_presentation_infectious_disease_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_gp_presentation_mental_health = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_presentation_mental_health_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_gp_presentation_respiratory_system = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_gp_presentation_respiratory_system_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_gp = c(
+  files_gp_disorder,
+  files_gp_finding,
+  files_gp_procedure, 
+  files_gp_regime_therapy,
+  files_gp_observable_entity, 
+  files_gp_specimen,
+  files_gp_presentation_cancer,
+  files_gp_presentation_infectious_disease,
+  files_gp_presentation_mental_health,
+  files_gp_presentation_respiratory_system
+)
 
 # Read GP data from csv ----
 data_gp = here::here("output", "data_weekly", files_gp) %>%
