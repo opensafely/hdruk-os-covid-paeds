@@ -150,3 +150,165 @@ snomed_transplant = codelist_from_csv(
     system="snomed",
     column="code",
 )
+
+snomed_KM_nervous_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-central-nervous-system-finding-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_pregnancy_complication = codelist_from_csv(
+    "codelists/user-kate-mansfield-complication-of-pregnancy-childbirth-andor-the-puerperium-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_congenital_disease = codelist_from_csv(
+    "codelists/user-kate-mansfield-congenital-disease-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_auditory_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-auditory-system-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_cardiovascular_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-cardiovascular-system-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_cellular_component_blood = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-cellular-component-of-blood-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_connective_tissue = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-connective-tissue-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_digestive_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-digestive-system-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_endocrine_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-endocrine-system-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_fetus_newborn = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-fetus-or-newborn-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_hematopoietic_structure = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-hematopoietic-structure-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_immune_function = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-immune-function-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_labor_delivery = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-labor-delivery-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_musculoskeletal_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-musculoskeletal-system-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_nervous_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-nervous-system-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_puerperium = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-puerperium-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_respiratory_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-respiratory-system-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_skin_subcutaneous_tissue = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-skin-andor-subcutaneous-tissue-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_genitourinary_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-disorder-of-the-genitourinary-system-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_infectious_disease = codelist_from_csv(
+    "codelists/user-kate-mansfield-infectious-disease-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_mental_disorder = codelist_from_csv(
+    "codelists/user-kate-mansfield-mental-disorder-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_metabolic_disease = codelist_from_csv(
+    "codelists/user-kate-mansfield-metabolic-disease-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_neoplastic_disease = codelist_from_csv(
+    "codelists/user-kate-mansfield-neoplastic-disease-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_nutritional_disorder = codelist_from_csv(
+    "codelists/user-kate-mansfield-nutritional-disorder-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_poisoning = codelist_from_csv(
+    "codelists/user-kate-mansfield-poisoning-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_injury = codelist_from_csv(
+    "codelists/user-kate-mansfield-traumatic-andor-non-traumatic-injury-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_KM_visual_system = codelist_from_csv(
+    "codelists/user-kate-mansfield-visual-system-disorder-all-descendants.csv",
+    system="snomed",
+    column="code",
+)
