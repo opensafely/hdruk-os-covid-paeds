@@ -133,6 +133,62 @@ actions:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_specimen_20*.csv.gz
 
+  generate_gp_pres_cancer:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_presentation_cancer
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_presentation_cancer_20*.csv.gz
+
+  generate_gp_pres_infectious_disease:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_presentation_infectious_disease
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_presentation_infectious_disease_20*.csv.gz
+
+  generate_gp_pres_mental_health:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_presentation_mental_health
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_presentation_mental_health_20*.csv.gz
+
+  generate_gp_pres_respiratory_system:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_presentation_respiratory_system
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_presentation_respiratory_system_20*.csv.gz
+
   generate_covid_tests_negative:
     run: >
       cohortextractor:latest generate_cohort
