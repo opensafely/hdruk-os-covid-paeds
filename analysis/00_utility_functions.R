@@ -1,6 +1,5 @@
 # Functions ----
 
-
 # Applies general exclusion criteria to cohort
 apply_exclusion_criteria = function(.data_patient){
   .data_patient  %>% 
@@ -30,6 +29,7 @@ boot.incidence.rate = function(counts, persontime, name = "inc_rate",
 
 # Calculates age and age group at index date
 calc_age = function(.data_patient, index_date){
+  index_date = lubridate::ymd(index_date)
   .data_patient %>% 
     mutate(
       age = time_length(
@@ -48,6 +48,7 @@ calc_age = function(.data_patient, index_date){
 
 # Calculates comorbidity status given index date
 calc_comorbidity_status = function(.data_patient, index_date){
+  index_date = lubridate::ymd(index_date)
   .data_patient %>% 
     mutate(
       asthma = case_when(
@@ -195,13 +196,14 @@ calc_comorbidity_status = function(.data_patient, index_date){
         comorbidity_count >= 6 ~ "6+",
         TRUE ~ NA_character_
       ) %>%
-        factor() %>% 
+        factor(levels = c("0", "1", "2-5", "6+")) %>% 
         ff_label("Comorbidity count")
     )
 }
 
 # Calculate death status at index date
 calc_death_status = function(.data_patient, index_date){
+  index_date = lubridate::ymd(index_date)
   .data_patient %>% 
     mutate(
       death = case_when(
@@ -214,12 +216,43 @@ calc_death_status = function(.data_patient, index_date){
     )
 }
 
-# Wrapper function for calculating time-dependent variables
+# count exclusion criteria to cohort
+count_exclusion_criteria = function(.data_patient){
+  data_exclusion = .data_patient  %>% 
+    transmute(
+      is_aged_between_4_17 = (age >= 4) & (age < 18),
+      is_not_covid_nosocomial = covid_nosocomial == "No",
+      is_not_covid_discrepant_test = covid_discrepant_test == "No",
+      is_alive = death == "No",
+      include = is_aged_between_4_17 & is_not_covid_nosocomial &
+        is_not_covid_discrepant_test & is_alive
+    )
+  if(any(is.na(data_exclusion$include))) warning("Inclusion column contains NAs")
+  return(data_exclusion)
+}
+
+# Wrapper function for calculating time-varying variables
 calc_indexed_variables = function(.data_patient, index_date){
+  index_date = lubridate::ymd(index_date)
   .data_patient %>% 
     calc_age(index_date) %>%
     calc_comorbidity_status(index_date) %>%
+    calc_vaccination_status(index_date) %>% 
     calc_death_status(index_date)
+}
+
+# Calculates vaccination status at index date
+calc_vaccination_status = function(.data_patient, index_date){
+  index_date = lubridate::ymd(index_date)
+  .data_patient %>% 
+    mutate(
+      vaccination_status = case_when(
+        (vax_covid_date_1 + days(14) < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Vaccination status"),
+    )
 }
 
 fct_case_when <- function(...) {
