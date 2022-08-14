@@ -13,6 +13,12 @@ ethnicity_codes = codelist_from_csv(
     category_column="Grouping_6",
 )
 
+shielding_codes = codelist_from_csv(
+    "codelists/primis-covid19-vacc-uptake-shield.csv",
+    system="snomed",
+    column="code",
+)
+
 snomed_disorder = codelist_from_csv(
     "analysis/codelists/snomed-disorder.csv",
     system="snomed",
