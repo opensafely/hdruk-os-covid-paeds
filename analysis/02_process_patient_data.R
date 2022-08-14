@@ -34,31 +34,7 @@ data_patient = data_patient %>%
     date_of_birth = if_else(is.na(date_of_birth),
                             NA_character_,
                             paste0(date_of_birth, "-15")) %>%
-      as.Date(),
-
-    age_2019 = as.numeric((ymd("2019-01-01") - date_of_birth)/365.25) %>%
-      ff_label("Age on 1st Jan 2019 (years)"),
-
-    age_2020 = as.numeric((ymd("2020-01-01") - date_of_birth)/365.25) %>%
-      ff_label("Age on 1st Jan 2020 (years)"),
-
-    age_2021 = as.numeric((ymd("2021-01-01") - date_of_birth)/365.25) %>%
-      ff_label("Age on 1st Jan 2021 (years)"),
-
-    age_2019_factor = cut(age_2019,
-                     breaks = c(-Inf, 4, 7, 11, 15, 18, Inf),
-                     labels = c("Under 4", "4-6", "7-10", "11-14", "15-17", "18+"))%>%
-      ff_label("Age group on 1st Jan 2019 (years)"),
-
-    age_2020_factor = cut(age_2020,
-                          breaks = c(-Inf, 4, 7, 11, 15, 18, Inf),
-                          labels = c("Under 4", "4-6", "7-10", "11-14", "15-17", "18+"))%>%
-      ff_label("Age group on 1st Jan 2020 (years)"),
-
-    age_2021_factor = cut(age_2021,
-                          breaks = c(-Inf, 4, 7, 11, 15, 18, Inf),
-                          labels = c("Under 4", "4-6", "7-10", "11-14", "15-17", "18+"))%>%
-      ff_label("Age group on 1st Jan 2021 (years)"),
+      ymd(),
 
     sex = case_when(
       sex == "F" ~ "Female",
@@ -71,7 +47,7 @@ data_patient = data_patient %>%
     ethnicity_gp = case_when(
       ethnicity_gp == "1" ~ "White",
       ethnicity_gp == "4" ~ "Black",
-      ethnicity_gp == "3" ~ "South Asian",
+      ethnicity_gp == "3" ~ "Asian",
       ethnicity_gp == "2" ~ "Mixed",
       ethnicity_gp == "5" ~ "Other",
       TRUE ~ NA_character_
@@ -82,7 +58,7 @@ data_patient = data_patient %>%
     ethnicity_6_sus = case_when(
       ethnicity_6_sus == "1" ~ "White",
       ethnicity_6_sus == "4" ~ "Black",
-      ethnicity_6_sus == "3" ~ "South Asian",
+      ethnicity_6_sus == "3" ~ "Asian",
       ethnicity_6_sus == "2" ~ "Mixed",
       ethnicity_6_sus == "5" ~ "Other",
       TRUE ~ NA_character_
@@ -97,45 +73,15 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Region"),
 
-    region_2020 = region_2020 %>%
-      factor() %>%
-      ff_label("Region"),
-
-    region_2021 = region_2021 %>%
-      factor() %>%
-      ff_label("Region"),
-
     imd_Q5_2019 = case_when(
-      (imd_2019 >=1)          & (imd_2019 < 32844*1/5) ~ "(most deprived) 1",
+      (imd_2019 >=1)          & (imd_2019 < 32844*1/5) ~ "1 (most deprived)",
       (imd_2019 >= 32844*1/5) & (imd_2019 < 32844*2/5) ~ "2",
       (imd_2019 >= 32844*2/5) & (imd_2019 < 32844*3/5) ~ "3",
       (imd_2019 >= 32844*3/5) & (imd_2019 < 32844*4/5) ~ "4",
-      (imd_2019 >= 32844*4/5)                          ~ "(least deprived) 5",
+      (imd_2019 >= 32844*4/5)                          ~ "5 (least deprived)",
       TRUE ~ NA_character_
     ) %>%
-      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>%
-      ff_label("Multiple deprivation quintile"),
-
-    imd_Q5_2020 = case_when(
-      (imd_2020 >=1)          & (imd_2020 < 32844*1/5) ~ "(most deprived) 1",
-      (imd_2020 >= 32844*1/5) & (imd_2020 < 32844*2/5) ~ "2",
-      (imd_2020 >= 32844*2/5) & (imd_2020 < 32844*3/5) ~ "3",
-      (imd_2020 >= 32844*3/5) & (imd_2020 < 32844*4/5) ~ "4",
-      (imd_2020 >= 32844*4/5)                          ~ "(least deprived) 5",
-      TRUE ~ NA_character_
-    ) %>%
-      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>%
-      ff_label("Multiple deprivation quintile"),
-
-    imd_Q5_2021 = case_when(
-      (imd_2021 >=1)          & (imd_2021 < 32844*1/5) ~ "(most deprived) 1",
-      (imd_2021 >= 32844*1/5) & (imd_2021 < 32844*2/5) ~ "2",
-      (imd_2021 >= 32844*2/5) & (imd_2021 < 32844*3/5) ~ "3",
-      (imd_2021 >= 32844*3/5) & (imd_2021 < 32844*4/5) ~ "4",
-      (imd_2021 >= 32844*4/5)                          ~ "(least deprived) 5",
-      TRUE ~ NA_character_
-    ) %>%
-      factor(levels = c("(most deprived) 1", "2", "3", "4", "(least deprived) 5")) %>%
+      factor(levels = c("1 (most deprived)", "2", "3", "4", "5 (least deprived)")) %>%
       ff_label("Multiple deprivation quintile"),
 
     rural_urban_2019 = case_when(
@@ -146,89 +92,12 @@ data_patient = data_patient %>%
     ) %>%
       factor() %>%
       ff_label("Rural-urban classification"),
-
-    rural_urban_2020 = case_when(
-      rural_urban_2020 %in% c(1,2)     ~ "Urban conurbation",
-      rural_urban_2020 %in% c(3,4)     ~ "Urban city or town",
-      rural_urban_2020 %in% c(5,6,7,8) ~ "Rural town or village",
-      TRUE                             ~ NA_character_
-    ) %>%
-      factor() %>%
-      ff_label("Rural-urban classification"),
-
-    rural_urban_2021 = case_when(
-      rural_urban_2021 %in% c(1,2)     ~ "Urban conurbation",
-      rural_urban_2021 %in% c(3,4)     ~ "Urban city or town",
-      rural_urban_2021 %in% c(5,6,7,8) ~ "Rural town or village",
-      TRUE                             ~ NA_character_
-    ) %>%
-      factor() %>%
-      ff_label("Rural-urban classification"),
     
-    asthma = if_else(is.na(asthma_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Asthma"),
-    
-    cancer = if_else(is.na(cancer_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Cancer"),
-    
-    diabetes = if_else(is.na(diabetes_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Diabetes"),
-    
-    epilepsy = if_else(is.na(epilepsy_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Epilepsy"),
-    
-    severe_mental_illness = if_else(is.na(severe_mental_illness_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Severe mental illness"),
-    
-    cerebral_palsy = if_else(is.na(cerebral_palsy_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Cerebral palsy"),
-    
-    chronic_infections = if_else(is.na(chronic_infections_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Chronic infections"),
-    
-    devices_and_stomas = if_else(is.na(devices_and_stomas_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Devices and stomas"),
-    
-    endocrine_disorders = if_else(is.na(endocrine_disorders_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Endocrine disorders"),
-    
-    gastrointestinal_disorders = if_else(is.na(gastrointestinal_disorders_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Gastrointestinal disorders"),
-    
-    haematological_disorders = if_else(is.na(haematological_disorders_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Haematological disorders"),
-    
-    immunological_disorders = if_else(is.na(immunological_disorders_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Immunological disorders"),
-    
-    learning_and_behaviour_difficulties = if_else(is.na(learning_and_behaviour_difficulties_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Learning and behavioural difficulties"),
-    
-    mental_illness = if_else(is.na(mental_illness_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Mental illness"),
-    
-    musculoskeletal_and_rheum = if_else(is.na(musculoskeletal_and_rheum_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Musculoskeletal and rheumatic diseases"),
-    
-    transplant = if_else(is.na(transplant_first_date), "No", "Yes") %>%
-      factor() %>%
-      ff_label("Transplant"),
-  )
+    shielding = if_else(is.na(shielding_first_date), "No", "Yes") %>% 
+      factor() %>% 
+      ff_label("COVID-19 shielding")
+  ) %>% 
+  calc_indexed_variables(ymd("2019-01-01"))
 
 # Covid status, counts and test dates ----
 ## First positive test date ----
