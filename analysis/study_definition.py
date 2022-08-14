@@ -271,6 +271,25 @@ study = StudyDefinition(
         },
     ),
 
+    #############
+    # Shielding #
+    #############
+
+    shielding_first_date=patients.with_these_clinical_events(
+        combine_codelists(
+            shielding_codes
+        ),
+        on_or_before=end_date,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        find_first_match_in_period=True,
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.05
+        }
+    ),
+
     ##############
     # Conditions #
     ##############
@@ -287,7 +306,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -302,7 +321,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -318,7 +337,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -333,7 +352,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -349,7 +368,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -364,7 +383,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -380,7 +399,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -395,7 +414,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -411,7 +430,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -426,7 +445,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -442,7 +461,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -457,7 +476,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -504,7 +523,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -519,7 +538,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -535,7 +554,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -550,7 +569,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -566,7 +585,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -581,7 +600,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -597,7 +616,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -612,7 +631,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -628,7 +647,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -643,7 +662,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -659,7 +678,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -674,7 +693,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -690,7 +709,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -705,7 +724,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -721,7 +740,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -736,7 +755,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -752,7 +771,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -767,7 +786,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "2015-01-01", "latest": end_date},
             "rate": "uniform",
-            "incidence": 0.05
+            "incidence": 0.3
         }
     ),
 
@@ -824,7 +843,7 @@ study = StudyDefinition(
     # Date of 2nd covid-19 vaccination
     vax_covid_date_2=patients.with_tpp_vaccination_record(
         target_disease_matches="SARS-2 CORONAVIRUS",
-        between=["vax_covid_date_1 + 1 day", end_date],
+        between=["vax_covid_date_1 + 19 days", end_date],
         find_first_match_in_period=True,
         returning="date",
         date_format="YYYY-MM-DD",
@@ -838,7 +857,7 @@ study = StudyDefinition(
     # Date of 3rd covid-19 vaccination
     vax_covid_date_3=patients.with_tpp_vaccination_record(
         target_disease_matches="SARS-2 CORONAVIRUS",
-        between=["vax_covid_date_2 + 1 day", end_date],
+        between=["vax_covid_date_2 + 56 day", end_date],
         find_first_match_in_period=True,
         returning="date",
         date_format="YYYY-MM-DD",
