@@ -242,8 +242,8 @@ actions:
 
   process_gp_data:
     run: r:latest analysis/02_process_gp_data.R
-    needs: [generate_gp_disorder, generate_gp_finding, generate_gp_procedure, generate_gp_regime_therapy,
-            generate_gp_specimen, process_patient_ids]
+    needs: [generate_gp_disorder, generate_gp_finding, generate_gp_observable_entity, generate_gp_procedure,
+            generate_gp_regime_therapy, generate_gp_specimen, process_patient_ids]
     outputs:
       highly_sensitive:
         data_gp: output/data/data_gp.rds
