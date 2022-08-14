@@ -12,6 +12,12 @@
       "downloaded_at": "2022-05-24 10:57:53.733295Z",
       "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
     },
+    "primis-covid19-vacc-uptake-shield.csv": {
+      "id": "primis-covid19-vacc-uptake/shield/v.1.5.3",
+      "url": "https://codelists.opensafely.org/codelist/primis-covid19-vacc-uptake/shield/v.1.5.3/",
+      "downloaded_at": "2022-08-14 13:14:50.474512Z",
+      "sha": "7edf08877d201478d4f794edb4d4dfe1353cb095"
+    },
     "user-kate-mansfield-central-nervous-system-finding-all-descendants.csv": {
       "id": "user/kate-mansfield/central-nervous-system-finding-all-descendants/10864777",
       "url": "https://codelists.opensafely.org/codelist/user/kate-mansfield/central-nervous-system-finding-all-descendants/10864777/",
