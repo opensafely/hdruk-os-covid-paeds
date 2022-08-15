@@ -247,7 +247,7 @@ calc_vaccination_status = function(.data_patient, index_date){
   .data_patient %>% 
     mutate(
       vaccination_status = case_when(
-        (vax_covid_date_1 + days(14) < index_date) ~ "Yes",
+        (vax_covid_date_1 + days(21) < index_date) ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
