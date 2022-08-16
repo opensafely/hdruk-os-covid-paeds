@@ -67,6 +67,14 @@ calc_comorbidity_status = function(.data_patient, index_date){
         factor() %>%
         ff_label("Cancer"),
       
+      cystic_fibrosis = case_when(
+        (cystic_fibrosis_first_date < index_date) &
+          ((cystic_fibrosis_last_date + years(5)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Cystic fibrosis"),
+      
       diabetes = case_when(
         (diabetes_first_date < index_date) &
           ((diabetes_last_date + years(5)) >= index_date) ~ "Yes",
@@ -181,6 +189,7 @@ calc_comorbidity_status = function(.data_patient, index_date){
       comorbidity_count = rowSums(
         select(.,
                asthma, cancer, cerebral_palsy, chronic_infections,
+               cystic_fibrosis,
                devices_and_stomas, diabetes, endocrine_disorders,
                epilepsy, gastrointestinal_disorders,
                haematological_disorders, immunological_disorders,
