@@ -523,7 +523,7 @@ actions:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_mapped_4_laboratory_procedures_20*.csv.gz
 
-  generate_5_radiology_physics_in_medicine:
+  generate_gp_mapped_5_radiology_physics_in_medicine:
     run: >
       cohortextractor:latest generate_cohort
         --study-definition study_definition_gp_mapped_5_radiology_physics_in_medicine
@@ -618,7 +618,7 @@ actions:
             generate_gp_KM_visual_system, 
             generate_gp_mapped_0_occupations, generate_gp_mapped_1_history_symptoms,
             generate_gp_mapped_2_examination_signs, generate_gp_mapped_3_diagnostic_procedures,
-            generate_gp_mapped_4_laboratory_procedures, generate_5_radiology_physics_in_medicine,
+            generate_gp_mapped_4_laboratory_procedures, generate_gp_mapped_5_radiology_physics_in_medicine,
             generate_gp_mapped_6_preventive_procedures, generate_gp_mapped_7_operations_procedures_sites,
             generate_gp_mapped_8_other_therapeutic_procedures, generate_gp_mapped_9_administration,
             process_patient_ids]
