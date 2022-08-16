@@ -93,9 +93,9 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Rural-urban classification"),
     
-    shielding = if_else(is.na(shielding_first_date), "No", "Yes") %>% 
-      factor() %>% 
-      ff_label("COVID-19 shielding")
+    # shielding = if_else(is.na(shielding_first_date), "No", "Yes") %>% 
+    #   factor() %>% 
+    #   ff_label("COVID-19 shielding")
   ) %>% 
   calc_indexed_variables(ymd("2019-01-01"))
 
@@ -220,7 +220,7 @@ data_patient = data_patient %>%
     data_admissions %>%
       left_join(
         data_patient %>%
-          select(patient_id, covid_pos_test_date_1),
+          select(patient_id, covid_test_date_pos_tp),
         by = "patient_id") %>%
       mutate(
         covid_nosocomial = case_when(
@@ -228,8 +228,8 @@ data_patient = data_patient %>%
           (discharge_date - admission_date) < 7 ~ NA_character_,
           # Length of stay 7+ days: Nosocomial if positive after day 7 in hospital
           # and on or before day 7 following discharge, otherwise not nosocomial
-          (admission_date + days(7) < covid_pos_test_date_1) &
-            (discharge_date + days(7) >= covid_pos_test_date_1) ~ "Yes",
+          (admission_date + days(7) < covid_test_date_pos_tp) &
+            (discharge_date + days(7) >= covid_test_date_pos_tp) ~ "Yes",
           TRUE ~ NA_character_
         ) %>%
           ff_label("Nosocomial infection")) %>%
