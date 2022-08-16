@@ -15,8 +15,6 @@
 # Load packages ----
 library(tidyverse)
 library(lubridate)
-library(MatchIt)
-library(finalfit)
 
 # Load custom functions and lookup tables ----
 source(here::here("analysis", "00_utility_functions.R"))
@@ -25,9 +23,6 @@ source(here::here("analysis", "00_lookup_tables.R"))
 # Output directories ----
 dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "descriptives", "matched_cohort"), showWarnings = FALSE, recursive=TRUE)
-
-# Plot theme ----
-theme_set(theme_bw())
 
 # Load global variables ----
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
@@ -345,6 +340,7 @@ data_inclusion = data_inclusion %>%
       TRUE ~ TRUE
     ),
     not_in_hospital_test_match_date = case_when(
+      covid_status_tp == "Positive" ~ TRUE,
       not_in_hospital_neg_test == TRUE ~ TRUE,
       is_not_inhospital_untested == TRUE ~ TRUE,
       TRUE ~ FALSE
@@ -360,11 +356,11 @@ flowchart = data_inclusion %>%
     patient_id,
     covid_status_tp,
     c0 = TRUE,
-    c1 = c0 & not_nosocomial,
-    c2 = c1 & not_in_hospital_test_match_date,
-    c3 = c2 & no_discrepant_results,
+    c1 = c0 & no_discrepant_results,
+    c2 = c1 & not_nosocomial,
+    c3 = c2 & meets_age_criteria,
     c4 = c3 & alive_matched_date,
-    c5 = c4 & meets_age_criteria,
+    c5 = c4 & not_in_hospital_test_match_date,
     c6 = c5 & matched
   ) %>%
   select(-patient_id) %>%
@@ -388,11 +384,11 @@ flowchart = data_inclusion %>%
     crit = str_extract(criteria, "^c\\d+"),
     criteria = fct_case_when(
       crit == "c0" ~ "OpenSAFELY extract: Registered with GP, alive, with age >0 and <18 years on 01 January 2019",
-      crit == "c1" ~ "-  with no probable nosocomial infection",
-      crit == "c2" ~ "-  not hospitalised on day of matching/negative RT-PCR test result",
-      crit == "c3" ~ "-  with no same-day discrepant RT-PCR test result",
+      crit == "c1" ~ "-  with no same-day discrepant RT-PCR test result",
+      crit == "c2" ~ "-  with no probable nosocomial infection",
+      crit == "c3" ~ "-  with age between 4 and 17 years inclusive on test/matched date",
       crit == "c4" ~ "-  is alive on test/matched date",
-      crit == "c5" ~ "-  with age between 4 and 17 years inclusive on test/matched date",
+      crit == "c5" ~ "-  not hospitalised on day of matching/negative RT-PCR test result",
       crit == "c6" ~ "-  successfully matched with negative:untested:positive of 5:5:1",
       TRUE ~ NA_character_
     )
