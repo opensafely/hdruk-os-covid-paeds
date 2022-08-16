@@ -132,7 +132,7 @@ explanatory_var = c(
   "rural_urban_2019",
   
   # Shielding
-  #"shielding",
+  "shielding",
   
   # Comorbidities
   "comorbidity_count.factor",
