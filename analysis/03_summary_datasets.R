@@ -33,37 +33,21 @@ data_gp = read_rds(here::here("output", "data", "data_gp.rds"))
 
 dependent = "covid_status_tp"
 explanatory = c(
-  "age_2019",
-  "age_2019_factor",
-  "sex",
-  "ethnicity",
-  "imd_Q5_2019",
-  "region_2019",
+  # Demographics
+  "age", "age_group", "sex", "ethnicity", "imd_Q5_2019", "region_2019",
   "rural_urban_2019",
   
-  "covid_status_fup",
-  "covid_test_neg_tp_count",
-  "covid_test_pos_tp_count",
-  "covid_test_neg_fup_count",
-  "covid_test_pos_fup_count",
+  # Shielding
+  "shielding",
   
-  "asthma",
-  "cancer",
-  "cerebral_palsy",
-  "chronic_infections",
-  "cystic_fibrosis",
-  "devices_and_stomas",
-  "diabetes",
-  "endocrine_disorders",
-  "epilepsy",
-  "gastrointestinal_disorders",
-  "haematological_disorders",
-  "immunological_disorders",
-  "learning_and_behaviour_difficulties",
-  "mental_illness",
-  "musculoskeletal_and_rheum",
-  "severe_mental_illness",
-  "transplant"
+  # Comorbidities
+  "comorbidity_count.factor",
+  "asthma", "cancer", "cerebral_palsy", "chronic_infections",
+  "devices_and_stomas", "diabetes", "endocrine_disorders",
+  "epilepsy", "gastrointestinal_disorders", "haematological_disorders",
+  "immunological_disorders", "learning_and_behaviour_difficulties",
+  "mental_illness", "musculoskeletal_and_rheum",
+  "severe_mental_illness", "transplant"
   
 )
 
