@@ -1,0 +1,300 @@
+version: '3.0'
+
+expectations:
+  population_size: 10000
+
+actions:
+
+  generate_study_population:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input.csv.gz
+
+  generate_dummy_data:
+    run: r:latest analysis/01_generate_dummy_data.R
+    needs: [generate_study_population]
+    outputs:
+      highly_sensitive:
+        dummy_data_admissions: output/dummy_data/dummy_data_admissions.csv.gz
+        dummy_data_outpatient: output/dummy_data/dummy_data_outpatient.csv.gz
+        dummy_data_gp: output/dummy_data/dummy_data_gp.csv.gz
+        dummy_data_testing_negative: output/dummy_data/dummy_data_testing_negative.csv.gz
+        dummy_data_testing_positive: output/dummy_data/dummy_data_testing_positive.csv.gz
+
+  generate_admissions:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_admissions
+        --index-date-range "2018-10-01 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_admissions.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_admissions: output/data_weekly/input_admissions_20*.csv.gz
+
+  generate_outpatient:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_20*.csv.gz
+
+  generate_gp_disorder:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_disorder
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_disorder_20*.csv.gz
+
+  generate_gp_finding:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_finding
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_finding_20*.csv.gz
+
+  generate_gp_procedure:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_procedure
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_procedure_20*.csv.gz
+
+  generate_gp_regime_therapy:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_regime_therapy
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_regime_therapy_20*.csv.gz
+
+  generate_gp_observable_entity:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_observable_entity
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_observable_entity_20*.csv.gz
+
+  generate_gp_specimen:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_specimen
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_specimen_20*.csv.gz
+
+  generate_gp_pres_cancer:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_presentation_cancer
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_presentation_cancer_20*.csv.gz
+
+  generate_gp_pres_infectious_disease:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_presentation_infectious_disease
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_presentation_infectious_disease_20*.csv.gz
+
+  generate_gp_pres_mental_health:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_presentation_mental_health
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_presentation_mental_health_20*.csv.gz
+
+  generate_gp_pres_respiratory_system:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_presentation_respiratory_system
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_presentation_respiratory_system_20*.csv.gz
+
+  generate_covid_tests_negative:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_covid_tests_negative
+        --index-date-range "2019-12-30 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_testing_negative.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_negative_tests: output/data_weekly/input_covid_tests_negative_20*.csv.gz
+
+  generate_covid_tests_positive:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_covid_tests_positive
+        --index-date-range "2019-12-30 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+    dummy_data_file: output/dummy_data/dummy_data_testing_positive.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_positive_tests: output/data_weekly/input_covid_tests_positive_20*.csv.gz
+
+  process_patient_ids:
+    run: r:latest analysis/02_process_patient_ids.R
+    needs: [generate_study_population]
+    outputs:
+      highly_sensitive:
+        data_id: output/data/data_id.rds
+
+  process_admissions_data:
+    run: r:latest analysis/02_process_admissions_data.R
+    needs: [generate_admissions, process_patient_ids]
+    outputs:
+      highly_sensitive:
+        data_admissions: output/data/data_admissions.rds
+      moderately_sensitive:
+        diagnostics_admissions: output/diagnostics/diagnostics_admissions.csv
+
+  process_outpatient_data:
+    run: r:latest analysis/02_process_outpatient_data.R
+    needs: [generate_outpatient, process_patient_ids]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data/data_outpatient.rds
+      moderately_sensitive:
+        diagnostics_outpatient: output/diagnostics/diagnostics_outpatient.csv
+
+  process_gp_data:
+    run: r:latest analysis/02_process_gp_data.R
+    needs: [generate_gp_disorder, generate_gp_finding, generate_gp_observable_entity, generate_gp_procedure,
+            generate_gp_regime_therapy, generate_gp_specimen, process_patient_ids]
+    outputs:
+      highly_sensitive:
+        data_gp: output/data/data_gp.rds
+      moderately_sensitive:
+        diagnostics_gp: output/diagnostics/diagnostics_gp.csv
+
+  process_testing_data:
+    run: r:latest analysis/02_process_testing_data.R
+    needs: [generate_covid_tests_negative, generate_covid_tests_positive, process_patient_ids]
+    outputs:
+      highly_sensitive:
+        data_testing: output/data/data_testing.rds
+      moderately_sensitive:
+        diagnostics_testing: output/diagnostics/diagnostics_testing.csv
+        plots_testing: output/descriptives/data_testing/*.jpeg
+
+  process_patient_data:
+    run: r:latest analysis/02_process_patient_data.R
+    needs: [generate_study_population, process_admissions_data, process_testing_data]
+    outputs:
+      highly_sensitive:
+        data_patient: output/data/data_patient.rds
+
+  summarise_datasets:
+    run: r:latest analysis/03_summary_datasets.R
+    needs: [process_patient_data, process_testing_data, process_admissions_data, process_outpatient_data, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        summary_datasets_tables: output/descriptives/summary_datasets/*.csv
+        summary_datasets_plots: output/descriptives/summary_datasets/*.jpeg
+
+  calculate_epi_stats:
+    run: r:latest analysis/04_epidemiology.R
+    needs: [process_patient_data]
+    outputs:
+      moderately_sensitive:
+        summary_datasets_tables: output/descriptives/epidemiology/*.csv
+        summary_datasets_plots: output/descriptives/epidemiology/*.jpeg
+
+  healthcare_use_2019_2022:
+    run: r:latest analysis/05_healthcare_use_2019_2022.R
+    needs: [process_patient_data, process_testing_data, process_admissions_data, process_outpatient_data, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        healthcare_use_2019_2022_tables: output/descriptives/healthcare_use_2019_2022/*.csv
+
+  create_matched_cohort:
+    run: r:latest analysis/06_matched_cohort.R
+    needs: [process_patient_data, process_testing_data, process_admissions_data]
+    outputs:
+      highly_sensitive:
+        data_matched: output/data/data_matched.rds
+      moderately_sensitive:
+        create_matched_cohort_tables: output/descriptives/matched_cohort/*.csv
