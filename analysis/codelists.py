@@ -19,6 +19,68 @@ shielding_codes = codelist_from_csv(
     column="code",
 )
 
+snomed_mapped_0_occupations = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_0_occupations.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_1_history_symptoms = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_1_history_symptoms.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_2_examination_signs = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_2_examination_signs.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_3_diagnostic_procedures = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_3_diagnostic_procedures.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_4_laboratory_procedures = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_4_laboratory_procedures.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_5_radiology_physics_in_medicine = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_5_radiology_physics_in_medicine.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_6_preventive_procedures = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_6_preventive_procedures.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_7_operations_procedures_sites = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_7_operations_procedures_sites.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_8_other_therapeutic_procedures = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_8_other_therapeutic_procedures.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+snomed_mapped_9_administration = codelist_from_csv(
+    "analysis/codelists/snomed_mapped_9_administration.csv",
+    system="snomed",
+    column="conceptId",
+)
+
+
+
 snomed_disorder = codelist_from_csv(
     "analysis/codelists/snomed-disorder.csv",
     system="snomed",
@@ -54,6 +116,8 @@ snomed_specimen = codelist_from_csv(
     system="snomed",
     column="code",
 )
+
+
 
 snomed_asthma = codelist_from_csv(
     "analysis/codelists/SNOMED_athma_disorders.csv",
@@ -157,13 +221,15 @@ snomed_transplant = codelist_from_csv(
     column="code",
 )
 
-snomed_KM_nervous_system = codelist_from_csv(
+
+
+snomed_KM_central_nervous_system = codelist_from_csv(
     "codelists/user-kate-mansfield-central-nervous-system-finding-all-descendants.csv",
     system="snomed",
     column="code",
 )
 
-snomed_KM_pregnancy_complication = codelist_from_csv(
+snomed_KM_pregnancy_childbirth = codelist_from_csv(
     "codelists/user-kate-mansfield-complication-of-pregnancy-childbirth-andor-the-puerperium-all-descendants.csv",
     system="snomed",
     column="code",
@@ -307,7 +373,7 @@ snomed_KM_poisoning = codelist_from_csv(
     column="code",
 )
 
-snomed_KM_injury = codelist_from_csv(
+snomed_KM_traumatic_injury = codelist_from_csv(
     "codelists/user-kate-mansfield-traumatic-andor-non-traumatic-injury-all-descendants.csv",
     system="snomed",
     column="code",
