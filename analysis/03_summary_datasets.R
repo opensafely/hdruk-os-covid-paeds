@@ -51,6 +51,7 @@ explanatory = c(
   "cancer",
   "cerebral_palsy",
   "chronic_infections",
+  "cystic_fibrosis",
   "devices_and_stomas",
   "diabetes",
   "endocrine_disorders",
