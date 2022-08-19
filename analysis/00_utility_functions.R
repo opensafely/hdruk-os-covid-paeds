@@ -298,6 +298,40 @@ ff_round_counts = function (.data, accuracy = 15, ignore = c("label", "levels", 
   return(df.out)
 }
 
+# icd10_code_to_chapter: 
+icd10_code_to_chapter = function(icd10_code){
+  case_when(
+    str_sub(icd10_code, 1,1) == "A" ~ "01: Infectious and parasitic diseases",
+    str_sub(icd10_code, 1,1) == "B" ~ "01: Infectious and parasitic diseases",
+    str_sub(icd10_code, 1,1) == "C" ~ "02: Neoplasms",
+    str_sub(icd10_code, 1,3) %in% sprintf("%s%02d", "D",  0:49) ~ "02: Neoplasms",
+    str_sub(icd10_code, 1,3) %in% sprintf("%s%02d", "D",  50:89) ~ "03: Diseases of the blood",
+    str_sub(icd10_code, 1,1) == "E" ~ "04: Endocrine, nutritional and metabolic",
+    str_sub(icd10_code, 1,1) == "F" ~ "05: Mental and behavioural disorders",
+    str_sub(icd10_code, 1,1) == "G" ~ "06: Nervous system",
+    str_sub(icd10_code, 1,3) %in% sprintf("%s%02d", "H",  0:59) ~ "07: Eye and adnexa",
+    str_sub(icd10_code, 1,3) %in% sprintf("%s%02d", "H",  60:95) ~ "08: Ear and mastoid process",
+    str_sub(icd10_code, 1,1) == "I" ~ "09: Circulatory system",
+    str_sub(icd10_code, 1,1) == "J" ~ "10: Respiratory system",
+    str_sub(icd10_code, 1,1) == "K" ~ "11: Digestive system",
+    str_sub(icd10_code, 1,1) == "L" ~ "12: Skin and subcutaneous tissue",
+    str_sub(icd10_code, 1,1) == "M" ~ "13: Musculoskeletal and connective tissue",
+    str_sub(icd10_code, 1,1) == "N" ~ "14: Genitourinary system",
+    str_sub(icd10_code, 1,1) == "O" ~ "15: Pregnancy, childbirth and the puerperium",
+    str_sub(icd10_code, 1,1) == "P" ~ "16: Conditions in the perinatal period",
+    str_sub(icd10_code, 1,1) == "Q" ~ "17: Congenital malformations",
+    str_sub(icd10_code, 1,1) == "R" ~ "18: Abnormal clinical and laboratory findings",
+    str_sub(icd10_code, 1,1) == "S" ~ "19: Injury and poisoning",
+    str_sub(icd10_code, 1,1) == "T" ~ "19: Injury and poisoning",
+    str_sub(icd10_code, 1,1) == "V" ~ "20: External causes",
+    str_sub(icd10_code, 1,1) == "W" ~ "20: External causes",
+    str_sub(icd10_code, 1,1) == "X" ~ "20: External causes",
+    str_sub(icd10_code, 1,1) == "Y" ~ "20: External causes",
+    str_sub(icd10_code, 1,1) == "Z" ~ "21: Factors influencing health status",
+    str_sub(icd10_code, 1,1) == "U" ~ "22: Codes for special purposes",
+  )
+}
+
 # read_column_type: read column name to determine column data type
 read_column_type = function(file){
   
