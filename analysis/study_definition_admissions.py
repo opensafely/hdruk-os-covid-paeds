@@ -64,6 +64,12 @@ def admitted_to_hospital_X(n):
         "category": {"ratios": {"100": 0.25, "173": 0.25, "212": 0.25, "I50": 0.25}},
                      "incidence": 0.95}
 
+    # Expectation for days in critical care
+    return_expectations_critical_care={
+        "int": {"distribution": "poisson", "mean": 0.1},
+                "incidence": 1}
+
+
     for i in range(1, n+1):
         if i == 1:
             variables = var_signature("admission_date_1", "date_admitted", "index_date", return_expectations_date_adm)
@@ -71,12 +77,14 @@ def admitted_to_hospital_X(n):
             variables.update(var_signature2("admission_method_1", "admission_method", "admission_date_1", return_expectations_method))
             variables.update(var_signature2("primary_diagnosis_1", "primary_diagnosis", "admission_date_1", return_expectations_diagnosis))
             variables.update(var_signature2("treatment_function_1", "admission_treatment_function_code", "admission_date_1", return_expectations_diagnosis))
+            variables.update(var_signature2("critical_care_days_1", "days_in_critical_care", "admission_date_1", return_expectations_critical_care))
         else:
             variables.update(var_signature(f"admission_date_{i}", "date_admitted", f"admission_date_{i-1} + 1 day", return_expectations_date_adm))
             variables.update(var_signature2(f"discharge_date_{i}", "date_discharged", f"admission_date_{i}", return_expectations_date_dis))
             variables.update(var_signature2(f"admission_method_{i}", "admission_method", f"admission_date_{i}", return_expectations_method))
             variables.update(var_signature2(f"primary_diagnosis_{i}", "primary_diagnosis", f"admission_date_{i}", return_expectations_diagnosis))
             variables.update(var_signature2(f"treatment_function_{i}", "admission_treatment_function_code", f"admission_date_{i}", return_expectations_diagnosis))
+            variables.update(var_signature2(f"critical_care_days_{i}", "days_in_critical_care", f"admission_date_{i}", return_expectations_critical_care))
     return variables
 
 
