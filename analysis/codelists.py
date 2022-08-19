@@ -384,3 +384,149 @@ snomed_KM_visual_system = codelist_from_csv(
     system="snomed",
     column="code",
 )
+
+
+
+treatment_function_cardiology = codelist_from_csv(
+    "analysis/codelists/treatment_function_cardiology.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_community_paediatrics = codelist_from_csv(
+    "analysis/codelists/treatment_function_community_paediatrics.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_dermatology = codelist_from_csv(
+    "analysis/codelists/treatment_function_dermatology.csv",
+    system=None,
+    column="code",
+)
+treatment_function_dietetics = codelist_from_csv(
+    "analysis/codelists/treatment_function_dietetics.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_endocrinology = codelist_from_csv(
+    "analysis/codelists/treatment_function_endocrinology.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_gastrointestinal = codelist_from_csv(
+    "analysis/codelists/treatment_function_gastrointestinal.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_general = codelist_from_csv(
+    "analysis/codelists/treatment_function_general.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_haematology = codelist_from_csv(
+    "analysis/codelists/treatment_function_haematology.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_immunology_and_allergy = codelist_from_csv(
+    "analysis/codelists/treatment_function_immunology_and_allergy.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_infectious_disease = codelist_from_csv(
+    "analysis/codelists/treatment_function_infectious_disease.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_mental_health = codelist_from_csv(
+    "analysis/codelists/treatment_function_mental_health.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_metabolic = codelist_from_csv(
+    "analysis/codelists/treatment_function_metabolic.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_neurology = codelist_from_csv(
+    "analysis/codelists/treatment_function_neurology.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_occupational_therapy = codelist_from_csv(
+    "analysis/codelists/treatment_function_occupational_therapy.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_oncology = codelist_from_csv(
+    "analysis/codelists/treatment_function_oncology.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_pain_management_and_palliative_care = codelist_from_csv(
+    "analysis/codelists/treatment_function_pain_management_and_palliative_care.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_physiology = codelist_from_csv(
+    "analysis/codelists/treatment_function_physiology.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_physiotherapy = codelist_from_csv(
+    "analysis/codelists/treatment_function_physiotherapy.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_post_covid_clinic = codelist_from_csv(
+    "analysis/codelists/treatment_function_post_covid_clinic.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_rehabilitation = codelist_from_csv(
+    "analysis/codelists/treatment_function_rehabilitation.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_renal = codelist_from_csv(
+    "analysis/codelists/treatment_function_renal.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_respiratory = codelist_from_csv(
+    "analysis/codelists/treatment_function_respiratory.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_rheumatology = codelist_from_csv(
+    "analysis/codelists/treatment_function_rheumatology.csv",
+    system=None,
+    column="code",
+)
+
+treatment_function_speech_and_language_therapy = codelist_from_csv(
+    "analysis/codelists/treatment_function_speech_and_language_therapy.csv",
+    system=None,
+    column="code",
+)
+
