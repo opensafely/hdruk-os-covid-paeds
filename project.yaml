@@ -49,6 +49,342 @@ actions:
       highly_sensitive:
         data_outpatient: output/data_weekly/input_outpatient_20*.csv.gz
 
+  generate_outpatient_TF_cardiology:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_cardiology
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_cardiology_20*.csv.gz
+
+  generate_outpatient_TF_community_paediatrics:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_community_paediatrics
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_community_paediatrics_20*.csv.gz
+
+  generate_outpatient_TF_dermatology:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_dermatology
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_dermatology_20*.csv.gz
+
+  generate_outpatient_TF_dietetics:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_dietetics
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_dietetics_20*.csv.gz
+
+  generate_outpatient_TF_endocrinology:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_endocrinology
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_endocrinology_20*.csv.gz
+
+  generate_outpatient_TF_gastrointestinal:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_gastrointestinal
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_gastrointestinal_20*.csv.gz
+
+  generate_outpatient_TF_general:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_general
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_general_20*.csv.gz
+
+  generate_outpatient_TF_haematology:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_haematology
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_haematology_20*.csv.gz
+
+  generate_outpatient_TF_immunology_and_allergy:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_immunology_and_allergy
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_immunology_and_allergy_20*.csv.gz
+
+  generate_outpatient_TF_infectious_disease:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_infectious_disease
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_infectious_disease_20*.csv.gz
+
+  generate_outpatient_TF_mental_health:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_mental_health
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_mental_health_20*.csv.gz
+
+  generate_outpatient_TF_metabolic:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_metabolic
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_metabolic_20*.csv.gz
+
+  generate_outpatient_TF_neurology:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_neurology
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_neurology_20*.csv.gz
+
+  generate_outpatient_TF_occupational_therapy:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_occupational_therapy
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_occupational_therapy_20*.csv.gz
+
+  generate_outpatient_TF_oncology:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_oncology
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_oncology_20*.csv.gz
+
+  generate_outpatient_TF_pain_management_and_palliative_care:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_pain_management_and_palliative_care
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_pain_management_and_palliative_care_20*.csv.gz
+
+  generate_outpatient_TF_physiology:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_physiology
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_physiology_20*.csv.gz
+
+  generate_outpatient_TF_physiotherapy:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_physiotherapy
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_physiotherapy_20*.csv.gz
+
+  generate_outpatient_TF_post_covid_clinic:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_post_covid_clinic
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_post_covid_clinic_20*.csv.gz
+
+  generate_outpatient_TF_rehabilitation:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_rehabilitation
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_rehabilitation_20*.csv.gz
+
+  generate_outpatient_TF_renal:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_renal
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_renal_20*.csv.gz
+
+  generate_outpatient_TF_respiratory:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_respiratory
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_respiratory_20*.csv.gz
+
+  generate_outpatient_TF_rheumatology:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_rheumatology
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_rheumatology_20*.csv.gz
+
+  generate_outpatient_TF_speech_and_language_therapy:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_outpatient_TF_speech_and_language_therapy
+        --index-date-range "2019-03-11 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_outpatient.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data_weekly/input_outpatient_TF_speech_and_language_therapy_20*.csv.gz
+
   generate_covid_tests_negative:
     run: >
       cohortextractor:latest generate_cohort
