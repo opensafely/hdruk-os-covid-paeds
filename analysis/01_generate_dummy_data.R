@@ -60,42 +60,49 @@ dummy_data_admissions = data_patient %>%
     admission_method_1 = sample(admission_method, nrow(data_patient), replace = TRUE),
     primary_diagnosis_1 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
     treatment_function_1 = sample(treatment_function, nrow(data_patient), replace = TRUE),
+    critical_care_days_1 = rpois(nrow(data_patient), 0.1),
     admission_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_2 = sample(date_range, nrow(data_patient), replace = TRUE),
     admission_method_2 = sample(admission_method, nrow(data_patient), replace = TRUE),
     primary_diagnosis_2 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
     treatment_function_2 = sample(treatment_function, nrow(data_patient), replace = TRUE),
+    critical_care_days_2 = rpois(nrow(data_patient), 0.1),
     admission_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_3 = sample(date_range, nrow(data_patient), replace = TRUE),
     admission_method_3 = sample(admission_method, nrow(data_patient), replace = TRUE),
     primary_diagnosis_3 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
     treatment_function_3 = sample(treatment_function, nrow(data_patient), replace = TRUE),
+    critical_care_days_3 = rpois(nrow(data_patient), 0.1),
     admission_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_4 = sample(date_range, nrow(data_patient), replace = TRUE),
     admission_method_4 = sample(admission_method, nrow(data_patient), replace = TRUE),
     primary_diagnosis_4 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
     treatment_function_4 = sample(treatment_function, nrow(data_patient), replace = TRUE),
+    critical_care_days_4 = rpois(nrow(data_patient), 0.1),
     admission_date_5 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_5 = sample(date_range, nrow(data_patient), replace = TRUE),
     admission_method_5 = sample(admission_method, nrow(data_patient), replace = TRUE),
     primary_diagnosis_5 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
     treatment_function_5 = sample(treatment_function, nrow(data_patient), replace = TRUE),
+    critical_care_days_5 = rpois(nrow(data_patient), 0.1),
     admission_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_6 = sample(date_range, nrow(data_patient), replace = TRUE),
     admission_method_6 = sample(admission_method, nrow(data_patient), replace = TRUE),
     primary_diagnosis_6 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
     treatment_function_6 = sample(treatment_function, nrow(data_patient), replace = TRUE),
+    critical_care_days_6 = rpois(nrow(data_patient), 0.1),
     admission_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
     discharge_date_7 = sample(date_range, nrow(data_patient), replace = TRUE),
     admission_method_7 = sample(admission_method, nrow(data_patient), replace = TRUE),
     primary_diagnosis_7 = sample(primary_diagnosis, nrow(data_patient), replace = TRUE),
     treatment_function_7 = sample(treatment_function, nrow(data_patient), replace = TRUE),
+    critical_care_days_7 = rpois(nrow(data_patient), 0.1),
     patient_id = patient_id,
   )
 
 ## Make dates consecutive, create missing values based on incidence ----
 dummy_data_admissions = dummy_data_admissions %>%
-  mutate_at(vars(starts_with(c("admission_date", "discharge_date"))),
+  mutate_at(vars(starts_with(c("admission_date", "discharge_date", "critical_care_days"))),
             as.character) %>%
   pivot_longer(-patient_id,
                names_to = c("variable", "index"),
@@ -124,10 +131,10 @@ dummy_data_admissions = dummy_data_admissions %>%
 
 ## Ensure valid number of rows and columns ----
 dummy_data_admissions = tibble(
-  patient_id = unique(data_patient$patient_id) %>% rep(each = 5*n_admission),
+  patient_id = unique(data_patient$patient_id) %>% rep(each = 6*n_admission),
   var_name = rep(paste0(rep(c("admission_date_", "discharge_date_", "admission_method_",
-                              "primary_diagnosis_", "treatment_function_"), 7),
-                    rep(c(1:n_admission), each = 5)),
+                              "primary_diagnosis_", "treatment_function_", "critical_care_days_"), 7),
+                    rep(c(1:n_admission), each = 6)),
                  length(unique(data_patient$patient_id)))
 ) %>% 
   left_join(dummy_data_admissions) %>% 
