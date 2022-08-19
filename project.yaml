@@ -936,6 +936,15 @@ actions:
       highly_sensitive:
         data_id: output/data/data_id.rds
 
+  process_admissions_data:
+    run: r:latest analysis/02_process_admissions_data.R
+    needs: [generate_admissions, process_patient_ids]
+    outputs:
+      highly_sensitive:
+        data_admissions: output/data/data_admissions.rds
+      moderately_sensitive:
+        diagnostics_admissions: output/diagnostics/diagnostics_admissions.csv
+
   process_gp_data:
     run: r:latest analysis/02_process_gp_data.R
     needs: [generate_gp_KM_auditory_system, generate_gp_KM_cardiovascular_system,
@@ -963,3 +972,41 @@ actions:
         data_gp: output/data/data_gp.rds
       moderately_sensitive:
         diagnostics_gp: output/diagnostics/diagnostics_gp.csv
+
+  process_outpatient_data:
+    run: r:latest analysis/02_process_outpatient_data.R
+    needs: [generate_outpatient,
+            generate_outpatient_TF_cardiology, generate_outpatient_TF_community_paediatrics,
+            generate_outpatient_TF_dermatology, generate_outpatient_TF_dietetics,
+            generate_outpatient_TF_endocrinology, generate_outpatient_TF_gastrointestinal,
+            generate_outpatient_TF_general, generate_outpatient_TF_haematology,
+            generate_outpatient_TF_immunology_and_allergy, generate_outpatient_TF_infectious_disease,
+            generate_outpatient_TF_mental_health, generate_outpatient_TF_metabolic,
+            generate_outpatient_TF_neurology, generate_outpatient_TF_occupational_therapy,
+            generate_outpatient_TF_oncology, generate_outpatient_TF_pain_management_and_palliative_care,
+            generate_outpatient_TF_physiology, generate_outpatient_TF_physiotherapy,
+            generate_outpatient_TF_post_covid_clinic, generate_outpatient_TF_rehabilitation,
+            generate_outpatient_TF_renal, generate_outpatient_TF_respiratory,
+            generate_outpatient_TF_rheumatology, generate_outpatient_TF_speech_and_language_therapy,
+            process_patient_ids]
+    outputs:
+      highly_sensitive:
+        data_outpatient: output/data/data_outpatient.rds
+      moderately_sensitive:
+        diagnostics_outpatient: output/diagnostics/diagnostics_outpatient.csv
+
+  process_testing_data:
+    run: r:latest analysis/02_process_testing_data.R
+    needs: [generate_covid_tests_negative, generate_covid_tests_positive, process_patient_ids]
+    outputs:
+      highly_sensitive:
+        data_testing: output/data/data_testing.rds
+      moderately_sensitive:
+        diagnostics_testing: output/diagnostics/diagnostics_testing.csv
+
+  process_patient_data:
+    run: r:latest analysis/02_process_patient_data.R
+    needs: [generate_study_population, process_admissions_data, process_testing_data]
+    outputs:
+      highly_sensitive:
+        data_patient: output/data/data_patient.rds
