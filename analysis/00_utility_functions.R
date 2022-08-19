@@ -329,6 +329,7 @@ icd10_code_to_chapter = function(icd10_code){
     str_sub(icd10_code, 1,1) == "Y" ~ "20: External causes",
     str_sub(icd10_code, 1,1) == "Z" ~ "21: Factors influencing health status",
     str_sub(icd10_code, 1,1) == "U" ~ "22: Codes for special purposes",
+    TRUE ~ NA_character_
   )
 }
 
