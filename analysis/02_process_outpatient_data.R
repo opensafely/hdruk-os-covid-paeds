@@ -16,8 +16,15 @@ dir.create(here::here("output", "descriptives", "data_outpatient"), showWarnings
 data_id = read_rds(here::here("output", "data", "data_id.rds"))
 
 # Data Files ----
-files_outpatient = list.files(path = here::here("output", "data_weekly"),
-                      pattern = "input_outpatient_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+files_outpatient_all = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_outpatient_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_outpatient_specialty = list.files(
+  path = here::here("output", "data_weekly"),
+  pattern = "input_outpatient_TF_[[:lower:]_]+_20\\d{2}-\\d{2}-\\d{2}.csv.gz")
+
+files_outpatient = c(files_outpatient_all, files_outpatient_specialty)
 
 # Read outpatient data from csv ----
 data_outpatient = here::here("output", "data_weekly", files_outpatient) %>%
@@ -79,7 +86,10 @@ data_outpatient = map2(
         outpatient_date = .file_list %>%
           str_extract(
             pattern = "20\\d{2}-\\d{2}-\\d{2}(?=\\.csv\\.gz)") %>% 
-          ymd() + days(index - 1)
+          ymd() + days(index - 1),
+        specialty = .file_list %>%
+          str_extract(
+            pattern = "(?<=input_outpatient_)[[:alnum:]_]+(?=_20\\d{2}-\\d{2}-\\d{2}\\.csv\\.gz)")
       ) %>% 
       select(-index)
   }) %>%
