@@ -6,6 +6,7 @@ library(finalfit)
 
 # Load custom functions ----
 source(here::here("analysis", "00_utility_functions.R"))
+source(here::here("analysis", "00_load_codelists.R"))
 
 # Load patient data from csv file ----
 data_patient = here::here("output", "input.csv.gz") %>% 
@@ -27,6 +28,46 @@ fup_start_date   = ymd(global_var$fup_start_date)
 
 # Create directory for processed data and diagnostics ----
 dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
+
+
+# Update first and last comorbidity dates with info from admissions data ----
+data_patient = icd_10_codelist %>% 
+  map2(as.list(names(icd_10_codelist)), function(.icd_10_codelist, .comorb_vars){
+
+    
+    # Filter for admissions with primary diagnosis in codelist ----
+    icd_10_first_last_dates = data_admissions %>%
+      filter(primary_diagnosis %in% .icd_10_codelist) %>%
+      group_by(patient_id) %>%
+      # Extract first/last ----
+      summarise(
+        icd10_first_date = first(admission_date),
+        icd10_last_date = last(admission_date)
+      )
+    
+    # Comorbidity first and last date variable names
+    snomed_first_date = paste0(.comorb_vars, "_first_date")
+    snomed_last_date  = paste0(.comorb_vars, "_last_date")
+    
+    data_patient %>%
+      select(patient_id, snomed_first_date = all_of(snomed_first_date),
+             snomed_last_date = all_of(snomed_last_date)) %>% 
+      left_join(icd_10_first_last_dates, by = "patient_id") %>% 
+      mutate(
+        # Select minimum first date and max for last date
+        new_first_date = pmin(snomed_first_date, icd10_first_date, na.rm = TRUE),
+        new_last_date  = pmax(snomed_last_date,  icd10_last_date,  na.rm = TRUE),
+       ) %>%
+      select(-c(snomed_first_date, snomed_last_date, icd10_first_date, icd10_last_date)) %>%
+      rename({{snomed_first_date}} := new_first_date,
+             {{snomed_last_date}} := new_last_date)
+   }) %>% 
+  reduce(full_join, by = "patient_id") %>% 
+  right_join(
+    data_patient %>% 
+      select(-contains(names(icd_10_codelist))),
+    by = "patient_id"
+  )
 
 # Create factors and label variables -----
 data_patient = data_patient %>%
@@ -93,9 +134,9 @@ data_patient = data_patient %>%
       factor() %>%
       ff_label("Rural-urban classification"),
     
-    # shielding = if_else(is.na(shielding_first_date), "No", "Yes") %>% 
-    #   factor() %>% 
-    #   ff_label("COVID-19 shielding")
+     shielding = if_else(is.na(shielding_first_date), "No", "Yes") %>% 
+       factor() %>% 
+       ff_label("COVID-19 shielding")
   ) %>% 
   calc_indexed_variables(ymd("2019-01-01"))
 
