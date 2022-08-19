@@ -29,12 +29,10 @@ fup_start_date   = ymd(global_var$fup_start_date)
 # Create directory for processed data and diagnostics ----
 dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 
-
 # Update first and last comorbidity dates with info from admissions data ----
 data_patient = icd_10_codelist %>% 
   map2(as.list(names(icd_10_codelist)), function(.icd_10_codelist, .comorb_vars){
 
-    
     # Filter for admissions with primary diagnosis in codelist ----
     icd_10_first_last_dates = data_admissions %>%
       filter(primary_diagnosis %in% .icd_10_codelist) %>%
