@@ -18,8 +18,18 @@ dir.create(here::here("output", "descriptives", "summary_datasets"), showWarning
 # Plot theme ----
 theme_set(theme_bw())
 
+# Load global variables ----
+global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
+
+# Study dates ----
+study_start_date = ymd(global_var$start_date)
+study_end_date   = ymd(global_var$end_date)
+tp_start_date    = ymd(global_var$tp_start_date)
+tp_end_date      = ymd(global_var$tp_end_date)
+fup_start_date   = ymd(global_var$fup_start_date)
+
 # Disclosure control parameters ----
-count_round = 15
+count_round = global_var$disclosure_count_round
 
 # Load datasets ----
 data_patient = read_rds(here::here("output", "data", "data_patient.rds"))
@@ -42,7 +52,7 @@ explanatory = c(
   
   # Comorbidities
   "comorbidity_count.factor",
-  "asthma", "cancer", "cerebral_palsy", "chronic_infections",
+  "asthma", "cancer", "cerebral_palsy", "chronic_infections", "cystic_fibrosis",
   "devices_and_stomas", "diabetes", "endocrine_disorders",
   "epilepsy", "gastrointestinal_disorders", "haematological_disorders",
   "immunological_disorders", "learning_and_behaviour_difficulties",
@@ -102,20 +112,9 @@ ggsave("plot_weekly_testing_by_result.jpeg",
 ## Combine with lookup table ----
 ### Primary diagnosis ----
 data_admissions = data_admissions %>%
-  left_join(
-    lookup_icd10 %>%
-      mutate(
-        code = code %>% ff_label("Primary diagnosis"),
-        description_short = description_short %>% ff_label("Primary diagnosis"),
-        chapter_short = chapter_short %>% ff_label("Primary diagnosis"),
-      ) %>% 
-      select(
-        primary_diagnosis = code,
-        primary_diagnosis.description = description_short,
-        primary_diagnosis.chapter = chapter_short
-      ),
-    by = "primary_diagnosis"
-  )
+  mutate(primary_diagnosis.chapter = primary_diagnosis %>% 
+           icd10_code_to_chapter() %>% 
+           ff_label("Primary diagnosis"))
 
 ### Treatment function ----
 data_admissions = data_admissions %>%
@@ -355,8 +354,9 @@ ggsave("plot_length_of_stay.jpeg",
 
 
 # Outpatient Appointments ----
-
-tbl_weekly_outpatient = data_outpatient %>% 
+## All ----
+tbl_weekly_outpatient = data_outpatient %>%
+  filter(is.na(specialty)) %>% 
   mutate(
     date = outpatient_date %>% cut(breaks = "week")
   ) %>%
@@ -387,9 +387,43 @@ ggsave("plot_weekly_outpatient.jpeg",
        path = here::here("output", "descriptives", "summary_datasets"),
        height = 5, width = 7)
 
+## By specialty ----
+tbl_weekly_outpatient_specialty = data_outpatient %>%
+  filter(!is.na(specialty)) %>% 
+  mutate(
+    date = outpatient_date %>% cut(breaks = "week")
+  ) %>%
+  group_by(date, specialty) %>% 
+  summarise(
+    n = sum(outpatient_count)
+  ) %>%
+  ungroup() %>% 
+  mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
+         date = date %>% as_date(),
+         n = n %>% plyr::round_any(count_round))
+
+write_csv(tbl_weekly_outpatient_specialty, 
+          here::here("output", "descriptives", "summary_datasets",
+                     "tbl_weekly_outpatient_specialty.csv"))
+
+plot_weekly_outpatient_specialty = tbl_weekly_outpatient_specialty %>% 
+  ggplot(aes(date, n)) +
+  geom_col() +
+  geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
+  scale_x_date(labels = date_format("%b\n%Y"),
+               breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "3 month")) +
+  labs(y = "Weekly count", x = NULL, linetype = NULL) +
+  theme(legend.position = "bottom") +
+  facet_wrap(~ specialty, ncol = 4)
+
+ggsave("plot_weekly_outpatient.jpeg",
+       plot_weekly_outpatient,
+       path = here::here("output", "descriptives", "summary_datasets"),
+       height = 5, width = 7)
+
 
 # GP Records ----
-# Weekly contact-day count ----
+## Weekly contact-day count ----
 tbl_weekly_gp = data_gp %>%
   distinct(patient_id, gp_date) %>% 
   mutate(
@@ -417,41 +451,77 @@ ggsave("plot_weekly_gp.jpeg",
        path = here::here("output", "descriptives", "summary_datasets"),
        height = 5, width = 7)
 
-# Weekly contact-day count by Snomed tag ----
-tbl_weekly_gp_by_snomed_tag = data_gp %>% 
+## Weekly contact-day count by disorder ----
+tbl_weekly_gp_by_disorder = data_gp %>%
+  filter(str_starts(code_type, "KM_")) %>% 
   mutate(
     date = gp_date %>% cut(breaks = "week")
   ) %>% 
-  count(date, snomed_tag, .drop = FALSE) %>%
-  group_by(snomed_tag) %>% 
+  count(date, code_type, .drop = FALSE) %>%
+  group_by(code_type) %>% 
   mutate(
     roll_mean = rollmean(n, 4, align = "right", fill = NA)
   ) %>% 
   ungroup() %>% 
   mutate(date = date %>% as_date(),
-         snomed_tag = snomed_tag %>% 
+         code_type = code_type %>% 
            str_replace_all("_", " ") %>% 
            str_to_sentence(),
-         snomed_tag = if_else(snomed_tag == "Regime therapy",
-                              "Regime/therapy",
-                              snomed_tag),
          n = n %>% plyr::round_any(count_round))
 
-write_csv(tbl_weekly_gp, 
+write_csv(tbl_weekly_gp_by_disorder, 
           here::here("output", "descriptives", "summary_datasets",
-                     "tbl_weekly_gp_by_snomed_tag.csv"))
+                     "tbl_weekly_gp_by_disorder.csv"))
 
-plot_weekly_gp_by_snomed_tag = tbl_weekly_gp_by_snomed_tag %>% 
+plot_weekly_gp_by_disorder = tbl_weekly_gp_by_disorder %>% 
   ggplot(aes(date, n)) +
   geom_col() +
-  facet_wrap(~snomed_tag) +
+  facet_wrap(~code_type) +
   geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
   scale_x_date(labels = date_format("%b\n%Y"),
                breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-01-01"), by = "6 month")) +
   labs(y = "Weekly count", x = NULL, linetype = NULL) +
   theme(legend.position = "bottom")
 
-ggsave("plot_weekly_gp_by_snomed_tag.jpeg",
-       plot_weekly_gp_by_snomed_tag,
+ggsave("plot_weekly_gp_by_disorder.jpeg",
+       plot_weekly_gp_by_disorder,
        path = here::here("output", "descriptives", "summary_datasets"),
-       height = 7, width = 10)
+       height = 7, width = 12)
+
+
+## Weekly contact-day count by read chapter ----
+tbl_weekly_gp_by_chapter = data_gp %>%
+  filter(str_starts(code_type, "mapped_")) %>% 
+  mutate(
+    date = gp_date %>% cut(breaks = "week")
+  ) %>% 
+  count(date, code_type, .drop = FALSE) %>%
+  group_by(code_type) %>% 
+  mutate(
+    roll_mean = rollmean(n, 4, align = "right", fill = NA)
+  ) %>% 
+  ungroup() %>% 
+  mutate(date = date %>% as_date(),
+         code_type = code_type %>% 
+           str_replace_all("_", " ") %>% 
+           str_to_sentence(),
+         n = n %>% plyr::round_any(count_round))
+
+write_csv(tbl_weekly_gp_by_chapter, 
+          here::here("output", "descriptives", "summary_datasets",
+                     "tbl_weekly_gp_by_chapter.csv"))
+
+plot_weekly_gp_by_chapter = tbl_weekly_gp_by_chapter %>% 
+  ggplot(aes(date, n)) +
+  geom_col() +
+  facet_wrap(~code_type) +
+  geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
+  scale_x_date(labels = date_format("%b\n%Y"),
+               breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-01-01"), by = "6 month")) +
+  labs(y = "Weekly count", x = NULL, linetype = NULL) +
+  theme(legend.position = "bottom")
+
+ggsave("plot_weekly_gp_by_chapter.jpeg",
+       plot_weekly_gp_by_chapter,
+       path = here::here("output", "descriptives", "summary_datasets"),
+       height = 7, width = 12)
