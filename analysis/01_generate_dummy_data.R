@@ -39,10 +39,10 @@ date_range_testing = seq(tp_start_date, end_date, by="day")
 admission_method = c("11", "12", "13", "21", "22", "23", "24", "25", "2A", 
                      "2B", "2C", "2D", "28", "31", "32", "82", "83", "81")
 primary_diagnosis = paste0(
-  sample(LETTERS, 50, replace = TRUE),
-  sample(0:9, 50, replace = TRUE),
-  sample(0:9, 50, replace = TRUE),
-  sample(0:9, 50, replace = TRUE)
+  sample(LETTERS, 1000, replace = TRUE),
+  sample(0:9, 1000, replace = TRUE),
+  sample(0:9, 1000, replace = TRUE),
+  sample(0:9, 1000, replace = TRUE)
 )
 treatment_function = c("100", "101", "102", "110", "242", "260", "280", "321",
                        "180", "190", "192", "300", "301", "302", "361", "711")
