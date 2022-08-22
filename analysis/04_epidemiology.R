@@ -86,12 +86,14 @@ calc_epi_stats = function(index_date, data, condition, group = NULL, ...){
 }
 
 
-comorbidity_list = c("asthma", "cancer", "diabetes", "epilepsy", "severe_mental_illness",
-                     "cerebral_palsy", "chronic_infections", "devices_and_stomas",
-                     "endocrine_disorders", "gastrointestinal_disorders",
-                     "haematological_disorders", "immunological_disorders",
-                     "learning_and_behaviour_difficulties", "mental_illness",
-                     "musculoskeletal_and_rheum", "transplant")
+comorbidity_list = c(
+  "asthma", "cancer", "cerebral_palsy", "chronic_infections", "cystic_fibrosis",
+  "devices_and_stomas", "diabetes", "endocrine_disorders",
+  "epilepsy", "gastrointestinal_disorders", "haematological_disorders",
+  "immunological_disorders", "learning_and_behaviour_difficulties",
+  "mental_illness", "musculoskeletal_and_rheum",
+  "severe_mental_illness", "transplant"
+  )
 
 # Map each comorbidity to calc_epi_stats monthly ----
 epi_stats_by_condition =  comorbidity_list %>% 
