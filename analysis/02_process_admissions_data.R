@@ -111,7 +111,9 @@ data_admissions = data_admissions %>%
            .keep_all = TRUE) %>%
   group_by(patient_id) %>% 
   mutate(index = row_number()) %>% 
-  ungroup()
+  ungroup() %>% 
+  mutate(critical_care_days = critical_care_days %>% 
+           as.numeric())
 
 # Save data as rds ----
 write_rds(data_admissions,
