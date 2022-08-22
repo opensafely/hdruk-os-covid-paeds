@@ -163,7 +163,8 @@ data_patient = data_patient %>%
           TRUE ~ NA_character_
         ),
         result_period = paste0(result_abr, "_", test_period)
-      ) %>% 
+      ) %>%
+      filter(!is.na(test_period)) %>% 
       group_by(patient_id) %>% 
       count(result_period) %>% 
       pivot_wider(
