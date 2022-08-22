@@ -10,7 +10,7 @@ source(here::here("analysis", "00_utility_functions.R"))
 dir.create(here::here("output", "data"),
            showWarnings = FALSE, recursive=TRUE)
 
-dir.create(here::here("output", "descriptives", "machine_learning"),
+dir.create(here::here("output", "descriptives", "positives_resource_use"),
            showWarnings = FALSE, recursive=TRUE)
 
 # Load global variables ----
@@ -108,7 +108,7 @@ tbl_flowchart = flowchart %>%
 
 ## Save flowchart table ----
 write_csv(tbl_flowchart, 
-          here::here("output", "descriptives", "machine_learning",
+          here::here("output", "descriptives", "positives_resource_use",
                      "tbl_flowchart.csv"))
 
 
