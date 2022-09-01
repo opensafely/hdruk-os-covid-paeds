@@ -116,6 +116,14 @@ data_admissions = data_admissions %>%
            icd10_code_to_chapter() %>% 
            ff_label("Primary diagnosis"))
 
+data_admissions = data_admissions %>% 
+  left_join(
+    lookup_icd10 %>% 
+      select(primary_diagnosis = code,
+             primary_diagnosis.description = description_short),
+    by = "primary_diagnosis"
+  )
+
 ### Treatment function ----
 data_admissions = data_admissions %>%
   left_join(
@@ -391,7 +399,11 @@ ggsave("plot_weekly_outpatient.jpeg",
 tbl_weekly_outpatient_specialty = data_outpatient %>%
   filter(!is.na(specialty)) %>% 
   mutate(
-    date = outpatient_date %>% cut(breaks = "week")
+    date = outpatient_date %>% cut(breaks = "week"),
+    specialty = specialty %>% 
+      str_replace("TF_", "") %>%
+      str_replace_all("_", " ") %>% 
+      str_to_sentence()
   ) %>%
   group_by(date, specialty) %>% 
   summarise(
@@ -416,10 +428,10 @@ plot_weekly_outpatient_specialty = tbl_weekly_outpatient_specialty %>%
   theme(legend.position = "bottom") +
   facet_wrap(~ specialty, ncol = 4)
 
-ggsave("plot_weekly_outpatient.jpeg",
-       plot_weekly_outpatient,
+ggsave("plot_weekly_outpatient_specialty.jpeg",
+       plot_weekly_outpatient_specialty,
        path = here::here("output", "descriptives", "summary_datasets"),
-       height = 5, width = 7)
+       height = 7, width = 12)
 
 
 # GP Records ----
@@ -464,7 +476,8 @@ tbl_weekly_gp_by_disorder = data_gp %>%
   ) %>% 
   ungroup() %>% 
   mutate(date = date %>% as_date(),
-         code_type = code_type %>% 
+         code_type = code_type %>%
+           str_replace("KM_", "") %>% 
            str_replace_all("_", " ") %>% 
            str_to_sentence(),
          n = n %>% plyr::round_any(count_round))
@@ -493,7 +506,10 @@ ggsave("plot_weekly_gp_by_disorder.jpeg",
 tbl_weekly_gp_by_chapter = data_gp %>%
   filter(str_starts(code_type, "mapped_")) %>% 
   mutate(
-    date = gp_date %>% cut(breaks = "week")
+    date = gp_date %>% cut(breaks = "week"),
+    code_type = code_type %>% 
+      str_replace("mapped_", "") %>% 
+      str_to_sentence()
   ) %>% 
   count(date, code_type, .drop = FALSE) %>%
   group_by(code_type) %>% 
