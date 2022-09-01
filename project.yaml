@@ -1011,6 +1011,14 @@ actions:
       highly_sensitive:
         data_patient: output/data/data_patient.rds
 
+  summarise_datasets:
+    run: r:latest analysis/03_summary_datasets.R
+    needs: [process_patient_data, process_testing_data, process_admissions_data, process_outpatient_data, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        summary_datasets_tables: output/descriptives/summary_datasets/*.csv
+        summary_datasets_plots: output/descriptives/summary_datasets/*.jpeg
+
   construct_yearly_cohort:
     run: r:latest analysis/05_construct_yearly_cohort.R
     needs: [process_patient_data]
