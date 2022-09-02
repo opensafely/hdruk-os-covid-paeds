@@ -223,7 +223,7 @@ plot_weekly_admission_by_method = tbl_weekly_admissions_by_method %>%
                breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "6 month")) +
   labs(y = "Weekly count", x = NULL, linetype = NULL) +
   theme(legend.position = "bottom") +
-  facet_wrap(~ admission_method.category)
+  facet_wrap(~ admission_method.category, scales = "free_y")
 
 ggsave("plot_weekly_admission_by_method.jpeg",
        plot_weekly_admission_by_method,
@@ -256,7 +256,7 @@ plot_weekly_admissions_by_specialty = tbl_weekly_admissions_by_specialty %>%
                breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "6 month")) +
   labs(y = "Weekly count", x = NULL, linetype = NULL) +
   theme(legend.position = "bottom") +
-  facet_wrap(~ treatment_function.category)
+  facet_wrap(~ treatment_function.category, scales = "free_y")
 
 ggsave("plot_weekly_admissions_by_specialty.jpeg",
        plot_weekly_admissions_by_specialty,
@@ -289,7 +289,7 @@ plot_weekly_admissions_by_diagnosis = tbl_weekly_admissions_by_diagnosis %>%
                breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "6 month")) +
   labs(y = "Weekly count", x = NULL, linetype = NULL) +
   theme(legend.position = "bottom") +
-  facet_wrap(~ primary_diagnosis.chapter, ncol = 4)
+  facet_wrap(~ primary_diagnosis.chapter, ncol = 4, scales = "free_y")
 
 ggsave("plot_weekly_admissions_by_diagnosis.jpeg",
        plot_weekly_admissions_by_diagnosis,
@@ -409,7 +409,7 @@ tbl_weekly_outpatient_specialty = data_outpatient %>%
   summarise(
     n = sum(outpatient_count)
   ) %>%
-  ungroup() %>% 
+  group_by(specialty) %>% 
   mutate(roll_mean = rollmean(n, 4, align = "right", fill = NA),
          date = date %>% as_date(),
          n = n %>% plyr::round_any(count_round))
@@ -426,7 +426,7 @@ plot_weekly_outpatient_specialty = tbl_weekly_outpatient_specialty %>%
                breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-12-01"), by = "3 month")) +
   labs(y = "Weekly count", x = NULL, linetype = NULL) +
   theme(legend.position = "bottom") +
-  facet_wrap(~ specialty, ncol = 4)
+  facet_wrap(~ specialty, ncol = 4, scales = "free_y")
 
 ggsave("plot_weekly_outpatient_specialty.jpeg",
        plot_weekly_outpatient_specialty,
@@ -489,7 +489,7 @@ write_csv(tbl_weekly_gp_by_disorder,
 plot_weekly_gp_by_disorder = tbl_weekly_gp_by_disorder %>% 
   ggplot(aes(date, n)) +
   geom_col() +
-  facet_wrap(~code_type) +
+  facet_wrap(~code_type, scales = "free_y") +
   geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
   scale_x_date(labels = date_format("%b\n%Y"),
                breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-01-01"), by = "6 month")) +
@@ -530,7 +530,7 @@ write_csv(tbl_weekly_gp_by_chapter,
 plot_weekly_gp_by_chapter = tbl_weekly_gp_by_chapter %>% 
   ggplot(aes(date, n)) +
   geom_col() +
-  facet_wrap(~code_type) +
+  facet_wrap(~code_type, scales = "free_y") +
   geom_line(aes(date, roll_mean, linetype = "4-week averge"), colour = "red") +
   scale_x_date(labels = date_format("%b\n%Y"),
                breaks = seq(from = ymd("2015-01-01"), to = ymd("2022-01-01"), by = "6 month")) +
