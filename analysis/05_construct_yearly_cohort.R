@@ -90,7 +90,7 @@ tbl_flowchart = data_cohort %>%
           criteria = fct_case_when(
             crit == "c0" ~ "OpenSAFELY extract: Registered with GP, alive, with age >0 and <18 years on 01 January 2019",
             crit == "c1" ~ "  with no probable nosocomial infection",
-            crit == "c2" ~ "  with no same-day discrepent RT-PCR test result",
+            crit == "c2" ~ "  with no same-day discrepant RT-PCR test result",
             crit == "c3" ~ "  is alive on 1st January",
             crit == "c4" ~ "  with age between 4 and 17 years inclusive",
             TRUE ~ NA_character_
