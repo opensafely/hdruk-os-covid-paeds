@@ -40,10 +40,6 @@ if(length(args) == 0){
   stratification = args[[3]]
 }
 
-# resource_type  = "admissions"
-# condition      = "12_skin_and_subcutaneous_tissue"
-# stratification = "overall"
-
 data_cohort = read_rds(here::here("output", "data", "data_cohort.rds"))
 
 var_labs = extract_variable_label(data_cohort[[1]])
@@ -189,19 +185,21 @@ if(resource_type == "outpatient"){
     )
 }
 
-monthly_count = monthly_count %>% 
-  left_join(data_resource %>% 
-              select(-cohort),
-            by = c("stratification", "month_date")) %>% 
+monthly_count = monthly_count %>%
+  left_join(
+    data_cohort %>%
+      group_by(stratification, cohort) %>%
+      summarise(
+        n_patient = n()
+      ),
+    by = c("stratification", "cohort")
+  ) %>% 
+  left_join(
+    data_resource,
+    by = c("stratification", "month_date", "cohort")) %>% 
   replace_na(list(n_counts = 0)) %>% 
   mutate(
-    n_patient = case_when(
-      cohort == 2019 ~ length(patient_id_2019),
-      cohort == 2020 ~ length(patient_id_2020),
-      cohort == 2021 ~ length(patient_id_2021),
-      cohort == 2022 ~ length(patient_id_2022)
-    )%>% 
-      plyr::round_any(count_round),
+    n_patient = n_patient %>% plyr::round_any(count_round),
     n_counts = n_counts %>% plyr::round_any(count_round),
     n_patient_000 = n_patient/1000
   ) %>% 
