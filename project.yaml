@@ -1277,6 +1277,22 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_overall.jpeg
 
+  monthly_outpatient_all_age_group:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all age_group
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_age_group.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_age_group.jpeg
+
+  monthly_outpatient_all_covid_status_tp:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all covid_status_tp
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_covid_status_tp.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_covid_status_tp.jpeg
+
   monthly_outpatient_cardiology_overall:
     run: r:latest analysis/05_monthly_resource_use.R outpatient cardiology overall
     needs: [construct_yearly_cohort, process_outpatient_data]
