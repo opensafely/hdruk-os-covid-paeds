@@ -131,20 +131,45 @@ if(resource_type == "gp"){
       count(patient_id, month_date)
     
   } else {
-    data_resource = data_resource %>%
-      select(patient_id, admission_date, discharge_date) %>% 
-      rowwise() %>% 
-      mutate(date = list(seq(admission_date, discharge_date, by = "day"))) %>% 
-      unnest(date) %>% 
-      mutate(month_date = floor_date(date, "month")) %>% 
-      mutate(
-        n = case_when(
-          admission_date == discharge_date ~ 0.5, # Day-case
-          TRUE ~ 1
-        )
-      ) %>% 
-      group_by(patient_id, month_date) %>% 
-      summarise(n = sum(n))
+    
+    data_resource = data_resource %>% 
+      summarise(
+        month_date = seq(floor_date(min(admission_date), "month"),
+                         floor_date(max(discharge_date), "month"),
+                         by = "month")
+      ) %>%
+      pull(month_date) %>%
+      as.list() %>% 
+      map(function(month_date){
+        data_resource %>%
+          select(patient_id, admission_date, discharge_date) %>%
+          mutate(
+            start_date = month_date,
+            end_date = (month_date + months(1) - days(1))
+            ) %>%
+          filter(admission_date <= end_date,
+                 discharge_date >= start_date) %>% 
+          mutate(
+            admission_half_day = if_else(
+              admission_date >= start_date &
+                admission_date <= end_date, 0.5, 0),
+            discharge_half_day = if_else(
+              discharge_date >= start_date &
+                discharge_date <= end_date, 0.5, 0),
+            inbetween_day = (pmin(discharge_date, end_date) -
+              pmax(admission_date, start_date)) %>% as.numeric(),
+            length_of_stay = inbetween_day + 1 - admission_half_day -
+              discharge_half_day
+          ) %>%
+          group_by(patient_id) %>% 
+          summarise(
+            month_date = month_date,
+            n = sum(length_of_stay)
+          ) %>% 
+          ungroup()
+      }) %>% 
+      bind_rows()
+    
   }
   
 } else {
