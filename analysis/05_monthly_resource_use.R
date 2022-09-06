@@ -135,13 +135,9 @@ if(resource_type == "gp"){
     
   } else {
     
-    data_resource = data_resource %>% 
-      summarise(
-        month_date = seq(floor_date(min(admission_date), "month"),
-                         floor_date(max(discharge_date), "month"),
-                         by = "month")
-      ) %>%
-      pull(month_date) %>%
+    data_resource = seq(study_start_date,
+                        study_end_date - days(1),
+                        by = "month") %>%
       as.list() %>% 
       map(function(month_date){
         data_resource %>%
