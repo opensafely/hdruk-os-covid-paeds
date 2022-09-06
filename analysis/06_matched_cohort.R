@@ -52,7 +52,14 @@ data_inclusion = data_patient %>%
     patient_id,
     covid_status_tp,
     not_nosocomial = covid_nosocomial == "No",
-    no_discrepant_results = covid_discrepant_test == "No"
+    no_discrepant_results = covid_discrepant_test == "No",
+    no_missing_demographics = case_when(
+      !is.na(sex) ~ TRUE,
+      !is.na(imd_2019) ~ TRUE,
+      !is.na(region_2019) ~ TRUE,
+      !is.na(rural_urban_2019) ~ TRUE,
+      TRUE ~ FALSE
+    )
   )
 
 # Only consider test data within testing period ----
@@ -63,6 +70,11 @@ data_testing_tp = data_testing %>%
 # Filter out nosocomial covid and discrepant covid test results ----
 data_patient = data_patient %>% 
   filter(covid_nosocomial == "No", covid_discrepant_test == "No")
+
+# Filter out missing demographics ----
+data_patient = data_patient %>% 
+  filter(!is.na(sex), !is.na(imd_2019),
+         !is.na(region_2019), !is.na(rural_urban_2019))
 
 data_testing_tp = data_testing_tp %>%
   filter(patient_id %in% data_patient$patient_id) %>% 
@@ -356,12 +368,13 @@ flowchart = data_inclusion %>%
     patient_id,
     covid_status_tp,
     c0 = TRUE,
-    c1 = c0 & no_discrepant_results,
-    c2 = c1 & not_nosocomial,
-    c3 = c2 & meets_age_criteria,
-    c4 = c3 & alive_matched_date,
-    c5 = c4 & not_in_hospital_test_match_date,
-    c6 = c5 & matched
+    c1 = c0 & no_missing_demographics,
+    c2 = c1 & no_discrepant_results,
+    c3 = c2 & not_nosocomial,
+    c4 = c3 & meets_age_criteria,
+    c5 = c4 & alive_matched_date,
+    c6 = c5 & not_in_hospital_test_match_date,
+    c7 = c6 & matched
   ) %>%
   select(-patient_id) %>%
   group_by(covid_status_tp) %>%
@@ -384,12 +397,13 @@ flowchart = data_inclusion %>%
     crit = str_extract(criteria, "^c\\d+"),
     criteria = fct_case_when(
       crit == "c0" ~ "OpenSAFELY extract: Registered with GP, alive, with age >0 and <18 years on 01 January 2019",
-      crit == "c1" ~ "-  with no same-day discrepant RT-PCR test result",
-      crit == "c2" ~ "-  with no probable nosocomial infection",
-      crit == "c3" ~ "-  with age between 4 and 17 years inclusive on test/matched date",
-      crit == "c4" ~ "-  is alive on test/matched date",
-      crit == "c5" ~ "-  not hospitalised on day of matching/negative RT-PCR test result",
-      crit == "c6" ~ "-  successfully matched with negative:untested:positive of 5:5:1",
+      crit == "c1" ~ "-  with no missing demographic data (sex, IMD, region, rural-urban classification)",
+      crit == "c2" ~ "-  with no same-day discrepant RT-PCR test result",
+      crit == "c3" ~ "-  with no probable nosocomial infection",
+      crit == "c4" ~ "-  with age between 4 and 17 years inclusive on test/matched date",
+      crit == "c5" ~ "-  is alive on test/matched date",
+      crit == "c6" ~ "-  not hospitalised on day of matching/negative RT-PCR test result",
+      crit == "c7" ~ "-  successfully matched with negative:untested:positive of 5:5:1",
       TRUE ~ NA_character_
     )
   ) %>%
