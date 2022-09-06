@@ -39,7 +39,7 @@ fup_start_date   = ymd(global_var$fup_start_date)
 
 # Matching parameters ----
 match_ratio = 5
-match_window = 1 
+match_window = 0
 
 # Load datasets ----
 data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
@@ -156,8 +156,8 @@ match_pos_neg = data_testing_pos %>%
     # Negative pool ----
     # Restrict to match window, remove matched negatives from last iteration ----
     df_pool_neg = data_testing_neg %>%
-      filter(test_date < pos_test_date + days(match_window),
-             test_date > pos_test_date - days(match_window)) %>% 
+      filter(test_date <= pos_test_date + days(match_window),
+             test_date >= pos_test_date - days(match_window)) %>% 
       filter(!patient_id %in% matched) %>%
       group_by(patient_id) %>%
       slice(1) %>%
@@ -290,7 +290,7 @@ match_untested = match_pos_neg %>%
     if(n_match > 0){
       df_out = df_pool_unt %>%
         slice(1:(n_match*match_ratio)) %>% 
-        mutate(match_id = rep(df_pool_pos$match_id, each = match_ratio))
+        mutate(match_id = rep(df_pool_pos$match_id[1:n_match], each = match_ratio))
     } else {
       df_out = NULL
     }
