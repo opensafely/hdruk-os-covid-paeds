@@ -1947,4 +1947,11 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_22_codes_for_special_purposes_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_22_codes_for_special_purposes_overall.jpeg
 
-
+  create_matched_cohort:
+    run: r:latest analysis/06_matched_cohort.R
+    needs: [process_patient_data, process_testing_data, process_admissions_data]
+    outputs:
+      highly_sensitive:
+        data_matched: output/data/data_matched.rds
+      moderately_sensitive:
+        create_matched_cohort_tables: output/descriptives/matched_cohort/*.csv
