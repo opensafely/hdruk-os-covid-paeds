@@ -229,7 +229,10 @@ data_resource = data_resource %>%
         by = "patient_id"
       ) %>% 
       filter(gp_date >= follow_up_start_date,
-             gp_date <= follow_up_end_date) %>% 
+             gp_date <= follow_up_end_date) %>%
+      filter(str_starts(code_type, "KM_") |
+               str_starts(code_type, "mapped_1") |
+               str_starts(code_type, "mapped_2")) %>% 
       distinct(patient_id, gp_date, .keep_all = TRUE) %>% 
       mutate(n_gp = 1) %>% 
       select(patient_id, date = gp_date, n_gp),
