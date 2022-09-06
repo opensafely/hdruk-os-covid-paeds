@@ -747,6 +747,20 @@ actions:
       highly_sensitive:
         data_gp_contacts: output/data_weekly/input_gp_KM_respiratory_system_20*.csv.gz
 
+  generate_gp_KM_self_harm:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition_gp_KM_self_harm
+        --index-date-range "2018-12-31 to 2022-05-02 by week"
+        --output-format csv.gz
+        --output-dir=output/data_weekly
+        --with-end-date-fix
+    dummy_data_file: output/dummy_data/dummy_data_gp.csv.gz
+    needs: [generate_dummy_data]
+    outputs:
+      highly_sensitive:
+        data_gp_contacts: output/data_weekly/input_gp_KM_self_harm_20*.csv.gz
+
   generate_gp_KM_skin_subcutaneous_tissue:
     run: >
       cohortextractor:latest generate_cohort
@@ -958,7 +972,7 @@ actions:
             generate_gp_KM_musculoskeletal_system, generate_gp_KM_neoplastic_disease,
             generate_gp_KM_nervous_system, generate_gp_KM_nutritional_disorder,
             generate_gp_KM_poisoning, generate_gp_KM_pregnancy_childbirth,
-            generate_gp_KM_puerperium, generate_gp_KM_respiratory_system,
+            generate_gp_KM_puerperium, generate_gp_KM_respiratory_system, generate_gp_KM_self_harm,
             generate_gp_KM_skin_subcutaneous_tissue, generate_gp_KM_traumatic_injury,
             generate_gp_KM_visual_system, 
             generate_gp_mapped_0_occupations, generate_gp_mapped_1_history_symptoms,
@@ -1173,6 +1187,14 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_mental_disorder_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_mental_disorder_overall.jpeg
 
+  monthly_gp_mental_disorder_age_group:
+    run: r:latest analysis/05_monthly_resource_use.R gp mental_disorder age_group
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_mental_disorder_age_group.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_mental_disorder_age_group.jpeg
+
   monthly_gp_metabolic_disease_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp metabolic_disease overall
     needs: [construct_yearly_cohort, process_gp_data]
@@ -1381,6 +1403,14 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_mental_health_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_mental_health_overall.jpeg
 
+  monthly_outpatient_mental_health_age_group:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient mental_health age_group
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_mental_health_age_group.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_mental_health_age_group.jpeg
+
   monthly_outpatient_metabolic_overall:
     run: r:latest analysis/05_monthly_resource_use.R outpatient metabolic overall
     needs: [construct_yearly_cohort, process_outpatient_data]
@@ -1549,6 +1579,14 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_05_mental_and_behavioural_disorders_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_05_mental_and_behavioural_disorders_overall.jpeg
 
+  monthly_admissions_05_mental_and_behavioural_disorders_age_group:
+    run: r:latest analysis/05_monthly_resource_use.R admissions 05_mental_and_behavioural_disorders age_group
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_05_mental_and_behavioural_disorders_age_group.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_05_mental_and_behavioural_disorders_age_group.jpeg
+
   monthly_admissions_06_nervous_system_overall:
     run: r:latest analysis/05_monthly_resource_use.R admissions 06_nervous_system overall
     needs: [construct_yearly_cohort, process_admissions_data]
@@ -1661,13 +1699,21 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_19_injury_and_poisoning_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_19_injury_and_poisoning_overall.jpeg
 
-  monthly_admissions_20_external_causes_overall:
-    run: r:latest analysis/05_monthly_resource_use.R admissions 20_external_causes overall
+  monthly_admissions_20_external_causes_not_self_harm_overall:
+    run: r:latest analysis/05_monthly_resource_use.R admissions 20_external_causes_not_self_harm overall
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_20_external_causes_overall.csv
-        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_20_external_causes_overall.jpeg
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_20_external_causes_not_self_harm_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_20_external_causes_not_self_harm_overall.jpeg
+
+  monthly_admissions_20_external_causes_self_harm_overall:
+    run: r:latest analysis/05_monthly_resource_use.R admissions 20_external_causes_self_harm overall
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_20_external_causes_self_harm_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_20_external_causes_self_harm_overall.jpeg
 
   monthly_admissions_21_factors_influencing_health_status_overall:
     run: r:latest analysis/05_monthly_resource_use.R admissions 21_factors_influencing_health_status overall
@@ -1748,6 +1794,14 @@ actions:
       moderately_sensitive:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_05_mental_and_behavioural_disorders_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_05_mental_and_behavioural_disorders_overall.jpeg
+
+  monthly_beddays_05_mental_and_behavioural_disorders_age_group:
+    run: r:latest analysis/05_monthly_resource_use.R beddays 05_mental_and_behavioural_disorders age_group
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_05_mental_and_behavioural_disorders_age_group.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_05_mental_and_behavioural_disorders_age_group.jpeg
 
   monthly_beddays_06_nervous_system_overall:
     run: r:latest analysis/05_monthly_resource_use.R beddays 06_nervous_system overall
@@ -1861,13 +1915,21 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_19_injury_and_poisoning_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_19_injury_and_poisoning_overall.jpeg
 
-  monthly_beddays_20_external_causes_overall:
-    run: r:latest analysis/05_monthly_resource_use.R beddays 20_external_causes overall
+  monthly_beddays_20_external_causes_not_self_harm_overall:
+    run: r:latest analysis/05_monthly_resource_use.R beddays 20_external_causes_not_self_harm overall
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_20_external_causes_overall.csv
-        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_20_external_causes_overall.jpeg
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_20_external_causes_not_self_harm_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_20_external_causes_not_self_harm_overall.jpeg
+
+  monthly_beddays_20_external_causes_self_harm_overall:
+    run: r:latest analysis/05_monthly_resource_use.R beddays 20_external_causes_self_harm overall
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_20_external_causes_self_harm_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_20_external_causes_self_harm_overall.jpeg
 
   monthly_beddays_21_factors_influencing_health_status_overall:
     run: r:latest analysis/05_monthly_resource_use.R beddays 21_factors_influencing_health_status overall
