@@ -385,6 +385,11 @@ snomed_KM_visual_system = codelist_from_csv(
     column="code",
 )
 
+snomed_KM_self_harm = codelist_from_csv(
+    "analysis/codelists/SNOMED_self_harm.csv",
+    system="snomed",
+    column="code",
+)
 
 
 treatment_function_cardiology = codelist_from_csv(
