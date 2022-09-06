@@ -64,7 +64,8 @@ if(resource_type == "gp"){
     
     data_resource = data_resource %>% 
       filter(str_starts(code_type, "KM_") |
-               str_starts(code_type, "mapped_1"))%>% 
+               str_starts(code_type, "mapped_1") |
+               str_starts(code_type, "mapped_2"))%>% 
       distinct(patient_id, gp_date) %>% 
       rename(date = gp_date) %>% 
       mutate(month_date = floor_date(date, "month")) %>% 
@@ -117,7 +118,9 @@ if(resource_type == "gp"){
                icd10_code_to_chapter() %>%
                str_to_lower() %>% 
                str_replace_all(":", "") %>% 
-               str_replace_all(",", "") %>% 
+               str_replace_all(",", "") %>%
+               str_replace_all("(", "") %>%
+               str_replace_all(")", "") %>%
                str_replace_all(" ", "_") %>% 
                factor()) %>% 
       filter(primary_diagnosis.chapter == condition)
