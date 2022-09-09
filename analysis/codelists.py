@@ -80,146 +80,229 @@ snomed_mapped_9_administration = codelist_from_csv(
 )
 
 
-
-snomed_disorder = codelist_from_csv(
-    "analysis/codelists/snomed-disorder.csv",
-    system="snomed",
-    column="code",
-)
-
-snomed_finding = codelist_from_csv(
-    "analysis/codelists/snomed-finding_no_vacc.csv",
-    system="snomed",
-    column="code",
-)
-
-snomed_observable_entity = codelist_from_csv(
-    "analysis/codelists/snomed-observable-entity.csv",
-    system="snomed",
-    column="code",
-)
-
-snomed_procedure = codelist_from_csv(
-    "analysis/codelists/snomed-procedure.csv",
-    system="snomed",
-    column="code",
-)
-
-snomed_regime_therapy = codelist_from_csv(
-    "analysis/codelists/snomed-regime-therapy.csv",
-    system="snomed",
-    column="code",
-)
-
-snomed_specimen = codelist_from_csv(
-    "analysis/codelists/snomed-specimen.csv",
-    system="snomed",
-    column="code",
-)
-
-
-
 snomed_asthma = codelist_from_csv(
-    "analysis/codelists/SNOMED_athma_disorders.csv",
+    "analysis/codelists/snomed_asthma.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_behavioural_and_developmental_including_autism = codelist_from_csv(
+    "analysis/codelists/snomed_behavioural_and_developmental_including_autism.csv",
     system="snomed",
     column="code",
 )
 
 snomed_cancer = codelist_from_csv(
-    "analysis/codelists/SNOMED_cancer_disorders.csv",
+    "analysis/codelists/snomed_cancer.csv",
     system="snomed",
     column="code",
 )
 
-snomed_cystic_fibrosis = codelist_from_csv(
-    "analysis/codelists/SNOMED_CF_disorders.csv",
+snomed_cardiovascular_congenital = codelist_from_csv(
+    "analysis/codelists/snomed_cardiovascular_congenital.csv",
     system="snomed",
     column="code",
 )
 
-snomed_diabetes = codelist_from_csv(
-    "analysis/codelists/SNOMED_diabetes_disorders.csv",
+snomed_cardiovascular_devices = codelist_from_csv(
+    "analysis/codelists/snomed_cardiovascular_devices.csv",
     system="snomed",
     column="code",
 )
 
-snomed_epilepsy = codelist_from_csv(
-    "analysis/codelists/SNOMED_epilepsy_disorders.csv",
+snomed_cardiovascular_non_congenital = codelist_from_csv(
+    "analysis/codelists/snomed_cardiovascular_non_congenital.csv",
     system="snomed",
     column="code",
 )
 
-snomed_severe_mental_illness = codelist_from_csv(
-    "analysis/codelists/SNOMED_severe_mental_illness_disorders.csv",
-    system="snomed",
-    column="code",
-)
-
-snomed_cerebral_palsy = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_cerebral_palsy.csv",
+snomed_cerebral_palsy_paralysis = codelist_from_csv(
+    "analysis/codelists/snomed_cerebral_palsy_paralysis.csv",
     system="snomed",
     column="code",
 )
 
 snomed_chronic_infections = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_chronic_infections.csv",
+    "analysis/codelists/snomed_chronic_infections.csv",
     system="snomed",
     column="code",
 )
 
-snomed_devices_and_stomas = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_devices_and_stomas.csv",
+snomed_congenital_endocrine = codelist_from_csv(
+    "analysis/codelists/snomed_congenital_endocrine.csv",
     system="snomed",
     column="code",
 )
 
-snomed_endocrine = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_endocrine.csv",
+snomed_congenital_malformation_syndromes_and_chromosomal = codelist_from_csv(
+    "analysis/codelists/snomed_congenital_malformation_syndromes_and_chromosomal.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_congenital_neuro = codelist_from_csv(
+    "analysis/codelists/snomed_congenital_neuro.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_congenital_renal = codelist_from_csv(
+    "analysis/codelists/snomed_congenital_renal.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_congenital_urogenital = codelist_from_csv(
+    "analysis/codelists/snomed_congenital_urogenital.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_cystic_fibrosis = codelist_from_csv(
+    "analysis/codelists/snomed_cystic_fibrosis.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_diabetes = codelist_from_csv(
+    "analysis/codelists/snomed_diabetes.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_endocrine_no_dm = codelist_from_csv(
+    "analysis/codelists/snomed_endocrine_no_dm.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_epilepsy = codelist_from_csv(
+    "analysis/codelists/snomed_epilepsy.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_gastrointestinal_devices = codelist_from_csv(
+    "analysis/codelists/snomed_gastrointestinal_devices.csv",
     system="snomed",
     column="code",
 )
 
 snomed_gastrointestinal = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_gastrointestinal.csv",
+    "analysis/codelists/snomed_gastrointestinal.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_genitourinary_non_congenital = codelist_from_csv(
+    "analysis/codelists/snomed_genitourinary_non_congenital.csv",
     system="snomed",
     column="code",
 )
 
 snomed_haematology = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_haematology.csv",
+    "analysis/codelists/snomed_haematology.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_headaches = codelist_from_csv(
+    "analysis/codelists/snomed_headaches.csv",
     system="snomed",
     column="code",
 )
 
 snomed_immunological = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_immunological.csv",
-    system="snomed",
-    column="code",
-)
-
-snomed_learning_difficulties_and_behaviour = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_learning_difficulties_and_behaviour.csv",
+    "analysis/codelists/snomed_immunological.csv",
     system="snomed",
     column="code",
 )
 
 snomed_mental_illness = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_mental_illness.csv",
+    "analysis/codelists/snomed_mental_illness.csv",
     system="snomed",
     column="code",
 )
 
-snomed_musculoskeletal_and_rheum = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_musculoskeletal_and_rheum.csv",
+snomed_metabolic = codelist_from_csv(
+    "analysis/codelists/snomed_metabolic.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_neuro_devices = codelist_from_csv(
+    "analysis/codelists/snomed_neuro_devices.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_neurological_no_epilepsy_or_cp_headaches = codelist_from_csv(
+    "analysis/codelists/snomed_neurological_no_epilepsy_or_cp_headaches.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_obesity = codelist_from_csv(
+    "analysis/codelists/snomed_obesity.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_palliative_care = codelist_from_csv(
+    "analysis/codelists/snomed_palliative_care.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_renal_devices = codelist_from_csv(
+    "analysis/codelists/snomed_renal_devices.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_resp_congenital = codelist_from_csv(
+    "analysis/codelists/snomed_resp_congenital.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_resp_devices = codelist_from_csv(
+    "analysis/codelists/snomed_resp_devices.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_respiratory_not_asthma_or_cf = codelist_from_csv(
+    "analysis/codelists/snomed_respiratory_not_asthma_or_cf.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_rheumatology = codelist_from_csv(
+    "analysis/codelists/snomed_rheumatology.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_self_harm = codelist_from_csv(
+    "analysis/codelists/snomed_self_harm.csv",
+    system="snomed",
+    column="code",
+)
+
+snomed_severe_mental_illness = codelist_from_csv(
+    "analysis/codelists/snomed_severe_mental_illness.csv",
     system="snomed",
     column="code",
 )
 
 snomed_transplant = codelist_from_csv(
-    "analysis/codelists_draft/SNOMED_transplant.csv",
+    "analysis/codelists/snomed_transplant.csv",
     system="snomed",
     column="code",
 )
+
+
 
 
 
