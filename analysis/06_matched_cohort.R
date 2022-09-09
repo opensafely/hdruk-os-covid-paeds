@@ -55,7 +55,7 @@ data_inclusion = data_patient %>%
     no_discrepant_results = covid_discrepant_test == "No",
     no_missing_demographics = case_when(
       !is.na(sex) ~ TRUE,
-      !is.na(imd_2019) ~ TRUE,
+      !is.na(imd_Q5_2019) ~ TRUE,
       !is.na(region_2019) ~ TRUE,
       !is.na(rural_urban_2019) ~ TRUE,
       TRUE ~ FALSE
@@ -73,7 +73,7 @@ data_patient = data_patient %>%
 
 # Filter out missing demographics ----
 data_patient = data_patient %>% 
-  filter(!is.na(sex), !is.na(imd_2019),
+  filter(!is.na(sex), !is.na(imd_Q5_2019),
          !is.na(region_2019), !is.na(rural_urban_2019))
 
 data_testing_tp = data_testing_tp %>%
