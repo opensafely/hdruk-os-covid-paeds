@@ -294,12 +294,6 @@ study = StudyDefinition(
     # Conditions #
     ##############
 
-    condition_expectations = {
-            "date": {"earliest": "2015-01-01", "latest": end_date},
-            "rate": "uniform",
-            "incidence": 0.2
-        }
-
     # ASTHMA
     asthma_first_date=patients.with_these_clinical_events(
         snomed_asthma,
@@ -307,7 +301,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     asthma_last_date=patients.with_these_clinical_events(
@@ -316,7 +314,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Behavioural and developmental conditions including autism
@@ -326,7 +328,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     behavioural_and_developmental_including_autism_last_date=patients.with_these_clinical_events(
@@ -335,7 +341,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Cancer
@@ -345,7 +355,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     cancer_last_date=patients.with_these_clinical_events(
@@ -354,7 +368,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Cardiovascular - congenital
@@ -364,7 +382,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     cardiovascular_congenital_last_date=patients.with_these_clinical_events(
@@ -373,7 +395,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Cardiovascular - devices
@@ -383,7 +409,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     cardiovascular_devices_last_date=patients.with_these_clinical_events(
@@ -392,7 +422,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Cardiovascular - non-congenital
@@ -402,7 +436,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     cardiovascular_non_congenital_last_date=patients.with_these_clinical_events(
@@ -411,7 +449,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Cerebral palsy and paralysis
@@ -421,7 +463,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     cerebral_palsy_paralysis_last_date=patients.with_these_clinical_events(
@@ -430,7 +476,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Chronic infections
@@ -440,7 +490,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     chronic_infections_last_date=patients.with_these_clinical_events(
@@ -449,7 +503,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Congenital endocrine
@@ -459,7 +517,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     congenital_endocrine_last_date=patients.with_these_clinical_events(
@@ -468,7 +530,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Congenital malformation syndromes and chromosomal
@@ -478,7 +544,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     congenital_malformation_syndromes_and_chromosomal_last_date=patients.with_these_clinical_events(
@@ -487,7 +557,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Congenital neurological
@@ -497,7 +571,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     congenital_neuro_last_date=patients.with_these_clinical_events(
@@ -506,7 +584,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Congenital renal
@@ -516,7 +598,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     congenital_renal_last_date=patients.with_these_clinical_events(
@@ -525,7 +611,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Congenital urogenital
@@ -535,7 +625,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     congenital_urogenital_last_date=patients.with_these_clinical_events(
@@ -544,7 +638,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Cystic fibrosis
@@ -554,7 +652,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     cystic_fibrosis_last_date=patients.with_these_clinical_events(
@@ -563,7 +665,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Diabetes
@@ -573,7 +679,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     diabetes_last_date=patients.with_these_clinical_events(
@@ -582,7 +692,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Endocrine no dm
@@ -592,7 +706,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     endocrine_no_dm_last_date=patients.with_these_clinical_events(
@@ -601,7 +719,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Epilepsy
@@ -611,7 +733,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     epilepsy_last_date=patients.with_these_clinical_events(
@@ -620,7 +746,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Gastrointestinal - devices
@@ -630,7 +760,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     gastrointestinal_devices_last_date=patients.with_these_clinical_events(
@@ -639,7 +773,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Gastrointestinal
@@ -649,7 +787,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     gastrointestinal_last_date=patients.with_these_clinical_events(
@@ -658,7 +800,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Gastrointestinal - non-congenital
@@ -668,7 +814,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     genitourinary_non_congenital_last_date=patients.with_these_clinical_events(
@@ -677,7 +827,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Haematology
@@ -687,7 +841,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     haematology_last_date=patients.with_these_clinical_events(
@@ -696,7 +854,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Headaches
@@ -706,7 +868,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     headaches_last_date=patients.with_these_clinical_events(
@@ -715,7 +881,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Immunological
@@ -725,7 +895,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     immunological_last_date=patients.with_these_clinical_events(
@@ -734,7 +908,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Mental illness
@@ -744,7 +922,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     mental_illness_last_date=patients.with_these_clinical_events(
@@ -753,7 +935,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Metabolic
@@ -763,7 +949,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     metabolic_last_date=patients.with_these_clinical_events(
@@ -772,7 +962,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Neuro devices
@@ -782,7 +976,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     neuro_devices_last_date=patients.with_these_clinical_events(
@@ -791,7 +989,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Neurological no epilepsy or cp headaches
@@ -801,7 +1003,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     neurological_no_epilepsy_or_cp_headaches_last_date=patients.with_these_clinical_events(
@@ -810,7 +1016,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Obesity
@@ -820,7 +1030,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     obesity_last_date=patients.with_these_clinical_events(
@@ -829,7 +1043,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Palliative care
@@ -839,7 +1057,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     palliative_care_last_date=patients.with_these_clinical_events(
@@ -848,7 +1070,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Renal devices
@@ -858,7 +1084,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     renal_devices_last_date=patients.with_these_clinical_events(
@@ -867,7 +1097,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Resp congenital
@@ -877,7 +1111,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     resp_congenital_last_date=patients.with_these_clinical_events(
@@ -886,7 +1124,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Resp devices
@@ -896,7 +1138,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     resp_devices_last_date=patients.with_these_clinical_events(
@@ -905,7 +1151,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Respiratory not asthma or cf
@@ -915,7 +1165,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     respiratory_not_asthma_or_cf_last_date=patients.with_these_clinical_events(
@@ -924,7 +1178,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Rheumatology
@@ -934,7 +1192,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     rheumatology_last_date=patients.with_these_clinical_events(
@@ -943,7 +1205,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Severe mental illness
@@ -953,7 +1219,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     severe_mental_illness_last_date=patients.with_these_clinical_events(
@@ -962,7 +1232,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     # Transplant
@@ -972,7 +1246,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_first_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
     transplant_last_date=patients.with_these_clinical_events(
@@ -981,7 +1259,11 @@ study = StudyDefinition(
         returning = "date",
         date_format = "YYYY-MM-DD",
         find_last_match_in_period=True,
-        return_expectations=condition_expectations
+        return_expectations={
+            "date": {"earliest": "2015-01-01", "latest": end_date},
+            "rate": "uniform",
+            "incidence": 0.2
+        }
     ),
 
 
