@@ -1955,3 +1955,18 @@ actions:
         data_matched: output/data/data_matched.rds
       moderately_sensitive:
         create_matched_cohort_tables: output/descriptives/matched_cohort/*.csv
+
+  weight_matched_cohort:
+    run: r:latest analysis/07_ipw.R
+    needs: [process_patient_data, process_testing_data, process_admissions_data,
+            process_outpatient_data, process_gp_data, create_matched_cohort]
+    outputs:
+      highly_sensitive:
+        data_matched: output/data/data_weights.rds
+      moderately_sensitive:
+        summary_unweighted: output/descriptives/matched_cohort/ipw/summary_unweighted.csv
+        summary_weighted: output/descriptives/matched_cohort/ipw/summary_weighted.csv
+        effective_sample_size: output/descriptives/matched_cohort/ipw/table_effective_sample_size.csv
+        pairwise_balance: output/descriptives/matched_cohort/ipw/table_pair_balance.csv
+        balance_plots: output/descriptives/matched_cohort/ipw/balance_plot/*.jpeg
+        love_plot: output/descriptives/matched_cohort/ipw/love_plot.jpeg
