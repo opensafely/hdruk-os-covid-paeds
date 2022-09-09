@@ -1,0 +1,248 @@
+code,description
+671461000000102,"Analgesic poisoning, NEC"
+269808005,Attempt suicide - car exhaust
+288311002,Attempt suicide - domestic gas
+248073004,Cuts self
+248062006,Deliberate self-harm
+676361000000101,Drug and medicament poisoning NOS
+971271000006100,Injury from deliberate self harm
+1984251000006103,Manchester triage - Overdose / poisoning
+1984301000006105,Manchester triage - Self-harm
+1809461000006106,Non-fatal suicide behaviour
+212609002,Other analgesic and antipyretic poisoning
+212612004,Other analgesic or antipyretic poisoning NOS
+288293001,Poisoning by CNS drugs
+1821291000006109,Recent suicide attempt
+981171000006104,Self-harm
+269725004,Suicide and self harm
+219141008,Suicide and selfinflicted injury by drowning
+1773231000006107,Suspected drug overdose
+446891000000101,[X]Intentional self harm by drowning and submersion
+472701000000102,[X]Intentional self harm by handgun discharge
+446901000000100,[X]Overdose - ibuprofen
+518431000000101,Intentional overdose of prescription only medication
+473128000,Suspected drug overdose
+844631000000104,Acute renal failure induced by poison
+275385007,Overdose of biological substance
+55680006,Overdose of drug
+75478009,Poisoning by CNS drugs
+105624005,"Analgesic, antipyretic and antirheumatic drug poisoning"
+241748001,Analgesic poisoning
+241767002,Antipyretic poisoning
+18052008,Meperidine (pethidine) poisoning
+47836003,Morphine poisoning
+290162009,Dextropropoxyphene poisoning
+241750009,Dihydrocodeine poisoning
+7248001,Salicylate poisoning
+70273001,Paracetamol poisoning
+212597004,Phenacetin poisoning
+89715001,Phenylbutazone poisoning
+212602006,Ibuprofen poisoning
+212603001,Naproxen poisoning
+290273008,Mefenamic acid poisoning
+12898000,Pentazocine poisoning
+85337000,Sedative and hypnotic drug poisoning
+44003006,Barbiturate poisoning
+64921004,Phenobarbital poisoning
+25980005,Quinalbarbitone poisoning
+111763008,Mixed sedative poisoning NEC
+269268004,Central nervous system depressants and anaesthetic poisoning
+241756003,Anaesthetic poisoning
+212641008,Central nervous system muscle-tone depressant poisoning
+41839000,Thiopental sodium poisoning
+40748005,Other thiobarbiturate poisoning
+290486002,Other general anaesthetic agent poisoning
+61438005,Psychotropic agent poisoning
+82276009,Antidepressant poisoning
+78695006,Amitriptyline poisoning
+65425009,Imipramine poisoning
+9291000,Monoamine oxidase inhibitor poisoning
+290923004,Trazodone poisoning
+48534006,Phenothiazine poisoning
+87396006,Chlorpromazine poisoning
+91267002,Fluphenazine poisoning
+111765001,Prochlorperazine poisoning
+87363009,Promazine poisoning
+291190004,Thioridazine poisoning
+16248006,Butyrophenone poisoning
+88993007,Haloperidol poisoning
+212658003,Spiperone poisoning
+73108003,Trifluperidol poisoning
+81914009,Benzodiazepine poisoning
+84483000,Chlordiazepoxide poisoning
+61406000,Diazepam poisoning
+36784008,Flurazepam poisoning
+70330008,Lorazepam poisoning
+10486009,Medazepam poisoning
+6024006,Nitrazepam poisoning
+241757007,Poisoning by temazepam
+212664005,Hydroxyzine poisoning
+20260003,Psychostimulant poisoning
+61803000,Central nervous system stimulant poisoning
+32835006,Autonomic nervous system drug poisoning
+52703008,Propranolol poisoning
+241762008,Beta blocker poisoning
+7895008,Other drug and medicament poisoning NOS
+42377002,"[X]Poisoning by mixed antiepileptics, NEC"
+441931000000102,[X]Poisoning by oth antiepileptic & sedative-hypnotic drugs
+4836003,[X]Poisoning by antipark drug/oth central musc-tone depress
+213769004,Suicide/assault/other inj caus
+59274003,Cause of overdose - deliberate
+276853009,Injury - self-inflicted
+271982007,Poisoning - self-inflicted
+82313006,Attempted suicide
+48981002,Para-suicide
+242836008,Suicide + selfinflicted poisoning by solid/liquid substances
+219108005,Suicide + selfinflicted poisoning by analgesic/antipyretic
+296036006,Suicide + selfinflicted poisoning by barbiturates
+296039004,Suicide and self inflicted injury by Amylobarbitone
+431307001,Suicide + selfinflicted poisoning by oth sedatives/hypnotics
+681111000000102,Suicide - drug overdose
+274912004,Suicide + selfinflicted poisoning by agricultural chemical
+219122005,Suicide + selfinflicted poisoning by corrosive/caustic subst
+219123000,Suicide + selfinflicted poisoning by arsenic + its compounds
+219125007,Suicide + selfinflicted poisoning by gases in domestic use
+219126008,Suicide + selfinflicted poisoning by gas via pipeline
+219127004,Suicide + selfinflicted poisoning by liquified petrol gas
+242839001,Suicide + selfinflicted poisoning by other gases and vapours
+219131005,Suicide + selfinflicted poisoning by motor veh exhaust gas
+287181000,Suicide and selfinflicted injury by hanging
+219137009,Suicide - hanging
+269726003,Suicide - suffocate
+287182007,Attempt suicide - suffocate
+287183002,Suicide and selfinflicted injury by drowning
+287184008,Suicide and selfinflicted injury by firearms and explosives
+219142001,Suicide - firearms
+418420002,Suicide and selfinflicted injury by explosives
+219150005,Suicide and selfinflicted injury by cutting and stabbing
+287185009,Attempt suicide - cut/stab
+219151009,Suicide and selfinflicted injury by cutting
+219152002,Self inflicted lacerations to wrist
+219153007,Suicide and selfinflicted injury by stabbing
+287186005,Suicide and selfinflicted injury by jumping from high place
+219155000,Suicide - jump from high
+219168008,Suicide and selfinflicted injury by electrocution
+403582001,"Suicide and selfinflicted injury caustic subst, excl poison"
+684281000000100,Suicide - NOS
+219328003,"Injury ?accidental, hanging, strangulation and suffocation"
+269735005,"Injury ?accidental, hanging/strangulation/suffocation NOS"
+219342006,"Injury ?accidental, by cutting and stabbing instruments"
+219343001,"Injury ?accidental, by cutting instrument"
+219344007,"Injury ?accidental, by stabbing instrument"
+219359001,"Injury ?accidental, by electrocution"
+44301001,[X]Suicide
+461371000000105,[X]Intentional self poisoning/exposure to noxious substances
+295124009,[X]Overdose - paracetamol
+295250003,[X]Overdose - ibuprofen
+393341000000109,[X]Int self poison/exposure to nonopioid analgesic at home
+474461000000102,[X]Intent self poison nonopioid analgesic at res institut
+422721000000107,[X]Int self poison nonopioid analges school/pub admin area
+387071000000108,[X]Int self poison nonopioid analges in sport/athletic area
+385711000000109,[X]Intent self pois nonopioid analgesic in street/highway
+473621000000105,[X]Intent self pois nonopioid analgesic trade/service area
+385731000000101,[X]Int self pois nonopioid analgesic indust/construct area
+458171000000105,[X]Int self poison/exposure to nonopioid analgesic on farm
+459381000000104,[X]Int self poison nonopioid analgesic other spec place
+459421000000108,[X]Intent self poison nonopioid analgesic unspecif place
+296015009,[X]Overdose - sleeping tabs
+296118008,[X]Overdose - diazepam
+296125001,[X]Overdose - temazepam
+296058008,[X]Overdose - flurazepam
+296070007,[X]Overdose - nitrazepam
+296053004,[X]Overdose - benzodiazepine
+296037002,[X]Overdose - amobarbital
+295830007,[X]Overdose - antidepressant
+295835002,[X]Overdose - amitriptyline
+295918002,[X]Overdose - SSRI
+290221007,[X]Intent self poison/exposure to narcotic drug
+433941000000106,[X]Int self poison/exposure to narcotic drug at home
+385601000000100,[X]Intent self poison narcotic drug at res institut
+421581000000105,[X]Int self poison narcotic drug school/pub admin area
+446651000000105,[X]Int self poison narcotic drug in sport/athletic area
+446661000000108,[X]Intent self pois narcotic drug in street/highway
+393011000000105,[X]Intent self pois narcotic drug trade/service area
+446791000000109,[X]Int self pois narcotic drug indust/construct area
+393331000000100,[X]Int self poison/exposure to narcotic drug on farm
+458971000000107,[X]Int self poison narcotic drug other spec place
+403681000000100,[X]Intent self poison narcotic drug unspecif place
+85975005,[X]Int self poison/exposure to hallucinogen at home
+67426006,[X]Int self poison/exposure to alcohol at home
+241769004,"[X]Intent self pois organ solvent,halogen hydrocarb, home"
+461331000000108,[X]Intent self poison/exposure to pesticide
+242837004,[X]Self poisoning with paraquat
+392701000000104,[X]Int self poison/exposure to pesticide at home
+420741000000104,[X]Intent self poison pesticide at res institut
+392001000000101,[X]Int self poison pesticide school/pub admin area
+445311000000106,[X]Int self poison pesticide in sport/athletic area
+457141000000100,[X]Intent self pois pesticide in street/highway
+457161000000104,[X]Intent self pois pesticide trade/service area
+391791000000102,[X]Int self pois pesticide indust/construct area
+472721000000106,[X]Int self poison/exposure to pesticide on farm
+445341000000107,[X]Int self poison pesticide other spec place
+403581000000101,[X]Intent self poison pesticide unspecif place
+434241000000100,[X]Intent self harm by hanging strangulat/suffocat occ home
+473791000000101,[X]Intent self harm by hangng strangult/suffoct resid instit
+391821000000107,[X]Intent self harm by hangng strangul/suffoct unspecif plce
+458281000000101,[X]Intent self harm by drowning/submersion occurrn at home
+473731000000102,[X]Intent self harm by drowning/submersn occ resid instit'n
+457321000000105,[X]Intent self harm drown/submers occ sch/ins/pub adm area
+385231000000108,[X]Intent self harm by drown/submersn occ sport/athlet area
+457331000000107,[X]Intent self harm by drowning/submersn occ street/highway
+392011000000104,[X]Intent self harm by drown/submersn occ trade/servce area
+392021000000105,[X]Intent self harm by drown/submers occ indust/constr area
+392031000000107,[X]Intent self harm by drowning/submersion occurrn on farm
+472681000000104,[X]Intent self harm by drown/submersn occ oth specif place
+415591000000101,[X]Intent self harm by drown/submersn occ unspecified place
+420511000000107,[X]Intention self harm by handgun discharge occurrn at home
+391801000000103,[X]Intent self harm by handgun disch occ in resid instit'n
+405051000000103,[X]Intent self harm h'gun disch occ sch oth ins/pub adm area
+405061000000100,[X]Intent self harm by handgun disch occ sport/athlet area
+393111000000106,[X]Intent self harm by handgun disch occ on street/highway
+458381000000105,[X]Intent self harm by handgun disch occ trade/service area
+458391000000107,[X]Intent self harm by handgun disch occ indust/constr area
+434261000000104,[X]Intention self harm by handgun discharge occurrn on farm
+422691000000103,[X]Intent self harm by handgun disch occ at oth specif plce
+393841000000101,[X]Intent self harm by handgun disch occ at unspecif place
+387051000000104,[X]Intent self harm by rifle shotgun/larger firearm disch
+393871000000107,[X]Intent self harm rifle sh'gun/largr firarm disch occ home
+393881000000109,[X]Int self harm rifl s'gun/lrg frarm disch occ resid instit
+421331000000103,[X]Int self harm rifl s'gun/lrg frarm disch sprt/athlet area
+446251000000108,[X]Int self harm rifl s'gun/lrg frarm disch occ street/h'way
+473371000000101,[X]Int self harm rifl s'gun/lrg frarm disch trad/servce area
+404741000000103,[X]Intent self harm rifle sh'gun/largr firarm disch occ farm
+432991000000105,[X]Int self harm rifl s'gun/lrg frarm disch oth specif place
+445021000000102,[X]Int self harm rifl s'gun/lrg frarm disch occ unspec place
+403641000000108,[X]Intent self harm by other/unspecified firearm discharge
+433281000000106,[X]Intent self harm oth/unspecif firearm disch occ at home
+472751000000101,[X]Intent self harm oth/unsp firearm disch occ resid instit
+403671000000102,[X]Inten self harm oth/uns firarm disch sch/ins/pub adm area
+445351000000105,[X]Inten self harm oth/uns firearm disch occ sprt/athl area
+404831000000101,[X]Intent self harm oth/unsp firearm disch occ street/h'way
+458531000000103,[X]Intent self harm oth/uns firearm disch trade/servce area
+457721000000106,[X]Inten self harm oth/uns firearm disch indust/constr area
+385481000000108,[X]Intent self harm oth/unspecif firearm disch occ on farm
+445891000000109,[X]Intent self harm oth/unsp firearm disch oth specif place
+445901000000105,[X]Intent self harm oth/unsp firearm disch occ unspecif plce
+219340003,[X]Intention self harm by explosive material occurrn home
+284744004,[X]Intent self harm by smoke fire/flame occ resid instit'n
+285142001,[X]Intent self harm by steam hot vapour/hot obj occ at home
+446551000000106,[X]Intentional self harm by sharp object occurrence at home
+459811000000100,[X]Intent self harm by sharp object occ resident instit'n
+459821000000106,[X]Intent self harm sharp obj occ sch oth ins/pub adm area
+385441000000100,[X]Intent self harm by sharp object occ sports/athlet area
+385451000000102,[X]Intention self harm by sharp object occ street/highway
+385461000000104,[X]Intent self harm by sharp object occ trade/service area
+385491000000105,[X]Intent self harm by sharp object occ indust/constr area
+385501000000104,[X]Intentional self harm by sharp object occurrence on farm
+433701000000106,[X]Intention self harm by sharp object occ oth specif place
+445911000000107,[X]Intentional self harm by sharp object occ unspecif place
+284756003,[X]Intentional self harm by blunt object occurrence at home
+392501000000107,[X]Int self harm by jump from high place occ unspecif place
+224948000,[X]Intent self harm by jump/lying befor moving obj occ home
+130968006,[X]Self mutilation
+219187002,[X]Deliberate drug poisoning
+290133008,"[X]Poisoning/exposure, ? intent, to nonopioid analgesic"
+269688005,"[X]Poison/exposure, ?intent, to other/unspec drug/medicament"
+57335002,"[X]Poisoning/exposure, ? intent, to other gas/vapour"
+37131007,"[X]Poisoning/exposure, ? intent, to pesticide"
+362977000,[X]Sequel intentn self-harm assault+event of undeterm intent
