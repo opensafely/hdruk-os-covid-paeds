@@ -1691,29 +1691,21 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_18_abnormal_clinical_and_laboratory_findings_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_18_abnormal_clinical_and_laboratory_findings_overall.jpeg
 
-  monthly_admissions_19_injury_and_poisoning_overall:
-    run: r:latest analysis/05_monthly_resource_use.R admissions 19_injury_and_poisoning overall
+  monthly_admissions_19_injury_and_poisoning_excluding_poisoning_by_drugs_overall:
+    run: r:latest analysis/05_monthly_resource_use.R admissions 19_injury_and_poisoning_excluding_poisoning_by_drugs overall
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_19_injury_and_poisoning_overall.csv
-        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_19_injury_and_poisoning_overall.jpeg
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_19_injury_and_poisoning_excluding_poisoning_by_drugs_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_19_injury_and_poisoning_excluding_poisoning_by_drugs_overall.jpeg
 
-  monthly_admissions_20_external_causes_not_self_harm_overall:
+  monthly_admissions_20_external_causes_excluding_self_harm_overall:
     run: r:latest analysis/05_monthly_resource_use.R admissions 20_external_causes_not_self_harm overall
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_20_external_causes_not_self_harm_overall.csv
-        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_20_external_causes_not_self_harm_overall.jpeg
-
-  monthly_admissions_20_external_causes_self_harm_overall:
-    run: r:latest analysis/05_monthly_resource_use.R admissions 20_external_causes_self_harm overall
-    needs: [construct_yearly_cohort, process_admissions_data]
-    outputs:
-      moderately_sensitive:
-        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_20_external_causes_self_harm_overall.csv
-        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_20_external_causes_self_harm_overall.jpeg
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_20_external_causes_excluding_self_harm_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_20_external_causes_excluding_self_harm_overall.jpeg
 
   monthly_admissions_21_factors_influencing_health_status_overall:
     run: r:latest analysis/05_monthly_resource_use.R admissions 21_factors_influencing_health_status overall
@@ -1730,6 +1722,14 @@ actions:
       moderately_sensitive:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_22_codes_for_special_purposes_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_22_codes_for_special_purposes_overall.jpeg
+
+  monthly_admissions_23_self_harm_and_poisoning_by_drugs_overall:
+    run: r:latest analysis/05_monthly_resource_use.R admissions 23_self_harm_and_poisoning_by_drugs overall
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_23_self_harm_and_poisoning_by_drugs_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_23_self_harm_and_poisoning_by_drugs_overall.jpeg
 
   monthly_beddays_all_overall:
     run: r:latest analysis/05_monthly_resource_use.R beddays all overall
@@ -1907,29 +1907,21 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_18_abnormal_clinical_and_laboratory_findings_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_18_abnormal_clinical_and_laboratory_findings_overall.jpeg
 
-  monthly_beddays_19_injury_and_poisoning_overall:
-    run: r:latest analysis/05_monthly_resource_use.R beddays 19_injury_and_poisoning overall
+  monthly_beddays_19_injury_and_poisoning_excluding_poisoning_by_drugs_overall:
+    run: r:latest analysis/05_monthly_resource_use.R beddays 19_injury_and_poisoning_excluding_poisoning_by_drugs overall
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_19_injury_and_poisoning_overall.csv
-        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_19_injury_and_poisoning_overall.jpeg
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_19_injury_and_poisoning_excluding_poisoning_by_drugs_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_19_injury_and_poisoning_excluding_poisoning_by_drugs_overall.jpeg
 
-  monthly_beddays_20_external_causes_not_self_harm_overall:
-    run: r:latest analysis/05_monthly_resource_use.R beddays 20_external_causes_not_self_harm overall
+  monthly_beddays_20_external_causes_excluding_self_harm_overall:
+    run: r:latest analysis/05_monthly_resource_use.R beddays 20_external_causes_excluding_self_harm overall
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_20_external_causes_not_self_harm_overall.csv
-        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_20_external_causes_not_self_harm_overall.jpeg
-
-  monthly_beddays_20_external_causes_self_harm_overall:
-    run: r:latest analysis/05_monthly_resource_use.R beddays 20_external_causes_self_harm overall
-    needs: [construct_yearly_cohort, process_admissions_data]
-    outputs:
-      moderately_sensitive:
-        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_20_external_causes_self_harm_overall.csv
-        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_20_external_causes_self_harm_overall.jpeg
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_20_external_causes_excluding_self_harm_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_20_external_causes_excluding_self_harm_overall.jpeg
 
   monthly_beddays_21_factors_influencing_health_status_overall:
     run: r:latest analysis/05_monthly_resource_use.R beddays 21_factors_influencing_health_status overall
@@ -1946,6 +1938,14 @@ actions:
       moderately_sensitive:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_22_codes_for_special_purposes_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_22_codes_for_special_purposes_overall.jpeg
+
+  monthly_beddays_23_self_harm_and_poisoning_by_drugs_overall:
+    run: r:latest analysis/05_monthly_resource_use.R beddays 23_self_harm_and_poisoning_by_drugs overall
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_23_self_harm_and_poisoning_by_drugs_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_23_self_harm_and_poisoning_by_drugs_overall.jpeg
 
   create_matched_cohort:
     run: r:latest analysis/06_matched_cohort.R
