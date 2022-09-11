@@ -121,6 +121,7 @@ if(resource_type == "gp"){
                str_replace_all(",", "") %>%
                str_replace_all("\\(", "") %>%
                str_replace_all("\\)", "") %>%
+               str_replace_all("-", "_") %>%
                str_replace_all(" ", "_") %>% 
                factor()) %>% 
       filter(primary_diagnosis.chapter == condition)
