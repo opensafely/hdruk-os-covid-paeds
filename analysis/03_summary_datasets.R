@@ -52,12 +52,13 @@ explanatory = c(
   
   # Comorbidities
   "comorbidity_count.factor",
-  "asthma", "cancer", "cerebral_palsy", "chronic_infections", "cystic_fibrosis",
-  "devices_and_stomas", "diabetes", "endocrine_disorders",
-  "epilepsy", "gastrointestinal_disorders", "haematological_disorders",
-  "immunological_disorders", "learning_and_behaviour_difficulties",
-  "mental_illness", "musculoskeletal_and_rheum",
-  "severe_mental_illness", "transplant"
+  "mental_health_disorders", "neurodevelopmental_and_behavioural",
+  "asthma", "cystic_fibrosis", "other_respiratory",
+  "cardiovascular", "epilepsy", "headaches", "other_neurological",
+  "gastrointestinal_conditions", "genitourinary", "cancer",
+  "non_malignant_haematological", "immunological", "chronic_infections",
+  "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
+  "metabolic", "obesity", "transplant", "palliative_care"
   
 )
 
