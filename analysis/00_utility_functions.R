@@ -366,7 +366,7 @@ calc_comorbidity_status = function(.data_patient, index_date,
         TRUE ~ "No"
       ) %>%
         factor() %>%
-        ff_label("rheumatological conditions"),
+        ff_label("Rheumatological conditions"),
       
       # 17. Other congenital multisystem syndromes and chromosomal abnormalities ----
       congenital_malformation = case_when(
@@ -462,11 +462,11 @@ calc_comorbidity_status = function(.data_patient, index_date,
       comorbidity_count.factor = case_when(
         comorbidity_count == 0 ~ "0",
         comorbidity_count == 1 ~ "1",
-        comorbidity_count <  6 ~ "2-5",
-        comorbidity_count >= 6 ~ "6+",
+        comorbidity_count == 2 ~ "2",
+        comorbidity_count >= 3 ~ "3+",
         TRUE ~ NA_character_
       ) %>%
-        factor(levels = c("0", "1", "2-5", "6+")) %>% 
+        factor(levels = c("0", "1", "2", "3+")) %>% 
         ff_label("Comorbidity count")
     )
 }
