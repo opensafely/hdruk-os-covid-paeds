@@ -1700,7 +1700,7 @@ actions:
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_19_injury_and_poisoning_excluding_poisoning_by_drugs_overall.jpeg
 
   monthly_admissions_20_external_causes_excluding_self_harm_overall:
-    run: r:latest analysis/05_monthly_resource_use.R admissions 20_external_causes_not_self_harm overall
+    run: r:latest analysis/05_monthly_resource_use.R admissions 20_external_causes_excluding_self_harm overall
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
