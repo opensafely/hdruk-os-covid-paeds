@@ -563,7 +563,7 @@ ff_round_counts = function (.data, accuracy = 15, ignore = c("label", "levels", 
 icd10_code_to_chapter = function(icd10_code){
   
   case_when(
-    str_sub(icd10_code, 1,1) %in% c(paste0("T", 36:50), paste0("X", 60:84))  ~ "23: Self-harm and poisoning by drugs",
+    str_sub(icd10_code, 1,3) %in% c(paste0("T", 36:50), paste0("X", 60:84))  ~ "23: Self-harm and poisoning by drugs",
     str_sub(icd10_code, 1,1) == "A" ~ "01: Infectious and parasitic diseases",
     str_sub(icd10_code, 1,1) == "B" ~ "01: Infectious and parasitic diseases",
     str_sub(icd10_code, 1,1) == "C" ~ "02: Neoplasms",
