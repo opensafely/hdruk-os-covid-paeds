@@ -1962,8 +1962,9 @@ actions:
             process_outpatient_data, process_gp_data, create_matched_cohort]
     outputs:
       highly_sensitive:
-        data_matched: output/data/data_weights.rds
+        data_matched: output/data/data_weighted.rds
       moderately_sensitive:
+        plot_persontime: output/descriptives/matched_cohort/persontime/plot_persontime_distribution.jpeg
         summary_unweighted: output/descriptives/matched_cohort/ipw/summary_unweighted.csv
         summary_weighted: output/descriptives/matched_cohort/ipw/summary_weighted.csv
         effective_sample_size: output/descriptives/matched_cohort/ipw/table_effective_sample_size.csv
