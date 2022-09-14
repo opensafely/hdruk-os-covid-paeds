@@ -57,97 +57,97 @@ data_matched = data_matched %>%
   mutate(ethnicity = ethnicity %>% 
            fct_explicit_na())
 
-## Calculate number of covid tests days in prior year to match date ----
-data_matched = data_matched %>% 
-  left_join(
-    data_testing %>% 
-      left_join(data_matched %>% 
-                  select(patient_id, match_date = test_date),
-                by = "patient_id") %>% 
-      filter(test_date >= match_date - years(1),
-             test_date < match_date) %>% 
-      distinct(patient_id, test_date) %>% 
-      count(patient_id) %>% 
-      rename(n_covid_tests = n) %>% 
-      mutate(
-        n_covid_tests = n_covid_tests %>% 
-          ff_label("SARS-CoV-2 RT-PCR tests in prior year")
-      ),
-    by = c("patient_id")
-  ) %>% 
-  replace_na(list(n_covid_tests = 0))
-
-## Calculate number of beddays in prior year to match date ----
-data_matched = data_matched %>% 
-  left_join(
-    data_admissions %>% 
-      left_join(data_matched %>% 
-                  select(patient_id, test_date),
-                by = "patient_id") %>% 
-      filter(admission_date >= test_date - years(1),
-             admission_date < test_date) %>% 
-      mutate(
-        n_beddays = case_when(
-          admission_date == discharge_date ~ 0.5,
-          TRUE ~ (pmin(discharge_date, test_date - days(1)) - admission_date) %>% 
-            as.numeric()
-        ) %>% 
-          ff_label("Bed-days in prior year")
-      ) %>% 
-      select(patient_id, n_beddays),
-    by = "patient_id"
-  ) %>% 
-  replace_na(list(n_beddays = 0))
-
-## Calculate number of outpatient appointments in prior year to match date ----
-data_matched = data_matched %>% 
-  left_join(
-    data_outpatient %>%
-      filter(is.na(specialty)) %>% 
-      left_join(
-        data_matched %>% 
-          select(patient_id, test_date),
-        by = "patient_id"
-      ) %>%
-      filter(outpatient_date >= test_date - years(1),
-             outpatient_date <  test_date) %>% 
-      group_by(patient_id) %>% 
-      summarise(
-        n_outpatient = sum(outpatient_count)
-      ) %>% 
-      ungroup() %>% 
-      mutate(
-        n_outpatient = n_outpatient %>% 
-          ff_label("Outpatient appointments in prior year")
-      ),
-    by = "patient_id"
-  ) %>% 
-  replace_na(list(n_outpatient = 0))
-    
-## Calculate number of GP contact days in prior year to match date ----
-data_matched = data_matched %>% 
-  left_join(
-    data_gp %>%
-      filter(str_starts(code_type, "KM_") |
-               str_starts(code_type, "mapped_1") |
-               str_starts(code_type, "mapped_2")) %>% 
-      left_join(
-        data_matched %>% 
-          select(patient_id, test_date),
-        by = "patient_id"
-      ) %>%
-      filter(gp_date >= test_date - years(1),
-             gp_date <  test_date) %>%
-      distinct(patient_id, gp_date) %>%
-      count(patient_id) %>% 
-      rename(n_gp = n) %>% 
-      mutate(
-        n_gp = n_gp %>% 
-          ff_label("Healthcare episodes in prior year")
-      ),
-    by = "patient_id"
-  ) %>% 
-  replace_na(list(n_gp = 0))
+# ## Calculate number of covid tests days in prior year to match date ----
+# data_matched = data_matched %>% 
+#   left_join(
+#     data_testing %>% 
+#       left_join(data_matched %>% 
+#                   select(patient_id, match_date = test_date),
+#                 by = "patient_id") %>% 
+#       filter(test_date >= match_date - years(1),
+#              test_date < match_date) %>% 
+#       distinct(patient_id, test_date) %>% 
+#       count(patient_id) %>% 
+#       rename(n_covid_tests = n) %>% 
+#       mutate(
+#         n_covid_tests = n_covid_tests %>% 
+#           ff_label("SARS-CoV-2 RT-PCR tests in prior year")
+#       ),
+#     by = c("patient_id")
+#   ) %>% 
+#   replace_na(list(n_covid_tests = 0))
+# 
+# ## Calculate number of beddays in prior year to match date ----
+# data_matched = data_matched %>% 
+#   left_join(
+#     data_admissions %>% 
+#       left_join(data_matched %>% 
+#                   select(patient_id, test_date),
+#                 by = "patient_id") %>% 
+#       filter(admission_date >= test_date - years(1),
+#              admission_date < test_date) %>% 
+#       mutate(
+#         n_beddays = case_when(
+#           admission_date == discharge_date ~ 0.5,
+#           TRUE ~ (pmin(discharge_date, test_date - days(1)) - admission_date) %>% 
+#             as.numeric()
+#         ) %>% 
+#           ff_label("Bed-days in prior year")
+#       ) %>% 
+#       select(patient_id, n_beddays),
+#     by = "patient_id"
+#   ) %>% 
+#   replace_na(list(n_beddays = 0))
+# 
+# ## Calculate number of outpatient appointments in prior year to match date ----
+# data_matched = data_matched %>% 
+#   left_join(
+#     data_outpatient %>%
+#       filter(is.na(specialty)) %>% 
+#       left_join(
+#         data_matched %>% 
+#           select(patient_id, test_date),
+#         by = "patient_id"
+#       ) %>%
+#       filter(outpatient_date >= test_date - years(1),
+#              outpatient_date <  test_date) %>% 
+#       group_by(patient_id) %>% 
+#       summarise(
+#         n_outpatient = sum(outpatient_count)
+#       ) %>% 
+#       ungroup() %>% 
+#       mutate(
+#         n_outpatient = n_outpatient %>% 
+#           ff_label("Outpatient appointments in prior year")
+#       ),
+#     by = "patient_id"
+#   ) %>% 
+#   replace_na(list(n_outpatient = 0))
+#     
+# ## Calculate number of GP contact days in prior year to match date ----
+# data_matched = data_matched %>% 
+#   left_join(
+#     data_gp %>%
+#       filter(str_starts(code_type, "KM_") |
+#                str_starts(code_type, "mapped_1") |
+#                str_starts(code_type, "mapped_2")) %>% 
+#       left_join(
+#         data_matched %>% 
+#           select(patient_id, test_date),
+#         by = "patient_id"
+#       ) %>%
+#       filter(gp_date >= test_date - years(1),
+#              gp_date <  test_date) %>%
+#       distinct(patient_id, gp_date) %>%
+#       count(patient_id) %>% 
+#       rename(n_gp = n) %>% 
+#       mutate(
+#         n_gp = n_gp %>% 
+#           ff_label("Healthcare episodes in prior year")
+#       ),
+#     by = "patient_id"
+#   ) %>% 
+#   replace_na(list(n_gp = 0))
 
 # Calculate person time ----
 ## Calculate censor dates indexed to match/test date ----
@@ -211,11 +211,11 @@ weight_variables = c(
   "gastrointestinal_conditions", "genitourinary", "cancer",
   "non_malignant_haematological", "immunological", "chronic_infections",
   "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "obesity", "transplant", "palliative_care",
+  "metabolic", "obesity", "transplant", "palliative_care"#,
   
-  # Resource use and covid testing
-  "n_covid_tests",
-  "n_beddays", "n_outpatient", "n_gp"
+  # # Resource use and covid testing
+  # "n_covid_tests",
+  # "n_beddays", "n_outpatient", "n_gp"
 )
 
 ## Model forumla ----
