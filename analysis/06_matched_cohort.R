@@ -68,6 +68,7 @@ data_testing_tp = data_testing %>%
          test_date < tp_end_date)
 
 # Filter out nosocomial covid and discrepant covid test results ----
+## Also filter out death_date < test_date (dummy data)
 data_patient = data_patient %>% 
   filter(covid_nosocomial == "No", covid_discrepant_test == "No")
 
@@ -79,9 +80,9 @@ data_patient = data_patient %>%
 data_testing_tp = data_testing_tp %>%
   filter(patient_id %in% data_patient$patient_id) %>% 
   left_join(data_patient %>% 
-              select(patient_id, covid_status_tp, date_of_birth),
+              select(patient_id, covid_status_tp, date_of_birth, death_date),
             by = "patient_id") %>% 
-  drop_na()
+  drop_na(patient_id, covid_status_tp, date_of_birth)
 
 # Filter test dates ----
 # Include only:
@@ -91,7 +92,10 @@ data_testing_tp = data_testing_tp %>%
   group_by(patient_id, result) %>% 
   filter(covid_status_tp == "Positive" & result == "Positive" & row_number() == 1 |
            covid_status_tp == "Negative" & result == "Negative") %>% 
-  ungroup()
+  ungroup() %>% 
+  filter(
+    is.na(death_date) | test_date + days(14) > death_date 
+  )
 
 ## Calculate age on test date ----
 data_testing_tp = data_testing_tp %>% 
@@ -128,7 +132,7 @@ data_testing_tp = data_testing_tp %>%
   ) %>% 
   filter(is.na(in_hospital_neg_test))
 
-### Log number of patients not hospitaled during negative test ----
+### Log number of patients not hospitalised during negative test ----
 data_inclusion = data_inclusion %>% 
   left_join(data_testing_tp %>%
               group_by(patient_id) %>% 
@@ -227,7 +231,7 @@ data_untested = data_patient %>%
 
 ## Filter out dead patients on matched test date ----
 data_untested = data_untested %>% 
-  filter(test_date < death_date | is.na(death_date))
+  filter(test_date + days(14) < death_date | is.na(death_date))
 
 ### Log number of patients alive on matched test date ----
 data_inclusion = data_inclusion %>% 
