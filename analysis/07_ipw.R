@@ -21,11 +21,22 @@ source(here::here("analysis", "00_lookup_tables.R"))
 # Output directories ----
 dir.create(here::here("output", "data"),
            showWarnings = FALSE, recursive=TRUE)
+dir.create(here::here("output", "descriptives", "matched_cohort", "persontime"),
+           showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "descriptives", "matched_cohort", "ipw"),
            showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "descriptives", "matched_cohort", "ipw", "balance_plot"),
            showWarnings = FALSE, recursive=TRUE)
 
+# Load global variables ----
+global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
+
+## Study dates ----
+start_date     = ymd(global_var$start_date)
+end_date       = ymd(global_var$end_date)
+tp_start_date  = ymd(global_var$tp_start_date)
+tp_end_date    = ymd(global_var$tp_end_date)
+fup_start_date = ymd(global_var$fup_start_date)
 
 # Load datasets ----
 data_matched    = read_rds(here::here("output", "data", "data_matched.rds"))
@@ -57,7 +68,11 @@ data_matched = data_matched %>%
              test_date < match_date) %>% 
       distinct(patient_id, test_date) %>% 
       count(patient_id) %>% 
-      rename(n_covid_tests = n),
+      rename(n_covid_tests = n) %>% 
+      mutate(
+        n_covid_tests = n_covid_tests %>% 
+          ff_label("SARS-CoV-2 RT-PCR tests in prior year")
+      ),
     by = c("patient_id")
   ) %>% 
   replace_na(list(n_covid_tests = 0))
@@ -76,7 +91,8 @@ data_matched = data_matched %>%
           admission_date == discharge_date ~ 0.5,
           TRUE ~ (pmin(discharge_date, test_date - days(1)) - admission_date) %>% 
             as.numeric()
-        )
+        ) %>% 
+          ff_label("Bed-days in prior year")
       ) %>% 
       select(patient_id, n_beddays),
     by = "patient_id"
@@ -98,6 +114,11 @@ data_matched = data_matched %>%
       group_by(patient_id) %>% 
       summarise(
         n_outpatient = sum(outpatient_count)
+      ) %>% 
+      ungroup() %>% 
+      mutate(
+        n_outpatient = n_outpatient %>% 
+          ff_label("Outpatient appointments in prior year")
       ),
     by = "patient_id"
   ) %>% 
@@ -119,10 +140,61 @@ data_matched = data_matched %>%
              gp_date <  test_date) %>%
       distinct(patient_id, gp_date) %>%
       count(patient_id) %>% 
-      rename(n_gp = n),
+      rename(n_gp = n) %>% 
+      mutate(
+        n_gp = n_gp %>% 
+          ff_label("Healthcare episodes in prior year")
+      ),
     by = "patient_id"
   ) %>% 
   replace_na(list(n_gp = 0))
+
+# Calculate person time ----
+## Calculate censor dates indexed to match/test date ----
+data_matched = data_matched %>% 
+  mutate(
+    followup_start_date = test_date + days(14),
+    one_year_followup_date = followup_start_date + weeks(52),
+    turned_positive_date = case_when(
+      covid_status_tp == "Untested" ~ covid_test_date_pos_fup,
+      covid_status_tp == "Negative" ~ covid_test_date_pos_fup,
+      TRUE ~ NA_Date_
+    ),
+    followup_end_date = pmin(one_year_followup_date, turned_positive_date,
+                             death_date, end_date, na.rm = TRUE)
+  )
+
+## Calculate person-time ----
+data_matched = data_matched %>% 
+  mutate(
+    person_time = (followup_end_date - followup_start_date) %>% 
+      as.numeric()
+  ) %>% 
+  group_by(match_id) %>% 
+  mutate(
+    followup_end_date_grouped = min(followup_end_date),
+    person_time_grouped = (followup_end_date_grouped - followup_start_date) %>% 
+      as.numeric()
+  ) %>% 
+  ungroup()
+
+## Plot person-time/followup period distribution ----
+plot_persontime_distribution = data_matched %>% 
+  ggplot(aes(person_time, colour = "Individual")) +
+  geom_density() +
+  geom_density(aes(person_time_grouped, colour = "Group minimum")) +
+  theme_bw() +
+  scale_x_continuous(limits = c(0, NA)) +
+  labs(colour = NULL) +
+  theme(
+    legend.position = "bottom"
+  )
+
+ggsave(filename = "plot_persontime_distribution.jpeg",
+       plot = plot_persontime_distribution,
+       path = here::here("output", "descriptives", "matched_cohort", "persontime"),
+       height = 7, width = 7, units = "in"
+)
 
 # Calculate weighting ----
 ## Predictors
@@ -157,33 +229,33 @@ data_weights = weightit(model_formula,
                  method = "ps",
                  use.mlogit = FALSE)
 
-write_rds(x = data_weights,
-          file = here::here("output", "data", "data_weights.rds"),
-          compress="gz")
-
 # Assess balance across groups ----
 ## Add weights to matched data ----
-data_matched = data_matched %>% 
+data_weighted = data_matched %>% 
   mutate(weights = data_weights$weights)
 
+write_rds(data_weighted,
+          here::here("output", "data", "data_weighted.rds"),
+          compress="gz")
+
 ## Summary of unweighted ----
-summary_unweighted = data_matched %>% 
+summary_unweighted = data_weighted %>% 
   summary_factorlist(dependent = "covid_status_tp",
                      explanatory = weight_variables)
 
-write_csv(x = summary_unweighted,
-          file = here::here("output", "descriptives", "matched_cohort", "ipw", 
-                            "summary_unweighted.csv"))
+write_csv(summary_unweighted,
+          here::here("output", "descriptives", "matched_cohort", "ipw", 
+                     "summary_unweighted.csv"))
 
 ## Summary of weighted ----
-summary_weighted = data_matched %>% 
-  summary_factorlist(dependent = "covid_status_tp",
-                     explanatory = weight_variables,
-                     weights = "weights")
-
-write_csv(x = summary_weighted,
-          file = here::here("output", "descriptives", "matched_cohort", "ipw",
-                            "summary_weighted.csv"))
+# summary_weighted = data_weighted %>% 
+#   summary_factorlist(dependent = "covid_status_tp",
+#                      explanatory = weight_variables,
+#                      weights = "weights")
+# 
+# write_csv(x = summary_weighted,
+#           file = here::here("output", "descriptives", "matched_cohort", "ipw",
+#                             "summary_weighted.csv"))
 
 ## Effective sample size ----
 balance_summary = bal.tab(data_weights, un = TRUE)
@@ -191,9 +263,9 @@ balance_summary = bal.tab(data_weights, un = TRUE)
 table_effective_sample_size = balance_summary$Observations %>% 
   as_tibble(rownames = "Adjustment")
 
-write_csv(x = table_effective_sample_size,
-          file = here::here("output", "descriptives", "matched_cohort", "ipw",
-                            "table_effective_sample_size.csv"))
+write_csv(table_effective_sample_size,
+          here::here("output", "descriptives", "matched_cohort", "ipw",
+                     "table_effective_sample_size.csv"))
 
 ## Assess balance for each pair of treatments ----
 pair_balance = bal.tab(data_weights, un = TRUE, disp.means = TRUE, which.treat = .all)
@@ -207,9 +279,9 @@ table_pair_balance = map2(pair_balance$Pair.Balance,
 }) %>% 
   bind_rows()
 
-write_csv(x = table_pair_balance,
-          file = here::here("output", "descriptives", "matched_cohort", "ipw",
-                            "table_pair_balance.csv"))
+write_csv(table_pair_balance,
+          here::here("output", "descriptives", "matched_cohort", "ipw",
+                     "table_pair_balance.csv"))
 
 ## Assess balance graphically ----
 weight_variables %>% 
@@ -231,97 +303,3 @@ ggsave(filename = paste0("love_plot.jpeg"),
        plot = love_plot,
        path = here::here("output", "descriptives", "matched_cohort", "ipw"),
        width = 10, height = 10, units = "in")
-
-
-
-# 
-# library(tidyverse)
-# library(cobalt)
-# 
-# set.seed(42)
-# n_pos_sample = 100
-# match_ratio = 10
-# n_total = n_pos_sample*(1 + 2*match_ratio)
-# 
-# df = tibble(
-#   person_time = rnorm(n_total, 12, 2),
-#   health_contact = rpois(n_total, 10),
-#   status = c(
-#     rep("Pos", n_pos_sample),
-#     rep("Neg", n_pos_sample*match_ratio),
-#     rep("Unt", n_pos_sample*match_ratio)) %>% 
-#     factor() %>% 
-#     fct_relevel("Unt")
-# ) %>%
-#   rowwise() %>% 
-#   mutate(
-#     sex = case_when(
-#       status == "Pos" ~ sample(c("M", "F"), 1, replace = TRUE, prob = c(0.5, 0.5)),
-#       status == "Neg" ~ sample(c("M", "F"), 1, replace = TRUE, prob = c(0.5, 0.5)),
-#       status == "Unt" ~ sample(c("M", "F"), 1, replace = TRUE, prob = c(0.7, 0.3))
-#     ),
-#     asthma = case_when(
-#       status == "Pos" ~ sample(c("Yes", "No"), 1, replace = TRUE, prob = c(0.7, 0.3)),
-#       status == "Neg" ~ sample(c("Yes", "No"), 1, replace = TRUE, prob = c(0.5, 0.5)),
-#       status == "Unt" ~ sample(c("Yes", "No"), 1, replace = TRUE, prob = c(0.3, 0.7))
-#     ),
-#     age_group = case_when(
-#       status == "Pos" ~ sample(c("4-6", "7-10", "11-14", "15-18"), 1, prob = c(0.1, 0.15, 0.25, 0.5)),
-#       status == "Neg" ~ sample(c("4-6", "7-10", "11-14", "15-18"), 1, prob = c(0.1, 0.25, 0.25, 0.4)),
-#       status == "Unt" ~ sample(c("4-6", "7-10", "11-14", "15-18"), 1, prob = c(0.5, 0.15, 0.15, 0.1))
-#     )
-#   ) %>% 
-#   ungroup() %>% 
-#   mutate(
-#     age_group = age_group %>% 
-#       factor() %>% 
-#       fct_relevel(c("4-6", "7-10", "11-14", "15-18")),
-#   )
-# 
-# 
-# #Using WeightIt to generate weights with multinomial
-# #logistic regression
-# W.out.mn <- WeightIt::weightit(status ~ sex + asthma + age_group, data = df,
-#                                method = "ps", use.mlogit = FALSE)
-# 
-# #Balance summary across treatment pairs
-# bal.tab(W.out.mn, un = TRUE)
-# 
-# #Assessing balance for each pair of treatments
-# bal.tab(W.out.mn, un = TRUE, disp.means = TRUE, which.treat = .all)
-# 
-# x = bal.tab(W.out.mn, un = TRUE, disp.means = TRUE, which.treat = .all)
-# 
-# df = df %>%
-#   ungroup() %>% 
-#   mutate(weights = W.out.mn$weights)
-# 
-# (1/df$weights) %>% sum()
-# 
-# #Assessing balance graphically
-# bal.plot(W.out.mn, "sex", which = "both")
-# bal.plot(W.out.mn, "asthma", which = "both")
-# bal.plot(W.out.mn, "age_group", which = "both")
-# 
-# #Summarizing balance in a Love plot
-# love.plot(W.out.mn, thresholds = c(m = .1), binary = "std",
-#           which.treat = .all, abs = TRUE, position = "bottom")
-# 
-# ## Model healthcare contacts using poisson regression
-# library(MASS)
-# library(broom)
-# 
-# fit_pois = glm(health_contact ~ status + sex + asthma + offset(person_time),
-#                weights = W.out.mn$weights,
-#                data = df,
-#                family = poisson)
-# fit_pois %>% 
-#   tidy(conf.int = TRUE, exponentiate = TRUE)
-# 
-# ## Model healthcare contacts using negative binomial regression
-# fit_nb = glm.nb(health_contact ~ status + sex + asthma + offset(person_time),
-#                 weights = W.out.mn$weights,
-#                 data = df,
-#                 maxit = 100)
-# fit_nb %>% 
-#   tidy(conf.int = TRUE, exponentiate = TRUE)
