@@ -200,11 +200,11 @@ match_pos_neg = data_testing_pos %>%
       
       # Filter pools based on maximum possible matches ----
       df_pool_pos = df_pool_pos %>% 
-        slice(1:n_match) %>% 
+        slice_sample(n = n_match) %>% 
         mutate(match_id = paste0(.y, 1:n_match))
       
       df_pool_neg = df_pool_neg %>% 
-        slice(1:(n_match*match_ratio)) %>% 
+        slice_sample(n = n_match*match_ratio) %>% 
         mutate(match_id = paste0(.y, rep(1:n_match, each = match_ratio)))
       
       # Bind pools ----
@@ -316,7 +316,7 @@ match_untested = match_pos_neg %>%
     # Restrict number to number of matches, assign match_id ----
     if(n_match > 0){
       df_out = df_pool_unt %>%
-        slice(1:(n_match*match_ratio)) %>% 
+        slice_sample(n = n_match*match_ratio) %>% 
         mutate(match_id = rep(df_pool_pos$match_id[1:n_match], each = match_ratio))
     } else {
       df_out = NULL
