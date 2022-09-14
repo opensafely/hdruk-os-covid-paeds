@@ -92,10 +92,7 @@ data_testing_tp = data_testing_tp %>%
   group_by(patient_id, result) %>% 
   filter(covid_status_tp == "Positive" & result == "Positive" & row_number() == 1 |
            covid_status_tp == "Negative" & result == "Negative") %>% 
-  ungroup() %>% 
-  filter(
-    is.na(death_date) | test_date + days(14) > death_date 
-  )
+  ungroup()
 
 ## Calculate age on test date ----
 data_testing_tp = data_testing_tp %>% 
@@ -112,6 +109,20 @@ data_inclusion = data_inclusion %>%
               ungroup() %>% 
               mutate(age_criteria_test_date = TRUE) %>% 
               select(patient_id, age_criteria_test_date),
+            by = c("patient_id"))
+
+## Is alive at start of follow-up ---
+data_testing_tp = data_testing_tp %>% 
+  filter(is.na(death_date) | test_date + days(14) < death_date)
+
+### Log patients alive at start of follow-up ----
+data_inclusion = data_inclusion %>% 
+  left_join(data_testing_tp %>%
+              group_by(patient_id) %>% 
+              slice(1) %>% 
+              ungroup() %>% 
+              mutate(alive_at_start_of_followup = TRUE) %>% 
+              select(patient_id, alive_at_start_of_followup),
             by = c("patient_id"))
 
 ## Filter out in-hospital test-dates for negative patients ----
@@ -231,13 +242,13 @@ data_untested = data_patient %>%
 
 ## Filter out dead patients on matched test date ----
 data_untested = data_untested %>% 
-  filter(test_date + days(14) < death_date | is.na(death_date))
+  filter(test_date + days(14)< death_date | is.na(death_date))
 
 ### Log number of patients alive on matched test date ----
 data_inclusion = data_inclusion %>% 
   left_join(data_untested %>% 
-              mutate(alive_matched_date = TRUE) %>% 
-              select(patient_id, alive_matched_date),
+              mutate(alive_matched_followup = TRUE) %>% 
+              select(patient_id, alive_matched_followup),
             by = "patient_id")
 
 ## Filter out patients not aged 4-17 ----
@@ -351,8 +362,10 @@ data_inclusion = data_inclusion %>%
       age_criteria_matched_date == TRUE ~ TRUE, 
       TRUE ~ FALSE
     ),
-    alive_matched_date = case_when(
-      covid_status_tp == "Untested" & is.na(alive_matched_date) ~ FALSE,
+    alive_start_followup = case_when(
+      covid_status_tp == "Untested" & is.na(alive_matched_followup) ~ FALSE,
+      (covid_status_tp == "Negative" | covid_status_tp == "Positive") &
+        is.na(alive_at_start_of_followup) ~ FALSE,
       TRUE ~ TRUE
     ),
     not_in_hospital_test_match_date = case_when(
@@ -376,7 +389,7 @@ flowchart = data_inclusion %>%
     c2 = c1 & no_discrepant_results,
     c3 = c2 & not_nosocomial,
     c4 = c3 & meets_age_criteria,
-    c5 = c4 & alive_matched_date,
+    c5 = c4 & alive_start_followup,
     c6 = c5 & not_in_hospital_test_match_date,
     c7 = c6 & matched
   ) %>%
@@ -405,7 +418,7 @@ flowchart = data_inclusion %>%
       crit == "c2" ~ "-  with no same-day discrepant RT-PCR test result",
       crit == "c3" ~ "-  with no probable nosocomial infection",
       crit == "c4" ~ "-  with age between 4 and 17 years inclusive on test/matched date",
-      crit == "c5" ~ "-  is alive on test/matched date",
+      crit == "c5" ~ "-  is alive at the start of follow-up",
       crit == "c6" ~ "-  not hospitalised on day of matching/negative RT-PCR test result",
       crit == "c7" ~ "-  successfully matched with negative:untested:positive of 5:5:1",
       TRUE ~ NA_character_
