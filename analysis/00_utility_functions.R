@@ -40,7 +40,8 @@ calc_age = function(.data_patient, index_date){
       age_group = age %>%
         cut(
           breaks = c(-Inf, 4, 7, 11, 15, 18, Inf),
-          labels = c("Under 4", "4-6", "7-10", "11-14", "15-17", "18+")
+          labels = c("Under 4", "4-6", "7-10", "11-14", "15-17", "18+"),
+          right = FALSE
         ) %>% 
         ff_label("Age group (years)")
     )
