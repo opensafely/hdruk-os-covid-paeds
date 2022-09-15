@@ -57,37 +57,37 @@ data_matched = data_matched %>%
   mutate(ethnicity = ethnicity %>% 
            fct_explicit_na())
 
-## Calculate number of covid tests days in prior year to match date ----
-# data_matched = data_matched %>%
-#   left_join(
-#     data_testing %>%
-#       left_join(data_matched %>%
-#                   select(patient_id, match_date = test_date),
-#                 by = "patient_id") %>%
-#       filter(test_date >= match_date - years(1),
-#              test_date < match_date) %>%
-#       distinct(patient_id, test_date) %>%
-#       count(patient_id) %>%
-#       rename(n_covid_tests = n) %>%
-#       mutate(
-#         n_covid_tests =  n_covid_tests %>%
-#           ff_label("SARS-CoV-2 RT-PCR tests in prior year"),
-#         n_covid_tests_Q = n_covid_tests %>% ntile(4)
-#       ),
-#     by = c("patient_id")
-#   ) %>%
-#   replace_na(list(n_covid_tests = 0)) %>%
-#   mutate(
-#     n_covid_tests_Q = case_when(
-#       n_covid_tests == 0 ~ "None",
-#       n_covid_tests_Q == 1 ~ "1 (low)",
-#       n_covid_tests_Q == 4 ~ "4 (high)",
-#       TRUE ~ n_covid_tests_Q %>% as.character()
-#     ) %>%
-#       factor() %>%
-#       fct_relevel("None") %>%
-#       ff_label("SARS-CoV-2 RT-PCR tests in prior year (quartile)"),
-#   )
+# Calculate number of covid tests days in prior year to match date ----
+data_matched = data_matched %>%
+  left_join(
+    data_testing %>%
+      left_join(data_matched %>%
+                  select(patient_id, match_date = test_date),
+                by = "patient_id") %>%
+      filter(test_date >= match_date - years(1),
+             test_date < match_date) %>%
+      distinct(patient_id, test_date) %>%
+      count(patient_id) %>%
+      rename(n_covid_tests = n) %>%
+      mutate(
+        n_covid_tests =  n_covid_tests %>%
+          ff_label("SARS-CoV-2 RT-PCR tests in prior year"),
+        n_covid_tests_Q = n_covid_tests %>% ntile(4)
+      ),
+    by = c("patient_id")
+  ) %>%
+  replace_na(list(n_covid_tests = 0)) %>%
+  mutate(
+    n_covid_tests_Q = case_when(
+      n_covid_tests == 0 ~ "None",
+      n_covid_tests_Q == 1 ~ "1 (low)",
+      n_covid_tests_Q == 4 ~ "4 (high)",
+      TRUE ~ n_covid_tests_Q %>% as.character()
+    ) %>%
+      factor() %>%
+      fct_relevel("None") %>%
+      ff_label("SARS-CoV-2 RT-PCR tests in prior year (quartile)"),
+  )
 
 ## Calculate number of beddays in prior year to match date ----
 data_matched = data_matched %>%
@@ -251,6 +251,13 @@ ggsave(filename = "plot_persontime_distribution.jpeg",
        height = 7, width = 7, units = "in"
 )
 
+# Drop unused factors ----
+## Extract labels first, drop unused levels, relabel
+var_labels = extract_variable_label(data_matched)
+data_matched = data_matched %>% 
+  droplevels() %>% 
+  ff_relabel(var_labels)
+
 # Calculate weighting ----
 ## Predictors
 weight_variables = c(
@@ -305,14 +312,8 @@ write_csv(summary_unweighted,
           here::here("output", "descriptives", "matched_cohort", "ipw", 
                      "summary_unweighted.csv"))
 
-
-data_weighted %>% 
-  group_by(covid_status_tp) %>%
-  count(age_group, wt = weights) %>% 
-  mutate(prop = n/sum(n))
-  
-
-## Summary of weighted ----
+## Summary of weighted ---- 
+# Latest finalfit version not installed: can't use weights input
 # summary_weighted = data_weighted %>% 
 #   summary_factorlist(dependent = "covid_status_tp",
 #                      explanatory = weight_variables,
@@ -344,6 +345,31 @@ table_pair_balance = map2(pair_balance$Pair.Balance,
 }) %>% 
   bind_rows()
 
+
+# Create label lookup table ----
+var_label_lookup = tibble(
+  var_cobalt = var.names(pair_balance)
+) %>%
+  mutate(
+    var = var_cobalt %>% 
+      str_extract(".+(?=_[[:graph:] ^_]+$)"),
+    level = var_cobalt %>% 
+      str_remove(paste0(var, "_")),
+  ) %>%
+  left_join(
+    tibble(var_labels = var_labels,
+           var = names(var_labels)),
+    by = "var"
+  ) %>% 
+  mutate(
+    var_label_level = paste0(var_labels, ": ", level)
+  )
+
+## Vector used for labeling plots ----
+var_label_level = var_label_lookup$var_label_level
+names(var_label_level) = var_label_lookup$var_cobalt
+
+# Create pair balance table ----
 table_pair_balance = map(pair_balance$Pair.Balance,
      function(pair_balance_list){
        
@@ -351,7 +377,7 @@ table_pair_balance = map(pair_balance$Pair.Balance,
        observations = pair_balance_list$Observations
        
        output = balance %>%
-         as_tibble(rownames = "var_combined") %>% 
+         as_tibble(rownames = "var_cobalt") %>% 
          mutate(M.0 = colnames(observations)[1],
                 M.1 = colnames(observations)[2],
                 M.0_n = observations[1,1],
@@ -364,7 +390,7 @@ table_pair_balance = map(pair_balance$Pair.Balance,
 # Create balance summary table ----
 table_balance_summmary = table_pair_balance %>%
   pivot_longer(
-    cols = -c(var_combined, Type, M.0, M.1)
+    cols = -c(var_cobalt, Type, M.0, M.1)
   ) %>%
   mutate(
     name = name %>%
@@ -400,44 +426,32 @@ table_balance_summmary = table_pair_balance %>%
       round_tidy(Untested_ESS*Untested.Adj, 1), " (",
       round_tidy(Untested.Adj*100,1), ")"
     ),
-    Abs_Max_Diff.Un = round_tidy(pmax(abs(Negative_Positive_Diff.Un),
-                                      abs(Negative_Untested_Diff.Un),
-                                      abs(Positive_Untested_Diff.Un))*100, 1),
-    Abs_Max_Diff.Adj = round_tidy(pmax(abs(Negative_Positive_Diff.Adj),
-                                       abs(Negative_Untested_Diff.Adj),
-                                       abs(Positive_Untested_Diff.Adj))*100, 1),
+    Abs_Max_Diff.Un = round_tidy(pmax(abs(Untested_Negative_Diff.Un),
+                                      abs(Untested_Positive_Diff.Un),
+                                      abs(Negative_Positive_Diff.Un))*100, 1),
+    Abs_Max_Diff.Adj = round_tidy(pmax(abs(Untested_Negative_Diff.Adj),
+                                       abs(Untested_Positive_Diff.Adj),
+                                       abs(Negative_Positive_Diff.Adj))*100, 1),
+    Untested_Negative_Diff.Un = round_tidy(Untested_Negative_Diff.Un*100, 1),
+    Untested_Positive_Diff.Un = round_tidy(Untested_Positive_Diff.Un*100, 1),
     Negative_Positive_Diff.Un = round_tidy(Negative_Positive_Diff.Un*100, 1),
-    Negative_Untested_Diff.Un = round_tidy(Negative_Untested_Diff.Un*100, 1),
-    Positive_Untested_Diff.Un = round_tidy(Positive_Untested_Diff.Un*100, 1),
+    Untested_Negative_Diff.Adj = round_tidy(Untested_Negative_Diff.Adj*100, 1),
+    Untested_Positive_Diff.Adj = round_tidy(Untested_Positive_Diff.Adj*100, 1),
     Negative_Positive_Diff.Adj = round_tidy(Negative_Positive_Diff.Adj*100, 1),
-    Negative_Untested_Diff.Adj = round_tidy(Negative_Untested_Diff.Adj*100, 1),
-    Positive_Untested_Diff.Adj = round_tidy(Positive_Untested_Diff.Adj*100, 1),
   )
 
-## Extract variables labels and add to table ----
-var_labels = extract_variable_label(data_weighted)
-
+## Add variable labels to table ----
 table_balance_summmary = table_balance_summmary %>% 
-  mutate(
-    var = var_combined %>% 
-      str_extract(".+(?=_[[:graph:] ^_]+$)"),
-    level = var_combined %>% 
-      str_remove(paste0(var, "_")),
-  ) %>% 
-  left_join(
-    tibble(var_labels = var_labels,
-           var = names(var_labels)),
-    by = "var"
-  )
+  left_join(var_label_lookup, by = "var_cobalt")
 
 ## Organise columns ----
 table_balance_summmary = table_balance_summmary %>% 
   select(var_labels, level,
-         Negative.Un, Positive.Un, Untested.Un,
-         Negative.Adj, Positive.Adj, Untested.Adj,
+         Untested.Un, Negative.Un, Positive.Un,
+         Untested.Adj, Negative.Adj, Positive.Adj,
+         Untested_Negative_Diff.Un, Untested_Negative_Diff.Adj,
+         Untested_Positive_Diff.Un, Untested_Positive_Diff.Adj,
          Negative_Positive_Diff.Un, Negative_Positive_Diff.Adj,
-         Negative_Untested_Diff.Un, Negative_Untested_Diff.Adj,
-         Positive_Untested_Diff.Un, Positive_Untested_Diff.Adj,
          Abs_Max_Diff.Un, Abs_Max_Diff.Adj)
 
 ## Save balance table and balance summary tables ----
@@ -448,8 +462,6 @@ write_csv(table_pair_balance,
 write_csv(table_balance_summmary,
           here::here("output", "descriptives", "matched_cohort", "ipw",
                      "table_balance_summmary.csv"))
-
-
 
 
 ## Assess balance graphically ----
@@ -466,7 +478,9 @@ weight_variables %>%
 
 # Create love plot ----
 love_plot = love.plot(data_weights, thresholds = c(m = .1), binary = "std",
-                      which.treat = .all, abs = TRUE, position = "bottom")
+                      which.treat = .all, abs = TRUE, position = "bottom",
+                      var.names = var_label_level
+                      )
 
 ggsave(filename = paste0("love_plot.jpeg"),
        plot = love_plot,
