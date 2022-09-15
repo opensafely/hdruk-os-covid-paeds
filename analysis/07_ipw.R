@@ -269,6 +269,9 @@ weight_variables = c(
   #"rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
   #"metabolic", "obesity", "transplant", "palliative_care",
   
+  # Vaccination status
+  #"vaccination_status",
+  
   # Resource use and covid testing
   #"n_covid_tests_Q",
   #"n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
