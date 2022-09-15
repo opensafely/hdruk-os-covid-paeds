@@ -21,12 +21,6 @@ tp_start_date    = ymd(global_var$tp_start_date)
 tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
-# Create output directory folders ----
-dir.create(here::here("output", "descriptives", "matched_cohort", "nb_model", "tables"),
-           showWarnings = FALSE, recursive=TRUE)
-dir.create(here::here("output", "descriptives", "matched_cohort", "nb_model", "plots"),
-           showWarnings = FALSE, recursive=TRUE)
-
 #Plot theme
 theme_set(theme_bw())
 
@@ -36,10 +30,18 @@ args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
   resource_type  = "gp"
   condition      = "all"
+  model_type     = "poisson"
 } else{
   resource_type  = args[[1]]
   condition      = args[[2]]
+  model_type     = args[[3]]
 }
+
+# Create output directory folders ----
+dir.create(here::here("output", "descriptives", "matched_cohort", model_type, "tables"),
+           showWarnings = FALSE, recursive=TRUE)
+dir.create(here::here("output", "descriptives", "matched_cohort", model_type, "plots"),
+           showWarnings = FALSE, recursive=TRUE)
 
 # Load weighted matched cohort  ----
 data_weighted = read_rds(here::here("output", "data", "data_weighted.rds"))
@@ -209,7 +211,7 @@ predictors = c(
   
   # Resource use and covid testing
   #"n_covid_tests",
-  #"n_beddays", "n_outpatient", "n_gp"
+  "n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
 )
 
 ## Model forumla ----
@@ -219,7 +221,7 @@ model_formula = paste0("health_contact ~ ",
   as.formula()
 
 
-if(fit_type == "poisson"){
+if(model_type == "poisson"){
   
   ## Model healthcare contacts using Poisson regression
   model_fit = glm(model_formula,
@@ -227,7 +229,7 @@ if(fit_type == "poisson"){
                   family = poisson,
                   data = data_weighted)
   
-} else if(fit_type == "negative_binomial"){
+} else if(model_type == "negative_binomial"){
   
   model_fit = MASS::glm.nb(model_formula,
                         weights = data_weighted$weights,
@@ -239,8 +241,34 @@ if(fit_type == "poisson"){
 }
 
 
+# Model coefficients ----
 model_coeff = model_fit %>%
   tidy(conf.int = TRUE, exponentiate = TRUE)
 
+## Save model coefficients ----
+write_csv(model_coeff,
+          here::here("output", "descriptives", "matched_cohort", model_type, "tables",
+                     paste0("coeff_", resource_type, "_", condition, ".csv")))
+
+## Plot relative rates coefficients ----
+plot_rr = model_coeff %>%
+  filter(term != "(Intercept)") %>%
+  mutate(term = term %>% factor(levels = term) %>% 
+           fct_rev()) %>% 
+  ggplot(aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
+  geom_pointrange(size = 0.2, colour = "red") + 
+  geom_hline(yintercept=1, lty=2) +
+  coord_flip() +
+  labs(x = NULL) +
+  ylab("Incidence rate ratio (95% CI)")
+plot_rr
+
+# Model summary stats ----
 model_stats = model_fit %>%
   glance()
+
+## Save model summary stats ----
+write_csv(model_stats,
+          here::here("output", "descriptives", "matched_cohort", model_type, "tables",
+                     paste0("stats_", resource_type, "_", condition, ".csv")))
+
