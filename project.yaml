@@ -1967,6 +1967,7 @@ actions:
         plot_persontime: output/descriptives/matched_cohort/persontime/plot_persontime_distribution.jpeg
         summary_unweighted: output/descriptives/matched_cohort/ipw/summary_unweighted.csv
         effective_sample_size: output/descriptives/matched_cohort/ipw/table_effective_sample_size.csv
-        pairwise_balance: output/descriptives/matched_cohort/ipw/table_pair_balance.csv
+        table_pairwise_balance: output/descriptives/matched_cohort/ipw/table_pair_balance.csv
+        table_balance_summmary: output/descriptives/matched_cohort/ipw/table_balance_summmary.csv
         balance_plots: output/descriptives/matched_cohort/ipw/balance_plot/*.jpeg
         love_plot: output/descriptives/matched_cohort/ipw/love_plot.jpeg
