@@ -260,17 +260,17 @@ weight_variables = c(
   "region_2019", "rural_urban_2019",
   
   # Comorbidities
-  "comorbidity_count.factor"#,
-  #"mental_health_disorders", "neurodevelopmental_and_behavioural",
-  #"asthma", "cystic_fibrosis", "other_respiratory",
-  #"cardiovascular", "epilepsy", "headaches", "other_neurological",
-  #"gastrointestinal_conditions", "genitourinary", "cancer",
-  #"non_malignant_haematological", "immunological", "chronic_infections",
-  #"rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  #"metabolic", "obesity", "transplant", "palliative_care",
+  "comorbidity_count.factor",
+  "mental_health_disorders", "neurodevelopmental_and_behavioural",
+  "asthma", "cystic_fibrosis", "other_respiratory",
+  "cardiovascular", "epilepsy", "headaches", "other_neurological",
+  "gastrointestinal_conditions", "genitourinary", "cancer",
+  "non_malignant_haematological", "immunological", "chronic_infections",
+  "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
+  "metabolic", "obesity", "transplant", "palliative_care",
   
   # Vaccination status
-  #"vaccination_status",
+  "vaccination_status"#,
   
   # Resource use and covid testing
   #"n_covid_tests_Q",
