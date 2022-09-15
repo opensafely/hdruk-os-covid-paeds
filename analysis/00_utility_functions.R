@@ -11,22 +11,6 @@ apply_exclusion_criteria = function(.data_patient){
     )
 }
 
-# Bootstrap confidence intervals for incidence rate 
-boot.incidence.rate = function(counts, persontime, name = "inc_rate",
-                               R = 20, conf = 0.95, type = "perc", ...){
-  bootfunc = function(c, i, pt){
-    n = sum(c[i])
-    d = sum(pt[i])
-    return(n/d)
-  }
-  
-  boot_ci = boot(counts, bootfunc, R = R, pt = persontime, ...) %>% 
-    boot.ci(conf = conf, type = type)
-  boot_result = c(boot_ci$t0, boot_ci$percent[4:5])
-  names(boot_result) = paste0(name, c("_est", "_LL", "_UL"))
-  return(boot_result)
-}
-
 # Calculates age and age group at index date
 calc_age = function(.data_patient, index_date){
   index_date = lubridate::ymd(index_date)
@@ -375,7 +359,7 @@ calc_comorbidity_status = function(.data_patient, index_date,
         TRUE ~ "No"
       ) %>%
         factor() %>%
-        ff_label("Other congenital multisystem syndromes and chromosomal abnormalities"),
+        ff_label("Other malformation syndromes and abnormalities"),
       
       # 18. Diabetes ----
       diabetes = case_when(
