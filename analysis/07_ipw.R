@@ -255,7 +255,7 @@ ggsave(filename = "plot_persontime_distribution.jpeg",
 ## Predictors
 weight_variables = c(
   # Demographics
-  #"age_group",
+  "age_group",
   "sex", "ethnicity", "imd_Q5_2019",
   "region_2019", "rural_urban_2019",
   
