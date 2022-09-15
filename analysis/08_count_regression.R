@@ -1,9 +1,11 @@
 
 
+
+library(broom)
+library(broom.helpers)
 library(tidyverse)
 library(lubridate)
 library(finalfit)
-library(broom)
 
 # Load custom functions ----
 source(here::here("analysis", "00_utility_functions.R"))
@@ -207,11 +209,14 @@ predictors = c(
   "gastrointestinal_conditions", "genitourinary", "cancer",
   "non_malignant_haematological", "immunological", "chronic_infections",
   "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "obesity", "transplant", "palliative_care",
+  "metabolic", "obesity", "transplant", "palliative_care"#,
+  
+  # Vaccination status
+  #"vaccination_status",
   
   # Resource use and covid testing
-  #"n_covid_tests",
-  "n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
+  #"n_covid_tests_Q",
+  #"n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
 )
 
 ## Model forumla ----
@@ -243,7 +248,10 @@ if(model_type == "poisson"){
 
 # Model coefficients ----
 model_coeff = model_fit %>%
-  tidy(conf.int = TRUE, exponentiate = TRUE)
+  tidy_and_attach(exponentiate = TRUE, conf.int = TRUE) %>%
+  tidy_add_reference_rows() %>%
+  tidy_add_estimate_to_reference_rows() %>% 
+  tidy_add_term_labels()
 
 ## Save model coefficients ----
 write_csv(model_coeff,
@@ -251,17 +259,28 @@ write_csv(model_coeff,
                      paste0("coeff_", resource_type, "_", condition, ".csv")))
 
 ## Plot relative rates coefficients ----
+
+# Prep for plotting ----
 plot_rr = model_coeff %>%
-  filter(term != "(Intercept)") %>%
-  mutate(term = term %>% factor(levels = term) %>% 
-           fct_rev()) %>% 
-  ggplot(aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
-  geom_pointrange(size = 0.2, colour = "red") + 
+  tidy_remove_intercept() %>%
+  filter(reference_row == FALSE) %>% 
+  mutate(plot_label = paste0(var_label, ": ", label) %>% 
+           factor() %>% 
+           fct_inorder() %>% 
+           fct_rev()) %>%
+  ggplot(aes(x = plot_label, y = estimate, ymin = conf.low, ymax = conf.high)) +
+  geom_point(colour = "blue", size = 1.5) + 
+  geom_errorbar(colour = "blue", width=.2) +
   geom_hline(yintercept=1, lty=2) +
   coord_flip() +
   labs(x = NULL) +
   ylab("Incidence rate ratio (95% CI)")
-plot_rr
+
+## Save plot ----
+ggsave(filename = paste0("rrplot_", resource_type, "_", condition, ".jpeg"),
+       plot = plot_rr,
+       path = here::here("output", "descriptives", "matched_cohort", model_type, "plots"),
+       width = 8, height = 8, units = "in")
 
 # Model summary stats ----
 model_stats = model_fit %>%
