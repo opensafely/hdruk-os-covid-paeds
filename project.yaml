@@ -1971,3 +1971,12 @@ actions:
         table_balance_summmary: output/descriptives/matched_cohort/ipw/table_balance_summmary.csv
         balance_plots: output/descriptives/matched_cohort/ipw/balance_plot/*.jpeg
         love_plot: output/descriptives/matched_cohort/ipw/love_plot.jpeg
+
+  count_regression_gp_all_poisson:
+    run: r:latest analysis/08_count_regression.R gp all poisson
+    needs: [weight_matched_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/poisson/tables/coeff_gp_all.csv
+        model_stats: output/descriptives/matched_cohort/poisson/tables/stats_gp_all.csv
+        rr_plot: output/descriptives/matched_cohort/poisson/plots/rrplot_gp_all.jpeg
