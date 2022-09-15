@@ -71,7 +71,7 @@ data_matched = data_matched %>%
       rename(n_covid_tests = n) %>%
       mutate(
         n_covid_tests =  n_covid_tests %>%
-          ff_label("SARS-CoV-2 RT-PCR tests in prior year (quartile)"),
+          ff_label("SARS-CoV-2 RT-PCR tests in prior year"),
         n_covid_tests_Q = n_covid_tests %>% ntile(4)
       ),
     by = c("patient_id")
@@ -273,7 +273,7 @@ weight_variables = c(
   "vaccination_status",
   
   # Resource use and covid testing
-  #"n_covid_tests_Q",
+  "n_covid_tests_Q",
   "n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
 )
 
