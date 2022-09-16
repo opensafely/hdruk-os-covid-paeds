@@ -227,9 +227,8 @@ data_matched = data_matched %>%
   ) %>% 
   group_by(match_id) %>% 
   mutate(
-    followup_end_date_grouped = min(followup_end_date),
-    person_time_grouped = (followup_end_date_grouped - followup_start_date) %>% 
-      as.numeric()
+    person_time_grouped = min(person_time),
+    followup_end_date_grouped = followup_start_date + days(person_time_grouped)
   ) %>% 
   ungroup()
 
