@@ -2007,3 +2007,12 @@ actions:
         model_coefficients: output/descriptives/matched_cohort/poisson/tables/coeff_gp_all.csv
         model_stats: output/descriptives/matched_cohort/poisson/tables/stats_gp_all.csv
         rr_plot: output/descriptives/matched_cohort/poisson/plots/rrplot_gp_all.jpeg
+
+  count_regression_admissions_all_negative_binomial:
+    run: r:latest analysis/08_count_regression.R admissions all negative_binomial
+    needs: [weight_matched_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/tables/coeff_admissions_all.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/tables/stats_admissions_all.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/plots/rrplot_admissions_all.jpeg
