@@ -2016,3 +2016,30 @@ actions:
         model_coefficients: output/descriptives/matched_cohort/negative_binomial/tables/coeff_admissions_all.csv
         model_stats: output/descriptives/matched_cohort/negative_binomial/tables/stats_admissions_all.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/plots/rrplot_admissions_all.jpeg
+
+  count_regression_beddays_all_negative_binomial:
+    run: r:latest analysis/08_count_regression.R beddays all negative_binomial
+    needs: [weight_matched_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/tables/coeff_beddays_all.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/tables/stats_beddays_all.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/plots/rrplot_beddays_all.jpeg
+
+  count_regression_outpatient_all_negative_binomial:
+    run: r:latest analysis/08_count_regression.R outpatient all negative_binomial
+    needs: [weight_matched_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/tables/coeff_outpatient_all.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/tables/stats_outpatient_all.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/plots/rrplot_outpatient_all.jpeg
+
+  count_regression_gp_all_negative_binomial:
+    run: r:latest analysis/08_count_regression.R gp all negative_binomial
+    needs: [weight_matched_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/tables/coeff_gp_all.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/tables/stats_gp_all.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/plots/rrplot_gp_all.jpeg
