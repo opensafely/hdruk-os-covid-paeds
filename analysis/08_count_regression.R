@@ -223,7 +223,7 @@ predictors = c(
   "vaccination_status",
   
   # Resource use and covid testing
-  "n_covid_tests_Q",
+  #"n_covid_tests_Q",
   "n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
 )
 
