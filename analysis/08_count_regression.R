@@ -52,7 +52,7 @@ unique_match_id = unique(data_weighted$match_id)
 
 data_weighted = data_weighted %>% 
   filter(match_id %in% sample(unique_match_id,
-                              min(length(unique_match_id), 2000),
+                              min(length(unique_match_id), 5000),
                               replace = FALSE))
 
 
