@@ -210,7 +210,7 @@ predictors = c(
   "region_2019", "rural_urban_2019",
   
   # Comorbidities
-  "comorbidity_count.factor",
+  #"comorbidity_count.factor",
   "mental_health_disorders", "neurodevelopmental_and_behavioural",
   "asthma", "cystic_fibrosis", "other_respiratory",
   "cardiovascular", "epilepsy", "headaches", "other_neurological",
