@@ -15,6 +15,7 @@
 # Load packages ----
 library(tidyverse)
 library(lubridate)
+library(finalfit)
 
 # Load custom functions and lookup tables ----
 source(here::here("analysis", "00_utility_functions.R"))
@@ -38,13 +39,16 @@ tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
 # Matching parameters ----
-match_ratio = 5
+match_ratio = 7
 match_window = 0
 
 # Load datasets ----
 data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
 data_testing    = read_rds(here::here("output", "data", "data_testing.rds"))
 data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
+
+# Variable labels ----
+var_label = data_patient %>% extract_variable_label()
 
 # Create dataset to log inclusion for inclusion flowchart ----
 data_inclusion = data_patient %>% 
@@ -242,7 +246,7 @@ data_untested = data_patient %>%
 
 ## Filter out dead patients on matched test date ----
 data_untested = data_untested %>% 
-  filter(test_date + days(14)< death_date | is.na(death_date))
+  filter(test_date + days(14) < death_date | is.na(death_date))
 
 ### Log number of patients alive on matched test date ----
 data_inclusion = data_inclusion %>% 
@@ -338,6 +342,10 @@ data_matched = match_pos_neg %>%
 data_matched = data_matched %>% 
   filter(n_matches == (match_ratio*2 +1)) %>% 
   select(-n_matches)
+
+## Relabel variables ----
+data_matched = data_matched %>% 
+  ff_relabel(var_label)
 
 ## Save data as rds ----
 write_rds(data_matched,
