@@ -39,8 +39,9 @@ tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
 # Matching parameters ----
-match_ratio = 10
-match_window = 30
+match_ratio = 5
+match_window = 0
+min_followup_months = 6
 
 # Load datasets ----
 data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
@@ -59,6 +60,7 @@ data_inclusion = data_patient %>%
     no_discrepant_results = covid_discrepant_test == "No",
     no_missing_demographics = case_when(
       !is.na(sex) ~ TRUE,
+      !is.na(ethnicity) ~ TRUE,
       !is.na(imd_Q5_2019) ~ TRUE,
       !is.na(region_2019) ~ TRUE,
       !is.na(rural_urban_2019) ~ TRUE,
@@ -78,7 +80,8 @@ data_patient = data_patient %>%
 # Filter out missing demographics ----
 data_patient = data_patient %>% 
   filter(!is.na(sex), !is.na(imd_Q5_2019),
-         !is.na(region_2019), !is.na(rural_urban_2019))
+         !is.na(region_2019), !is.na(rural_urban_2019),
+         !is.na(ethnicity))
 
 data_testing_tp = data_testing_tp %>%
   filter(patient_id %in% data_patient$patient_id) %>% 
@@ -117,19 +120,19 @@ data_inclusion = data_inclusion %>%
 
 ## Has at least 2 months follow-up ---
 data_testing_tp = data_testing_tp %>% 
-  filter(is.na(death_date) | test_date + days(14) + months(2) < death_date) %>% 
+  filter(is.na(death_date) | test_date + days(14) + months(min_followup_months) < death_date) %>% 
   filter(covid_status_tp == "Positive" |
            is.na(covid_test_date_pos_fup) |
-           (test_date + days(14) + months(2) < covid_test_date_pos_fup))
+           (test_date + days(14) + months(min_followup_months) < covid_test_date_pos_fup))
 
-### Log with minimum 2 months follow-up ----
+### Log with minimum follow-up ----
 data_inclusion = data_inclusion %>% 
   left_join(data_testing_tp %>%
               group_by(patient_id) %>% 
               slice(1) %>% 
               ungroup() %>% 
-              mutate(min_2_months_followup_pos_neg = TRUE) %>% 
-              select(patient_id, min_2_months_followup_pos_neg),
+              mutate(min_months_followup_pos_neg = TRUE) %>% 
+              select(patient_id, min_months_followup_pos_neg),
             by = c("patient_id"))
 
 ## Filter out in-hospital test-dates for negative patients ----
@@ -249,15 +252,15 @@ data_untested = data_patient %>%
 
 ## Filter out patients with less than 2 months followup ----
 data_untested = data_untested %>% 
-  filter(is.na(death_date) | test_date + days(14) + months(2) < death_date) %>% 
-  filter(is.na(covid_test_date_pos_fup) | test_date + days(14) + months(2) < covid_test_date_pos_fup)
+  filter(is.na(death_date) | test_date + days(14) + months(min_followup_months) < death_date) %>% 
+  filter(is.na(covid_test_date_pos_fup) | test_date + days(14) + months(min_followup_months) < covid_test_date_pos_fup)
 
 
 ### Log number of patients minimum 2 months followup ----
 data_inclusion = data_inclusion %>% 
   left_join(data_untested %>% 
-              mutate(min_2_months_followup_untested = TRUE) %>% 
-              select(patient_id, min_2_months_followup_untested),
+              mutate(min_months_followup_untested = TRUE) %>% 
+              select(patient_id, min_months_followup_untested),
             by = "patient_id")
 
 ## Filter out patients not aged 4-17 ----
@@ -375,10 +378,10 @@ data_inclusion = data_inclusion %>%
       age_criteria_matched_date == TRUE ~ TRUE, 
       TRUE ~ FALSE
     ),
-    min_2_months_followup = case_when(
-      covid_status_tp == "Untested" & is.na(min_2_months_followup_untested) ~ FALSE,
+    min_months_followup = case_when(
+      covid_status_tp == "Untested" & is.na(min_months_followup_untested) ~ FALSE,
       (covid_status_tp == "Negative" | covid_status_tp == "Positive") &
-        is.na(min_2_months_followup_pos_neg) ~ FALSE,
+        is.na(min_months_followup_pos_neg) ~ FALSE,
       TRUE ~ TRUE
     ),
     not_in_hospital_test_match_date = case_when(
@@ -402,7 +405,7 @@ flowchart = data_inclusion %>%
     c2 = c1 & no_discrepant_results,
     c3 = c2 & not_nosocomial,
     c4 = c3 & meets_age_criteria,
-    c5 = c4 & min_2_months_followup,
+    c5 = c4 & min_months_followup,
     c6 = c5 & not_in_hospital_test_match_date,
     c7 = c6 & matched
   ) %>%
@@ -427,11 +430,11 @@ flowchart = data_inclusion %>%
     crit = str_extract(criteria, "^c\\d+"),
     criteria = fct_case_when(
       crit == "c0" ~ "OpenSAFELY extract: Registered with GP, alive, with age >0 and <18 years on 01 January 2019",
-      crit == "c1" ~ "-  with no missing demographic data (sex, IMD, region, rural-urban classification)",
+      crit == "c1" ~ "-  with no missing demographic data (sex, ethnicity, IMD, region, rural-urban classification)",
       crit == "c2" ~ "-  with no same-day discrepant RT-PCR test result",
       crit == "c3" ~ "-  with no probable nosocomial infection",
       crit == "c4" ~ "-  with age between 4 and 17 years inclusive on test/matched date",
-      crit == "c5" ~ "-  minimum 2 months follow-up",
+      crit == "c5" ~ "-  minimum 6 months follow-up",
       crit == "c6" ~ "-  not hospitalised on day of matching/negative RT-PCR test result",
       crit == "c7" ~ "-  successfully matched with negative:untested:positive of 5:5:1",
       TRUE ~ NA_character_
@@ -441,6 +444,7 @@ flowchart = data_inclusion %>%
   replace_na(
     list(n_exclude = "-", pct_exclude_step = "-")
   )
+
 
 ## Format flowchart table ----
 tbl_flowchart = flowchart %>% 
