@@ -46,11 +46,15 @@ data_admissions = read_rds(here::here("output", "data", "data_admissions.rds"))
 data_outpatient = read_rds(here::here("output", "data", "data_outpatient.rds"))
 data_gp         = read_rds(here::here("output", "data", "data_gp.rds"))
 
+# Extract variable labels ----
+var_labels = extract_variable_label(data_patient)
+
 # Calculate weighting variables ----
 ## Calculate time-dependent variables on matched date ----
 data_matched = data_matched %>%
   left_join(data_patient, by = c("patient_id", "covid_status_tp")) %>% 
-  calc_indexed_variables(data_matched %>% pull(test_date)) 
+  calc_indexed_variables(data_matched %>% pull(test_date)) %>% 
+  ff_relabel(var_labels)
 
 ## Ethnicity - explicitly code missing as factor
 data_matched = data_matched %>% 
@@ -251,7 +255,6 @@ ggsave(filename = "plot_persontime_distribution.jpeg",
 )
 
 # Drop unused factors ----
-## Extract labels first, drop unused levels, relabel
 var_labels = extract_variable_label(data_matched)
 data_matched = data_matched %>% 
   droplevels() %>% 
