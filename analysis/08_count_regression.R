@@ -48,6 +48,14 @@ dir.create(here::here("output", "descriptives", "matched_cohort", model_type, "p
 # Load weighted matched cohort  ----
 data_weighted = read_rds(here::here("output", "data", "data_weighted.rds"))
 
+unique_match_id = unique(data_weighted$match_id)
+
+data_weighted = data_weighted %>% 
+  filter(match_id %in% sample(unique_match_id,
+                              min(length(unique_match_id), 2000),
+                              replace = FALSE))
+
+
 # Load resource type ----
 if(resource_type == "gp"){
   
@@ -226,6 +234,7 @@ model_formula = paste0("health_contact ~ ",
   as.formula()
 
 
+
 if(model_type == "poisson"){
   
   ## Model healthcare contacts using Poisson regression
@@ -239,7 +248,7 @@ if(model_type == "poisson"){
   model_fit = MASS::glm.nb(model_formula,
                         weights = data_weighted$weights,
                         data = data_weighted,
-                        maxit = 1000)
+                        maxit = 10000)
   
 } else {
   stop("Unrecognised fit_type")
