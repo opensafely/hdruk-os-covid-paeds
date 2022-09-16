@@ -113,7 +113,7 @@ study = StudyDefinition(
                     "Yorkshire and the Humber": 0.2,
                     "East Midlands": 0.1,
                     "West Midlands": 0.1,
-                    "East of England": 0.1,
+                    "East": 0.1,
                     "London": 0.1,
                     "South East": 0.09,
                     "": 0.01
@@ -134,7 +134,7 @@ study = StudyDefinition(
                     "Yorkshire and the Humber": 0.2,
                     "East Midlands": 0.1,
                     "West Midlands": 0.1,
-                    "East of England": 0.1,
+                    "East": 0.1,
                     "London": 0.1,
                     "South East": 0.09,
                     "": 0.01
@@ -155,7 +155,7 @@ study = StudyDefinition(
                     "Yorkshire and the Humber": 0.2,
                     "East Midlands": 0.1,
                     "West Midlands": 0.1,
-                    "East of England": 0.1,
+                    "East": 0.1,
                     "London": 0.1,
                     "South East": 0.09,
                     "": 0.01
