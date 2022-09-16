@@ -40,7 +40,7 @@ fup_start_date   = ymd(global_var$fup_start_date)
 
 # Matching parameters ----
 match_ratio = 10
-match_window = 14
+match_window = 30
 
 # Load datasets ----
 data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
