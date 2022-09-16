@@ -217,14 +217,14 @@ predictors = c(
   "gastrointestinal_conditions", "genitourinary", "cancer",
   "non_malignant_haematological", "immunological", "chronic_infections",
   "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "obesity", "transplant", "palliative_care"#,
+  "metabolic", "obesity", "transplant", "palliative_care",
   
   # Vaccination status
-  #"vaccination_status",
+  "vaccination_status",
   
   # Resource use and covid testing
-  #"n_covid_tests_Q",
-  #"n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
+  "n_covid_tests_Q",
+  "n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
 )
 
 ## Model forumla ----
