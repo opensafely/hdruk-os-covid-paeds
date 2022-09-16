@@ -118,9 +118,11 @@ data_inclusion = data_inclusion %>%
 ## Has at least 2 months follow-up ---
 data_testing_tp = data_testing_tp %>% 
   filter(is.na(death_date) | test_date + days(14) + months(2) < death_date) %>% 
-  filter(is.na(covid_test_date_pos_fup) | test_date + days(14) + months(2) < covid_test_date_pos_fup)
+  filter(covid_status_tp == "Positive" |
+           is.na(covid_test_date_pos_fup) |
+           (test_date + days(14) + months(2) < covid_test_date_pos_fup))
 
-### Log patients alive at start of follow-up ----
+### Log with minimum 2 months follow-up ----
 data_inclusion = data_inclusion %>% 
   left_join(data_testing_tp %>%
               group_by(patient_id) %>% 
