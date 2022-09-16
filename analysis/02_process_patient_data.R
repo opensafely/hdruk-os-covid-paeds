@@ -92,6 +92,7 @@ data_patient = data_patient %>%
       TRUE ~ NA_character_
     ) %>%
       factor() %>%
+      fct_relevel("White") %>% 
       ff_label("Ethnicity (primary care)"),
 
     ethnicity_6_sus = case_when(
@@ -110,6 +111,7 @@ data_patient = data_patient %>%
 
     region_2019 = region_2019 %>%
       factor() %>%
+      fct_relevel("East Midlands") %>% 
       ff_label("Region"),
 
     imd_Q5_2019 = case_when(
@@ -130,6 +132,7 @@ data_patient = data_patient %>%
       TRUE                             ~ NA_character_
     ) %>%
       factor() %>%
+      fct_relevel("Urban city or town", "Urban conurbation") %>% 
       ff_label("Rural-urban classification"),
     
      shielding = if_else(is.na(shielding_first_date), "No", "Yes") %>% 
@@ -199,14 +202,14 @@ data_patient = data_patient %>%
       covid_test_neg_tp_count > 0 ~ "Negative",
       TRUE ~ "Untested") %>%
       factor() %>%
-      fct_relevel("Untested") %>% 
+      fct_relevel("Untested", "Positive") %>% 
       ff_label("SARS-CoV-2 status (testing period)"),
     covid_status_fup = case_when(
       covid_test_pos_fup_count > 0 ~ "Positive",
       covid_test_neg_fup_count > 0 ~ "Negative",
       TRUE ~ "Untested") %>%
       factor() %>%
-      fct_relevel("Untested") %>% 
+      fct_relevel("Untested", "Positive") %>% 
       ff_label("SARS-CoV-2 status (follow-up period)"),
   )
 
