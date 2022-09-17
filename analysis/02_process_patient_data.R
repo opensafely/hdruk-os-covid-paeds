@@ -202,14 +202,14 @@ data_patient = data_patient %>%
       covid_test_neg_tp_count > 0 ~ "Negative",
       TRUE ~ "Untested") %>%
       factor() %>%
-      fct_relevel("Untested", "Positive") %>% 
+      fct_relevel("Negative", "Positive") %>% 
       ff_label("SARS-CoV-2 status (testing period)"),
     covid_status_fup = case_when(
       covid_test_pos_fup_count > 0 ~ "Positive",
       covid_test_neg_fup_count > 0 ~ "Negative",
       TRUE ~ "Untested") %>%
       factor() %>%
-      fct_relevel("Untested", "Positive") %>% 
+      fct_relevel("Negative", "Positive") %>% 
       ff_label("SARS-CoV-2 status (follow-up period)"),
   )
 
