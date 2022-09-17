@@ -428,18 +428,18 @@ table_balance_summmary = table_pair_balance %>%
       round_tidy(Untested_ESS*Untested.Adj, 1), " (",
       round_tidy(Untested.Adj*100,1), ")"
     ),
-    Abs_Max_Diff.Un = round_tidy(pmax(abs(Untested_Positive_Diff.Un),
-                                      abs(Untested_Negative_Diff.Un),
-                                      abs(Positive_Negative_Diff.Un))*100, 1),
-    Abs_Max_Diff.Adj = round_tidy(pmax(abs(Untested_Positive_Diff.Adj),
-                                       abs(Untested_Negative_Diff.Adj),
-                                       abs(Positive_Negative_Diff.Adj))*100, 1),
-    Untested_Positive_Diff.Un = round_tidy(Untested_Positive_Diff.Un*100, 1),
-    Untested_Negative_Diff.Un = round_tidy(Untested_Negative_Diff.Un*100, 1),
-    Positive_Negative_Diff.Un = round_tidy(Positive_Negative_Diff.Un*100, 1),
-    Untested_Positive_Diff.Adj = round_tidy(Untested_Positive_Diff.Adj*100, 1),
-    Untested_Negative_Diff.Adj = round_tidy(Untested_Negative_Diff.Adj*100, 1),
-    Positive_Negative_Diff.Adj = round_tidy(Positive_Negative_Diff.Adj*100, 1),
+    Abs_Max_Diff.Un = round_tidy(pmax(abs(Negative_Positive_Diff.Un),
+                                      abs(Negative_Untested_Diff.Un),
+                                      abs(Positive_Untested_Diff.Un))*100, 1),
+    Abs_Max_Diff.Adj = round_tidy(pmax(abs(Negative_Positive_Diff.Adj),
+                                       abs(Negative_Untested_Diff.Adj),
+                                       abs(Positive_Untested_Diff.Adj))*100, 1),
+    Negative_Positive_Diff.Un = round_tidy(Negative_Positive_Diff.Un*100, 1),
+    Negative_Untested_Diff.Un = round_tidy(Negative_Untested_Diff.Un*100, 1),
+    Positive_Untested_Diff.Un = round_tidy(Positive_Untested_Diff.Un*100, 1),
+    Negative_Positive_Diff.Adj = round_tidy(Negative_Positive_Diff.Adj*100, 1),
+    Negative_Untested_Diff.Adj = round_tidy(Negative_Untested_Diff.Adj*100, 1),
+    Positive_Untested_Diff.Adj = round_tidy(Positive_Untested_Diff.Adj*100, 1),
   )
 
 ## Add variable labels to table ----
@@ -449,11 +449,11 @@ table_balance_summmary = table_balance_summmary %>%
 ## Organise columns ----
 table_balance_summmary = table_balance_summmary %>% 
   select(var_labels, level,
-         Untested.Un, Negative.Un, Positive.Un,
-         Untested.Adj, Negative.Adj, Positive.Adj,
-         Untested_Positive_Diff.Un, Untested_Positive_Diff.Adj,
-         Untested_Negative_Diff.Un, Untested_Negative_Diff.Adj,
-         Positive_Negative_Diff.Un, Positive_Negative_Diff.Adj,
+         Negative.Un, Positive.Un, Untested.Un,
+         Negative.Adj, Positive.Adj, Untested.Adj,
+         Negative_Positive_Diff.Un, Negative_Positive_Diff.Adj,
+         Negative_Untested_Diff.Un, Negative_Untested_Diff.Adj,
+         Positive_Untested_Diff.Un, Positive_Untested_Diff.Adj,
          Abs_Max_Diff.Un, Abs_Max_Diff.Adj)
 
 ## Save balance table and balance summary tables ----
