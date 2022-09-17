@@ -48,14 +48,6 @@ dir.create(here::here("output", "descriptives", "matched_cohort", model_type, "p
 # Load weighted matched cohort  ----
 data_weighted = read_rds(here::here("output", "data", "data_weighted.rds"))
 
-unique_match_id = unique(data_weighted$match_id)
-
-data_weighted = data_weighted %>% 
-  filter(match_id %in% sample(unique_match_id,
-                              min(length(unique_match_id), 5000),
-                              replace = FALSE))
-
-
 # Load resource type ----
 if(resource_type == "gp"){
   
@@ -223,7 +215,7 @@ predictors = c(
   "vaccination_status",
   
   # Resource use and covid testing
-  #"n_covid_tests_Q",
+  "n_covid_tests_Q",
   "n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
 )
 
