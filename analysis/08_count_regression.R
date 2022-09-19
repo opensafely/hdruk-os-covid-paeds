@@ -198,25 +198,25 @@ predictors = c(
   "covid_status_tp",
   
   # Demographics
-  "age_group", "sex", "ethnicity", "imd_Q5_2019",
-  "region_2019", "rural_urban_2019",
+  #"age_group", "sex", "ethnicity", "imd_Q5_2019",
+  #"region_2019", "rural_urban_2019",
   
   # Comorbidities
   #"comorbidity_count.factor",
-  "mental_health_disorders", "neurodevelopmental_and_behavioural",
-  "asthma", "cystic_fibrosis", "other_respiratory",
-  "cardiovascular", "epilepsy", "headaches", "other_neurological",
-  "gastrointestinal_conditions", "genitourinary", "cancer",
-  "non_malignant_haematological", "immunological", "chronic_infections",
-  "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "obesity", "transplant", "palliative_care",
+  #"mental_health_disorders", "neurodevelopmental_and_behavioural",
+  #"asthma", "cystic_fibrosis", "other_respiratory",
+  #"cardiovascular", "epilepsy", "headaches", "other_neurological",
+  #"gastrointestinal_conditions", "genitourinary", "cancer",
+  #"non_malignant_haematological", "immunological", "chronic_infections",
+  #"rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
+  #"metabolic", "obesity", "transplant", "palliative_care",
   
   # Vaccination status
-  "vaccination_status",
+  #"vaccination_status",
   
   # Resource use and covid testing
-  "n_covid_tests_Q",
-  "n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
+  #"n_covid_tests_Q",
+  #"n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
 )
 
 ## Model forumla ----
