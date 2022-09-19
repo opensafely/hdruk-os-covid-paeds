@@ -39,10 +39,12 @@ if(length(args) == 0){
   model_type     = args[[3]]
 }
 
+predictors = "uni_var"
+
 # Create output directory folders ----
-dir.create(here::here("output", "descriptives", "matched_cohort", model_type, "tables"),
+dir.create(here::here("output", "descriptives", "matched_cohort", model_type, predictors, "tables"),
            showWarnings = FALSE, recursive=TRUE)
-dir.create(here::here("output", "descriptives", "matched_cohort", model_type, "plots"),
+dir.create(here::here("output", "descriptives", "matched_cohort", model_type, predictors, "plots"),
            showWarnings = FALSE, recursive=TRUE)
 
 # Load weighted matched cohort  ----
@@ -160,16 +162,11 @@ if(resource_type == "gp"){
       filter(admission_date <= followup_end_date_grouped,
              discharge_date >= followup_start_date) %>%
       mutate(
-        admission_half_day = if_else(
-          admission_date >= followup_start_date &
-            admission_date <= followup_end_date_grouped, 0.5, 0),
-        discharge_half_day = if_else(
-          discharge_date >= followup_start_date &
-            discharge_date <= followup_end_date_grouped, 0.5, 0),
-        inbetween_day = (pmin(discharge_date, followup_end_date_grouped) -
-                           pmax(admission_date, followup_start_date)) %>% as.numeric(),
-        length_of_stay = inbetween_day + 1 - admission_half_day -
-          discharge_half_day
+        length_of_stay = case_when(
+          admission_date == discharge_date ~ 0.5, # Day-case
+          TRUE ~ (pmin(discharge_date, followup_end_date_grouped) -
+                    pmax(admission_date, followup_start_date)) %>% as.numeric()
+        )
       ) %>% 
       group_by(patient_id) %>% 
       summarise(
@@ -256,7 +253,7 @@ model_coeff = model_fit %>%
 
 ## Save model coefficients ----
 write_csv(model_coeff,
-          here::here("output", "descriptives", "matched_cohort", model_type, "tables",
+          here::here("output", "descriptives", "matched_cohort", model_type, predictors, "tables",
                      paste0("coeff_", resource_type, "_", condition, ".csv")))
 
 ## Plot relative rates coefficients ----
@@ -273,6 +270,7 @@ plot_rr = model_coeff %>%
   geom_point(colour = "blue", size = 1.5) + 
   geom_errorbar(colour = "blue", width=.2) +
   geom_hline(yintercept=1, lty=2) +
+  scale_y_continuous(trans='log10') +
   coord_flip() +
   labs(x = NULL) +
   ylab("Incidence rate ratio (95% CI)")
@@ -280,7 +278,7 @@ plot_rr = model_coeff %>%
 ## Save plot ----
 ggsave(filename = paste0("rrplot_", resource_type, "_", condition, ".jpeg"),
        plot = plot_rr,
-       path = here::here("output", "descriptives", "matched_cohort", model_type, "plots"),
+       path = here::here("output", "descriptives", "matched_cohort", model_type, predictors, "plots"),
        width = 8, height = 8, units = "in")
 
 # Model summary stats ----
@@ -289,6 +287,6 @@ model_stats = model_fit %>%
 
 ## Save model summary stats ----
 write_csv(model_stats,
-          here::here("output", "descriptives", "matched_cohort", model_type, "tables",
+          here::here("output", "descriptives", "matched_cohort", model_type, predictors, "tables",
                      paste0("stats_", resource_type, "_", condition, ".csv")))
 
