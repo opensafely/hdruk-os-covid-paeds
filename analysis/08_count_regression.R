@@ -195,7 +195,7 @@ data_weighted = data_weighted %>%
 ## Predictors
 predictors = c(
   # Covid status
-  "covid_status_tp",
+  "covid_status_tp"#,
   
   # Demographics
   #"age_group", "sex", "ethnicity", "imd_Q5_2019",
