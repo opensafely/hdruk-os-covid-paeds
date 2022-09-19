@@ -30,21 +30,21 @@ theme_set(theme_bw())
 args = commandArgs(trailingOnly=TRUE)
 
 if(length(args) == 0){
-  resource_type  = "gp"
+  resource_type  = "beddays"
   condition      = "all"
-  model_type     = "poisson"
+  model_type     = "negative_binomial"
 } else{
   resource_type  = args[[1]]
   condition      = args[[2]]
   model_type     = args[[3]]
 }
 
-predictors = "uni_var"
+pred_type = "uni_var"
 
 # Create output directory folders ----
-dir.create(here::here("output", "descriptives", "matched_cohort", model_type, predictors, "tables"),
+dir.create(here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "tables"),
            showWarnings = FALSE, recursive=TRUE)
-dir.create(here::here("output", "descriptives", "matched_cohort", model_type, predictors, "plots"),
+dir.create(here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "plots"),
            showWarnings = FALSE, recursive=TRUE)
 
 # Load weighted matched cohort  ----
@@ -253,7 +253,7 @@ model_coeff = model_fit %>%
 
 ## Save model coefficients ----
 write_csv(model_coeff,
-          here::here("output", "descriptives", "matched_cohort", model_type, predictors, "tables",
+          here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "tables",
                      paste0("coeff_", resource_type, "_", condition, ".csv")))
 
 ## Plot relative rates coefficients ----
@@ -278,7 +278,7 @@ plot_rr = model_coeff %>%
 ## Save plot ----
 ggsave(filename = paste0("rrplot_", resource_type, "_", condition, ".jpeg"),
        plot = plot_rr,
-       path = here::here("output", "descriptives", "matched_cohort", model_type, predictors, "plots"),
+       path = here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "plots"),
        width = 8, height = 8, units = "in")
 
 # Model summary stats ----
@@ -287,6 +287,6 @@ model_stats = model_fit %>%
 
 ## Save model summary stats ----
 write_csv(model_stats,
-          here::here("output", "descriptives", "matched_cohort", model_type, predictors, "tables",
+          here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "tables",
                      paste0("stats_", resource_type, "_", condition, ".csv")))
 
