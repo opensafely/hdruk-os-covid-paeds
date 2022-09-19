@@ -10,3 +10,5 @@ venv/
 analysis/04_summary_datasets.html
 analysis/05_healthcare_use_2019_2022.html
 .Rhistory
+.Rhistory
+*.pper
