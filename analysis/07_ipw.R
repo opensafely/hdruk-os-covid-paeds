@@ -262,7 +262,7 @@ plot_followup_distribution = data_matched %>%
   )
 
 ggsave(filename = "plot_followup_distribution.jpeg",
-       plot = plot_persontime_distribution,
+       plot = plot_followup_distribution,
        path = here::here("output", "descriptives", "matched_cohort", "persontime"),
        height = 7, width = 7, units = "in"
 )
