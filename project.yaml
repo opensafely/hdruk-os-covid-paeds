@@ -1267,6 +1267,14 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_respiratory_system_overall.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_respiratory_system_overall.jpeg
 
+  monthly_gp_self_harm_overall:
+    run: r:latest analysis/05_monthly_resource_use.R gp self_harm overall
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_self_harm_overall.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_self_harm_overall.jpeg
+
   monthly_gp_skin_subcutaneous_tissue_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp skin_subcutaneous_tissue overall
     needs: [construct_yearly_cohort, process_gp_data]
