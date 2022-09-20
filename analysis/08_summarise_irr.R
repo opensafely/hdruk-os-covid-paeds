@@ -2,6 +2,9 @@
 # Load packages ----
 library(tidyverse)
 
+#Plot theme
+theme_set(theme_bw())
+
 # Parameters ----
 model_type     = "negative_binomial"
 pred_type      = "uni_var"
