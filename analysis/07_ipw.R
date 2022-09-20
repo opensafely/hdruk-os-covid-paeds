@@ -31,6 +31,9 @@ dir.create(here::here("output", "descriptives", "matched_cohort", "ipw", "balanc
 # Load global variables ----
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
 
+# Disclosure control parameters ----
+count_round = global_var$disclosure_count_round
+
 ## Study dates ----
 start_date     = ymd(global_var$start_date)
 end_date       = ymd(global_var$end_date)
@@ -236,8 +239,18 @@ data_matched = data_matched %>%
   ) %>% 
   ungroup()
 
+## Save follow-up period statistics ----
+table_followup = data_matched %>% 
+  summary_factorlist(dependent = "covid_status_tp",
+                     explanatory = "person_time_grouped",
+                     cont = "median")
+
+write_csv(table_followup,
+          here::here("output", "descriptives", "matched_cohort", "persontime",
+                     "tbl_followup_stats.csv"))
+
 ## Plot person-time/followup period distribution ----
-plot_persontime_distribution = data_matched %>% 
+plot_followup_distribution = data_matched %>% 
   ggplot(aes(person_time, colour = "Individual")) +
   geom_density() +
   geom_density(aes(person_time_grouped, colour = "Group minimum")) +
@@ -248,7 +261,7 @@ plot_persontime_distribution = data_matched %>%
     legend.position = "bottom"
   )
 
-ggsave(filename = "plot_persontime_distribution.jpeg",
+ggsave(filename = "plot_followup_distribution.jpeg",
        plot = plot_persontime_distribution,
        path = here::here("output", "descriptives", "matched_cohort", "persontime"),
        height = 7, width = 7, units = "in"
@@ -405,7 +418,7 @@ table_balance_summmary = table_pair_balance %>%
   pivot_wider() %>% 
   mutate(
     Negative.Un = paste0(
-      Negative_n*Negative.Un, " (",
+      plyr::round_any(Negative_n*Negative.Un, count_round), " (",
       round_tidy(Negative.Un*100,1), ")"
     ),
     Negative.Adj = paste0(
@@ -413,7 +426,7 @@ table_balance_summmary = table_pair_balance %>%
       round_tidy(Negative.Adj*100,1), ")"
     ),
     Positive.Un = paste0(
-      Positive_n*Positive.Un, " (",
+      plyr::round_any(Positive_n*Positive.Un, count_round), " (",
       round_tidy(Positive.Un*100,1), ")"
     ),
     Positive.Adj = paste0(
@@ -421,7 +434,7 @@ table_balance_summmary = table_pair_balance %>%
       round_tidy(Positive.Adj*100,1), ")"
     ),
     Untested.Un = paste0(
-      Untested_n*Untested.Un, " (",
+      plyr::round_any(Untested_n*Untested.Un, count_round), " (",
       round_tidy(Untested.Un*100,1), ")"
     ),
     Untested.Adj = paste0(
