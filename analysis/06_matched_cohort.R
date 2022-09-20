@@ -421,7 +421,7 @@ flowchart = data_inclusion %>%
   ) %>%
   group_by(covid_status_tp) %>%
   mutate(
-    n = n #%>% plyr::round_any(count_round)
+    n = n %>% plyr::round_any(count_round)
   ) %>% 
   mutate(
     n_exclude = lag(n) - n,
