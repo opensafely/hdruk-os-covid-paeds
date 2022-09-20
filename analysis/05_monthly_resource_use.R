@@ -10,7 +10,8 @@ source(here::here("analysis", "00_utility_functions.R"))
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
 
 # Disclosure control parameters ----
-count_round = global_var$disclosure_count_round
+count_round  = global_var$disclosure_count_round
+count_redact = global_var$disclosure_redact
 
 # Study dates ----
 study_start_date = ymd(global_var$start_date)
@@ -224,15 +225,21 @@ monthly_count = monthly_count %>%
     by = c("stratification", "month_date", "cohort")) %>% 
   replace_na(list(n_counts = 0)) %>% 
   mutate(
-    n_patient = n_patient %>% plyr::round_any(count_round),
-    n_counts = n_counts %>% plyr::round_any(count_round),
-    n_patient_000 = n_patient/1000
+    n_patient = if_else(n_patient <= count_redact,
+                        NA_real_,
+                        n_patient %>% plyr::round_any(count_round)),
+    n_counts = if_else(n_counts <= count_redact, NA_real_,
+                       n_counts %>% plyr::round_any(count_round)),
+    n_patient_000 = if_else(is.na(n_patient), NA_real_, n_patient/1000)
   ) %>% 
   rowwise() %>% 
   mutate(
-    estimate = poisson.test(n_counts,n_patient_000)$estimate,
-    ci_lower = poisson.test(n_counts,n_patient_000)$conf.int[1],
-    ci_upper = poisson.test(n_counts,n_patient_000)$conf.int[2]
+    estimate = if_else(is.na(n_patient) | is.na(n_counts), NA_real_,
+                       poisson.test(n_counts,n_patient_000)$estimate),
+    ci_lower = if_else(is.na(n_patient) | is.na(n_counts), NA_real_,
+                       poisson.test(n_counts,n_patient_000)$conf.int[1]),
+    ci_upper = if_else(is.na(n_patient) | is.na(n_counts), NA_real_,
+                       poisson.test(n_counts,n_patient_000)$conf.int[2])
   ) %>% 
   ungroup()
 
@@ -258,6 +265,14 @@ plot_monthly = monthly_count %>%
   ) +
   scale_y_continuous(limits = c(0, NA)) +
   theme(legend.position = "bottom")
+
+# Fill missing with redacted label ----
+monthly_count = monthly_count %>% 
+  mutate(n_counts  = n_counts %>% as.character(),
+         n_patient = n_patient %>% as.character()) %>% 
+  replace_na(list(n_counts  = "[REDACTED]",
+                  n_patient = "[REDACTED]"))
+
 
 # Save monthly count table ----
 write_csv(monthly_count, 
