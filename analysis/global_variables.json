@@ -9,5 +9,6 @@
     "n_gp": 5,
     "n_positive_test": 2,
     "n_negative_test": 3,
-    "disclosure_count_round": 15
+    "disclosure_count_round": 5,
+    "disclosure_redact": 7
   }
