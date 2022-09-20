@@ -1964,7 +1964,8 @@ actions:
       highly_sensitive:
         data_matched: output/data/data_weighted.rds
       moderately_sensitive:
-        plot_persontime: output/descriptives/matched_cohort/persontime/plot_persontime_distribution.jpeg
+        plot_followup: output/descriptives/matched_cohort/persontime/plot_followup_distribution.jpeg
+        tbl_followup: output/descriptives/matched_cohort/persontime/tbl_followup_stats.csv
         summary_unweighted: output/descriptives/matched_cohort/ipw/summary_unweighted.csv
         effective_sample_size: output/descriptives/matched_cohort/ipw/table_effective_sample_size.csv
         table_pairwise_balance: output/descriptives/matched_cohort/ipw/table_pair_balance.csv
