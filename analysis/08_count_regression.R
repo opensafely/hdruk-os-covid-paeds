@@ -5,6 +5,7 @@ library(broom)
 library(broom.helpers)
 library(tidyverse)
 library(lubridate)
+library(survey)
 library(finalfit)
 
 # Load custom functions ----
@@ -40,7 +41,6 @@ if(length(args) == 0){
   model_type     = args[[3]]
   pred_type      = args[[4]]
 }
-
 
 
 # Create output directory folders ----
@@ -240,11 +240,15 @@ model_formula = paste0("health_contact ~ ",
 
 if(model_type == "poisson"){
   
-  ## Model healthcare contacts using Poisson regression
-  model_fit = glm(model_formula,
+  # Survey deisgn ----
+  d.w = svydesign(~1,
                   weights = data_weighted$weights,
-                  family = poisson,
                   data = data_weighted)
+  
+  # Fit poisson model ----
+  model_fit = svyglm(model_formula,
+                   family = poisson,
+                   design = d.w)
   
 } else if(model_type == "negative_binomial"){
   
@@ -271,9 +275,7 @@ write_csv(model_coeff,
           here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "tables",
                      paste0("coeff_", resource_type, "_", condition, ".csv")))
 
-## Plot relative rates coefficients ----
-
-# Prep for plotting ----
+## Plot incidence rate ratios ----
 plot_rr = model_coeff %>%
   tidy_remove_intercept() %>%
   filter(reference_row == FALSE) %>% 
