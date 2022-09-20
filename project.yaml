@@ -2442,7 +2442,7 @@ actions:
         rr_plot: output/descriptives/matched_cohort/poisson/uni_var/plots/rrplot_gp_self_harm.jpeg
 
   summarise_irr:
-    run: r:latest analysis/08_summarise_irr.R
+    run: r:latest analysis/08_summarise_irr.R poisson uni_var
     needs: [count_regression_admissions_all_poisson_uni_var,
             count_regression_admissions_01_infectious_and_parasitic_diseases_poisson_uni_var,
             count_regression_admissions_02_neoplasms_poisson_uni_var,
