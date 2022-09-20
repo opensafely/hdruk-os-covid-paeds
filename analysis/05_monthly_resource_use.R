@@ -223,7 +223,10 @@ monthly_count = monthly_count %>%
   left_join(
     data_resource,
     by = c("stratification", "month_date", "cohort")) %>% 
-  replace_na(list(n_counts = 0)) %>% 
+  replace_na(list(n_counts = 0))
+
+# Remove low counts ----
+monthly_count = monthly_count%>% 
   mutate(
     n_patient = if_else(n_patient <= count_redact,
                         NA_real_,
@@ -234,16 +237,16 @@ monthly_count = monthly_count %>%
   ) %>% 
   rowwise() %>% 
   mutate(
-    estimate = if_else(is.na(n_patient) | is.na(n_counts), NA_real_,
+    estimate = ifelse(is.na(n_patient) | is.na(n_counts), NA_real_,
                        poisson.test(n_counts,n_patient_000)$estimate),
-    ci_lower = if_else(is.na(n_patient) | is.na(n_counts), NA_real_,
+    ci_lower = ifelse(is.na(n_patient) | is.na(n_counts), NA_real_,
                        poisson.test(n_counts,n_patient_000)$conf.int[1]),
-    ci_upper = if_else(is.na(n_patient) | is.na(n_counts), NA_real_,
+    ci_upper = ifelse(is.na(n_patient) | is.na(n_counts), NA_real_,
                        poisson.test(n_counts,n_patient_000)$conf.int[2])
   ) %>% 
   ungroup()
 
-
+# Assign y axis label based on resource type ----
 if(resource_type == "gp"){
   y_lab = "Monthly healthcare episodes per 1,000 CYP"
 } else if(resource_type == "outpatient"){
@@ -254,6 +257,7 @@ if(resource_type == "gp"){
   y_lab = "Monthly bed-days per 1,000 CYP"
 }
 
+# Plot monthly resource use ----
 plot_monthly = monthly_count %>% 
   ggplot(aes(month_date, estimate, colour = stratification, fill = stratification)) +
   geom_point(size = 0.5) + geom_line() + 
