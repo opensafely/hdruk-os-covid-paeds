@@ -1972,44 +1972,8 @@ actions:
         balance_plots: output/descriptives/matched_cohort/ipw/balance_plot/*.jpeg
         love_plot: output/descriptives/matched_cohort/ipw/love_plot.jpeg
 
-  count_regression_admissions_all_poisson:
-    run: r:latest analysis/08_count_regression.R admissions all poisson
-    needs: [weight_matched_cohort, process_admissions_data]
-    outputs:
-      moderately_sensitive:
-        model_coefficients: output/descriptives/matched_cohort/poisson/tables/coeff_admissions_all.csv
-        model_stats: output/descriptives/matched_cohort/poisson/tables/stats_admissions_all.csv
-        rr_plot: output/descriptives/matched_cohort/poisson/plots/rrplot_admissions_all.jpeg
-
-  count_regression_beddays_all_poisson:
-    run: r:latest analysis/08_count_regression.R beddays all poisson
-    needs: [weight_matched_cohort, process_admissions_data]
-    outputs:
-      moderately_sensitive:
-        model_coefficients: output/descriptives/matched_cohort/poisson/tables/coeff_beddays_all.csv
-        model_stats: output/descriptives/matched_cohort/poisson/tables/stats_beddays_all.csv
-        rr_plot: output/descriptives/matched_cohort/poisson/plots/rrplot_beddays_all.jpeg
-
-  count_regression_outpatient_all_poisson:
-    run: r:latest analysis/08_count_regression.R outpatient all poisson
-    needs: [weight_matched_cohort, process_outpatient_data]
-    outputs:
-      moderately_sensitive:
-        model_coefficients: output/descriptives/matched_cohort/poisson/tables/coeff_outpatient_all.csv
-        model_stats: output/descriptives/matched_cohort/poisson/tables/stats_outpatient_all.csv
-        rr_plot: output/descriptives/matched_cohort/poisson/plots/rrplot_outpatient_all.jpeg
-
-  count_regression_gp_all_poisson:
-    run: r:latest analysis/08_count_regression.R gp all poisson
-    needs: [weight_matched_cohort, process_gp_data]
-    outputs:
-      moderately_sensitive:
-        model_coefficients: output/descriptives/matched_cohort/poisson/tables/coeff_gp_all.csv
-        model_stats: output/descriptives/matched_cohort/poisson/tables/stats_gp_all.csv
-        rr_plot: output/descriptives/matched_cohort/poisson/plots/rrplot_gp_all.jpeg
-
-  count_regression_admissions_all_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions all negative_binomial
+  count_regression_admissions_all_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions all negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2017,8 +1981,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_all.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_all.jpeg
 
-  count_regression_admissions_01_infectious_and_parasitic_diseases_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 01_infectious_and_parasitic_diseases negative_binomial
+  count_regression_admissions_01_infectious_and_parasitic_diseases_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 01_infectious_and_parasitic_diseases negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2026,8 +1990,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_01_infectious_and_parasitic_diseases.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_01_infectious_and_parasitic_diseases.jpeg
 
-  count_regression_admissions_02_neoplasms_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 02_neoplasms negative_binomial
+  count_regression_admissions_02_neoplasms_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 02_neoplasms negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2035,8 +1999,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_02_neoplasms.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_02_neoplasms.jpeg
 
-  count_regression_admissions_03_diseases_of_the_blood_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 03_diseases_of_the_blood negative_binomial
+  count_regression_admissions_03_diseases_of_the_blood_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 03_diseases_of_the_blood negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2044,8 +2008,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_03_diseases_of_the_blood.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_03_diseases_of_the_blood.jpeg
 
-  count_regression_admissions_04_endocrine_nutritional_and_metabolic_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 04_endocrine_nutritional_and_metabolic negative_binomial
+  count_regression_admissions_04_endocrine_nutritional_and_metabolic_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 04_endocrine_nutritional_and_metabolic negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2053,8 +2017,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_04_endocrine_nutritional_and_metabolic.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_04_endocrine_nutritional_and_metabolic.jpeg
 
-  count_regression_admissions_05_mental_and_behavioural_disorders_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 05_mental_and_behavioural_disorders negative_binomial
+  count_regression_admissions_05_mental_and_behavioural_disorders_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 05_mental_and_behavioural_disorders negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2062,8 +2026,18 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_05_mental_and_behavioural_disorders.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_05_mental_and_behavioural_disorders.jpeg
 
-  count_regression_admissions_09_circulatory_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 09_circulatory_system negative_binomial
+  count_regression_admissions_06_nervous_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 06_nervous_system negative_binomial uni_var
+    needs: [weight_matched_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_admissions_06_nervous_system.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_06_nervous_system.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_06_nervous_system.jpeg
+
+
+  count_regression_admissions_09_circulatory_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 09_circulatory_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2071,8 +2045,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_09_circulatory_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_09_circulatory_system.jpeg
 
-  count_regression_admissions_10_respiratory_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 10_respiratory_system negative_binomial
+  count_regression_admissions_10_respiratory_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 10_respiratory_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2080,8 +2054,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_10_respiratory_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_10_respiratory_system.jpeg
 
-  count_regression_admissions_11_digestive_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 11_digestive_system negative_binomial
+  count_regression_admissions_11_digestive_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 11_digestive_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2089,8 +2063,17 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_11_digestive_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_11_digestive_system.jpeg
 
-  count_regression_admissions_14_genitourinary_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 14_genitourinary_system negative_binomial
+  count_regression_admissions_12_skin_and_subcutaneous_tissue_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 12_skin_and_subcutaneous_tissue negative_binomial uni_var
+    needs: [weight_matched_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_admissions_12_skin_and_subcutaneous_tissue.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_12_skin_and_subcutaneous_tissue.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_12_skin_and_subcutaneous_tissue.jpeg
+
+  count_regression_admissions_14_genitourinary_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 14_genitourinary_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2098,8 +2081,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_14_genitourinary_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_14_genitourinary_system.jpeg
 
-  count_regression_admissions_23_self_harm_and_poisoning_by_drugs_negative_binomial:
-    run: r:latest analysis/08_count_regression.R admissions 23_self_harm_and_poisoning_by_drugs negative_binomial
+  count_regression_admissions_23_self_harm_and_poisoning_by_drugs_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R admissions 23_self_harm_and_poisoning_by_drugs negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2107,8 +2090,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_23_self_harm_and_poisoning_by_drugs.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_23_self_harm_and_poisoning_by_drugs.jpeg
 
-  count_regression_beddays_all_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays all negative_binomial
+  count_regression_beddays_all_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays all negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2116,8 +2099,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_all.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_all.jpeg
 
-  count_regression_beddays_01_infectious_and_parasitic_diseases_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 01_infectious_and_parasitic_diseases negative_binomial
+  count_regression_beddays_01_infectious_and_parasitic_diseases_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 01_infectious_and_parasitic_diseases negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2125,8 +2108,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_01_infectious_and_parasitic_diseases.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_01_infectious_and_parasitic_diseases.jpeg
 
-  count_regression_beddays_02_neoplasms_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 02_neoplasms negative_binomial
+  count_regression_beddays_02_neoplasms_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 02_neoplasms negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2134,8 +2117,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_02_neoplasms.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_02_neoplasms.jpeg
 
-  count_regression_beddays_03_diseases_of_the_blood_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 03_diseases_of_the_blood negative_binomial
+  count_regression_beddays_03_diseases_of_the_blood_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 03_diseases_of_the_blood negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2143,8 +2126,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_03_diseases_of_the_blood.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_03_diseases_of_the_blood.jpeg
 
-  count_regression_beddays_04_endocrine_nutritional_and_metabolic_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 04_endocrine_nutritional_and_metabolic negative_binomial
+  count_regression_beddays_04_endocrine_nutritional_and_metabolic_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 04_endocrine_nutritional_and_metabolic negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2152,8 +2135,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_04_endocrine_nutritional_and_metabolic.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_04_endocrine_nutritional_and_metabolic.jpeg
 
-  count_regression_beddays_05_mental_and_behavioural_disorders_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 05_mental_and_behavioural_disorders negative_binomial
+  count_regression_beddays_05_mental_and_behavioural_disorders_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 05_mental_and_behavioural_disorders negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2161,8 +2144,17 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_05_mental_and_behavioural_disorders.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_05_mental_and_behavioural_disorders.jpeg
 
-  count_regression_beddays_09_circulatory_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 09_circulatory_system negative_binomial
+  count_regression_beddays_06_nervous_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 06_nervous_system negative_binomial uni_var
+    needs: [weight_matched_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_beddays_06_nervous_system.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_06_nervous_system.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_06_nervous_system.jpeg
+
+  count_regression_beddays_09_circulatory_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 09_circulatory_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2170,8 +2162,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_09_circulatory_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_09_circulatory_system.jpeg
 
-  count_regression_beddays_10_respiratory_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 10_respiratory_system negative_binomial
+  count_regression_beddays_10_respiratory_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 10_respiratory_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2179,8 +2171,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_10_respiratory_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_10_respiratory_system.jpeg
 
-  count_regression_beddays_11_digestive_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 11_digestive_system negative_binomial
+  count_regression_beddays_11_digestive_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 11_digestive_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2188,8 +2180,17 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_11_digestive_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_11_digestive_system.jpeg
 
-  count_regression_beddays_14_genitourinary_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 14_genitourinary_system negative_binomial
+  count_regression_beddays_12_skin_and_subcutaneous_tissue_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 12_skin_and_subcutaneous_tissue negative_binomial uni_var
+    needs: [weight_matched_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_beddays_12_skin_and_subcutaneous_tissue.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_12_skin_and_subcutaneous_tissue.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_12_skin_and_subcutaneous_tissue.jpeg
+
+  count_regression_beddays_14_genitourinary_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 14_genitourinary_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2197,8 +2198,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_14_genitourinary_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_14_genitourinary_system.jpeg
 
-  count_regression_beddays_23_self_harm_and_poisoning_by_drugs_negative_binomial:
-    run: r:latest analysis/08_count_regression.R beddays 23_self_harm_and_poisoning_by_drugs negative_binomial
+  count_regression_beddays_23_self_harm_and_poisoning_by_drugs_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R beddays 23_self_harm_and_poisoning_by_drugs negative_binomial uni_var
     needs: [weight_matched_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
@@ -2206,8 +2207,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_beddays_23_self_harm_and_poisoning_by_drugs.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_beddays_23_self_harm_and_poisoning_by_drugs.jpeg
 
-  count_regression_outpatient_all_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient all negative_binomial
+  count_regression_outpatient_all_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient all negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2215,8 +2216,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_all.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_all.jpeg
 
-  count_regression_outpatient_infectious_disease_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient infectious_disease negative_binomial
+  count_regression_outpatient_infectious_disease_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient infectious_disease negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2224,8 +2225,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_infectious_disease.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_infectious_disease.jpeg
 
-  count_regression_outpatient_oncology_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient oncology negative_binomial
+  count_regression_outpatient_oncology_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient oncology negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2233,8 +2234,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_oncology.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_oncology.jpeg
 
-  count_regression_outpatient_haematology_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient haematology negative_binomial
+  count_regression_outpatient_haematology_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient haematology negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2242,8 +2243,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_haematology.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_haematology.jpeg
 
-  count_regression_outpatient_endocrinology_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient endocrinology negative_binomial
+  count_regression_outpatient_endocrinology_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient endocrinology negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2251,8 +2252,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_endocrinology.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_endocrinology.jpeg
 
-  count_regression_outpatient_mental_health_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient mental_health negative_binomial
+  count_regression_outpatient_mental_health_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient mental_health negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2260,8 +2261,17 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_mental_health.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_mental_health.jpeg
 
-  count_regression_outpatient_cardiology_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient cardiology negative_binomial
+  count_regression_outpatient_neurology_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient neurology negative_binomial uni_var
+    needs: [weight_matched_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_outpatient_neurology.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_neurology.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_neurology.jpeg
+
+  count_regression_outpatient_cardiology_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient cardiology negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2269,8 +2279,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_cardiology.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_cardiology.jpeg
 
-  count_regression_outpatient_respiratory_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient respiratory negative_binomial
+  count_regression_outpatient_respiratory_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient respiratory negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2278,8 +2288,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_respiratory.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_respiratory.jpeg
 
-  count_regression_outpatient_gastrointestinal_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient gastrointestinal negative_binomial
+  count_regression_outpatient_gastrointestinal_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient gastrointestinal negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2287,8 +2297,17 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_gastrointestinal.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_gastrointestinal.jpeg
 
-  count_regression_outpatient_renal_negative_binomial:
-    run: r:latest analysis/08_count_regression.R outpatient renal negative_binomial
+  count_regression_outpatient_dermatology_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient dermatology negative_binomial uni_var
+    needs: [weight_matched_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_outpatient_dermatology.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_dermatology.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_dermatology.jpeg
+
+  count_regression_outpatient_renal_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R outpatient renal negative_binomial uni_var
     needs: [weight_matched_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
@@ -2296,8 +2315,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_outpatient_renal.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_outpatient_renal.jpeg
 
-  count_regression_gp_all_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp all negative_binomial
+  count_regression_gp_all_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp all negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2305,8 +2324,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_all.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_all.jpeg
 
-  count_regression_gp_infectious_disease_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp infectious_disease negative_binomial
+  count_regression_gp_infectious_disease_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp infectious_disease negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2314,8 +2333,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_infectious_disease.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_infectious_disease.jpeg
 
-  count_regression_gp_neoplastic_disease_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp neoplastic_disease negative_binomial
+  count_regression_gp_neoplastic_disease_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp neoplastic_disease negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2323,8 +2342,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_neoplastic_disease.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_neoplastic_disease.jpeg
 
-  count_regression_gp_cellular_component_of_blood_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp cellular_component_of_blood negative_binomial
+  count_regression_gp_cellular_component_of_blood_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp cellular_component_of_blood negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2332,8 +2351,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_cellular_component_of_blood.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_cellular_component_of_blood.jpeg
 
-  count_regression_gp_endocrine_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp endocrine_system negative_binomial
+  count_regression_gp_endocrine_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp endocrine_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2341,8 +2360,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_endocrine_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_endocrine_system.jpeg
 
-  count_regression_gp_mental_disorder_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp mental_disorder negative_binomial
+  count_regression_gp_mental_disorder_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp mental_disorder negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2350,8 +2369,17 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_mental_disorder.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_mental_disorder.jpeg
 
-  count_regression_gp_cardiovascular_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp cardiovascular_system negative_binomial
+  count_regression_gp_nervous_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp nervous_system negative_binomial uni_var
+    needs: [weight_matched_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_gp_nervous_system.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_nervous_system.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_nervous_system.jpeg
+
+  count_regression_gp_cardiovascular_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp cardiovascular_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2359,8 +2387,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_cardiovascular_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_cardiovascular_system.jpeg
 
-  count_regression_gp_respiratory_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp respiratory_system negative_binomial
+  count_regression_gp_respiratory_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp respiratory_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2368,8 +2396,8 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_respiratory_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_respiratory_system.jpeg
 
-  count_regression_gp_digestive_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp digestive_system negative_binomial
+  count_regression_gp_digestive_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp digestive_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2377,8 +2405,17 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_digestive_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_digestive_system.jpeg
 
-  count_regression_gp_genitourinary_system_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp genitourinary_system negative_binomial
+  count_regression_gp_skin_subcutaneous_tissue_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp skin_subcutaneous_tissue negative_binomial uni_var
+    needs: [weight_matched_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_gp_skin_subcutaneous_tissue.csv
+        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_skin_subcutaneous_tissue.csv
+        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_skin_subcutaneous_tissue.jpeg
+
+  count_regression_gp_genitourinary_system_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp genitourinary_system negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
@@ -2386,11 +2423,69 @@ actions:
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_genitourinary_system.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_genitourinary_system.jpeg
 
-  count_regression_gp_self_harm_negative_binomial:
-    run: r:latest analysis/08_count_regression.R gp self_harm negative_binomial
+  count_regression_gp_self_harm_negative_binomial_uni_var:
+    run: r:latest analysis/08_count_regression.R gp self_harm negative_binomial uni_var
     needs: [weight_matched_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
         model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_gp_self_harm.csv
         model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_gp_self_harm.csv
         rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_gp_self_harm.jpeg
+
+  summarise_irr:
+    run: r:latest analysis/08_summarise_irr.R
+    needs: [count_regression_admissions_all_negative_binomial_uni_var,
+            count_regression_admissions_01_infectious_and_parasitic_diseases_negative_binomial_uni_var,
+            count_regression_admissions_02_neoplasms_negative_binomial_uni_var,
+            count_regression_admissions_03_diseases_of_the_blood_negative_binomial_uni_var,
+            count_regression_admissions_04_endocrine_nutritional_and_metabolic_negative_binomial_uni_var,
+            count_regression_admissions_05_mental_and_behavioural_disorders_negative_binomial_uni_var,
+            count_regression_admissions_06_nervous_system_negative_binomial_uni_var,
+            count_regression_admissions_09_circulatory_system_negative_binomial_uni_var,
+            count_regression_admissions_10_respiratory_system_negative_binomial_uni_var,
+            count_regression_admissions_11_digestive_system_negative_binomial_uni_var,
+            count_regression_admissions_12_skin_and_subcutaneous_tissue_negative_binomial_uni_var,
+            count_regression_admissions_14_genitourinary_system_negative_binomial_uni_var,
+            count_regression_admissions_23_self_harm_and_poisoning_by_drugs_negative_binomial_uni_var,
+            count_regression_beddays_all_negative_binomial_uni_var,
+            count_regression_beddays_01_infectious_and_parasitic_diseases_negative_binomial_uni_var,
+            count_regression_beddays_02_neoplasms_negative_binomial_uni_var,
+            count_regression_beddays_03_diseases_of_the_blood_negative_binomial_uni_var,
+            count_regression_beddays_04_endocrine_nutritional_and_metabolic_negative_binomial_uni_var,
+            count_regression_beddays_05_mental_and_behavioural_disorders_negative_binomial_uni_var,
+            count_regression_beddays_06_nervous_system_negative_binomial_uni_var,
+            count_regression_beddays_09_circulatory_system_negative_binomial_uni_var,
+            count_regression_beddays_10_respiratory_system_negative_binomial_uni_var,
+            count_regression_beddays_11_digestive_system_negative_binomial_uni_var,
+            count_regression_beddays_12_skin_and_subcutaneous_tissue_negative_binomial_uni_var,
+            count_regression_beddays_14_genitourinary_system_negative_binomial_uni_var,
+            count_regression_beddays_23_self_harm_and_poisoning_by_drugs_negative_binomial_uni_var,
+            count_regression_outpatient_all_negative_binomial_uni_var,
+            count_regression_outpatient_infectious_disease_negative_binomial_uni_var,
+            count_regression_outpatient_oncology_negative_binomial_uni_var,
+            count_regression_outpatient_haematology_negative_binomial_uni_var,
+            count_regression_outpatient_endocrinology_negative_binomial_uni_var,
+            count_regression_outpatient_mental_health_negative_binomial_uni_var,
+            count_regression_outpatient_neurology_negative_binomial_uni_var,
+            count_regression_outpatient_cardiology_negative_binomial_uni_var,
+            count_regression_outpatient_respiratory_negative_binomial_uni_var,
+            count_regression_outpatient_gastrointestinal_negative_binomial_uni_var,
+            count_regression_outpatient_dermatology_negative_binomial_uni_var,
+            count_regression_outpatient_renal_negative_binomial_uni_var,
+            count_regression_gp_all_negative_binomial_uni_var,
+            count_regression_gp_infectious_disease_negative_binomial_uni_var,
+            count_regression_gp_neoplastic_disease_negative_binomial_uni_var,
+            count_regression_gp_cellular_component_of_blood_negative_binomial_uni_var,
+            count_regression_gp_endocrine_system_negative_binomial_uni_var,
+            count_regression_gp_mental_disorder_negative_binomial_uni_var,
+            count_regression_gp_nervous_system_negative_binomial_uni_var,
+            count_regression_gp_cardiovascular_system_negative_binomial_uni_var,
+            count_regression_gp_respiratory_system_negative_binomial_uni_var,
+            count_regression_gp_digestive_system_negative_binomial_uni_var,
+            count_regression_gp_skin_subcutaneous_tissue_negative_binomial_uni_var,
+            count_regression_gp_genitourinary_system_negative_binomial_uni_var,
+            count_regression_gp_self_harm_negative_binomial_uni_var]
+    outputs:
+      moderately_sensitive:
+        irr_table: output/descriptives/matched_cohort/negative_binomial/summarised_uni_var/table_irr.csv
+        irr_plot: output/descriptives/matched_cohort/negative_binomial/summarised_uni_var/plot_irr.jpeg
