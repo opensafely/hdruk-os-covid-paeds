@@ -5,9 +5,16 @@ library(tidyverse)
 #Plot theme
 theme_set(theme_bw())
 
-# Parameters ----
-model_type     = "negative_binomial"
-pred_type      = "uni_var"
+# Command arguments to set parameters ----
+args = commandArgs(trailingOnly=TRUE)
+
+if(length(args) == 0){
+  model_type     = "poisson"
+  pred_type      = "uni_var"
+} else{
+  model_type     = args[[1]]
+  pred_type      = args[[2]]
+}
 
 # Create output directory folders ----
 dir.create(here::here("output", "descriptives", "matched_cohort", model_type,
