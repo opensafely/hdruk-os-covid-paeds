@@ -32,14 +32,16 @@ args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
   resource_type  = "beddays"
   condition      = "all"
-  model_type     = "negative_binomial"
+  model_type     = "poisson"
+  pred_type      = "uni_var"
 } else{
   resource_type  = args[[1]]
   condition      = args[[2]]
   model_type     = args[[3]]
+  pred_type      = args[[4]]
 }
 
-pred_type = "uni_var"
+
 
 # Create output directory folders ----
 dir.create(here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "tables"),
@@ -188,33 +190,45 @@ data_weighted = data_weighted %>%
   replace_na(list(health_contact = 0)) %>% 
   mutate(health_contact = round(health_contact))
 
-# Negative binomial regression ----
-## Predictors
-predictors = c(
-  # Covid status
-  "covid_status_tp"#,
+
+# Predictors ----
+if (pred_type == "uni_var"){
   
-  # Demographics
-  #"age_group", "sex", "ethnicity", "imd_Q5_2019",
-  #"region_2019", "rural_urban_2019",
+  predictors = "covid_status_tp"
   
-  # Comorbidities
-  #"comorbidity_count.factor",
-  #"mental_health_disorders", "neurodevelopmental_and_behavioural",
-  #"asthma", "cystic_fibrosis", "other_respiratory",
-  #"cardiovascular", "epilepsy", "headaches", "other_neurological",
-  #"gastrointestinal_conditions", "genitourinary", "cancer",
-  #"non_malignant_haematological", "immunological", "chronic_infections",
-  #"rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  #"metabolic", "obesity", "transplant", "palliative_care",
+} else if (pred_type == "multi_var"){
   
-  # Vaccination status
-  #"vaccination_status",
+  predictors = c(
+    # Covid status
+    "covid_status_tp",
+    
+    # Demographics
+    "age_group", "sex", "ethnicity", "imd_Q5_2019",
+    "region_2019", "rural_urban_2019",
+    
+    # Comorbidities
+    "comorbidity_count.factor",
+    "mental_health_disorders", "neurodevelopmental_and_behavioural",
+    "asthma", "cystic_fibrosis", "other_respiratory",
+    "cardiovascular", "epilepsy", "headaches", "other_neurological",
+    "gastrointestinal_conditions", "genitourinary", "cancer",
+    "non_malignant_haematological", "immunological", "chronic_infections",
+    "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
+    "metabolic", "obesity", "transplant", "palliative_care",
+    
+    # Vaccination status
+    "vaccination_status",
+    
+    # Resource use and covid testing
+    "n_covid_tests_Q",
+    "n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
+  )
   
-  # Resource use and covid testing
-  #"n_covid_tests_Q",
-  #"n_beddays_Q", "n_outpatient_Q", "n_gp_Q"
-)
+} else {
+  stop("Unrecognised pred_type")
+}
+
+
 
 ## Model forumla ----
 model_formula = paste0("health_contact ~ ",
@@ -237,7 +251,8 @@ if(model_type == "poisson"){
   model_fit = MASS::glm.nb(model_formula,
                         weights = data_weighted$weights,
                         data = data_weighted,
-                        maxit = 10000)
+                        maxit = 10000,
+                        )
   
 } else {
   stop("Unrecognised fit_type")
