@@ -27,7 +27,7 @@ list_coeff_files = list.files(here::here("output", "descriptives", "matched_coho
 
 list_crude_rate_files = list.files(here::here("output", "descriptives", "matched_cohort",
                                               model_type, pred_type, "tables"),
-                                   pattern = "^crude_rate_[a-zA-Z0-9_]+.csv$")
+                                   pattern = "^crude_rates_[a-zA-Z0-9_]+.csv$")
 
 # Read in crude rate .csv files ----
 crude_rate = list_crude_rate_files %>% 
