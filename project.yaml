@@ -2548,5 +2548,6 @@ actions:
             count_regression_gp_self_harm_poisson_uni_var]
     outputs:
       moderately_sensitive:
+        crude_rates: output/descriptives/matched_cohort/poisson/summarised_uni_var/crude_rates.csv
         irr_table: output/descriptives/matched_cohort/poisson/summarised_uni_var/table_irr.csv
         irr_plot: output/descriptives/matched_cohort/poisson/summarised_uni_var/plot_irr.jpeg

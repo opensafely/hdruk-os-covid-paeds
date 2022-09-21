@@ -24,7 +24,25 @@ dir.create(here::here("output", "descriptives", "matched_cohort", model_type,
 list_coeff_files = list.files(here::here("output", "descriptives", "matched_cohort",
                                          model_type, pred_type, "tables"),
                               pattern = "^coeff_[a-zA-Z0-9_]+.csv$")
-# Read in .csv files ----
+
+list_crude_rate_files = list.files(here::here("output", "descriptives", "matched_cohort",
+                                              model_type, pred_type, "tables"),
+                                   pattern = "^crude_rate_[a-zA-Z0-9_]+.csv$")
+
+# Read in crude rate .csv files ----
+crude_rate = list_crude_rate_files %>% 
+  map(function(crude_rate_file){
+    x = read_csv(here::here("output", "descriptives", "matched_cohort",
+                            model_type, pred_type, "tables", crude_rate_file)) %>% 
+      mutate(file = crude_rate_file)
+  }) %>% 
+  bind_rows()
+
+write_csv(crude_rate,
+          here::here("output", "descriptives", "matched_cohort", model_type,
+                     paste0("summarised_", pred_type), "crude_rates.csv"))
+  
+# Read in coeff .csv files ----
 coeff = list_coeff_files %>% 
   map(function(coeff_file){
     x = read_csv(here::here("output", "descriptives", "matched_cohort",
@@ -32,6 +50,8 @@ coeff = list_coeff_files %>%
       mutate(file = coeff_file)
   }) %>% 
   bind_rows()
+
+
 
 # Extract resource type and condition ----
 coeff = coeff %>% 
