@@ -307,7 +307,8 @@ model_formula = paste0("covid_status_tp ~ ",
 data_weights = weightit(model_formula,
                  data = data_matched,
                  method = "ps",
-                 use.mlogit = FALSE)
+                 use.mlogit = FALSE,
+                 stabilize = TRUE)
 
 # Assess balance across groups ----
 ## Add weights to matched data ----
