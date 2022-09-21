@@ -190,6 +190,43 @@ data_weighted = data_weighted %>%
   replace_na(list(health_contact = 0)) %>% 
   mutate(health_contact = round(health_contact))
 
+# Summarise count and person-time data ----
+data_crude_rates = data_weighted %>% 
+  group_by(covid_status_tp) %>% 
+  summarise(
+    # Sample size
+    n = if_else(n() <= 7,
+                NA_real_,
+                n() %>% plyr::round_any(count_round)),
+    # Event count 
+    health_contact = case_when(
+      is.na(n) ~ NA_real_,
+      sum(health_contact) <= 7 ~ NA_real_,
+      TRUE ~ sum(health_contact)
+    ),
+    # Person-time
+    person_years_000 = if_else(is.na(n), NA_real_, sum(person_time_grouped)/365.25/1000),
+    # Crude rate (events per person-year)
+    estimate = ifelse(is.na(health_contact) | is.na(person_years_000), NA_real_,
+                      poisson.test(health_contact, person_years_000)$estimate),
+    ci_lower = ifelse(is.na(health_contact) | is.na(person_years_000), NA_real_,
+                      poisson.test(health_contact, person_years_000)$conf.int[1]),
+    ci_upper = ifelse(is.na(health_contact) | is.na(person_years_000), NA_real_,
+                      poisson.test(health_contact, person_years_000)$conf.int[2])
+  )
+
+# Redact low counts ----
+data_crude_rates = data_crude_rates %>% 
+  mutate(
+    n = n %>% as.character(),
+    health_contact = health_contact %>% as.character(),
+  ) %>% 
+  replace_na(list(n = "[REDACTED]", health_contact = "[REDACTED]"))
+
+# Save crude rates ----
+write_csv(data_crude_rates,
+          here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "tables",
+                     paste0("crude_rates_", resource_type, "_", condition, ".csv")))
 
 # Predictors ----
 if (pred_type == "uni_var"){
@@ -252,11 +289,13 @@ if(model_type == "poisson"){
   
 } else if(model_type == "negative_binomial"){
   
-  model_fit = MASS::glm.nb(model_formula,
-                        weights = data_weighted$weights,
-                        data = data_weighted,
-                        maxit = 10000,
-                        )
+  # Survey deisgn ----
+  d.w = svydesign(~1,
+                  weights = data_weighted$weights,
+                  data = data_weighted)
+  
+  model_fit = sjstats::svyglm.nb(model_formula,
+                                 design = d.w)
   
 } else {
   stop("Unrecognised fit_type")
