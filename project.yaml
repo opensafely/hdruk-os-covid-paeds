@@ -1049,8 +1049,10 @@ actions:
     outputs:
       moderately_sensitive:
         table_coeff: output/descriptives/healthcare_use_2019_2022/poisson/gp/table_irr.csv
+        table_counts: output/descriptives/healthcare_use_2019_2022/poisson/gp/table_counts.csv
         table_stats: output/descriptives/healthcare_use_2019_2022/poisson/gp/table_stats.csv
         plot_coeff: output/descriptives/healthcare_use_2019_2022/poisson/gp/plot_irr.jpeg
+        plot_coeff_reduced: output/descriptives/healthcare_use_2019_2022/poisson/gp/plot_irr_reduced.jpeg
 
   count_regression_yearly_outpatient:
     run: r:latest analysis/05_yearly_count_regression.R outpatient poisson
@@ -1058,8 +1060,10 @@ actions:
     outputs:
       moderately_sensitive:
         table_coeff: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/table_irr.csv
+        table_counts: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/table_counts.csv
         table_stats: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/table_stats.csv
         plot_coeff: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/plot_irr.jpeg
+        plot_coeff_reduced: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/plot_irr_reduced.jpeg
 
   count_regression_yearly_admissions:
     run: r:latest analysis/05_yearly_count_regression.R admissions poisson
@@ -1067,8 +1071,10 @@ actions:
     outputs:
       moderately_sensitive:
         table_coeff: output/descriptives/healthcare_use_2019_2022/poisson/admissions/table_irr.csv
+        table_counts: output/descriptives/healthcare_use_2019_2022/poisson/admissions/table_counts.csv
         table_stats: output/descriptives/healthcare_use_2019_2022/poisson/admissions/table_stats.csv
         plot_coeff: output/descriptives/healthcare_use_2019_2022/poisson/admissions/plot_irr.jpeg
+        plot_coeff_reduced: output/descriptives/healthcare_use_2019_2022/poisson/admissions/plot_irr_reduced.jpeg
 
   count_regression_yearly_beddays:
     run: r:latest analysis/05_yearly_count_regression.R beddays poisson
@@ -1076,8 +1082,10 @@ actions:
     outputs:
       moderately_sensitive:
         table_coeff: output/descriptives/healthcare_use_2019_2022/poisson/beddays/table_irr.csv
+        table_counts: output/descriptives/healthcare_use_2019_2022/poisson/beddays/table_counts.csv
         table_stats: output/descriptives/healthcare_use_2019_2022/poisson/beddays/table_stats.csv
         plot_coeff: output/descriptives/healthcare_use_2019_2022/poisson/beddays/plot_irr.jpeg
+        plot_coeff_reduced: output/descriptives/healthcare_use_2019_2022/poisson/beddays/plot_irr_reduced.jpeg
 
   monthly_gp_all_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp all overall
