@@ -29,7 +29,7 @@ theme_set(theme_bw())
 args = commandArgs(trailingOnly=TRUE)
 
 if(length(args) == 0){
-  resource_type  = "gp"
+  resource_type  = "admissions"
   model_type     = "poisson"
 } else{
   resource_type  = args[[1]]
@@ -180,12 +180,12 @@ predictors_comorb = c(
   "gastrointestinal_conditions", "genitourinary", "cancer",
   "non_malignant_haematological", "immunological", "chronic_infections",
   "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "obesity", "transplant", "palliative_care"#,
+  "metabolic", "obesity", "transplant", "palliative_care",
     
   # Intercations
-  # "neurodevelopmental_and_behavioural:other_respiratory",
-  # "neurodevelopmental_and_behavioural:cardiovascular",
-  # "other_respiratory:cardiovascular"
+  "neurodevelopmental_and_behavioural:other_respiratory",
+  "neurodevelopmental_and_behavioural:cardiovascular",
+  "other_respiratory:cardiovascular"
   )
 
 ## Formula ----
@@ -204,6 +204,20 @@ if(model_type == "poisson"){
                   data = data_cohort)
 
 }
+
+# Count person-time table ----
+table_counts = data_cohort %>% 
+  group_by(year) %>% 
+  summarise(
+    health_contact = sum(health_contact),
+    person_years_000 = sum(person_days)/365.25/1000,
+    crude_rate = health_contact/person_years_000
+  )
+
+## Save count table ----
+write_csv(table_counts,
+          here::here("output", "descriptives", "healthcare_use_2019_2022",
+                     model_type, resource_type, "table_counts.csv"))
 
 # Coefficient table ----
 table_coeff = model_fit %>%
@@ -280,9 +294,31 @@ plot_irr = coeff_prep %>%
   facet_wrap(~ year, ncol = 4) +
   theme_bw()
 
+## Reduced plot ----
+plot_irr_reduced = coeff_prep %>%
+  filter(!variable %in% c("age_group", "sex", "ethnicity", "imd_Q5_2019",
+                         "region_2019", "rural_urban_2019")) %>% 
+  ggplot(aes(x = plot_label, y = estimate, ymin = conf.low, ymax = conf.high)) +
+  geom_point(colour = "blue", size = 1.5) + 
+  geom_errorbar(colour = "blue", width=.2) +
+  geom_hline(yintercept=1, lty=2) +
+  scale_y_continuous(trans='log10') +
+  coord_flip() +
+  labs(x = NULL) +
+  ylab("Incidence rate ratio (95% CI)") +
+  facet_wrap(~ year, ncol = 4) +
+  theme_bw()
+
+
 # Save plot ----
 ggsave(filename = "plot_irr.jpeg",
        plot = plot_irr,
+       path = here::here("output", "descriptives", "healthcare_use_2019_2022",
+                         model_type, resource_type),
+       width = 11, height = 7, units = "in")
+
+ggsave(filename = "plot_irr_reduced.jpeg",
+       plot = plot_irr_reduced,
        path = here::here("output", "descriptives", "healthcare_use_2019_2022",
                          model_type, resource_type),
        width = 11, height = 7, units = "in")
