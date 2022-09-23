@@ -34,6 +34,10 @@ fup_start_date   = ymd(global_var$fup_start_date)
 # Load datasets ----
 data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
 
+# Extract variable labels ----
+var_labs = data_patient %>% 
+  extract_variable_label()
+
 # Yearly cohort construction ----
 ## Index dates ----
 index_date = c("2019-01-01",
@@ -115,7 +119,8 @@ write_csv(tbl_flowchart,
 data_cohort = data_cohort %>% 
   map(function(.data_cohort){
     .data_cohort %>%
-      apply_exclusion_criteria()
+      apply_exclusion_criteria() %>% 
+      ff_relabel(var_labs)
   })
 
 # Cohort summary table ----
