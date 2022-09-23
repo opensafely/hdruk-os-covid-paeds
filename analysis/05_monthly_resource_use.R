@@ -151,16 +151,11 @@ if(resource_type == "gp"){
           filter(admission_date <= end_date,
                  discharge_date >= start_date) %>% 
           mutate(
-            admission_half_day = if_else(
-              admission_date >= start_date &
-                admission_date <= end_date, 0.5, 0),
-            discharge_half_day = if_else(
-              discharge_date >= start_date &
-                discharge_date <= end_date, 0.5, 0),
-            inbetween_day = (pmin(discharge_date, end_date) -
-              pmax(admission_date, start_date)) %>% as.numeric(),
-            length_of_stay = inbetween_day + 1 - admission_half_day -
-              discharge_half_day
+            length_of_stay = case_when(
+              admission_date == discharge_date ~ 0.5, # day-case
+              TRUE ~ (pmin(discharge_date, end_date) -
+                        pmax(admission_date, start_date)) %>% as.numeric()
+            )
           ) %>%
           group_by(patient_id) %>% 
           summarise(
