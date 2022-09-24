@@ -15,6 +15,10 @@ global_var = jsonlite::read_json(path = here::here("analysis", "global_variables
 count_round  = global_var$disclosure_count_round
 count_redact = global_var$disclosure_redact
 
+# Set seed ----
+set.seed(24092022)
+n_sample = 200000
+
 # Study dates ----
 study_start_date = ymd(global_var$start_date)
 study_end_date   = ymd(global_var$end_date)
@@ -59,12 +63,25 @@ data_cohort = data_cohort %>%
   rename(year = cohort) %>% 
   ff_relabel(var_labs)
 
+## Select subset
+unique_id = data_cohort %>%
+  pull(patient_id) %>% 
+  unique()
+
+id_patient = sample(unique_id, 
+                    size = min(length(unique_id), n_sample),
+                    replace = FALSE)
+
+data_cohort = data_cohort  %>%
+  filter(patient_id %in% id_patient)
+
 # Calculate yearly resource use ----
 if(resource_type == "gp"){
   
-  data_resource = read_rds(here::here("output", "data", "data_gp.rds"))
+  data_resource = read_rds(here::here("output", "data", "data_gp.rds"))  %>%
+    filter(patient_id %in% id_patient)
   
-  data_resource = data_resource %>% 
+  data_resource = data_resource %>%
     filter(str_starts(code_type, "KM_") |
              str_starts(code_type, "mapped_1") |
              str_starts(code_type, "mapped_2"))%>% 
@@ -74,7 +91,8 @@ if(resource_type == "gp"){
   
 } else if (resource_type == "outpatient"){
   
-  data_resource = read_rds(here::here("output", "data", "data_outpatient.rds"))
+  data_resource = read_rds(here::here("output", "data", "data_outpatient.rds"))  %>%
+    filter(patient_id %in% id_patient)
 
   data_resource = data_resource %>% 
     filter(is.na(specialty)) %>% 
@@ -85,7 +103,8 @@ if(resource_type == "gp"){
   
 } else if (resource_type == "admissions" | resource_type == "beddays"){
   
-  data_resource = read_rds(here::here("output", "data", "data_admissions.rds"))
+  data_resource = read_rds(here::here("output", "data", "data_admissions.rds")) %>%
+    filter(patient_id %in% id_patient)
   
   if (resource_type == "admissions"){
     
