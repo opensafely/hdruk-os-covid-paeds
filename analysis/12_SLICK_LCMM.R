@@ -22,12 +22,16 @@ getwd()
 # setwd('SLICK/SLICK_R/')
 # ============================================================================= 
 # Insert appropriate data path
-data_path = '../Data/output/data/'
-output_path = '../Data/output/lcmm'
-path_model = '../Data/output/lcmm/models/'  # path to save models
+output_path = here::here("output", "lcmm")
+path_model  = here::here("output", "lcmm", "models")
+
+# Create output folders
+dir.create(output_path, showWarnings = FALSE, recursive=TRUE)
+dir.create(path_model,  showWarnings = FALSE, recursive=TRUE)
+
 
 # Load data - assumes data is in dummy data format .rds
-resource    <- readRDS(paste0(data_path, 'data_resource.rds'))
+resource = readRDS(here::here("output", "data", "data_resource.rds"))
 #===============================================================================
 
 # Some preprocessing for resource RDS
