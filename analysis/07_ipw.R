@@ -289,7 +289,7 @@ weight_variables = c(
   "gastrointestinal_conditions", "genitourinary", "cancer",
   "non_malignant_haematological", "immunological", "chronic_infections",
   "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "obesity", "transplant", "palliative_care",
+  "metabolic", "transplant", "palliative_care",
   
   # Vaccination status
   "vaccination_status",
