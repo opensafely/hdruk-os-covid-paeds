@@ -2595,3 +2595,120 @@ actions:
         crude_rates: output/descriptives/matched_cohort/poisson/summarised_uni_var/crude_rates.csv
         irr_table: output/descriptives/matched_cohort/poisson/summarised_uni_var/table_irr.csv
         irr_plot: output/descriptives/matched_cohort/poisson/summarised_uni_var/plot_irr.jpeg
+
+  generate_positive_cohort:
+    run: r:latest analysis/09_construct_positive_cohort.R
+    needs: [process_patient_data, process_admissions_data, process_outpatient_data, process_gp_data]
+    outputs:
+      highly_sensitive:
+        cohort_flowchart: output/descriptives/positive_cohort/tbl_flowchart.csv
+        resource_data: output/data/data_resource.rds
+        patient_data: output/data/data_positives.rds
+
+  lcmm_data_prep:
+    run: r:latest analysis/12_1_prep_resource.R
+    needs: [generate_positive_cohort]
+    outputs:
+      highly_sensitive:
+        lcmm_resource_data: output/data/data_resource_lcmm.rds
+
+  lcmm_run_model_1:
+    run: r:latest analysis/12_2_LCMM_model.R 1
+    needs: [lcmm_data_prep]
+    outputs:
+      highly_sensitive:
+        lcmm_model: output/lcmm/models/lcmm_model_1.rds
+
+  lcmm_run_model_2:
+    run: r:latest analysis/12_2_LCMM_model.R 2
+    needs: [lcmm_data_prep, lcmm_run_model_1]
+    outputs:
+      highly_sensitive:
+        lcmm_model: output/lcmm/models/lcmm_model_2.rds
+
+  lcmm_run_model_3:
+    run: r:latest analysis/12_2_LCMM_model.R 3
+    needs: [lcmm_data_prep, lcmm_run_model_1]
+    outputs:
+      highly_sensitive:
+        lcmm_model: output/lcmm/models/lcmm_model_3.rds
+
+  lcmm_run_model_4:
+    run: r:latest analysis/12_2_LCMM_model.R 4
+    needs: [lcmm_data_prep, lcmm_run_model_1]
+    outputs:
+      highly_sensitive:
+        lcmm_model: output/lcmm/models/lcmm_model_4.rds
+
+  lcmm_run_model_5:
+    run: r:latest analysis/12_2_LCMM_model.R 5
+    needs: [lcmm_data_prep, lcmm_run_model_1]
+    outputs:
+      highly_sensitive:
+        lcmm_model: output/lcmm/models/lcmm_model_5.rds
+
+  lcmm_model_selection:
+    run: r:latest analysis/12_3_LCMM_selection.R 5
+    needs: [lcmm_data_prep, lcmm_run_model_1, lcmm_run_model_2, lcmm_run_model_3, lcmm_run_model_4, lcmm_run_model_5]
+    outputs:
+      moderately_sensitive:
+        table_model_metrics: output/lcmm/selection/tbl_model_metrics.csv
+        table_class_probability: output/lcmm/selection/tbl_class_probability.csv
+        table_predicted_trajectory_1: output/lcmm/pred_trajectory/tbl_predicted_trajectory_1.csv
+        table_predicted_trajectory_2: output/lcmm/pred_trajectory/tbl_predicted_trajectory_2.csv
+        table_predicted_trajectory_3: output/lcmm/pred_trajectory/tbl_predicted_trajectory_3.csv
+        table_predicted_trajectory_4: output/lcmm/pred_trajectory/tbl_predicted_trajectory_4.csv
+        table_predicted_trajectory_5: output/lcmm/pred_trajectory/tbl_predicted_trajectory_5.csv
+        plot_BIC: output/lcmm/selection/plot_BIC.jpeg
+        plot_loglik: output/lcmm/selection/plot_loglik.jpeg
+        plot_class_probability: output/lcmm/selection/plot_class_probability.jpeg
+        plot_predicted_trajectory_1: output/lcmm/pred_trajectory/plot_predicted_trajectory_1.jpeg
+        plot_predicted_trajectory_2: output/lcmm/pred_trajectory/plot_predicted_trajectory_2.jpeg 
+        plot_predicted_trajectory_3: output/lcmm/pred_trajectory/plot_predicted_trajectory_3.jpeg 
+        plot_predicted_trajectory_4: output/lcmm/pred_trajectory/plot_predicted_trajectory_4.jpeg 
+        plot_predicted_trajectory_5: output/lcmm/pred_trajectory/plot_predicted_trajectory_5.jpeg 
+
+  lcmm_results_1:
+    run: r:latest analysis/12_4_LCMM_results.R 1
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_1]
+    outputs:
+      moderately_sensitive:
+        table_summary: output/lcmm/summary_tbl/tbl_summary_1.csv
+        table_observed_trajectory: output/lcmm/obs_trajectory/tbl_obs_trajectory_1.csv
+        plot_observed_trajectory: output/lcmm/obs_trajectory/plot_observed_trajectory_1.jpeg
+
+  lcmm_results_2:
+    run: r:latest analysis/12_4_LCMM_results.R 2
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_2]
+    outputs:
+      moderately_sensitive:
+        table_summary: output/lcmm/summary_tbl/tbl_summary_2.csv
+        table_observed_trajectory: output/lcmm/obs_trajectory/tbl_obs_trajectory_2.csv
+        plot_observed_trajectory: output/lcmm/obs_trajectory/plot_observed_trajectory_2.jpeg
+
+  lcmm_results_3:
+    run: r:latest analysis/12_4_LCMM_results.R 3
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_3]
+    outputs:
+      moderately_sensitive:
+        table_summary: output/lcmm/summary_tbl/tbl_summary_3.csv
+        table_observed_trajectory: output/lcmm/obs_trajectory/tbl_obs_trajectory_3.csv
+        plot_observed_trajectory: output/lcmm/obs_trajectory/plot_observed_trajectory_3.jpeg
+
+  lcmm_results_4:
+    run: r:latest analysis/12_4_LCMM_results.R 4
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_4]
+    outputs:
+      moderately_sensitive:
+        table_summary: output/lcmm/summary_tbl/tbl_summary_4.csv
+        table_observed_trajectory: output/lcmm/obs_trajectory/tbl_obs_trajectory_4.csv
+        plot_observed_trajectory: output/lcmm/obs_trajectory/plot_observed_trajectory_4.jpeg
+
+  lcmm_results_5:
+    run: r:latest analysis/12_4_LCMM_results.R 5
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_5]
+    outputs:
+      moderately_sensitive:
+        table_summary: output/lcmm/summary_tbl/tbl_summary_5.csv
+        table_observed_trajectory: output/lcmm/obs_trajectory/tbl_obs_trajectory_5.csv
+        plot_observed_trajectory: output/lcmm/obs_trajectory/plot_observed_trajectory_5.jpeg
