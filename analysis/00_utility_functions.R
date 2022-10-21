@@ -533,9 +533,36 @@ ff_round_counts = function (.data, accuracy = 15, ignore = c("label", "levels", 
                              plyr::round_any(accuracy)
                            value_perc = value_count/sum(value_count)*100
                            
-                           dplyr::case_when(!levels %in% c("Mean (SD)", "Median (IQR)") ~ 
-                                              format_n_percent(value_count, value_perc, 1), 
-                                            TRUE ~ .)
+                           dplyr::case_when(
+                             !levels %in% c("Mean (SD)", "Median (IQR)") ~ 
+                               format_n_percent(value_count, value_perc, 1), 
+                             TRUE ~ .)
+                         })) %>%
+    dplyr::mutate(label = dplyr::if_else(dplyr::row_number()==1, label, "")) %>% 
+    dplyr::ungroup()
+  class(df.out) = c("data.frame.ff", class(df.out))
+  return(df.out)
+}
+
+# ff_round_counts: Round counts from finalfit::summary_factorlist output
+ff_redact_counts = function (.data, n_redact = 7, ignore = c("label", "levels", "p")){ 
+  if (!any(names(.data) == "label")) 
+    stop("summary_factorlist() must include: add_dependent_label = FALSE")
+  df.out = .data %>%
+    dplyr::mutate(label = dplyr::if_else(label == "", NA_character_, label)) %>% 
+    tidyr::fill(label) %>%
+    dplyr::group_by(label) %>% 
+    dplyr::mutate(across(-dplyr::any_of(ignore), 
+                         function(.){
+                           value_count = as.numeric(stringr::str_extract(., "[:digit:]+"))
+                           value_readact = if_else(value_count <= n_redact, NA_real_, value_count)
+                           value_perc = value_readact/sum(value_readact, na.rm = TRUE)*100
+                           
+                           dplyr::case_when(
+                             is.na(value_readact) ~ "[REDACTED]",
+                             !levels %in% c("Mean (SD)", "Median (IQR)") ~ 
+                               format_n_percent(value_readact, value_perc, 1), 
+                             TRUE ~ .)
                            
                          })) %>%
     dplyr::mutate(label = dplyr::if_else(dplyr::row_number()==1, label, "")) %>% 
