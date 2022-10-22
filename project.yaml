@@ -1044,15 +1044,14 @@ actions:
         inclusion_flowchart: output/descriptives/healthcare_use_2019_2022/tbl_flowchart.csv
 
   count_regression_yearly_gp:
-    run: r:latest analysis/05_yearly_count_regression.R gp poisson
+    run: r:latest analysis/05_yearly_count_regression.R gp
     needs: [construct_yearly_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
-        table_coeff: output/descriptives/healthcare_use_2019_2022/poisson/gp/table_irr.csv
-        table_counts: output/descriptives/healthcare_use_2019_2022/poisson/gp/table_counts.csv
-        table_stats: output/descriptives/healthcare_use_2019_2022/poisson/gp/table_stats.csv
-        plot_coeff: output/descriptives/healthcare_use_2019_2022/poisson/gp/plot_irr.jpeg
-        plot_coeff_reduced: output/descriptives/healthcare_use_2019_2022/poisson/gp/plot_irr_reduced.jpeg
+        table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_gp.csv
+        table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_gp.csv
+        plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_gp.jpeg
+
 
   count_regression_yearly_outpatient:
     run: r:latest analysis/05_yearly_count_regression.R outpatient poisson
