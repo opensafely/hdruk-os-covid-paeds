@@ -41,9 +41,12 @@ if(length(args) == 0){
   stratification = args[[3]]
 }
 
+# Load cohort data ----
 data_cohort = read_rds(here::here("output", "data", "data_cohort.rds"))
 
+# Extract variable labels ----
 var_labs = extract_variable_label(data_cohort[[1]])
+
 
 data_cohort = data_cohort%>% 
   bind_rows() %>%
@@ -51,6 +54,7 @@ data_cohort = data_cohort%>%
   mutate(overall = "Overall" %>% ff_label("")) %>% 
   select(patient_id, cohort, stratification = all_of(stratification))
 
+# Extract patient IDs for each year ----
 patient_id_2019 = data_cohort %>% filter(cohort == 2019) %>% pull(patient_id)
 patient_id_2020 = data_cohort %>% filter(cohort == 2020) %>% pull(patient_id)
 patient_id_2021 = data_cohort %>% filter(cohort == 2021) %>% pull(patient_id)
