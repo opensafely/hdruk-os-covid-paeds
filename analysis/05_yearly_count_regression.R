@@ -223,13 +223,13 @@ lasso_model_est = cv.glmnet(x = X[,-1], # "-1" removes additional intercept term
                             type.measure = "deviance",
                             nfolds = 10
                             )
-# 
-# # Extract coefficient estimates ----
-# lasso_coef_est = lasso_model_est %>% 
-#   coef.glmnet(s = "lambda.min") %>%
-#   as.matrix() %>% 
-#   as_tibble(rownames = "coeff_name") %>% 
-#   rename("estimate" = "lambda.min")
+
+# Extract coefficient estimates ----
+lasso_coef_est = lasso_model_est %>%
+  coef.glmnet(s = "lambda.min") %>%
+  as.matrix() %>%
+  as_tibble(rownames = "coeff_name") %>%
+  rename("estimate" = "lambda.min")
 # 
 # # Bootstrap set up ----
 # n_rows = nrow(X)    # number of rows in dataset
@@ -242,24 +242,24 @@ lasso_model_est = cv.glmnet(x = X[,-1], # "-1" removes additional intercept term
 # plan(multisession, workers = min(parallel::detectCores(), n_cores))
 # 
 # # Perform bootstrap ----
-# lasso_bootstrap = 1:n_bootstrap %>% 
+# lasso_bootstrap = 1:n_bootstrap %>%
 #   future_map(function(boot_index){
-#     
+# 
 #     # Calculate row weight for bootstrap ----
-#     row_weight = tibble(row_id = 1:n_rows) %>% 
+#     row_weight = tibble(row_id = 1:n_rows) %>%
 #       left_join(
-#         tibble(index_sample = sample(1:n_rows, replace = TRUE)) %>% 
-#           count(index_sample) %>% 
+#         tibble(index_sample = sample(1:n_rows, replace = TRUE)) %>%
+#           count(index_sample) %>%
 #           select(row_id = index_sample, weight = n),
 #         by = "row_id"
-#       ) %>% 
+#       ) %>%
 #       replace_na(list(weight = 0))
-#     
+# 
 #     # Perform Lasso regression with bootstrap sample (via weights) ----
 #     lasso_model_boot = cv.glmnet(x = X[,-1],
 #                                  y = y,
 #                                  offset = offset,
-#                                  weights = row_weight$weight, 
+#                                  weights = row_weight$weight,
 #                                  family = "poisson")
 #     # Output Lasso model ----
 #     return(lasso_model_boot)
@@ -270,17 +270,17 @@ lasso_model_est = cv.glmnet(x = X[,-1], # "-1" removes additional intercept term
 # # Extract coefficients from bootstrap ----
 # lasso_coeff_bootstrap = lasso_bootstrap %>%
 #   map(function(lasso_model){
-#     lasso_model %>% 
+#     lasso_model %>%
 #       coef.glmnet(s = "lambda.min") %>%
-#       as.matrix() %>% 
-#       as_tibble(rownames = "coeff_name") %>% 
+#       as.matrix() %>%
+#       as_tibble(rownames = "coeff_name") %>%
 #       rename("coeff_value" = "lambda.min")
-#   }) %>% 
+#   }) %>%
 #   bind_rows(.id = "boot_id")
 # 
 # # Summarise bootstrap coefficients ----
 # lasso_coeff_bootstrap = lasso_coeff_bootstrap %>%
-#   group_by(coeff_name) %>% 
+#   group_by(coeff_name) %>%
 #   summarise(
 #     lower    = quantile(coeff_value, probs = alpha/2),
 #     upper    = quantile(coeff_value, probs = 1 - alpha/2),
@@ -289,42 +289,42 @@ lasso_model_est = cv.glmnet(x = X[,-1], # "-1" removes additional intercept term
 #   )
 # 
 # # Combine Lasso estimate and with bootstrap ----
-# lasso_coef = lasso_coef_est %>% 
+# lasso_coef = lasso_coef_est %>%
 #   left_join(lasso_coeff_bootstrap, by = "coeff_name")
 # 
 # # Format variable labels for plot ----
-# lasso_coef = lasso_coef %>% 
-#   mutate(year = str_extract(coeff_name, "year\\d{4}") %>% 
+# lasso_coef = lasso_coef %>%
+#   mutate(year = str_extract(coeff_name, "year\\d{4}") %>%
 #            str_remove("year"),
 #          var  = str_remove(coeff_name, "year\\d{4}[:]?"),
-#          var  = if_else(var == "", "Year", var)) %>% 
-#   replace_na(list(year = "2019")) %>% 
+#          var  = if_else(var == "", "Year", var)) %>%
+#   replace_na(list(year = "2019")) %>%
 #   mutate(var_type = case_when(
 #     year == "2019" ~ "Baseline covariate effect",
 #     var == "Year" ~ "Headline year effect",
 #     TRUE ~ "Year-covariate interaction"
-#   )) %>% 
+#   )) %>%
 #   left_join(
 #     label_lookup %>% select(var = var_level_combined, var_level_label)
-#   ) %>% 
+#   ) %>%
 #   mutate(var_level_label = if_else(is.na(var_level_label),
-#                                    var, var_level_label)) %>% 
-#   select(-var) %>% 
+#                                    var, var_level_label)) %>%
+#   select(-var) %>%
 #   mutate(
 #     var_level_label = var_level_label %>%
-#       factor() %>% 
-#       fct_relevel(unique(var_level_label)) %>% 
+#       factor() %>%
+#       fct_relevel(unique(var_level_label)) %>%
 #       fct_rev()
 #   )
 # 
 # # Save lasso coefficients ----
-# write_csv(lasso_coef, 
+# write_csv(lasso_coef,
 #           here::here("output", "descriptives", "lasso_model",
 #                      paste0("tbl_lasso_coef_", resource_type, ".csv")))
 # 
 # # Plot coefficients ----
 # plot_lasso_coef = lasso_coef %>%
-#   filter(var_level_label != "(Intercept)") %>% 
+#   filter(var_level_label != "(Intercept)") %>%
 #   ggplot(aes(x = var_level_label, y = estimate, ymin = lower, ymax = upper,
 #              colour = var_type)) +
 #   geom_point() +
