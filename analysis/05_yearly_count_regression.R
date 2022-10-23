@@ -216,15 +216,15 @@ X = sparse.model.matrix(predictor_formula, data = data_cohort)
 y = sparse.model.matrix(~ health_contact - 1, data = data_cohort) # "-1" removes intercept
 offset = log(data_cohort$days)
 
-
-
 # Bootstrap set up ----
 n_rows = nrow(X)   # number of rows in dataset
 n_bootstrap = 1  # number of bootstrap samples
 n_lambda = 10      # number of lambda samples within glmnet
 n_cores = 1        # number of cores to use
-alpha = 0.05       # significance
+alpha = 0.05       # significance level 
 
+# Set custom limit of 5GB to be passed to future proceses ---- 
+options(future.globals.maxSize = 5000*1024^2)
 
 # Set up parallelisation ----
 plan(multisession, workers = min(parallel::detectCores(), n_cores))
