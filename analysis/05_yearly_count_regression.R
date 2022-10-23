@@ -216,14 +216,13 @@ y = sparse.model.matrix(~ health_contact - 1, data = data_cohort) # "-1" removes
 offset = log(data_cohort$days)
 
 # Perform LASSO regression ----
-# lasso_model_est = glmnet(x = X[,-1], # "-1" removes additional intercept term
-#                             y = y,
-#                             offset = offset,
-#                             family = "poisson",
-#                             type.measure = "deviance",
-#                             lambda = c(0.1, 0.001)
-#                             #nfolds = 10
-#                             )
+lasso_model_est = cv.glmnet(x = X[,-1], # "-1" removes additional intercept term
+                            y = y,
+                            offset = offset,
+                            family = "poisson",
+                            type.measure = "deviance",
+                            nfolds = 10
+                            )
 # 
 # # Extract coefficient estimates ----
 # lasso_coef_est = lasso_model_est %>% 
