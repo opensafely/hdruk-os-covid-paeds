@@ -12,6 +12,7 @@
 library(tidyverse)
 library(lcmm)
 library(splines2)
+library(tictoc)
 
 # Output directories ----
 dir_lcmm_models = here::here("output", "lcmm", "models")
@@ -30,6 +31,15 @@ if(length(args) == 0){
 # Load resource data ----
 data_resource_lcmm = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
 
+data_resource_lcmm = 1:100 %>% 
+  map(function(x){
+    data_resource_lcmm = data_resource_lcmm %>% 
+      mutate(patient_id = 20000*x+patient_id)
+  }) %>% 
+  bind_rows()
+
+
+
 # Convert to data.frame ----
 data_resource_lcmm = as.data.frame(data_resource_lcmm)
 
@@ -40,13 +50,16 @@ max_iter = 2000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
   
+  tic()
   lcmm_model = hlme(hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
                     random = ~bSpline(indexed_month, degree = 3, knots = 7),
                     subject = "patient_id", 
                     ng = ng,
                     maxiter = max_iter, 
                     data = data_resource_lcmm,
-                    verbose = FALSE)
+                    verbose = FALSE,
+                    nproc = 8)
+  toc()
   
 } else{
   
