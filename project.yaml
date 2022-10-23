@@ -1050,41 +1050,38 @@ actions:
       moderately_sensitive:
         table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_gp.csv
         table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_gp.csv
+        table_lasso_pois_dev: output/descriptives/lasso_model/tbl_lasso_pois_dev_gp.csv
         plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_gp.jpeg
 
-
   count_regression_yearly_outpatient:
-    run: r:latest analysis/05_yearly_count_regression.R outpatient poisson
+    run: r:latest analysis/05_yearly_count_regression.R outpatient
     needs: [construct_yearly_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
-        table_coeff: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/table_irr.csv
-        table_counts: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/table_counts.csv
-        table_stats: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/table_stats.csv
-        plot_coeff: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/plot_irr.jpeg
-        plot_coeff_reduced: output/descriptives/healthcare_use_2019_2022/poisson/outpatient/plot_irr_reduced.jpeg
+        table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_outpatient.csv
+        table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_outpatient.csv
+        table_lasso_pois_dev: output/descriptives/lasso_model/tbl_lasso_pois_dev_outpatient.csv
+        plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_outpatient.jpeg
 
   count_regression_yearly_admissions:
-    run: r:latest analysis/05_yearly_count_regression.R admissions poisson
+    run: r:latest analysis/05_yearly_count_regression.R admissions
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        table_coeff: output/descriptives/healthcare_use_2019_2022/poisson/admissions/table_irr.csv
-        table_counts: output/descriptives/healthcare_use_2019_2022/poisson/admissions/table_counts.csv
-        table_stats: output/descriptives/healthcare_use_2019_2022/poisson/admissions/table_stats.csv
-        plot_coeff: output/descriptives/healthcare_use_2019_2022/poisson/admissions/plot_irr.jpeg
-        plot_coeff_reduced: output/descriptives/healthcare_use_2019_2022/poisson/admissions/plot_irr_reduced.jpeg
+        table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_admissions.csv
+        table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_admissions.csv
+        table_lasso_pois_dev: output/descriptives/lasso_model/tbl_lasso_pois_dev_admissions.csv
+        plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_admissions.jpeg
 
   count_regression_yearly_beddays:
-    run: r:latest analysis/05_yearly_count_regression.R beddays poisson
+    run: r:latest analysis/05_yearly_count_regression.R beddays
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        table_coeff: output/descriptives/healthcare_use_2019_2022/poisson/beddays/table_irr.csv
-        table_counts: output/descriptives/healthcare_use_2019_2022/poisson/beddays/table_counts.csv
-        table_stats: output/descriptives/healthcare_use_2019_2022/poisson/beddays/table_stats.csv
-        plot_coeff: output/descriptives/healthcare_use_2019_2022/poisson/beddays/plot_irr.jpeg
-        plot_coeff_reduced: output/descriptives/healthcare_use_2019_2022/poisson/beddays/plot_irr_reduced.jpeg
+        table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_beddays.csv
+        table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_beddays.csv
+        table_lasso_pois_dev: output/descriptives/lasso_model/tbl_lasso_pois_dev_beddays.csv
+        plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_beddays.jpeg
 
   monthly_gp_all_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp all overall
