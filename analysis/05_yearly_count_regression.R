@@ -342,14 +342,9 @@ lasso_coef_est = lasso_model_est %>%
 
 # Bootstrap set up ----
 n_rows = nrow(X)   # number of rows in dataset
-n_bootstrap = 1  # number of bootstrap samples
+n_bootstrap = 5  # number of bootstrap samples
 alpha = 0.05       # significance level 
 
-# Set custom limit of 5GB to be passed to future proceses ---- 
-options(future.globals.maxSize = 5000*1024^2)
-
-# Set up parallelisation ----
-plan(multisession, workers = min(parallel::detectCores(), n_cores))
 
 # Perform bootstrap ----
 lasso_bootstrap = 1:n_bootstrap %>%
