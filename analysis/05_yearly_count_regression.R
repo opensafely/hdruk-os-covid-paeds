@@ -3,7 +3,7 @@ library(lubridate)
 library(finalfit)
 library(glmnet)
 library(SparseM)
-library(furrr)
+library(doParallel)
 
 # Source custom functions ----
 source(here::here("analysis", "00_utility_functions.R"))
@@ -67,6 +67,88 @@ data_cohort = data_cohort %>%
       as.numeric() + 1
   )
 
+# Comorbidity interactions ----
+data_cohort = data_cohort %>% 
+  mutate(
+    asthma_with_cardiovascular = if_else(asthma == "Yes" & cardiovascular == "Yes",
+                                         "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Asthma & cardiovascular conditions"),
+    
+    cystic_fibrosis_with_cardiovascular = if_else(cystic_fibrosis == "Yes" & cardiovascular == "Yes",
+                                                  "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Cystic fibrosis & cardiovascular conditions"),
+    
+    other_respiratory_with_cardiovascular = if_else(other_respiratory == "Yes" & cardiovascular == "Yes",
+                                                    "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Other respiratory conditions & cardiovascular conditions"),
+    
+    epilepsy_with_cardiovascular = if_else(epilepsy == "Yes" & cardiovascular == "Yes",
+                                                    "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Epilepsy & cardiovascular conditions"),
+    
+    headaches_with_cardiovascular = if_else(headaches == "Yes" & cardiovascular == "Yes",
+                                           "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Headaches & cardiovascular conditions"),
+    
+    other_neurological_with_cardiovascular = if_else(other_neurological == "Yes" & cardiovascular == "Yes",
+                                            "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Other neurological conditions & cardiovascular conditions"),
+    
+    asthma_with_epilepsy = if_else(asthma == "Yes" & epilepsy == "Yes",
+                                                     "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Asthma & epilepsy"),
+    
+    cystic_fibrosis_with_epilepsy = if_else(cystic_fibrosis == "Yes" & epilepsy == "Yes",
+                                   "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Cystic fibrosis & epilepsy"),
+    
+    other_respiratory_with_epilepsy = if_else(other_respiratory == "Yes" & epilepsy == "Yes",
+                                            "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Other respiratory conditions & epilepsy"),
+    
+    asthma_with_headaches = if_else(asthma == "Yes" & headaches == "Yes",
+                                   "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Asthma & headaches"),
+    
+    cystic_fibrosis_with_headaches = if_else(cystic_fibrosis == "Yes" & headaches == "Yes",
+                                            "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Cystic fibrosis & headaches"),
+    
+    other_respiratory_with_headaches = if_else(other_respiratory == "Yes" & headaches == "Yes",
+                                              "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Other respiratory conditions & headaches"),
+    
+    asthma_with_other_neurological = if_else(asthma == "Yes" & other_neurological == "Yes",
+                                    "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Asthma & other neurological conditions"),
+    
+    cystic_fibrosis_with_other_neurological = if_else(cystic_fibrosis == "Yes" & other_neurological == "Yes",
+                                             "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Cystic fibrosis & other neurological conditions"),
+    
+    other_respiratory_with_other_neurological = if_else(other_respiratory == "Yes" & other_neurological == "Yes",
+                                               "Yes", "No") %>% 
+      factor() %>% 
+      ff_label("Other respiratory conditions & other neurological conditions"),
+    
+  )
+
+var_labs = extract_variable_label(data_cohort)
+
 # List of predictor variables ----
 predictor_vars = c(
   # Demographics
@@ -81,8 +163,24 @@ predictor_vars = c(
   "gastrointestinal_conditions", "genitourinary", "cancer",
   "non_malignant_haematological", "immunological", "chronic_infections",
   "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "transplant", "palliative_care"
+  "metabolic", "transplant", "palliative_care",
 
+  # Comorbidity interactions
+  "asthma_with_cardiovascular", "cystic_fibrosis_with_cardiovascular",
+  "other_respiratory_with_cardiovascular",
+  
+  "epilepsy_with_cardiovascular", "headaches_with_cardiovascular",
+  "other_neurological_with_cardiovascular",
+  
+  "asthma_with_epilepsy", "cystic_fibrosis_with_epilepsy",
+  "other_respiratory_with_epilepsy",
+  
+  "asthma_with_headaches", "cystic_fibrosis_with_headaches",
+  "other_respiratory_with_headaches",
+  
+  "asthma_with_other_neurological", "cystic_fibrosis_with_other_neurological",
+  "other_respiratory_with_other_neurological"
+  
 )
 
 # Retain regression variables in dataset ----
@@ -134,6 +232,7 @@ if(resource_type == "gp"){
   data_resource = read_rds(here::here("output", "data", "data_gp.rds"))
   
   data_resource = data_resource %>%
+    filter(patient_id %in% data_cohort$patient_id) %>% 
     filter(str_starts(code_type, "KM_") |
              str_starts(code_type, "mapped_1") |
              str_starts(code_type, "mapped_2"))%>% 
@@ -145,7 +244,8 @@ if(resource_type == "gp"){
   
   data_resource = read_rds(here::here("output", "data", "data_outpatient.rds"))
   
-  data_resource = data_resource %>% 
+  data_resource = data_resource %>%
+    filter(patient_id %in% data_cohort$patient_id) %>% 
     filter(is.na(specialty)) %>% 
     mutate(year = year(outpatient_date)) %>%
     group_by(patient_id, year) %>% 
@@ -158,7 +258,8 @@ if(resource_type == "gp"){
   
   if (resource_type == "admissions"){
     
-    data_resource = data_resource %>% 
+    data_resource = data_resource %>%
+      filter(patient_id %in% data_cohort$patient_id) %>% 
       mutate(year = year(admission_date)) %>% 
       count(patient_id, year)
     
@@ -169,6 +270,7 @@ if(resource_type == "gp"){
       as.list() %>% 
       map(function(year){
         data_resource %>%
+          filter(patient_id %in% data_cohort$patient_id) %>% 
           select(patient_id, admission_date, discharge_date) %>%
           mutate(
             year = year,
@@ -216,11 +318,31 @@ X = sparse.model.matrix(predictor_formula, data = data_cohort)
 y = sparse.model.matrix(~ health_contact - 1, data = data_cohort) # "-1" removes intercept
 offset = log(data_cohort$days)
 
+# Set up parallel ----
+n_workers = 5        
+registerDoParallel(n_workers)
+
+# Perform LASSO regression ----
+lasso_model_est = cv.glmnet(x = X[,-1], # "-1" removes additional intercept term
+                            y = y,
+                            offset = offset,
+                            standardize = FALSE,
+                            family = "poisson",
+                            type.measure = "deviance",
+                            nfolds = 10,
+                            parallel = TRUE
+)
+
+# Extract coefficient estimates ----
+lasso_coef_est = lasso_model_est %>%
+  coef.glmnet(s = "lambda.min") %>%
+  as.matrix() %>%
+  as_tibble(rownames = "coeff_name") %>%
+  rename("estimate" = "lambda.min")
+
 # Bootstrap set up ----
 n_rows = nrow(X)   # number of rows in dataset
 n_bootstrap = 1  # number of bootstrap samples
-n_lambda = 10      # number of lambda samples within glmnet
-n_cores = 1        # number of cores to use
 alpha = 0.05       # significance level 
 
 # Set custom limit of 5GB to be passed to future proceses ---- 
@@ -231,18 +353,20 @@ plan(multisession, workers = min(parallel::detectCores(), n_cores))
 
 # Perform bootstrap ----
 lasso_bootstrap = 1:n_bootstrap %>%
-  future_map(function(boot_index){
+  map(function(boot_index){
 
     # Sample row index
     i_boot = sample(1:n_rows, n_rows, replace = TRUE)
 
-    # Perform Lasso regression with bootstrap sample (via weights) ----
+    # Perform Lasso regression with bootstrap sample ----
     lasso_model_boot = cv.glmnet(x = X[i_boot, -1],
                                  y = y[i_boot],
                                  offset = offset[i_boot],
                                  standardize = FALSE,
-                                 nlambda = n_lambda,
-                                 family = "poisson")
+                                 family = "poisson",
+                                 type.measure = "deviance",
+                                 nfolds = 10,
+                                 parallel = TRUE)
     
     # Output Lasso model ----
     return(lasso_model_boot)
@@ -270,7 +394,7 @@ write_csv(lasso_pois_dev,
 
 
 # Extract coefficients from bootstrap ----
-lasso_coef = lasso_bootstrap %>%
+lasso_coef_boot = lasso_bootstrap %>%
   map(function(lasso_model){
     lasso_model %>%
       coef.glmnet(s = "lambda.min") %>%
@@ -281,10 +405,11 @@ lasso_coef = lasso_bootstrap %>%
   bind_rows(.id = "boot_id")
 
 # Summarise bootstrap coefficients ----
-lasso_coef = lasso_coef %>%
+lasso_coef_boot = lasso_coef_boot %>%
   group_by(coeff_name) %>%
   summarise(
-    estimate = median(coeff_value),
+    mean     = mean(coeff_value),
+    median   = median(coeff_value),
     lower    = quantile(coeff_value, probs = alpha/2),
     upper    = quantile(coeff_value, probs = 1 - alpha/2),
     minimum  = min(coeff_value),
@@ -292,17 +417,20 @@ lasso_coef = lasso_coef %>%
   )
 
 # Format variable labels for plot ----
-lasso_coef = lasso_coef %>%
+lasso_coef = lasso_coef_est %>%
+  left_join(lasso_coef_boot) %>% 
   mutate(year = str_extract(coeff_name, "year\\d{4}") %>%
            str_remove("year"),
          var  = str_remove(coeff_name, "year\\d{4}[:]?"),
          var  = if_else(var == "", "Year", var)) %>%
   replace_na(list(year = "2019")) %>%
   mutate(var_type = case_when(
+    year == "2019" & str_detect(var, "_with_") ~ "Baseline comorbidity interaction",
     year == "2019" ~ "Baseline covariate effect",
     var == "Year" ~ "Headline year effect",
     TRUE ~ "Year-covariate interaction"
-  )) %>%
+  ) %>% factor() %>% 
+    fct_relevel("Baseline covariate effect")) %>%
   left_join(
     label_lookup %>% select(var = var_level_combined, var_level_label)
   ) %>%
