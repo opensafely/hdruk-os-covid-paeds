@@ -287,17 +287,34 @@ data_cohort = data_cohort %>%
   rename(health_contact = n) %>% 
   mutate(year = year %>% factor())
 
+# Label lookup table ----
+lookup_label = tibble(
+  var = names(var_labs),
+  var_label = var_labs
+)
+
+# Set up parallel sessions ----
+plan(multisession, workers = 2)
+
 # For each comorbidity variable, perform regression to calculate IRR ----
-var_comorbidity[1] %>%
-  walk(function(var_comorb){
+var_comorbidity %>%
+  future_map(function(var_comorb){
     
     # Model formula ----
     model_formula = as.formula(
       paste0("health_contact ~ ", paste0(var_adjusting, collapse = " + "), " + ",
              paste0("year*", var_comorb, " + offset(log(days))")))
     
+    # Restrict comparison to patients with no comorbidities vs specific comorbidity
+    if(var_comorb != "comorbidity_count.factor"){
+      data_model = data_cohort %>% 
+        filter(comorbidity_count.factor == "0" | (!!rlang::sym(var_comorb) == "Yes"))
+    } else{
+      data_model = data_cohort
+    }
+    
     # Fit model ----
-    model_fit = glm(formula = model_formula, family = "poisson", data = data_cohort)
+    model_fit = MASS::glm.nb(formula = model_formula, data = data_model)
     
     # Model coefficient ----
     tbl_model_coef = model_fit %>%
@@ -342,19 +359,40 @@ var_comorbidity[1] %>%
         )
       )
     
+    # If model estimates contain NA, return empty IRR table 
+    if(any(is.na(tbl_model_coef))){
+      tbl_irr = tbl_irr %>% 
+        mutate(
+          estimate = NA_real_,
+          ci_lower = NA_real_,
+          ci_upper = NA_real_,
+          chisq = NA_real_,
+          pr_chisq = NA_real_
+        )
+    } else {
+      tbl_irr = tbl_irr %>% 
+        left_join(
+          lincom(model_fit, tbl_irr$lincom_term) %>% 
+            as_tibble(rownames = "lincom_term"),
+          by = "lincom_term"
+        ) %>% 
+        janitor::clean_names() %>% 
+        rename(ci_lower = x2_5_percent, ci_upper = x97_5_percent) %>% 
+        unnest(c(estimate, ci_lower, ci_upper, chisq, pr_chisq))
+    }
+    
+    # Join variable label ----
     tbl_irr = tbl_irr %>% 
       left_join(
-        lincom(model_fit, tbl_irr$lincom_term) %>% 
-          as_tibble(rownames = "lincom_term"),
-        by = "lincom_term"
-      ) %>% 
-      janitor::clean_names() %>% 
-      rename(ci_lower = x2_5_percent, ci_upper = x97_5_percent) %>% 
-      unnest(c(estimate, ci_lower, ci_upper, chisq, pr_chisq))
+        lookup_label %>% 
+          rename(var_2 = var),
+        by = "var_2"
+      )
     
     write_csv(tbl_irr,
               here::here("output", "comorbidity_yearly", resource_type, "incidence_rate_ratio",
                          paste0("tbl_irr_", var_comorb, ".csv")))
     
+    return(NULL)
   })
 
