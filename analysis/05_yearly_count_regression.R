@@ -1,18 +1,18 @@
 library(tidyverse)
 library(lubridate)
 library(finalfit)
-library(glmnet)
-library(SparseM)
-library(doParallel)
+library(furrr)
 
 # Source custom functions ----
 source(here::here("analysis", "00_utility_functions.R"))
 
-# Set seed
-set.seed(1573088)
-
-# Plot theme ----
-theme_set(theme_bw())
+# Command arguments ----
+args = commandArgs(trailingOnly=TRUE)
+if(length(args) == 0){
+  resource_type  = "outpatient"
+} else{
+  resource_type  = args[[1]]
+}
 
 # Load global variables ----
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
@@ -29,19 +29,17 @@ tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
 # Create output directory folders ----
-dir.create(here::here("output", "descriptives", "lasso_model"),
+dir.create(here::here("output", "comorbidity_yearly"),
            showWarnings = FALSE, recursive=TRUE)
 
-# Plot theme ----
-theme_set(theme_bw())
+dir.create(here::here("output", "comorbidity_yearly", resource_type, "model_coef"),
+           showWarnings = FALSE, recursive=TRUE)
 
-# Command arguments ----
-args = commandArgs(trailingOnly=TRUE)
-if(length(args) == 0){
-  resource_type  = "outpatient"
-} else{
-  resource_type  = args[[1]]
-}
+dir.create(here::here("output", "comorbidity_yearly", resource_type, "model_metrics"),
+           showWarnings = FALSE, recursive=TRUE)
+
+dir.create(here::here("output", "comorbidity_yearly", resource_type, "incidence_rate_ratio"),
+           showWarnings = FALSE, recursive=TRUE)
 
 # Load cohort data ----
 data_cohort = read_rds(here::here("output", "data", "data_cohort.rds"))
@@ -149,14 +147,14 @@ data_cohort = data_cohort %>%
 
 var_labs = extract_variable_label(data_cohort)
 
-# List of predictor variables ----
-predictor_vars = c(
-  # Demographics
-  "age_group",
-  "sex", "ethnicity", "imd_Q5_2019",
-  "region_2019", "rural_urban_2019",
+# List of adjusting variables ----
+var_adjusting = c("age_group", "sex", "ethnicity", "imd_Q5_2019", "region_2019",
+                  "rural_urban_2019")
+
+# List of comorbidity variables----
+var_comorbidity = c(
+  "comorbidity_count.factor",
   
-  # Comorbidities
   "mental_health_disorders", "neurodevelopmental_and_behavioural",
   "asthma", "cystic_fibrosis", "other_respiratory",
   "cardiovascular", "epilepsy", "headaches", "other_neurological",
@@ -168,16 +166,12 @@ predictor_vars = c(
   # Comorbidity interactions
   "asthma_with_cardiovascular", "cystic_fibrosis_with_cardiovascular",
   "other_respiratory_with_cardiovascular",
-  
   "epilepsy_with_cardiovascular", "headaches_with_cardiovascular",
   "other_neurological_with_cardiovascular",
-  
   "asthma_with_epilepsy", "cystic_fibrosis_with_epilepsy",
   "other_respiratory_with_epilepsy",
-  
   "asthma_with_headaches", "cystic_fibrosis_with_headaches",
   "other_respiratory_with_headaches",
-  
   "asthma_with_other_neurological", "cystic_fibrosis_with_other_neurological",
   "other_respiratory_with_other_neurological"
   
@@ -185,7 +179,8 @@ predictor_vars = c(
 
 # Retain regression variables in dataset ----
 data_cohort = data_cohort %>% 
-  select(all_of(c("patient_id", "days", predictor_vars)), year = cohort) %>%
+  select(all_of(c("patient_id", "days",  
+                  var_adjusting, var_comorbidity)), year = cohort) %>%
   mutate(year = year %>% factor()) %>% 
   drop_na() %>% 
   filter(days > 0)
@@ -194,7 +189,7 @@ data_cohort = data_cohort %>%
 tbl_cohort_summary = data_cohort %>% 
   summary_factorlist(
     dependent = "year",
-    explanatory = predictor_vars,
+    explanatory = c(var_adjusting, var_comorbidity),
     cont = "median",
     total_col = FALSE,
     add_col_totals = TRUE,
@@ -205,26 +200,8 @@ tbl_cohort_summary = data_cohort %>%
 
 ## Save Summary table -----
 write_csv(tbl_cohort_summary, 
-          here::here("output", "descriptives", "lasso_model",
+          here::here("output", "comorbidity_yearly",
                      paste0("tbl_cohort_summary_", resource_type, ".csv")))
-
-# Create lookup table for labels ----
-label_lookup = tibble(
-  var = predictor_vars) %>% 
-  rowwise() %>% 
-  mutate(
-    level_labels = levels(data_cohort[,var]) %>% list()
-  ) %>%
-  ungroup() %>% 
-  unnest(level_labels) %>% 
-  mutate(var_level_combined = paste0(var, level_labels)) %>% 
-  left_join(
-    tibble(var = names(var_labs), var_labels = var_labs)
-  ) %>% 
-  mutate(
-    var_level_label = paste0(var_labels, ": ", level_labels)
-  )
-
 
 # Calculate yearly resource use ----
 if(resource_type == "gp"){
@@ -307,160 +284,77 @@ data_cohort = data_cohort %>%
     by = c("patient_id", "year")
   ) %>% 
   replace_na(list(n = 0)) %>% 
-  rename(health_contact = n)
+  rename(health_contact = n) %>% 
+  mutate(year = year %>% factor())
 
-# Model formula with year-interaction ---- 
-predictor_formula = as.formula(
-  paste0("~ year*(", paste0(predictor_vars, collapse = " + "), ")"))
-
-# Model matrices and offset ----
-X = sparse.model.matrix(predictor_formula, data = data_cohort)
-y = sparse.model.matrix(~ health_contact - 1, data = data_cohort) # "-1" removes intercept
-offset = log(data_cohort$days)
-
-# Set up parallel ----
-n_workers = 5        
-registerDoParallel(n_workers)
-
-# Perform LASSO regression ----
-lasso_model_est = cv.glmnet(x = X[,-1], # "-1" removes additional intercept term
-                            y = y,
-                            offset = offset,
-                            standardize = FALSE,
-                            family = "poisson",
-                            type.measure = "deviance",
-                            nfolds = 10,
-                            parallel = TRUE
-)
-
-# Extract coefficient estimates ----
-lasso_coef_est = lasso_model_est %>%
-  coef.glmnet(s = "lambda.min") %>%
-  as.matrix() %>%
-  as_tibble(rownames = "coeff_name") %>%
-  rename("estimate" = "lambda.min")
-
-# Bootstrap set up ----
-n_rows = nrow(X)   # number of rows in dataset
-n_bootstrap = 5  # number of bootstrap samples
-alpha = 0.05       # significance level 
-
-
-# Perform bootstrap ----
-lasso_bootstrap = 1:n_bootstrap %>%
-  map(function(boot_index){
-
-    # Sample row index
-    i_boot = sample(1:n_rows, n_rows, replace = TRUE)
-
-    # Perform Lasso regression with bootstrap sample ----
-    lasso_model_boot = cv.glmnet(x = X[i_boot, -1],
-                                 y = y[i_boot],
-                                 offset = offset[i_boot],
-                                 standardize = FALSE,
-                                 family = "poisson",
-                                 type.measure = "deviance",
-                                 nfolds = 10,
-                                 parallel = TRUE)
+# For each comorbidity variable, perform regression to calculate IRR ----
+var_comorbidity[1] %>%
+  walk(function(var_comorb){
     
-    # Output Lasso model ----
-    return(lasso_model_boot)
-  }
-  )
+    # Model formula ----
+    model_formula = as.formula(
+      paste0("health_contact ~ ", paste0(var_adjusting, collapse = " + "), " + ",
+             paste0("year*", var_comorb, " + offset(log(days))")))
+    
+    # Fit model ----
+    model_fit = glm(formula = model_formula, family = "poisson", data = data_cohort)
+    
+    # Model coefficient ----
+    tbl_model_coef = model_fit %>%
+      broom::tidy()
+    
+    write_csv(tbl_model_coef,
+              here::here("output", "comorbidity_yearly", resource_type, "model_coef",
+                         paste0("tbl_model_coef_", var_comorb, ".csv")))
+    
+    # Model metrics ----
+    tbl_model_metrics = model_fit %>%
+      broom::glance()
+    
+    write_csv(tbl_model_metrics,
+              here::here("output", "comorbidity_yearly", resource_type, "model_metrics",
+                         paste0("tbl_model_metrics_", var_comorb, ".csv")))
+    
+    # IRR - linear combination ----
+    level_1 = data_cohort[,"year"] %>% levels()
+    level_2 = data_cohort[,var_comorb] %>% levels()
+    
+    tbl_irr = expand_grid(level_1, level_2) %>% 
+      mutate(var_1 = "year",
+             var_2 = var_comorb) %>% 
+      relocate(var_1, var_2) %>% 
+      group_by(level_2) %>% 
+      mutate(ref_1 = if_else(row_number() == 1, TRUE, FALSE)) %>%
+      group_by(level_1) %>% 
+      mutate(ref_2 = if_else(row_number() == 1, TRUE, FALSE)) %>% 
+      ungroup() %>% 
+      filter(!(ref_1 == TRUE & ref_2 == TRUE)) %>% # Remove both reference
+      rowwise() %>% 
+      mutate(
+        lincom_term = case_when(
+          ref_1 == FALSE & ref_2 == TRUE  ~ paste0(var_1, level_1),
+          ref_1 == TRUE  & ref_2 == FALSE ~ paste0(var_2, level_2),
+          ref_1 == FALSE & ref_2 == FALSE ~ paste0(c(paste0(var_1, level_1),
+                                                     paste0(var_2, level_2),
+                                                     paste0(var_1, level_1, ":", var_2, level_2)),
+                                                   collapse = "+"),
+          TRUE ~ NA_character_
+        )
+      )
+    
+    tbl_irr = tbl_irr %>% 
+      left_join(
+        lincom(model_fit, tbl_irr$lincom_term) %>% 
+          as_tibble(rownames = "lincom_term"),
+        by = "lincom_term"
+      ) %>% 
+      janitor::clean_names() %>% 
+      rename(ci_lower = x2_5_percent, ci_upper = x97_5_percent) %>% 
+      unnest(c(estimate, ci_lower, ci_upper, chisq, pr_chisq))
+    
+    write_csv(tbl_irr,
+              here::here("output", "comorbidity_yearly", resource_type, "incidence_rate_ratio",
+                         paste0("tbl_irr_", var_comorb, ".csv")))
+    
+  })
 
-# Extract poisson deviance from bootstrap ----
-lasso_pois_dev = lasso_bootstrap %>% 
-  map(function(lasso_model){
-    tibble(
-      pois_dev = lasso_model$cvm[which(lasso_model$lambda.min == lasso_model$lambda)]
-    )
-  }) %>%
-  bind_rows(.id = "boot_id") %>% 
-  summarise(
-    estimate = median(pois_dev),
-    lower    = quantile(pois_dev, probs = alpha/2),
-    upper    = quantile(pois_dev, probs = 1 - alpha/2),
-  )
-
-# Save lasso coefficients ----
-write_csv(lasso_pois_dev,
-          here::here("output", "descriptives", "lasso_model",
-                     paste0("tbl_lasso_pois_dev_", resource_type, ".csv")))
-
-
-# Extract coefficients from bootstrap ----
-lasso_coef_boot = lasso_bootstrap %>%
-  map(function(lasso_model){
-    lasso_model %>%
-      coef.glmnet(s = "lambda.min") %>%
-      as.matrix() %>%
-      as_tibble(rownames = "coeff_name") %>%
-      rename("coeff_value" = "lambda.min")
-  }) %>%
-  bind_rows(.id = "boot_id")
-
-# Summarise bootstrap coefficients ----
-lasso_coef_boot = lasso_coef_boot %>%
-  group_by(coeff_name) %>%
-  summarise(
-    mean     = mean(coeff_value),
-    median   = median(coeff_value),
-    lower    = quantile(coeff_value, probs = alpha/2),
-    upper    = quantile(coeff_value, probs = 1 - alpha/2),
-    minimum  = min(coeff_value),
-    maximum  = max(coeff_value)
-  )
-
-# Format variable labels for plot ----
-lasso_coef = lasso_coef_est %>%
-  left_join(lasso_coef_boot) %>% 
-  mutate(year = str_extract(coeff_name, "year\\d{4}") %>%
-           str_remove("year"),
-         var  = str_remove(coeff_name, "year\\d{4}[:]?"),
-         var  = if_else(var == "", "Year", var)) %>%
-  replace_na(list(year = "2019")) %>%
-  mutate(var_type = case_when(
-    year == "2019" & str_detect(var, "_with_") ~ "Baseline comorbidity interaction",
-    year == "2019" ~ "Baseline covariate effect",
-    var == "Year" ~ "Headline year effect",
-    TRUE ~ "Year-covariate interaction"
-  ) %>% factor() %>% 
-    fct_relevel("Baseline covariate effect")) %>%
-  left_join(
-    label_lookup %>% select(var = var_level_combined, var_level_label)
-  ) %>%
-  mutate(var_level_label = if_else(is.na(var_level_label),
-                                   var, var_level_label)) %>%
-  select(-var) %>%
-  mutate(
-    var_level_label = var_level_label %>%
-      factor() %>%
-      fct_relevel(unique(var_level_label)) %>%
-      fct_rev()
-  )
-
-# Save lasso coefficients ----
-write_csv(lasso_coef,
-          here::here("output", "descriptives", "lasso_model",
-                     paste0("tbl_lasso_coef_", resource_type, ".csv")))
-
-# Plot coefficients ----
-plot_lasso_coef = lasso_coef %>%
-  filter(var_level_label != "(Intercept)") %>%
-  ggplot(aes(x = var_level_label, y = estimate, ymin = lower, ymax = upper,
-             colour = var_type)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.1) +
-  geom_hline(yintercept = 0, linetype = "dashed", size = 0.25) +
-  facet_wrap(~ year, ncol = 4) +
-  labs(y = "Regression coefficient",
-       x = NULL, colour = NULL) +
-  theme(
-    legend.position = "bottom") +
-  coord_flip()
-
-# Save coefficient plot ----
-ggsave(paste0("plot_lasso_coef_", resource_type, ".jpeg"),
-       plot_lasso_coef,
-       path = here::here("output", "descriptives", "lasso_model"),
-       height = 8, width = 12)
