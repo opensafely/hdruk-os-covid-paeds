@@ -700,3 +700,32 @@ date_seq = function(dates, by = "month", week_start = 1){
       max(floor_date(dates, unit = by, week_start = week_start), na.rm = TRUE),
       by = by)
 }
+
+
+# lincom (from biostat3 V0.1.6) - calculate a linear combination of regression parameters.
+lincom = function (model, specification, level = 0.95, eform = FALSE, 
+                   ...) 
+{
+  stopifnot(requireNamespace("car"))
+  if (length(specification) > 1) 
+    return(t(sapply(specification, function(spec) lincom(model, 
+                                                         spec, level, eform, ...))))
+  x <- car::linearHypothesis(model, specification, ...)
+  cf <- as.vector(attr(x, "value"))
+  ses <- sqrt(as.vector(attr(x, "vcov")))
+  a <- (1 - level)/2
+  a <- c(a, 1 - a)
+  pct <- format_perc(a, 3)
+  fac <- qnorm(a)
+  ci <- cbind(cf, cf + ses %o% fac)
+  if (eform) 
+    ci <- exp(ci)
+  dimnames(ci) <- list(specification, c("Estimate", pct))
+  cbind(ci, x[-1, 3:4])
+}
+
+# format_perc (from biostat3 V0.1.6) - format percentage
+format_perc = function (probs, digits){
+  paste(format(100 * probs, trim = TRUE, scientific = FALSE, digits = digits), 
+        "%")
+}
