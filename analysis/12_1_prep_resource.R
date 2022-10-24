@@ -27,8 +27,8 @@ data_resource = data_resource %>%
 
 # Flag secondary care contact-day ----
 data_resource = data_resource %>% 
-  mutate(hospital = case_when(service %in% c('CC','BD','OP') ~ 1,
-                              service %in% c('Contact','None') ~ 0)) 
+  mutate(hospital = case_when(service %in% c("CC", "BD", "OP") ~ 1,
+                              service %in% c("Contact", "None") ~ 0)) 
 
 # Group days into 12 x 30-day periods from follow-up start date ----
 data_resource = data_resource %>% 
