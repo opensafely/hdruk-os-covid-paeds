@@ -1048,40 +1048,40 @@ actions:
     needs: [construct_yearly_cohort, process_gp_data]
     outputs:
       moderately_sensitive:
-        table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_gp.csv
-        table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_gp.csv
-        table_lasso_pois_dev: output/descriptives/lasso_model/tbl_lasso_pois_dev_gp.csv
-        plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_gp.jpeg
+        table_cohort_summary: output/comorbidity_yearly/tbl_cohort_summary_gp.csv
+        table_model_coef: output/comorbidity_yearly/gp/model_coef/tbl_model_coef_*.csv
+        table_model_metrics: output/comorbidity_yearly/gp/model_metrics/tbl_model_metrics_*.csv
+        table_irr: output/comorbidity_yearly/gp/incidence_rate_ratio/tbl_irr_*.csv
 
   count_regression_yearly_outpatient:
     run: r:latest analysis/05_yearly_count_regression.R outpatient
     needs: [construct_yearly_cohort, process_outpatient_data]
     outputs:
       moderately_sensitive:
-        table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_outpatient.csv
-        table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_outpatient.csv
-        table_lasso_pois_dev: output/descriptives/lasso_model/tbl_lasso_pois_dev_outpatient.csv
-        plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_outpatient.jpeg
+        table_cohort_summary: output/comorbidity_yearly/tbl_cohort_summary_outpatient.csv
+        table_model_coef: output/comorbidity_yearly/outpatient/model_coef/tbl_model_coef_*.csv
+        table_model_metrics: output/comorbidity_yearly/outpatient/model_metrics/tbl_model_metrics_*.csv
+        table_irr: output/comorbidity_yearly/outpatient/incidence_rate_ratio/tbl_irr_*.csv
 
   count_regression_yearly_admissions:
     run: r:latest analysis/05_yearly_count_regression.R admissions
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_admissions.csv
-        table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_admissions.csv
-        table_lasso_pois_dev: output/descriptives/lasso_model/tbl_lasso_pois_dev_admissions.csv
-        plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_admissions.jpeg
+        table_cohort_summary: output/comorbidity_yearly/tbl_cohort_summary_admissions.csv
+        table_model_coef: output/comorbidity_yearly/admissions/model_coef/tbl_model_coef_*.csv
+        table_model_metrics: output/comorbidity_yearly/admissions/model_metrics/tbl_model_metrics_*.csv
+        table_irr: output/comorbidity_yearly/admissions/incidence_rate_ratio/tbl_irr_*.csv
 
   count_regression_yearly_beddays:
     run: r:latest analysis/05_yearly_count_regression.R beddays
     needs: [construct_yearly_cohort, process_admissions_data]
     outputs:
       moderately_sensitive:
-        table_cohort_summary: output/descriptives/lasso_model/tbl_cohort_summary_beddays.csv
-        table_lasso_coef: output/descriptives/lasso_model/tbl_lasso_coef_beddays.csv
-        table_lasso_pois_dev: output/descriptives/lasso_model/tbl_lasso_pois_dev_beddays.csv
-        plot_lasso_coef: output/descriptives/lasso_model/plot_lasso_coef_beddays.jpeg
+        table_cohort_summary: output/comorbidity_yearly/tbl_cohort_summary_beddays.csv
+        table_model_coef: output/comorbidity_yearly/beddays/model_coef/tbl_model_coef_*.csv
+        table_model_metrics: output/comorbidity_yearly/beddays/model_metrics/tbl_model_metrics_*.csv
+        table_irr: output/comorbidity_yearly/beddays/incidence_rate_ratio/tbl_irr_*.csv
 
   monthly_gp_all_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp all overall
