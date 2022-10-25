@@ -294,7 +294,7 @@ lookup_label = tibble(
 )
 
 # Set up parallel sessions ----
-plan(multisession, workers = 2)
+plan(multisession, workers = 8)
 options(future.globals.maxSize = 5000*1024^2) # Set process limit to 5GB
 
 # For each comorbidity variable, perform regression to calculate IRR ----
@@ -315,7 +315,8 @@ var_comorbidity %>%
     }
     
     # Fit model ----
-    model_fit = MASS::glm.nb(formula = model_formula, data = data_model)
+    #model_fit = MASS::glm.nb(formula = model_formula, data = data_model)
+    model_fit = glm(formula = model_formula, family = "poisson", data = data_model)
     
     # Model coefficient ----
     tbl_model_coef = model_fit %>%
