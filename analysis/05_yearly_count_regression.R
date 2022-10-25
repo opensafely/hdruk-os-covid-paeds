@@ -315,8 +315,8 @@ var_comorbidity %>%
     }
     
     # Fit model ----
-    #model_fit = MASS::glm.nb(formula = model_formula, data = data_model)
-    model_fit = glm(formula = model_formula, family = "poisson", data = data_model)
+    model_fit = MASS::glm.nb(formula = model_formula, data = data_model)
+    #model_fit = glm(formula = model_formula, family = "poisson", data = data_model)
     
     # Model coefficient ----
     tbl_model_coef = model_fit %>%
