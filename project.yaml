@@ -1083,6 +1083,14 @@ actions:
         table_model_metrics: output/comorbidity_yearly/beddays/model_metrics/tbl_model_metrics_*.csv
         table_irr: output/comorbidity_yearly/beddays/incidence_rate_ratio/tbl_irr_*.csv
 
+  summarise_yearly_irr:
+    run: r:latest analysis/05_irr_summarise.R
+    needs: [count_regression_yearly_gp, count_regression_yearly_outpatient, count_regression_yearly_admissions, count_regression_yearly_beddays]
+    outputs:
+      moderately_sensitive:
+        tbl_yearly_irr: output/comorbidity_yearly/irr_summarised/tbl_yearly_irr.csv
+        plot_yearly_irr: output/comorbidity_yearly/irr_summarised/plot_yearly_irr.jpeg
+
   monthly_gp_all_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp all overall
     needs: [construct_yearly_cohort, process_gp_data]
