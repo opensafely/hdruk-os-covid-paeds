@@ -89,7 +89,7 @@ tbl_yearly_irr = tbl_yearly_irr %>%
 ## Save IRR table
 write_csv(tbl_yearly_irr, 
           here::here("output", "comorbidity_yearly", "irr_summarised",
-                     "tbl_irr.csv"))
+                     "tbl_yearly_irr.csv"))
 
 # Create IRR plot ----
 plot_yearly_irr = tbl_yearly_irr %>%
