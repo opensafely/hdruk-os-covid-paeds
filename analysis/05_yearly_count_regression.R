@@ -294,7 +294,7 @@ lookup_label = tibble(
 )
 
 # Set up parallel sessions ----
-plan(multisession, workers = 8)
+plan(multisession, workers = 4)
 options(future.globals.maxSize = 5000*1024^2) # Set process limit to 5GB
 
 # For each comorbidity variable, perform regression to calculate IRR ----
