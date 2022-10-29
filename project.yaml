@@ -1043,6 +1043,67 @@ actions:
         cohort_summary: output/descriptives/healthcare_use_2019_2022/tbl_cohort_summary.csv
         inclusion_flowchart: output/descriptives/healthcare_use_2019_2022/tbl_flowchart.csv
 
+  comorbidity_regression_gp_poisson:
+    run: r:latest analysis/05_comorbidity_regression.R gp poisson
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      highly_sensitive:
+        model_fit: output/comorbidity_multivar/poisson/gp/model/model_fit.rds
+      moderately_sensitive:
+        table_cohort_summary: output/comorbidity_multivar/poisson/gp/tbl_cohort_summary.csv
+        table_model_coef: output/comorbidity_multivar/poisson/gp/tbl_model_coef.csv
+        table_model_metrics: output/comorbidity_multivar/poisson/gp/tbl_model_metrics.csv
+        table_irr: output/comorbidity_multivar/poisson/gp/tbl_irr.csv
+
+  comorbidity_regression_outpatient_poisson:
+    run: r:latest analysis/05_comorbidity_regression.R outpatient poisson
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      highly_sensitive:
+        model_fit: output/comorbidity_multivar/poisson/outpatient/model/model_fit.rds
+      moderately_sensitive:
+        table_cohort_summary: output/comorbidity_multivar/poisson/outpatient/tbl_cohort_summary.csv
+        table_model_coef: output/comorbidity_multivar/poisson/outpatient/tbl_model_coef.csv
+        table_model_metrics: output/comorbidity_multivar/poisson/outpatient/tbl_model_metrics.csv
+        table_irr: output/comorbidity_multivar/poisson/outpatient/tbl_irr.csv
+
+  comorbidity_regression_admissions_poisson:
+    run: r:latest analysis/05_comorbidity_regression.R admissions poisson
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      highly_sensitive:
+        model_fit: output/comorbidity_multivar/poisson/admissions/model/model_fit.rds
+      moderately_sensitive:
+        table_cohort_summary: output/comorbidity_multivar/poisson/admissions/tbl_cohort_summary.csv
+        table_model_coef: output/comorbidity_multivar/poisson/admissions/tbl_model_coef.csv
+        table_model_metrics: output/comorbidity_multivar/poisson/admissions/tbl_model_metrics.csv
+        table_irr: output/comorbidity_multivar/poisson/admissions/tbl_irr.csv
+
+  comorbidity_regression_beddays_poisson:
+    run: r:latest analysis/05_comorbidity_regression.R beddays poisson
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      highly_sensitive:
+        model_fit: output/comorbidity_multivar/poisson/beddays/model/model_fit.rds
+      moderately_sensitive:
+        table_cohort_summary: output/comorbidity_multivar/poisson/beddays/tbl_cohort_summary.csv
+        table_model_coef: output/comorbidity_multivar/poisson/beddays/tbl_model_coef.csv
+        table_model_metrics: output/comorbidity_multivar/poisson/beddays/tbl_model_metrics.csv
+        table_irr: output/comorbidity_multivar/poisson/beddays/tbl_irr.csv
+
+  summarise_comorbidity_regression_poisson:
+    run: r:latest analysis/05_comorbidity_regression_summary.R poisson
+    needs: [comorbidity_regression_gp_poisson, comorbidity_regression_outpatient_poisson,
+            comorbidity_regression_admissions_poisson, comorbidity_regression_beddays_poisson]
+    outputs:
+      moderately_sensitive:
+        tbl_irr_combined: output/comorbidity_multivar/model_type/summary/tbl_irr_combined.csv
+        plot_irr_combined: output/comorbidity_multivar/model_type/summary/plot_irr_combined.jpeg
+        plot_model_coef_gp: output/comorbidity_multivar/poisson/gp/plot_model_coef.jpeg
+        plot_model_coef_outpatient: output/comorbidity_multivar/poisson/outpatient/plot_model_coef.jpeg
+        plot_model_coef_admission: output/comorbidity_multivar/poisson/admission/plot_model_coef.jpeg
+        plot_model_coef_beddays: output/comorbidity_multivar/poisson/beddays/plot_model_coef.jpeg
+
   count_regression_yearly_gp:
     run: r:latest analysis/05_yearly_count_regression.R gp
     needs: [construct_yearly_cohort, process_gp_data]
