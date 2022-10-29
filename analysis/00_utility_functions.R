@@ -430,6 +430,27 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Receiving palliative care"),
       
+      # Other neuro with other respiratory ----
+      other_neurological_with_other_respiratory =
+        if_else(other_neurological == "Yes" & other_respiratory == "Yes",
+                "Yes", "No") %>% 
+        factor() %>% 
+        ff_label("Other neurological with other respiratory conditions"),
+      
+      # Other neuro with cardiovascular ----
+      other_neurological_with_cardiovascular =
+        if_else(other_neurological == "Yes" & cardiovascular == "Yes",
+                "Yes", "No") %>% 
+        factor() %>% 
+        ff_label("Other neurological with other cardiovascular conditions"),
+      
+      # Other respiratory with cardiovascular ----
+      other_respiratory_with_cardiovascular =
+        if_else(other_respiratory == "Yes" & cardiovascular == "Yes",
+                "Yes", "No") %>% 
+        factor() %>% 
+        ff_label("Other respiratory with cardiovascular conditions")
+      
     ) %>% 
     mutate(
       comorbidity_count = rowSums(
