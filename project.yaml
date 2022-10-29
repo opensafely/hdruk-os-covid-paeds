@@ -1176,6 +1176,207 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_covid_status_tp.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_covid_status_tp.jpeg
 
+  monthly_gp_all_mental_health_disorders:
+    run: r:latest analysis/05_monthly_resource_use.R gp all mental_health_disorders
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_mental_health_disorders.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_mental_health_disorders.jpeg
+
+  monthly_gp_all_neurodevelopmental_and_behavioural:
+    run: r:latest analysis/05_monthly_resource_use.R gp all neurodevelopmental_and_behavioural
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_neurodevelopmental_and_behavioural.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_neurodevelopmental_and_behavioural.jpeg
+
+  monthly_gp_all_asthma:
+    run: r:latest analysis/05_monthly_resource_use.R gp all asthma
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_asthma.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_asthma.jpeg
+
+  monthly_gp_all_cystic_fibrosis:
+    run: r:latest analysis/05_monthly_resource_use.R gp all cystic_fibrosis
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_cystic_fibrosis.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_cystic_fibrosis.jpeg
+
+  monthly_gp_all_other_respiratory:
+    run: r:latest analysis/05_monthly_resource_use.R gp all other_respiratory
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_other_respiratory.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_other_respiratory.jpeg
+
+  monthly_gp_all_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R gp all cardiovascular
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_cardiovascular.jpeg
+
+  monthly_gp_all_epilepsy:
+    run: r:latest analysis/05_monthly_resource_use.R gp all epilepsy
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_epilepsy.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_epilepsy.jpeg
+
+  monthly_gp_all_headaches:
+    run: r:latest analysis/05_monthly_resource_use.R gp all headaches
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_headaches.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_headaches.jpeg
+
+  monthly_gp_all_other_neurological:
+    run: r:latest analysis/05_monthly_resource_use.R gp all other_neurological
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_other_neurological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_other_neurological.jpeg
+
+  monthly_gp_all_gastrointestinal_conditions:
+    run: r:latest analysis/05_monthly_resource_use.R gp all gastrointestinal_conditions
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_gastrointestinal_conditions.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_gastrointestinal_conditions.jpeg
+
+  monthly_gp_all_genitourinary:
+    run: r:latest analysis/05_monthly_resource_use.R gp all genitourinary
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_genitourinary.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_genitourinary.jpeg
+
+  monthly_gp_all_cancer:
+    run: r:latest analysis/05_monthly_resource_use.R gp all cancer
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_cancer.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_cancer.jpeg
+
+  monthly_gp_all_non_malignant_haematological:
+    run: r:latest analysis/05_monthly_resource_use.R gp all non_malignant_haematological
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_non_malignant_haematological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_non_malignant_haematological.jpeg
+
+  monthly_gp_all_immunological:
+    run: r:latest analysis/05_monthly_resource_use.R gp all immunological
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_immunological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_immunological.jpeg
+
+  monthly_gp_all_chronic_infections:
+    run: r:latest analysis/05_monthly_resource_use.R gp all chronic_infections
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_chronic_infections.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_chronic_infections.jpeg
+
+  monthly_gp_all_rheumatology:
+    run: r:latest analysis/05_monthly_resource_use.R gp all rheumatology
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_rheumatology.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_rheumatology.jpeg
+
+  monthly_gp_all_congenital_malformation:
+    run: r:latest analysis/05_monthly_resource_use.R gp all congenital_malformation
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_congenital_malformation.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_congenital_malformation.jpeg
+
+  monthly_gp_all_diabetes:
+    run: r:latest analysis/05_monthly_resource_use.R gp all diabetes
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_diabetes.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_diabetes.jpeg
+
+  monthly_gp_all_other_endocrine:
+    run: r:latest analysis/05_monthly_resource_use.R gp all other_endocrine
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_other_endocrine.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_other_endocrine.jpeg
+
+  monthly_gp_all_metabolic:
+    run: r:latest analysis/05_monthly_resource_use.R gp all metabolic
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_metabolic.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_metabolic.jpeg
+
+  monthly_gp_all_transplant:
+    run: r:latest analysis/05_monthly_resource_use.R gp all transplant
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_transplant.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_transplant.jpeg
+
+  monthly_gp_all_palliative_care:
+    run: r:latest analysis/05_monthly_resource_use.R gp all palliative_care
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_palliative_care.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_palliative_care.jpeg
+
+  monthly_gp_all_other_neurological_with_other_respiratory:
+    run: r:latest analysis/05_monthly_resource_use.R gp all other_neurological_with_other_respiratory
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_other_neurological_with_other_respiratory.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_other_neurological_with_other_respiratory.jpeg
+
+  monthly_gp_all_other_neurological_with_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R gp all other_neurological_with_cardiovascular
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_other_neurological_with_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_other_neurological_with_cardiovascular.jpeg
+
+  monthly_gp_all_other_respiratory_with_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R gp all other_respiratory_with_cardiovascular
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_other_respiratory_with_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_other_respiratory_with_cardiovascular.jpeg
+
+
   monthly_gp_auditory_system_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp auditory_system overall
     needs: [construct_yearly_cohort, process_gp_data]
@@ -1432,6 +1633,206 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_covid_status_tp.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_covid_status_tp.jpeg
 
+  monthly_outpatient_all_mental_health_disorders:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all mental_health_disorders
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_mental_health_disorders.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_mental_health_disorders.jpeg
+
+  monthly_outpatient_all_neurodevelopmental_and_behavioural:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all neurodevelopmental_and_behavioural
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_neurodevelopmental_and_behavioural.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_neurodevelopmental_and_behavioural.jpeg
+
+  monthly_outpatient_all_asthma:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all asthma
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_asthma.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_asthma.jpeg
+
+  monthly_outpatient_all_cystic_fibrosis:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all cystic_fibrosis
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_cystic_fibrosis.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_cystic_fibrosis.jpeg
+
+  monthly_outpatient_all_other_respiratory:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all other_respiratory
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_other_respiratory.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_other_respiratory.jpeg
+
+  monthly_outpatient_all_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all cardiovascular
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_cardiovascular.jpeg
+
+  monthly_outpatient_all_epilepsy:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all epilepsy
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_epilepsy.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_epilepsy.jpeg
+
+  monthly_outpatient_all_headaches:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all headaches
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_headaches.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_headaches.jpeg
+
+  monthly_outpatient_all_other_neurological:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all other_neurological
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_other_neurological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_other_neurological.jpeg
+
+  monthly_outpatient_all_gastrointestinal_conditions:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all gastrointestinal_conditions
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_gastrointestinal_conditions.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_gastrointestinal_conditions.jpeg
+
+  monthly_outpatient_all_genitourinary:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all genitourinary
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_genitourinary.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_genitourinary.jpeg
+
+  monthly_outpatient_all_cancer:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all cancer
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_cancer.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_cancer.jpeg
+
+  monthly_outpatient_all_non_malignant_haematological:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all non_malignant_haematological
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_non_malignant_haematological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_non_malignant_haematological.jpeg
+
+  monthly_outpatient_all_immunological:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all immunological
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_immunological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_immunological.jpeg
+
+  monthly_outpatient_all_chronic_infections:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all chronic_infections
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_chronic_infections.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_chronic_infections.jpeg
+
+  monthly_outpatient_all_rheumatology:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all rheumatology
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_rheumatology.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_rheumatology.jpeg
+
+  monthly_outpatient_all_congenital_malformation:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all congenital_malformation
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_congenital_malformation.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_congenital_malformation.jpeg
+
+  monthly_outpatient_all_diabetes:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all diabetes
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_diabetes.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_diabetes.jpeg
+
+  monthly_outpatient_all_other_endocrine:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all other_endocrine
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_other_endocrine.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_other_endocrine.jpeg
+
+  monthly_outpatient_all_metabolic:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all metabolic
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_metabolic.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_metabolic.jpeg
+
+  monthly_outpatient_all_transplant:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all transplant
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_transplant.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_transplant.jpeg
+
+  monthly_outpatient_all_palliative_care:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all palliative_care
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_palliative_care.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_palliative_care.jpeg
+
+  monthly_outpatient_all_other_neurological_with_other_respiratory:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all other_neurological_with_other_respiratory
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_other_neurological_with_other_respiratory.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_other_neurological_with_other_respiratory.jpeg
+
+  monthly_outpatient_all_other_neurological_with_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all other_neurological_with_cardiovascular
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_other_neurological_with_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_other_neurological_with_cardiovascular.jpeg
+
+  monthly_outpatient_all_other_respiratory_with_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all other_respiratory_with_cardiovascular
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_other_respiratory_with_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_other_respiratory_with_cardiovascular.jpeg
+
   monthly_outpatient_cardiology_overall:
     run: r:latest analysis/05_monthly_resource_use.R outpatient cardiology overall
     needs: [construct_yearly_cohort, process_outpatient_data]
@@ -1656,6 +2057,206 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_covid_status_tp.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_covid_status_tp.jpeg
 
+  monthly_admissions_all_mental_health_disorders:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all mental_health_disorders
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_mental_health_disorders.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_mental_health_disorders.jpeg
+
+  monthly_admissions_all_neurodevelopmental_and_behavioural:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all neurodevelopmental_and_behavioural
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_neurodevelopmental_and_behavioural.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_neurodevelopmental_and_behavioural.jpeg
+
+  monthly_admissions_all_asthma:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all asthma
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_asthma.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_asthma.jpeg
+
+  monthly_admissions_all_cystic_fibrosis:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all cystic_fibrosis
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_cystic_fibrosis.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_cystic_fibrosis.jpeg
+
+  monthly_admissions_all_other_respiratory:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all other_respiratory
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_other_respiratory.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_other_respiratory.jpeg
+
+  monthly_admissions_all_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all cardiovascular
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_cardiovascular.jpeg
+
+  monthly_admissions_all_epilepsy:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all epilepsy
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_epilepsy.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_epilepsy.jpeg
+
+  monthly_admissions_all_headaches:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all headaches
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_headaches.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_headaches.jpeg
+
+  monthly_admissions_all_other_neurological:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all other_neurological
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_other_neurological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_other_neurological.jpeg
+
+  monthly_admissions_all_gastrointestinal_conditions:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all gastrointestinal_conditions
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_gastrointestinal_conditions.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_gastrointestinal_conditions.jpeg
+
+  monthly_admissions_all_genitourinary:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all genitourinary
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_genitourinary.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_genitourinary.jpeg
+
+  monthly_admissions_all_cancer:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all cancer
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_cancer.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_cancer.jpeg
+
+  monthly_admissions_all_non_malignant_haematological:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all non_malignant_haematological
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_non_malignant_haematological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_non_malignant_haematological.jpeg
+
+  monthly_admissions_all_immunological:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all immunological
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_immunological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_immunological.jpeg
+
+  monthly_admissions_all_chronic_infections:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all chronic_infections
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_chronic_infections.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_chronic_infections.jpeg
+
+  monthly_admissions_all_rheumatology:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all rheumatology
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_rheumatology.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_rheumatology.jpeg
+
+  monthly_admissions_all_congenital_malformation:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all congenital_malformation
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_congenital_malformation.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_congenital_malformation.jpeg
+
+  monthly_admissions_all_diabetes:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all diabetes
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_diabetes.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_diabetes.jpeg
+
+  monthly_admissions_all_other_endocrine:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all other_endocrine
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_other_endocrine.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_other_endocrine.jpeg
+
+  monthly_admissions_all_metabolic:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all metabolic
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_metabolic.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_metabolic.jpeg
+
+  monthly_admissions_all_transplant:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all transplant
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_transplant.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_transplant.jpeg
+
+  monthly_admissions_all_palliative_care:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all palliative_care
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_palliative_care.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_palliative_care.jpeg
+
+  monthly_admissions_all_other_neurological_with_other_respiratory:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all other_neurological_with_other_respiratory
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_other_neurological_with_other_respiratory.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_other_neurological_with_other_respiratory.jpeg
+
+  monthly_admissions_all_other_neurological_with_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all other_neurological_with_cardiovascular
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_other_neurological_with_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_other_neurological_with_cardiovascular.jpeg
+
+  monthly_admissions_all_other_respiratory_with_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all other_respiratory_with_cardiovascular
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_other_respiratory_with_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_other_respiratory_with_cardiovascular.jpeg
+
   monthly_admissions_01_infectious_and_parasitic_diseases_overall:
     run: r:latest analysis/05_monthly_resource_use.R admissions 01_infectious_and_parasitic_diseases overall
     needs: [construct_yearly_cohort, process_admissions_data]
@@ -1871,6 +2472,206 @@ actions:
       moderately_sensitive:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_covid_status_tp.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_covid_status_tp.jpeg
+
+  monthly_beddays_all_mental_health_disorders:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all mental_health_disorders
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_mental_health_disorders.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_mental_health_disorders.jpeg
+
+  monthly_beddays_all_neurodevelopmental_and_behavioural:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all neurodevelopmental_and_behavioural
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_neurodevelopmental_and_behavioural.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_neurodevelopmental_and_behavioural.jpeg
+
+  monthly_beddays_all_asthma:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all asthma
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_asthma.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_asthma.jpeg
+
+  monthly_beddays_all_cystic_fibrosis:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all cystic_fibrosis
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_cystic_fibrosis.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_cystic_fibrosis.jpeg
+
+  monthly_beddays_all_other_respiratory:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all other_respiratory
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_other_respiratory.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_other_respiratory.jpeg
+
+  monthly_beddays_all_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all cardiovascular
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_cardiovascular.jpeg
+
+  monthly_beddays_all_epilepsy:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all epilepsy
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_epilepsy.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_epilepsy.jpeg
+
+  monthly_beddays_all_headaches:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all headaches
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_headaches.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_headaches.jpeg
+
+  monthly_beddays_all_other_neurological:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all other_neurological
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_other_neurological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_other_neurological.jpeg
+
+  monthly_beddays_all_gastrointestinal_conditions:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all gastrointestinal_conditions
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_gastrointestinal_conditions.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_gastrointestinal_conditions.jpeg
+
+  monthly_beddays_all_genitourinary:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all genitourinary
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_genitourinary.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_genitourinary.jpeg
+
+  monthly_beddays_all_cancer:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all cancer
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_cancer.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_cancer.jpeg
+
+  monthly_beddays_all_non_malignant_haematological:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all non_malignant_haematological
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_non_malignant_haematological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_non_malignant_haematological.jpeg
+
+  monthly_beddays_all_immunological:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all immunological
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_immunological.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_immunological.jpeg
+
+  monthly_beddays_all_chronic_infections:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all chronic_infections
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_chronic_infections.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_chronic_infections.jpeg
+
+  monthly_beddays_all_rheumatology:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all rheumatology
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_rheumatology.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_rheumatology.jpeg
+
+  monthly_beddays_all_congenital_malformation:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all congenital_malformation
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_congenital_malformation.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_congenital_malformation.jpeg
+
+  monthly_beddays_all_diabetes:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all diabetes
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_diabetes.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_diabetes.jpeg
+
+  monthly_beddays_all_other_endocrine:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all other_endocrine
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_other_endocrine.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_other_endocrine.jpeg
+
+  monthly_beddays_all_metabolic:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all metabolic
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_metabolic.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_metabolic.jpeg
+
+  monthly_beddays_all_transplant:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all transplant
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_transplant.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_transplant.jpeg
+
+  monthly_beddays_all_palliative_care:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all palliative_care
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_palliative_care.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_palliative_care.jpeg
+
+  monthly_beddays_all_other_neurological_with_other_respiratory:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all other_neurological_with_other_respiratory
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_other_neurological_with_other_respiratory.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_other_neurological_with_other_respiratory.jpeg
+
+  monthly_beddays_all_other_neurological_with_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all other_neurological_with_cardiovascular
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_other_neurological_with_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_other_neurological_with_cardiovascular.jpeg
+
+  monthly_beddays_all_other_respiratory_with_cardiovascular:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all other_respiratory_with_cardiovascular
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_other_respiratory_with_cardiovascular.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_other_respiratory_with_cardiovascular.jpeg
 
   monthly_beddays_01_infectious_and_parasitic_diseases_overall:
     run: r:latest analysis/05_monthly_resource_use.R beddays 01_infectious_and_parasitic_diseases overall
