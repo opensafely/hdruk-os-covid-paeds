@@ -3,6 +3,7 @@
 library(tidyverse)
 library(lubridate)
 library(broom)
+library(broom.helpers)
 
 # Set plot theme ----
 theme_set(theme_bw())
@@ -20,11 +21,6 @@ if(!model_type %in% c("poisson", "negative_binomial")){
   stop("Invalid command arguments")
 }
 
-model_fit = read_rds(here::here("output", "comorbidity_multivar", model_type,
-                                "gp", "model", "model_fit.rds"))
-
-model_coeff = model_fit %>% 
-  tidy(conf.int = TRUE)
 
 # Create output directory ----
 dir.create(here::here("output", "comorbidity_multivar", model_type, "summary"),
@@ -33,6 +29,24 @@ dir.create(here::here("output", "comorbidity_multivar", model_type, "summary"),
 
 c("gp", "outpatient", "admissions", "beddays") %>% 
   walk(function(resource_type){
+    
+    model_fit = read_rds(here::here("output", "comorbidity_multivar", model_type,
+                                    resource_type, "model", "model_fit.rds"))
+    
+    tbl_model_coef = model_fit %>%
+      tidy() %>% 
+      tidy_add_term_labels(model = model_fit) %>% 
+      left_join(
+        model_fit %>% 
+          confint.default() %>% 
+          as_tibble(rownames = "term") %>% 
+          rename(ci_lower = "2.5 %", ci_upper = "97.5 %"),
+        by = "term"
+      )
+    
+    write_csv(tbl_model_coef, 
+              here::here("output", "comorbidity_multivar", model_type,
+                         resource_type, "tbl_model_coef.csv"))
     
     # Read model coefficients
     tbl_model_coef = read_csv(here::here("output", "comorbidity_multivar", model_type,
@@ -61,8 +75,10 @@ c("gp", "outpatient", "admissions", "beddays") %>%
     
     
     plot_model_coef = tbl_model_coef_tidy %>% 
-      ggplot(aes(x = estimate, y = var_lab, colour = var_type)) +
+      ggplot(aes(x = estimate, xmin = ci_lower, xmax = ci_upper,
+                 y = var_lab, colour = var_type)) +
       geom_point() +
+      geom_errorbar(width = 0.25) +
       geom_vline(xintercept = 0, linetype = "dashed") +
       facet_wrap(~ year, nrow = 1) + 
       labs(
