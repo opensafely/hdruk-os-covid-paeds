@@ -2,6 +2,7 @@
 # Load packages ----
 library(tidyverse)
 library(lubridate)
+library(broom)
 
 # Set plot theme ----
 theme_set(theme_bw())
@@ -18,6 +19,12 @@ if(length(args) == 0){
 if(!model_type %in% c("poisson", "negative_binomial")){
   stop("Invalid command arguments")
 }
+
+model_fit = read_rds(here::here("output", "comorbidity_multivar", model_type,
+                                "gp", "model", "model_fit.rds"))
+
+model_coeff = model_fit %>% 
+  tidy(conf.int = TRUE)
 
 # Create output directory ----
 dir.create(here::here("output", "comorbidity_multivar", model_type, "summary"),
