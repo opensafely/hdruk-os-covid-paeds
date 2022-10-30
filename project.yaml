@@ -1054,6 +1054,7 @@ actions:
         table_model_coef: output/comorbidity_multivar/poisson/gp/tbl_model_coef.csv
         table_model_metrics: output/comorbidity_multivar/poisson/gp/tbl_model_metrics.csv
         table_irr: output/comorbidity_multivar/poisson/gp/tbl_irr.csv
+        plot_model_coef_gp: output/comorbidity_multivar/poisson/gp/plot_model_coef.jpeg
 
   comorbidity_regression_outpatient_poisson:
     run: r:latest analysis/05_comorbidity_regression.R outpatient poisson
@@ -1066,6 +1067,7 @@ actions:
         table_model_coef: output/comorbidity_multivar/poisson/outpatient/tbl_model_coef.csv
         table_model_metrics: output/comorbidity_multivar/poisson/outpatient/tbl_model_metrics.csv
         table_irr: output/comorbidity_multivar/poisson/outpatient/tbl_irr.csv
+        plot_model_coef_outpatient: output/comorbidity_multivar/poisson/outpatient/plot_model_coef.jpeg
 
   comorbidity_regression_admissions_poisson:
     run: r:latest analysis/05_comorbidity_regression.R admissions poisson
@@ -1078,6 +1080,7 @@ actions:
         table_model_coef: output/comorbidity_multivar/poisson/admissions/tbl_model_coef.csv
         table_model_metrics: output/comorbidity_multivar/poisson/admissions/tbl_model_metrics.csv
         table_irr: output/comorbidity_multivar/poisson/admissions/tbl_irr.csv
+        plot_model_coef_admission: output/comorbidity_multivar/poisson/admissions/plot_model_coef.jpeg
 
   comorbidity_regression_beddays_poisson:
     run: r:latest analysis/05_comorbidity_regression.R beddays poisson
@@ -1090,6 +1093,7 @@ actions:
         table_model_coef: output/comorbidity_multivar/poisson/beddays/tbl_model_coef.csv
         table_model_metrics: output/comorbidity_multivar/poisson/beddays/tbl_model_metrics.csv
         table_irr: output/comorbidity_multivar/poisson/beddays/tbl_irr.csv
+        plot_model_coef_beddays: output/comorbidity_multivar/poisson/beddays/plot_model_coef.jpeg
 
   summarise_comorbidity_regression_poisson:
     run: r:latest analysis/05_comorbidity_regression_summary.R poisson
@@ -1099,10 +1103,67 @@ actions:
       moderately_sensitive:
         tbl_irr_combined: output/comorbidity_multivar/poisson/summary/tbl_irr_combined.csv
         plot_irr_combined: output/comorbidity_multivar/poisson/summary/plot_irr_combined.jpeg
-        plot_model_coef_gp: output/comorbidity_multivar/poisson/gp/plot_model_coef.jpeg
-        plot_model_coef_outpatient: output/comorbidity_multivar/poisson/outpatient/plot_model_coef.jpeg
-        plot_model_coef_admission: output/comorbidity_multivar/poisson/admissions/plot_model_coef.jpeg
-        plot_model_coef_beddays: output/comorbidity_multivar/poisson/beddays/plot_model_coef.jpeg
+
+  comorbidity_regression_gp_negative_binomial:
+    run: r:latest analysis/05_comorbidity_regression.R gp negative_binomial
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      highly_sensitive:
+        model_fit: output/comorbidity_multivar/negative_binomial/gp/model/model_fit.rds
+      moderately_sensitive:
+        table_cohort_summary: output/comorbidity_multivar/negative_binomial/gp/tbl_cohort_summary.csv
+        table_model_coef: output/comorbidity_multivar/negative_binomial/gp/tbl_model_coef.csv
+        table_model_metrics: output/comorbidity_multivar/negative_binomial/gp/tbl_model_metrics.csv
+        table_irr: output/comorbidity_multivar/negative_binomial/gp/tbl_irr.csv
+        plot_model_coef_gp: output/comorbidity_multivar/negative_binomial/gp/plot_model_coef.jpeg
+
+  comorbidity_regression_outpatient_negative_binomial:
+    run: r:latest analysis/05_comorbidity_regression.R outpatient negative_binomial
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      highly_sensitive:
+        model_fit: output/comorbidity_multivar/negative_binomial/outpatient/model/model_fit.rds
+      moderately_sensitive:
+        table_cohort_summary: output/comorbidity_multivar/negative_binomial/outpatient/tbl_cohort_summary.csv
+        table_model_coef: output/comorbidity_multivar/negative_binomial/outpatient/tbl_model_coef.csv
+        table_model_metrics: output/comorbidity_multivar/negative_binomial/outpatient/tbl_model_metrics.csv
+        table_irr: output/comorbidity_multivar/negative_binomial/outpatient/tbl_irr.csv
+        plot_model_coef_gp: output/comorbidity_multivar/negative_binomial/outpatient/plot_model_coef.jpeg
+
+  comorbidity_regression_admissions_negative_binomial:
+    run: r:latest analysis/05_comorbidity_regression.R admissions negative_binomial
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      highly_sensitive:
+        model_fit: output/comorbidity_multivar/negative_binomial/admissions/model/model_fit.rds
+      moderately_sensitive:
+        table_cohort_summary: output/comorbidity_multivar/negative_binomial/admissions/tbl_cohort_summary.csv
+        table_model_coef: output/comorbidity_multivar/negative_binomial/admissions/tbl_model_coef.csv
+        table_model_metrics: output/comorbidity_multivar/negative_binomial/admissions/tbl_model_metrics.csv
+        table_irr: output/comorbidity_multivar/negative_binomial/admissions/tbl_irr.csv
+        plot_model_coef_gp: output/comorbidity_multivar/negative_binomial/admissions/plot_model_coef.jpeg
+
+  comorbidity_regression_beddays_negative_binomial:
+    run: r:latest analysis/05_comorbidity_regression.R beddays negative_binomial
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      highly_sensitive:
+        model_fit: output/comorbidity_multivar/negative_binomial/beddays/model/model_fit.rds
+      moderately_sensitive:
+        table_cohort_summary: output/comorbidity_multivar/negative_binomial/beddays/tbl_cohort_summary.csv
+        table_model_coef: output/comorbidity_multivar/negative_binomial/beddays/tbl_model_coef.csv
+        table_model_metrics: output/comorbidity_multivar/negative_binomial/beddays/tbl_model_metrics.csv
+        table_irr: output/comorbidity_multivar/negative_binomial/beddays/tbl_irr.csv
+        plot_model_coef_gp: output/comorbidity_multivar/negative_binomial/beddays/plot_model_coef.jpeg
+
+  summarise_comorbidity_regression_negative_binomial:
+    run: r:latest analysis/05_comorbidity_regression_summary.R negative_binomial
+    needs: [comorbidity_regression_gp_negative_binomial, comorbidity_regression_outpatient_negative_binomial,
+            comorbidity_regression_admissions_negative_binomial, comorbidity_regression_beddays_negative_binomial]
+    outputs:
+      moderately_sensitive:
+        tbl_irr_combined: output/comorbidity_multivar/negative_binomial/summary/tbl_irr_combined.csv
+        plot_irr_combined: output/comorbidity_multivar/negative_binomial/summary/plot_irr_combined.jpeg
 
   count_regression_yearly_gp:
     run: r:latest analysis/05_yearly_count_regression.R gp
