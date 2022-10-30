@@ -237,9 +237,55 @@ tbl_model_coef = model_fit %>%
     by = "term"
   )
 
+## Tidy up table ----
+tbl_model_coef = tbl_model_coef %>% 
+  mutate(
+    year = str_extract(term, "(?<=year)\\d{4}"),
+    var_lab = paste0(str_remove(var_label, "Year \\* "), ": ",
+                     str_remove(label, "\\d{4} \\* ")) %>% 
+      str_remove(": \\d{4}"),
+    var_lab = var_lab %>% 
+      factor(levels = unique(var_lab)) %>% 
+      fct_rev(),
+    var_type = case_when(
+      var_type == "interaction" ~ "Interaction",
+      str_detect(term, "_with_") ~ "Interaction",
+      variable == "year" ~ "Year effect",
+      TRUE ~ "Baseline effect"
+    ) %>% 
+      factor() %>% 
+      fct_relevel("Year effect", "Baseline effect")
+  ) %>% 
+  replace_na(list(year = "2019"))
+
 write_csv(tbl_model_coef,
           here::here("output", "comorbidity_multivar", model_type, resource_type,
                      "tbl_model_coef.csv"))
+
+# Plot coefficients ----
+plot_model_coef = tbl_model_coef %>% 
+  filter(!term == "(Intercept)") %>% 
+  ggplot(aes(x = estimate, xmin = ci_lower, xmax = ci_upper,
+             y = var_lab, colour = var_type)) +
+  geom_point() +
+  geom_errorbar(width = 0.25) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  facet_wrap(~ year, nrow = 1) + 
+  labs(
+    y = NULL, x = "Coefficient (95% confidence interval)",
+    colour = "Variable type"
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+
+## Save coefficient plot ----
+ggsave(filename = "plot_model_coef.jpeg",
+       plot = plot_model_coef,
+       path = here::here("output", "comorbidity_multivar", model_type,
+                         resource_type),
+       width = 12, height = 8, units = "in")
+
 
 # Model metrics ----
 tbl_model_metrics = model_fit %>%
