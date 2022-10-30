@@ -228,7 +228,14 @@ write_rds(
 # Model coefficient ----
 tbl_model_coef = model_fit %>%
   tidy() %>% 
-  tidy_add_term_labels(model = model_fit)
+  tidy_add_term_labels(model = model_fit) %>% 
+  left_join(
+    model_fit %>% 
+      confint.default() %>% 
+      as_tibble(rownames = "term") %>% 
+      rename(ci_lower = "2.5 %", ci_upper = "97.5 %"),
+    by = "term"
+  )
 
 write_csv(tbl_model_coef,
           here::here("output", "comorbidity_multivar", model_type, resource_type,
