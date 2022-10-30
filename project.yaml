@@ -1097,11 +1097,11 @@ actions:
             comorbidity_regression_admissions_poisson, comorbidity_regression_beddays_poisson]
     outputs:
       moderately_sensitive:
-        tbl_irr_combined: output/comorbidity_multivar/model_type/summary/tbl_irr_combined.csv
-        plot_irr_combined: output/comorbidity_multivar/model_type/summary/plot_irr_combined.jpeg
+        tbl_irr_combined: output/comorbidity_multivar/poisson/summary/tbl_irr_combined.csv
+        plot_irr_combined: output/comorbidity_multivar/poisson/summary/plot_irr_combined.jpeg
         plot_model_coef_gp: output/comorbidity_multivar/poisson/gp/plot_model_coef.jpeg
         plot_model_coef_outpatient: output/comorbidity_multivar/poisson/outpatient/plot_model_coef.jpeg
-        plot_model_coef_admission: output/comorbidity_multivar/poisson/admission/plot_model_coef.jpeg
+        plot_model_coef_admission: output/comorbidity_multivar/poisson/admissions/plot_model_coef.jpeg
         plot_model_coef_beddays: output/comorbidity_multivar/poisson/beddays/plot_model_coef.jpeg
 
   count_regression_yearly_gp:
