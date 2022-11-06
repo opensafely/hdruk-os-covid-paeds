@@ -66,12 +66,13 @@ data_cohort = data_cohort %>%
   )
 
 # List of explanatory variables----
-var_explanatory = c(
-  # Demographics ----
+## Demographics ----
+var_demographics = c(
   "age_group", "sex", "ethnicity", "imd_Q5_2019", "region_2019",
-  "rural_urban_2019",
-  
-  # Comorbidities ----
+  "rural_urban_2019")
+
+## Comorbidities ----
+var_comorbidity = c(
   "mental_health_disorders", "neurodevelopmental_and_behavioural",
   "asthma", "cystic_fibrosis", "other_respiratory",
   "cardiovascular", "epilepsy", "headaches", "other_neurological",
@@ -88,7 +89,8 @@ var_explanatory = c(
 
 # Retain regression variables in dataset ----
 data_cohort = data_cohort %>% 
-  select(all_of(c("patient_id", "days", var_explanatory)), year = cohort) %>%
+  select(all_of(c("patient_id", "days", var_demographics, var_comorbidity)),
+         year = cohort) %>%
   mutate(year = year %>% factor()) %>% 
   drop_na() %>% 
   filter(days > 0)
@@ -97,7 +99,7 @@ data_cohort = data_cohort %>%
 tbl_cohort_summary = data_cohort %>% 
   summary_factorlist(
     dependent = "year",
-    explanatory = var_explanatory,
+    explanatory = c(var_demographics, var_comorbidity),
     cont = "median",
     total_col = FALSE,
     add_col_totals = TRUE,
@@ -211,8 +213,8 @@ lookup_label = tibble(
 
 # Model formula ----
 model_formula = as.formula(
-  paste0("health_contact ~ ",
-         paste0("year*(", paste0(var_explanatory, collapse = " + "),
+  paste0("health_contact ~ ", paste0(var_demographics, collapse = "+"), "+",
+         paste0("year*(", paste0(var_comorbidity, collapse = " + "),
                 ") + offset(log(days))")))
 
 # Fit model ----
@@ -315,7 +317,7 @@ tbl_irr_year = tibble(
   filter(ref_1 != TRUE)
 
 ## Combined comorbidity and year effects ----
-tbl_irr_comorb = c(var_explanatory) %>% 
+tbl_irr_comorb = var_comorbidity %>% 
   map(function(var){
   
   # Extract levels
