@@ -56,6 +56,7 @@ data_positives = data_positives %>%
       select(patient_id, class),
     by = "patient_id"
   ) %>% 
+  replace_na(list(class = 0)) %>%
   mutate(
     class = class %>%
       factor() %>% 

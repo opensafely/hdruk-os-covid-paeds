@@ -23,22 +23,13 @@ dir.create(dir_lcmm_models, showWarnings = FALSE, recursive=TRUE)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 1 # will hard code ng = 1 to 5 in .yaml
+  ng = 1
 } else{
   ng = args[[1]] %>% as.integer()
 }
 
 # Load resource data ----
 data_resource_lcmm = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
-
-data_resource_lcmm = 1:100 %>% 
-  map(function(x){
-    data_resource_lcmm = data_resource_lcmm %>% 
-      mutate(patient_id = 20000*x+patient_id)
-  }) %>% 
-  bind_rows()
-
-
 
 # Convert to data.frame ----
 data_resource_lcmm = as.data.frame(data_resource_lcmm)
@@ -49,8 +40,7 @@ max_iter = 2000 # Maximum number of iterations
 
 ## Run lcmm ----
 if (ng == 1){
-  
-  tic()
+
   lcmm_model = hlme(hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
                     random = ~bSpline(indexed_month, degree = 3, knots = 7),
                     subject = "patient_id", 
@@ -58,8 +48,7 @@ if (ng == 1){
                     maxiter = max_iter, 
                     data = data_resource_lcmm,
                     verbose = FALSE,
-                    nproc = 8)
-  toc()
+                    nproc = 4)
   
 } else{
   
@@ -76,7 +65,8 @@ if (ng == 1){
                     data = data_resource_lcmm,
                     subject = "patient_id",
                     maxiter = max_iter,
-                    verbose = FALSE)
+                    verbose = FALSE,
+                    nproc = 4)
 }
 
 # Save lcmm_model ----
