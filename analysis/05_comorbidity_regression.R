@@ -10,8 +10,8 @@ source(here::here("analysis", "00_utility_functions.R"))
 # Command arguments ----
 args = commandArgs(trailingOnly = TRUE)
 if(length(args) == 0){
-  resource_type  = "outpatient"
-  model_type     = "poisson"
+  resource_type  = "gp"
+  model_type     = "negative_binomial"
 } else{
   resource_type  = args[[1]]
   model_type     = args[[2]]
@@ -197,6 +197,9 @@ data_cohort = data_cohort %>%
            factor() %>% 
            ff_label("Year"))
 
+# Remove data_resource ----
+rm(data_resource)
+
 # Extract variable labels ----
 var_labs = extract_variable_label(data_cohort)
 
@@ -216,7 +219,8 @@ model_formula = as.formula(
 if(model_type == "poisson"){
   model_fit = glm(formula = model_formula, family = "poisson", data = data_cohort)
 } else if (model_type == "negative_binomial"){
-  model_fit = MASS::glm.nb(formula = model_formula, data = data_cohort)
+  model_fit = MASS::glm.nb(formula = model_formula, data = data_cohort,
+                           model = FALSE, y = FALSE)
 }
 
 ## Save model
