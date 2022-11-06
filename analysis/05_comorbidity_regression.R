@@ -300,7 +300,22 @@ write_csv(tbl_model_metrics,
                      "tbl_model_metrics.csv"))
 
 # IRR - linear combination ----
-tbl_irr = var_explanatory %>% 
+## No comorbidity (i.e. only year effect) ----
+tbl_irr_year = tibble(
+  var_1 = "year",
+  var_2 = "no_comorbidity",
+  level_1 = data_cohort[,"year"] %>% levels(),
+  level_2 = "Yes"
+) %>% 
+  mutate(
+    ref_1 = if_else(row_number() == 1, TRUE, FALSE),
+    ref_2 = FALSE,
+    lincom_term = paste0(var_1, level_1)
+  ) %>% 
+  filter(ref_1 != TRUE)
+
+## Combined comorbidity and year effects ----
+tbl_irr_comorb = c(var_explanatory) %>% 
   map(function(var){
   
   # Extract levels
@@ -320,6 +335,7 @@ tbl_irr = var_explanatory %>%
     rowwise() %>% 
     mutate(
       lincom_term = case_when(
+        
         # Comorbidity interactions
         str_detect(var, "_with_") & ref_1 == TRUE ~ 
           paste0(
@@ -352,7 +368,11 @@ tbl_irr = var_explanatory %>%
 }) %>% 
   bind_rows()
 
-# Calculate IRR based on linear combination of coefficients
+## Combine tables ----
+tbl_irr =  tbl_irr_year %>% 
+  bind_rows(tbl_irr_comorb)
+
+## Calculate IRR based on linear combination of coefficients
 tbl_irr = tbl_irr %>% 
   left_join(
     lincom(model_fit, tbl_irr$lincom_term, eform = TRUE) %>% 
@@ -363,14 +383,18 @@ tbl_irr = tbl_irr %>%
   rename(ci_lower = x2_5_percent, ci_upper = x97_5_percent) %>% 
   unnest(c(estimate, ci_lower, ci_upper, chisq, pr_chisq))
 
+## Append labels and add label for no comorbidity ----
 tbl_irr = tbl_irr %>% 
   left_join(
     lookup_label %>% 
       rename(var_2 = var, var_2_label = var_label),
     by = "var_2"
+  ) %>% 
+  mutate(
+    var_2_label = if_else(var_2 == "no_comorbidity", "No comorbidities", var_2_label)
   )
 
-
+## Save IRR table to file ----
 write_csv(tbl_irr,
           here::here("output", "comorbidity_multivar", model_type, resource_type,
                      "tbl_irr.csv"))
