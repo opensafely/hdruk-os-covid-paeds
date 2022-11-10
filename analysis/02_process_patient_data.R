@@ -29,41 +29,73 @@ fup_start_date   = ymd(global_var$fup_start_date)
 # Create directory for processed data and diagnostics ----
 dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 
-# Update first and last comorbidity dates with info from admissions data ----
-data_patient = icd_10_codelist %>% 
-  map2(as.list(names(icd_10_codelist)), function(.icd_10_codelist, .comorb_vars){
+# List of comorbidity names ----
+comorb_vars = names(icd_10_codelist)
 
-    # Filter for admissions with primary diagnosis in codelist ----
-    icd_10_first_last_dates = data_admissions %>%
-      filter(primary_diagnosis %in% .icd_10_codelist) %>%
-      group_by(patient_id) %>%
-      # Extract first/last ----
-      summarise(
-        icd10_first_date = first(admission_date),
-        icd10_last_date = last(admission_date)
-      )
-    
-    # Comorbidity first and last date variable names
-    snomed_first_date = paste0(.comorb_vars, "_first_date")
-    snomed_last_date  = paste0(.comorb_vars, "_last_date")
-    
-    data_patient %>%
-      select(patient_id, snomed_first_date = all_of(snomed_first_date),
-             snomed_last_date = all_of(snomed_last_date)) %>% 
-      left_join(icd_10_first_last_dates, by = "patient_id") %>% 
-      mutate(
-        # Select minimum first date and max for last date
-        new_first_date = pmin(snomed_first_date, icd10_first_date, na.rm = TRUE),
-        new_last_date  = pmax(snomed_last_date,  icd10_last_date,  na.rm = TRUE),
-       ) %>%
-      select(-c(snomed_first_date, snomed_last_date, icd10_first_date, icd10_last_date)) %>%
-      rename({{snomed_first_date}} := new_first_date,
-             {{snomed_last_date}} := new_last_date)
-   }) %>% 
-  reduce(full_join, by = "patient_id") %>% 
-  right_join(
-    data_patient %>% 
-      select(-contains(names(icd_10_codelist))),
+# Comorbidity dates -----
+## Rename SNOMED comorbidity columns ----
+data_patient = data_patient %>% 
+  rename_with(.fn = ~paste0(., "_snomed"),
+              .cols = paste0(rep(comorb_vars, 2),
+                             rep(c("_first_date", "_last_date"),
+                                 each = length(comorb_vars))))
+
+## Join ICD-10 admission dates to patient data ----
+data_patient = data_patient %>% 
+  left_join(
+    icd_10_codelist %>% 
+      map2(as.list(names(icd_10_codelist)), function(.icd_10_codelist, .comorb_vars){
+        
+        # ICD-10 column names
+        icd10_first_date = paste0(.comorb_vars, "_first_date_icd10")
+        icd10_last_date = paste0(.comorb_vars, "_last_date_icd10")
+        
+        # Filter for admissions with primary diagnosis in codelist ----
+        icd_10_first_last_dates = data_admissions %>%
+          filter(primary_diagnosis %in% .icd_10_codelist) %>%
+          group_by(patient_id) %>%
+          summarise(
+            {{icd10_first_date}} := first(admission_date),
+            {{icd10_last_date}} := last(admission_date)
+          )
+      }) %>% 
+      reduce(full_join, by = "patient_id"),
+    by = "patient_id"
+  )
+
+# Update first and last comorbidity dates with info from admissions data ----
+data_patient = data_patient %>% 
+  left_join(
+    comorb_vars %>% 
+      map(function(.comorb_vars){
+        
+        # Column names ----
+        comorb_first_date = paste0(.comorb_vars, "_first_date")
+        comorb_last_date = paste0(.comorb_vars, "_last_date")
+        comorb_first_date_icd10 = paste0(.comorb_vars, "_first_date_icd10")
+        comorb_last_date_icd10 = paste0(.comorb_vars, "_last_date_icd10")
+        comorb_first_date_snomed = paste0(.comorb_vars, "_first_date_snomed")
+        comorb_last_date_snomed = paste0(.comorb_vars, "_last_date_snomed")
+        
+        # Calculate first and last dates based on combined ICD-10 and SNOMED data 
+        data_patient %>% 
+          select(
+            patient_id,
+            icd10_first_date = all_of(comorb_first_date_icd10),
+            icd10_last_date = all_of(comorb_last_date_icd10),
+            snomed_first_date = all_of(comorb_first_date_snomed),
+            snomed_last_date = all_of(comorb_last_date_snomed),
+          ) %>% 
+          mutate(
+            combined_first_date = pmin(snomed_first_date, icd10_first_date, na.rm = TRUE),
+            combined_last_date  = pmax(snomed_last_date,  icd10_last_date,  na.rm = TRUE),
+          ) %>%
+          select(-c(icd10_first_date, icd10_last_date,
+                    snomed_first_date, snomed_last_date)) %>% 
+          rename({{comorb_first_date}} := combined_first_date,
+                 {{comorb_last_date}} := combined_last_date)
+      }) %>% 
+      reduce(full_join, by = "patient_id"),
     by = "patient_id"
   )
 
