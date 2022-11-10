@@ -48,6 +48,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Mental illness"),
       
+      mental_illness_icd10 = case_when(
+        (mental_illness_first_date_icd10 < index_date) &
+          ((mental_illness_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Mental illness (ICD-10)"),
+      
       ## Severe mental illness ----
       severe_mental_illness = case_when(
         (severe_mental_illness_first_date < index_date) &
@@ -56,6 +64,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Severe mental illness"),
+      
+      severe_mental_illness_icd10 = case_when(
+        (severe_mental_illness_first_date_icd10 < index_date) &
+          ((severe_mental_illness_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Severe mental illness (ICD-10)"),
       
       ## Mental health disorders ----
       mental_health_disorders = case_when(
@@ -66,6 +82,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Mental health disorders"),
       
+      mental_health_disorders_icd10 = case_when(
+        mental_illness == "Yes" ~ "Yes",
+        severe_mental_illness == "Yes" ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Mental health disorders (ICD-10)"),
+      
       # 2. Neurodevelopmental and behavioural conditions ----
       neurodevelopmental_and_behavioural = case_when(
         (behavioural_and_developmental_including_autism_first_date < index_date) &
@@ -74,6 +98,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Neurodevelopmental and behavioural conditions"),
+      
+      neurodevelopmental_and_behavioural_icd10 = case_when(
+        (behavioural_and_developmental_including_autism_first_date_icd10 < index_date) &
+          ((behavioural_and_developmental_including_autism_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Neurodevelopmental and behavioural conditions (ICD-10)"),
       
       # 3. Asthma ----
       asthma = case_when(
@@ -84,6 +116,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Asthma"),
       
+      asthma_icd10 = case_when(
+        (asthma_first_date_icd10 < index_date) &
+          ((asthma_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Asthma (ICD-10)"),
+      
       # 4. Cystic fibrosis ----
       cystic_fibrosis = case_when(
         (cystic_fibrosis_first_date < index_date) ~ "Yes",
@@ -91,6 +131,13 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Cystic fibrosis"),
+      
+      cystic_fibrosis_icd10 = case_when(
+        (cystic_fibrosis_first_date_icd10 < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Cystic fibrosis (ICD-10)"),
       
       # 5. Other respiratory ----
       ## Congenital respiratory conditions ----
@@ -102,6 +149,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Congenital respiratory conditions"),
       
+      resp_congenital_icd10 = case_when(
+        (resp_congenital_first_date_icd10 < index_date) &
+          ((resp_congenital_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Congenital respiratory conditions (ICD-10)"),
+      
       ## Respiratory devices ----
       resp_devices = case_when(
         (resp_devices_first_date < index_date) &
@@ -111,6 +166,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Respiratory devices"),
       
+      resp_devices_icd10 = case_when(
+        (resp_devices_first_date_icd10 < index_date) &
+          ((resp_devices_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Respiratory devices (ICD-10)"),
+      
       ## Respiratory (not asthma or cystic fibrosis) ----
       respiratory_not_asthma_or_cf = case_when(
         (respiratory_not_asthma_or_cf_first_date < index_date) &
@@ -119,6 +182,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Respiratory conditions (not asthma or cystic fibrosis)"),
+      
+      respiratory_not_asthma_or_cf_icd10 = case_when(
+        (respiratory_not_asthma_or_cf_first_date_icd10 < index_date) &
+          ((respiratory_not_asthma_or_cf_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Respiratory conditions (not asthma or cystic fibrosis) (ICD-10)"),
       
       ## Other respiratory ----
       other_respiratory = case_when(
@@ -130,6 +201,15 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Other respiratory conditions"),
       
+      other_respiratory_icd10 = case_when(
+        resp_congenital_icd10 == "Yes" ~ "Yes",
+        resp_devices_icd10 == "Yes" ~ "Yes",
+        respiratory_not_asthma_or_cf_icd10 == "Yes" ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Other respiratory conditions (ICD-10)"),
+      
       # 6. Cardiovascular conditions ----
       ## Cardiovascular congenital ----
       cardiovascular_congenital = case_when(
@@ -140,6 +220,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Congenital cardiovascular conditions"),
       
+      cardiovascular_congenital_icd10 = case_when(
+        (cardiovascular_congenital_first_date_icd10 < index_date) &
+          ((cardiovascular_congenital_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Congenital cardiovascular conditions (ICD-10)"),
+      
       ## Cardiovascular devices ----
       cardiovascular_devices = case_when(
         (cardiovascular_devices_first_date < index_date) &
@@ -149,6 +237,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Cardiovascular devices"),
       
+      cardiovascular_devices_icd10 = case_when(
+        (cardiovascular_devices_first_date_icd10 < index_date) &
+          ((cardiovascular_devices_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Cardiovascular devices (ICD-10)"),
+      
       ## Cardiovascular (non-congenital) ----
       cardiovascular_non_congenital = case_when(
         (cardiovascular_non_congenital_first_date < index_date) &
@@ -157,6 +253,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Non-congenital cardiovascular conditions"),
+      
+      cardiovascular_non_congenital_icd10 = case_when(
+        (cardiovascular_non_congenital_first_date_icd10 < index_date) &
+          ((cardiovascular_non_congenital_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Non-congenital cardiovascular conditions (ICD-10)"),
       
       ## Cardiovascular conditions ----
       cardiovascular = case_when(
@@ -168,6 +272,15 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Cardiovascular conditions"),
       
+      cardiovascular_icd10 = case_when(
+        cardiovascular_congenital_icd10 == "Yes" ~ "Yes",
+        cardiovascular_devices_icd10 == "Yes" ~ "Yes",
+        cardiovascular_non_congenital_icd10 == "Yes" ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Cardiovascular conditions (ICD-10)"),
+      
       # 7. Epilepsy ----
       epilepsy = case_when(
         (epilepsy_first_date < index_date) &
@@ -176,6 +289,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Epilepsy"),
+      
+      epilepsy_icd10 = case_when(
+        (epilepsy_first_date_icd10 < index_date) &
+          ((epilepsy_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Epilepsy (ICD-10)"),
       
       # 8. Headaches ----
       headaches = case_when(
@@ -186,6 +307,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Headaches"),
       
+      headaches_icd10 = case_when(
+        (headaches_first_date_icd10 < index_date) &
+          ((headaches_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Headaches (ICD-10)"),
+      
       # 9. Other neurological ---- 
       ## Cerebral palsy or paralysis ----
       cerebral_palsy_paralysis = case_when(
@@ -194,6 +323,13 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Cerebral palsy and paralysis"),
+      
+      cerebral_palsy_paralysis_icd10 = case_when(
+        (cerebral_palsy_paralysis_first_date_icd10 < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Cerebral palsy and paralysis (ICD-10)"),
       
       ## Congenital neuro ----
       congenital_neuro = case_when(
@@ -204,6 +340,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Congenital neurological conditions"),
       
+      congenital_neuro_icd10 = case_when(
+        (congenital_neuro_first_date_icd10 < index_date) &
+          ((congenital_neuro_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Congenital neurological conditions (ICD-10)"),
+      
       ## Neuro devices ----
       neuro_devices = case_when(
         (neuro_devices_first_date < index_date) &
@@ -213,6 +357,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Neurological devices"),
       
+      neuro_devices_icd10 = case_when(
+        (neuro_devices_first_date_icd10 < index_date) &
+          ((neuro_devices_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Neurological devices (ICD-10)"),
+      
       ## Neurological (no epilepsy, cp or headaches) ----
       neurological_no_epilepsy_or_cp_headaches = case_when(
         (neurological_no_epilepsy_or_cp_headaches_first_date < index_date) &
@@ -221,6 +373,15 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Neurological conditions excluding epilepsy, cerebral palsy and headaches"),
+      
+      
+      neurological_no_epilepsy_or_cp_headaches_icd10 = case_when(
+        (neurological_no_epilepsy_or_cp_headaches_first_date_icd10 < index_date) &
+          ((neurological_no_epilepsy_or_cp_headaches_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Neurological conditions excluding epilepsy, cerebral palsy and headaches (ICD-10)"),
       
       ## Other neurological ----
       other_neurological = case_when(
@@ -233,6 +394,16 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Other neurological conditions"),
       
+      other_neurological_icd10 = case_when(
+        cerebral_palsy_paralysis_icd10 == "Yes" ~ "Yes",
+        congenital_neuro_icd10 == "Yes" ~ "Yes",
+        neuro_devices_icd10 == "Yes" ~ "Yes",
+        neurological_no_epilepsy_or_cp_headaches_icd10 == "Yes" ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Other neurological conditions (ICD-10)"),
+      
       # 10. Gastrointestinal conditions ----
       ## Gastrointestinal (non-device) ----
       gastrointestinal_non_device = case_when(
@@ -243,6 +414,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Gastrointestinal (non-device)"),
       
+      gastrointestinal_non_device_icd10 = case_when(
+        (gastrointestinal_first_date_icd10 < index_date) &
+          ((gastrointestinal_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Gastrointestinal (non-device) (ICD-10)"),
+      
       ## Gastrointestinal (devices) ----
       gastrointestinal_devices = case_when(
         (gastrointestinal_devices_first_date < index_date) &
@@ -252,6 +431,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Gastrointestinal (device)"),
       
+      gastrointestinal_devices_icd10 = case_when(
+        (gastrointestinal_devices_first_date_icd10 < index_date) &
+          ((gastrointestinal_devices_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Gastrointestinal (device) (ICD-10)"),
+      
       ## Gastrointestinal conditions ----
       gastrointestinal_conditions = case_when(
         gastrointestinal_non_device == "Yes" ~ "Yes",
@@ -260,6 +447,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Gastrointestinal conditions"),
+      
+      gastrointestinal_conditions_icd10 = case_when(
+        gastrointestinal_non_device_icd10 == "Yes" ~ "Yes",
+        gastrointestinal_devices_icd10 == "Yes" ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Gastrointestinal conditions (ICD-10)"),
       
       # 11. Genitourinary conditions ----
       ## Congenital renal ----
@@ -271,6 +466,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Congenital renal conditions"),
       
+      congenital_renal_icd10 = case_when(
+        (congenital_renal_first_date_icd10 < index_date) &
+          ((congenital_renal_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Congenital renal conditions (ICD-10)"),
+      
       ## Congenital urogenital ----
       congenital_urogenital = case_when(
         (congenital_urogenital_first_date < index_date) &
@@ -279,6 +482,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Congenital urogenital conditions"),
+      
+      congenital_urogenital_icd10 = case_when(
+        (congenital_urogenital_first_date_icd10 < index_date) &
+          ((congenital_urogenital_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Congenital urogenital conditions (ICD-10)"),
       
       ## Genitourinary non congenital ----
       genitourinary_non_congenital = case_when(
@@ -289,6 +500,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Non-congenital genitourinary conditions"),
       
+      genitourinary_non_congenital_icd10 = case_when(
+        (genitourinary_non_congenital_first_date_icd10 < index_date) &
+          ((genitourinary_non_congenital_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Non-congenital genitourinary conditions (ICD-10)"),
+      
       ## Renal devices ----
       renal_devices = case_when(
         (renal_devices_first_date < index_date) &
@@ -297,6 +516,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Renal devices"),
+      
+      renal_devices_icd10 = case_when(
+        (renal_devices_first_date_icd10 < index_date) &
+          ((renal_devices_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Renal devices (ICD-10)"),
       
       ## Genitourinary conditions ----
       genitourinary = case_when(
@@ -309,6 +536,16 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Genitourinary conditions"),
       
+      genitourinary_icd10 = case_when(
+        congenital_renal_icd10 == "Yes" ~ "Yes",
+        congenital_urogenital_icd10 == "Yes" ~ "Yes",
+        genitourinary_non_congenital_icd10 == "Yes" ~ "Yes",
+        renal_devices_icd10 == "Yes" ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Genitourinary conditions (ICD-10)"),
+      
       # 12. Cancer ----
       cancer = case_when(
         (cancer_first_date < index_date) &
@@ -317,6 +554,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Cancer"),
+      
+      cancer_icd10 = case_when(
+        (cancer_first_date_icd10 < index_date) &
+          ((cancer_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Cancer (ICD-10)"),
       
       # 13. Non-malignant haematological conditions ----
       non_malignant_haematological = case_when(
@@ -327,6 +572,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Non-malignant haematological conditions"),
       
+      non_malignant_haematological_icd10 = case_when(
+        (haematology_first_date_icd10 < index_date) &
+          ((haematology_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Non-malignant haematological conditions (ICD-10)"),
+      
       # 14. Immunological conditions ----
       immunological = case_when(
         (immunological_first_date < index_date) ~ "Yes",
@@ -334,6 +587,13 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Immunological conditions"),
+      
+      immunological_icd10 = case_when(
+        (immunological_first_date_icd10 < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Immunological conditions (ICD-10)"),
       
       # 15. Chronic infections ----
       chronic_infections = case_when(
@@ -344,6 +604,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Chronic infections"),
       
+      chronic_infections_icd10 = case_when(
+        (chronic_infections_first_date_icd10 < index_date) &
+          ((chronic_infections_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Chronic infections (ICD-10)"),
+      
       # 16. Rheumatology ----
       rheumatology = case_when(
         (rheumatology_first_date < index_date) &
@@ -353,6 +621,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Rheumatological conditions"),
       
+      rheumatology_icd10 = case_when(
+        (rheumatology_first_date_icd10 < index_date) &
+          ((rheumatology_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Rheumatological conditions (ICD-10)"),
+      
       # 17. Other congenital multisystem syndromes and chromosomal abnormalities ----
       congenital_malformation = case_when(
         (congenital_malformation_syndromes_and_chromosomal_first_date < index_date) ~ "Yes",
@@ -361,6 +637,13 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Other malformation syndromes and abnormalities"),
       
+      congenital_malformation_icd10 = case_when(
+        (congenital_malformation_syndromes_and_chromosomal_first_date_icd10 < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Other malformation syndromes and abnormalities (ICD-10)"),
+      
       # 18. Diabetes ----
       diabetes = case_when(
         (diabetes_first_date < index_date) ~ "Yes",
@@ -368,6 +651,13 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Diabetes"),
+      
+      diabetes_icd10 = case_when(
+        (diabetes_first_date_icd10 < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Diabetes (ICD-10)"),
       
       # 19. Other endocrine ----
       ## Congenital endocrine ----
@@ -379,6 +669,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Congenital endocrine"),
       
+      congenital_endocrine_icd10 = case_when(
+        (congenital_endocrine_first_date_icd10 < index_date) &
+          ((congenital_endocrine_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Congenital endocrine (ICD-10)"),
+      
       ## Endocrine (no dm) ----
       endocrine_no_dm = case_when(
         (endocrine_no_dm_first_date < index_date) &
@@ -388,14 +686,30 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Endocrine (no dm)"),
       
+      endocrine_no_dm_icd10 = case_when(
+        (endocrine_no_dm_first_date_icd10 < index_date) &
+          ((endocrine_no_dm_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Endocrine (no dm) (ICD-10)"),
+      
       ## Other endocrine ----
       other_endocrine = case_when(
-        congenital_endocrine == "Yes" ~ "Yes",
-        endocrine_no_dm == "Yes" ~ "Yes",
+        congenital_endocrine_icd10 == "Yes" ~ "Yes",
+        endocrine_no_dm_icd10 == "Yes" ~ "Yes",
         TRUE ~ "No"
       ) %>%
         factor() %>%
         ff_label("Other endocrine conditions"),
+      
+      other_endocrine_icd10 = case_when(
+        congenital_endocrine_icd10 == "Yes" ~ "Yes",
+        endocrine_no_dm_icd10 == "Yes" ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Other endocrine conditions (ICD-10)"),
       
       # 20. Metabolic conditions ----
       metabolic = case_when(
@@ -404,6 +718,13 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Metabolic conditions"),
+      
+      metabolic_icd10 = case_when(
+        (metabolic_first_date_icd10 < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Metabolic conditions (ICD-10)"),
       
       # 21. Obesity ----
       obesity = case_when(
@@ -414,6 +735,14 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Obesity"),
       
+      obesity_icd10 = case_when(
+        (obesity_first_date_icd10 < index_date) &
+          ((obesity_last_date_icd10 + years(years_from_last)) >= index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Obesity (ICD-10)"),
+      
       # 22. Transplant ----
       transplant = case_when(
         (transplant_first_date < index_date) ~ "Yes",
@@ -422,6 +751,13 @@ calc_comorbidity_status = function(.data_patient, index_date,
         factor() %>%
         ff_label("Transplant"),
       
+      transplant_icd10 = case_when(
+        (transplant_first_date_icd10 < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Transplant (ICD-10)"),
+      
       # 23. Palliative care ----
       palliative_care = case_when(
         (palliative_care_first_date < index_date) ~ "Yes",
@@ -429,6 +765,13 @@ calc_comorbidity_status = function(.data_patient, index_date,
       ) %>%
         factor() %>%
         ff_label("Receiving palliative care"),
+      
+      palliative_care_icd10 = case_when(
+        (palliative_care_first_date_icd10 < index_date) ~ "Yes",
+        TRUE ~ "No"
+      ) %>%
+        factor() %>%
+        ff_label("Receiving palliative care (ICD-10)"),
       
       # Other neuro with other respiratory ----
       other_neurological_with_other_respiratory =
@@ -461,11 +804,23 @@ calc_comorbidity_status = function(.data_patient, index_date,
                gastrointestinal_conditions, genitourinary, cancer,
                non_malignant_haematological, immunological, chronic_infections,
                rheumatology, congenital_malformation, diabetes, other_endocrine,
-               metabolic, obesity, transplant, palliative_care
+               metabolic, transplant, palliative_care
                ) == "Yes") %>% 
         ff_label("Number of comorbidities"),
       
-      comorbidity_count.factor = case_when(
+      comorbidity_count_icd10 = rowSums(
+        select(.,
+               mental_health_disorders_icd10, neurodevelopmental_and_behavioural_icd10,
+               asthma_icd10, cystic_fibrosis_icd10, other_respiratory_icd10,
+               cardiovascular_icd10, epilepsy_icd10, headaches_icd10, other_neurological_icd10,
+               gastrointestinal_conditions_icd10, genitourinary_icd10, cancer_icd10,
+               non_malignant_haematological_icd10, immunological_icd10, chronic_infections_icd10,
+               rheumatology_icd10, congenital_malformation_icd10, diabetes_icd10, other_endocrine_icd10,
+               metabolic_icd10, transplant_icd10, palliative_care_icd10
+        ) == "Yes") %>% 
+        ff_label("Number of comorbidities (ICD-10)"),
+      
+      comorbidity_count_factor = case_when(
         comorbidity_count == 0 ~ "0",
         comorbidity_count == 1 ~ "1",
         comorbidity_count == 2 ~ "2",
@@ -473,7 +828,17 @@ calc_comorbidity_status = function(.data_patient, index_date,
         TRUE ~ NA_character_
       ) %>%
         factor(levels = c("0", "1", "2", "3+")) %>% 
-        ff_label("Comorbidity count")
+        ff_label("Comorbidity count"),
+      
+      comorbidity_count_icd10_factor = case_when(
+        comorbidity_count_icd10 == 0 ~ "0",
+        comorbidity_count_icd10 == 1 ~ "1",
+        comorbidity_count_icd10 == 2 ~ "2",
+        comorbidity_count_icd10 >= 3 ~ "3+",
+        TRUE ~ NA_character_
+      ) %>%
+        factor(levels = c("0", "1", "2", "3+")) %>% 
+        ff_label("Comorbidity count (ICD-10)")
     )
 }
 
