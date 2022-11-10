@@ -136,14 +136,23 @@ explanatory_var = c(
   "shielding",
   
   # Comorbidities
-  "comorbidity_count.factor",
+  "comorbidity_count_factor",
   "mental_health_disorders", "neurodevelopmental_and_behavioural",
   "asthma", "cystic_fibrosis", "other_respiratory",
   "cardiovascular", "epilepsy", "headaches", "other_neurological",
   "gastrointestinal_conditions", "genitourinary", "cancer",
   "non_malignant_haematological", "immunological", "chronic_infections",
   "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "transplant", "palliative_care"
+  "metabolic", "transplant", "palliative_care",
+  
+  "comorbidity_count_icd10_factor",
+  "mental_health_disorders_icd10", "neurodevelopmental_and_behavioural_icd10",
+  "asthma_icd10", "cystic_fibrosis_icd10", "other_respiratory_icd10",
+  "cardiovascular_icd10", "epilepsy_icd10", "headaches_icd10", "other_neurological_icd10",
+  "gastrointestinal_conditions_icd10", "genitourinary_icd10", "cancer_icd10",
+  "non_malignant_haematological_icd10", "immunological_icd10", "chronic_infections_icd10",
+  "rheumatology_icd10", "congenital_malformation_icd10", "diabetes_icd10", "other_endocrine_icd10",
+  "metabolic_icd10", "transplant_icd10", "palliative_care_icd10"
 
 )
 
