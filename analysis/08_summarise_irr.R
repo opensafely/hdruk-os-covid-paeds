@@ -33,7 +33,8 @@ list_crude_rate_files = list.files(here::here("output", "descriptives", "matched
 crude_rate = list_crude_rate_files %>% 
   map(function(crude_rate_file){
     x = read_csv(here::here("output", "descriptives", "matched_cohort",
-                            model_type, pred_type, "tables", crude_rate_file)) %>% 
+                            model_type, pred_type, "tables", crude_rate_file),
+                 col_types = c("ccccccc")) %>% 
       mutate(file = crude_rate_file)
   }) %>% 
   bind_rows()
