@@ -1043,67 +1043,6 @@ actions:
         cohort_summary: output/descriptives/healthcare_use_2019_2022/tbl_cohort_summary.csv
         inclusion_flowchart: output/descriptives/healthcare_use_2019_2022/tbl_flowchart.csv
 
-  comorbidity_regression_gp_poisson:
-    run: r:latest analysis/05_comorbidity_regression.R gp poisson
-    needs: [construct_yearly_cohort, process_gp_data]
-    outputs:
-      highly_sensitive:
-        model_fit: output/comorbidity_multivar/poisson/gp/model/model_fit.rds
-      moderately_sensitive:
-        table_cohort_summary: output/comorbidity_multivar/poisson/gp/tbl_cohort_summary.csv
-        table_model_coef: output/comorbidity_multivar/poisson/gp/tbl_model_coef.csv
-        table_model_metrics: output/comorbidity_multivar/poisson/gp/tbl_model_metrics.csv
-        table_irr: output/comorbidity_multivar/poisson/gp/tbl_irr.csv
-        plot_model_coef_gp: output/comorbidity_multivar/poisson/gp/plot_model_coef.jpeg
-
-  comorbidity_regression_outpatient_poisson:
-    run: r:latest analysis/05_comorbidity_regression.R outpatient poisson
-    needs: [construct_yearly_cohort, process_outpatient_data]
-    outputs:
-      highly_sensitive:
-        model_fit: output/comorbidity_multivar/poisson/outpatient/model/model_fit.rds
-      moderately_sensitive:
-        table_cohort_summary: output/comorbidity_multivar/poisson/outpatient/tbl_cohort_summary.csv
-        table_model_coef: output/comorbidity_multivar/poisson/outpatient/tbl_model_coef.csv
-        table_model_metrics: output/comorbidity_multivar/poisson/outpatient/tbl_model_metrics.csv
-        table_irr: output/comorbidity_multivar/poisson/outpatient/tbl_irr.csv
-        plot_model_coef_outpatient: output/comorbidity_multivar/poisson/outpatient/plot_model_coef.jpeg
-
-  comorbidity_regression_admissions_poisson:
-    run: r:latest analysis/05_comorbidity_regression.R admissions poisson
-    needs: [construct_yearly_cohort, process_admissions_data]
-    outputs:
-      highly_sensitive:
-        model_fit: output/comorbidity_multivar/poisson/admissions/model/model_fit.rds
-      moderately_sensitive:
-        table_cohort_summary: output/comorbidity_multivar/poisson/admissions/tbl_cohort_summary.csv
-        table_model_coef: output/comorbidity_multivar/poisson/admissions/tbl_model_coef.csv
-        table_model_metrics: output/comorbidity_multivar/poisson/admissions/tbl_model_metrics.csv
-        table_irr: output/comorbidity_multivar/poisson/admissions/tbl_irr.csv
-        plot_model_coef_admission: output/comorbidity_multivar/poisson/admissions/plot_model_coef.jpeg
-
-  comorbidity_regression_beddays_poisson:
-    run: r:latest analysis/05_comorbidity_regression.R beddays poisson
-    needs: [construct_yearly_cohort, process_admissions_data]
-    outputs:
-      highly_sensitive:
-        model_fit: output/comorbidity_multivar/poisson/beddays/model/model_fit.rds
-      moderately_sensitive:
-        table_cohort_summary: output/comorbidity_multivar/poisson/beddays/tbl_cohort_summary.csv
-        table_model_coef: output/comorbidity_multivar/poisson/beddays/tbl_model_coef.csv
-        table_model_metrics: output/comorbidity_multivar/poisson/beddays/tbl_model_metrics.csv
-        table_irr: output/comorbidity_multivar/poisson/beddays/tbl_irr.csv
-        plot_model_coef_beddays: output/comorbidity_multivar/poisson/beddays/plot_model_coef.jpeg
-
-  summarise_comorbidity_regression_poisson:
-    run: r:latest analysis/05_comorbidity_regression_summary.R poisson
-    needs: [comorbidity_regression_gp_poisson, comorbidity_regression_outpatient_poisson,
-            comorbidity_regression_admissions_poisson, comorbidity_regression_beddays_poisson]
-    outputs:
-      moderately_sensitive:
-        tbl_irr_combined: output/comorbidity_multivar/poisson/summary/tbl_irr_combined.csv
-        plot_irr_combined: output/comorbidity_multivar/poisson/summary/plot_irr_combined.jpeg
-
   comorbidity_regression_gp_negative_binomial:
     run: r:latest analysis/05_comorbidity_regression.R gp negative_binomial
     needs: [construct_yearly_cohort, process_gp_data]
@@ -1165,54 +1104,6 @@ actions:
         tbl_irr_combined: output/comorbidity_multivar/negative_binomial/summary/tbl_irr_combined.csv
         plot_irr_combined: output/comorbidity_multivar/negative_binomial/summary/plot_irr_combined.jpeg
 
-  count_regression_yearly_gp:
-    run: r:latest analysis/05_yearly_count_regression.R gp
-    needs: [construct_yearly_cohort, process_gp_data]
-    outputs:
-      moderately_sensitive:
-        table_cohort_summary: output/comorbidity_yearly/tbl_cohort_summary_gp.csv
-        table_model_coef: output/comorbidity_yearly/gp/model_coef/tbl_model_coef_*.csv
-        table_model_metrics: output/comorbidity_yearly/gp/model_metrics/tbl_model_metrics_*.csv
-        table_irr: output/comorbidity_yearly/gp/incidence_rate_ratio/tbl_irr_*.csv
-
-  count_regression_yearly_outpatient:
-    run: r:latest analysis/05_yearly_count_regression.R outpatient
-    needs: [construct_yearly_cohort, process_outpatient_data]
-    outputs:
-      moderately_sensitive:
-        table_cohort_summary: output/comorbidity_yearly/tbl_cohort_summary_outpatient.csv
-        table_model_coef: output/comorbidity_yearly/outpatient/model_coef/tbl_model_coef_*.csv
-        table_model_metrics: output/comorbidity_yearly/outpatient/model_metrics/tbl_model_metrics_*.csv
-        table_irr: output/comorbidity_yearly/outpatient/incidence_rate_ratio/tbl_irr_*.csv
-
-  count_regression_yearly_admissions:
-    run: r:latest analysis/05_yearly_count_regression.R admissions
-    needs: [construct_yearly_cohort, process_admissions_data]
-    outputs:
-      moderately_sensitive:
-        table_cohort_summary: output/comorbidity_yearly/tbl_cohort_summary_admissions.csv
-        table_model_coef: output/comorbidity_yearly/admissions/model_coef/tbl_model_coef_*.csv
-        table_model_metrics: output/comorbidity_yearly/admissions/model_metrics/tbl_model_metrics_*.csv
-        table_irr: output/comorbidity_yearly/admissions/incidence_rate_ratio/tbl_irr_*.csv
-
-  count_regression_yearly_beddays:
-    run: r:latest analysis/05_yearly_count_regression.R beddays
-    needs: [construct_yearly_cohort, process_admissions_data]
-    outputs:
-      moderately_sensitive:
-        table_cohort_summary: output/comorbidity_yearly/tbl_cohort_summary_beddays.csv
-        table_model_coef: output/comorbidity_yearly/beddays/model_coef/tbl_model_coef_*.csv
-        table_model_metrics: output/comorbidity_yearly/beddays/model_metrics/tbl_model_metrics_*.csv
-        table_irr: output/comorbidity_yearly/beddays/incidence_rate_ratio/tbl_irr_*.csv
-
-  summarise_yearly_irr:
-    run: r:latest analysis/05_irr_summarise.R
-    needs: [count_regression_yearly_gp, count_regression_yearly_outpatient, count_regression_yearly_admissions, count_regression_yearly_beddays]
-    outputs:
-      moderately_sensitive:
-        tbl_yearly_irr: output/comorbidity_yearly/irr_summarised/tbl_yearly_irr.csv
-        plot_yearly_irr: output/comorbidity_yearly/irr_summarised/plot_yearly_irr.jpeg
-
   monthly_gp_all_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp all overall
     needs: [construct_yearly_cohort, process_gp_data]
@@ -1236,6 +1127,14 @@ actions:
       moderately_sensitive:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_covid_status_tp.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_covid_status_tp.jpeg
+
+  monthly_gp_all_comorbidity_count_factor:
+    run: r:latest analysis/05_monthly_resource_use.R gp all comorbidity_count_factor
+    needs: [construct_yearly_cohort, process_gp_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_gp_all_comorbidity_count_factor.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_gp_all_comorbidity_count_factor.jpeg
 
   monthly_gp_all_mental_health_disorders:
     run: r:latest analysis/05_monthly_resource_use.R gp all mental_health_disorders
@@ -1694,6 +1593,14 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_covid_status_tp.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_covid_status_tp.jpeg
 
+  monthly_outpatient_all_comorbidity_count_factor:
+    run: r:latest analysis/05_monthly_resource_use.R outpatient all comorbidity_count_factor
+    needs: [construct_yearly_cohort, process_outpatient_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_outpatient_all_comorbidity_count_factor.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_outpatient_all_comorbidity_count_factor.jpeg
+
   monthly_outpatient_all_mental_health_disorders:
     run: r:latest analysis/05_monthly_resource_use.R outpatient all mental_health_disorders
     needs: [construct_yearly_cohort, process_outpatient_data]
@@ -2118,6 +2025,14 @@ actions:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_covid_status_tp.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_covid_status_tp.jpeg
 
+  monthly_admissions_all_comorbidity_count_factor:
+    run: r:latest analysis/05_monthly_resource_use.R admissions all comorbidity_count_factor
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_admissions_all_comorbidity_count_factor.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_admissions_all_comorbidity_count_factor.jpeg
+
   monthly_admissions_all_mental_health_disorders:
     run: r:latest analysis/05_monthly_resource_use.R admissions all mental_health_disorders
     needs: [construct_yearly_cohort, process_admissions_data]
@@ -2533,6 +2448,14 @@ actions:
       moderately_sensitive:
         monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_covid_status_tp.csv
         monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_covid_status_tp.jpeg
+
+  monthly_beddays_all_comorbidity_count_factor:
+    run: r:latest analysis/05_monthly_resource_use.R beddays all comorbidity_count_factor
+    needs: [construct_yearly_cohort, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_table: output/descriptives/healthcare_use_2019_2022/tables/monthly_beddays_all_comorbidity_count_factor.csv
+        monthly_plot: output/descriptives/healthcare_use_2019_2022/plots/monthly_beddays_all_comorbidity_count_factor.jpeg
 
   monthly_beddays_all_mental_health_disorders:
     run: r:latest analysis/05_monthly_resource_use.R beddays all mental_health_disorders
@@ -3548,28 +3471,28 @@ actions:
 
   lcmm_run_model_2:
     run: r:latest analysis/12_2_LCMM_model.R 2
-    needs: [lcmm_data_prep, lcmm_run_model_1]
+    needs: [lcmm_data_prep]
     outputs:
       highly_sensitive:
         lcmm_model: output/lcmm/models/lcmm_model_2.rds
 
   lcmm_run_model_3:
     run: r:latest analysis/12_2_LCMM_model.R 3
-    needs: [lcmm_data_prep, lcmm_run_model_1]
+    needs: [lcmm_data_prep]
     outputs:
       highly_sensitive:
         lcmm_model: output/lcmm/models/lcmm_model_3.rds
 
   lcmm_run_model_4:
     run: r:latest analysis/12_2_LCMM_model.R 4
-    needs: [lcmm_data_prep, lcmm_run_model_1]
+    needs: [lcmm_data_prep]
     outputs:
       highly_sensitive:
         lcmm_model: output/lcmm/models/lcmm_model_4.rds
 
   lcmm_run_model_5:
     run: r:latest analysis/12_2_LCMM_model.R 5
-    needs: [lcmm_data_prep, lcmm_run_model_1]
+    needs: [lcmm_data_prep]
     outputs:
       highly_sensitive:
         lcmm_model: output/lcmm/models/lcmm_model_5.rds
