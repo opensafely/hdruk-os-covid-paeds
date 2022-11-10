@@ -42,7 +42,6 @@ if(length(args) == 0){
   pred_type      = args[[4]]
 }
 
-
 # Create output directory folders ----
 dir.create(here::here("output", "descriptives", "matched_cohort", model_type, pred_type, "tables"),
            showWarnings = FALSE, recursive=TRUE)
@@ -244,7 +243,7 @@ if (pred_type == "uni_var"){
     "region_2019", "rural_urban_2019",
     
     # Comorbidities
-    "comorbidity_count.factor",
+    "comorbidity_count_factor",
     "mental_health_disorders", "neurodevelopmental_and_behavioural",
     "asthma", "cystic_fibrosis", "other_respiratory",
     "cardiovascular", "epilepsy", "headaches", "other_neurological",
