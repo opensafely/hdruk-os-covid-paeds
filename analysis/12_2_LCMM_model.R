@@ -52,16 +52,12 @@ if (ng == 1){
   
 } else{
   
-  # Load lcmm model with ng = 1
-  lcmm_model_1 = read_rds(here::here("output", "lcmm", "models", "lcmm_model_1.rds"))
-  
   # Run hlme ----
   lcmm_model = hlme(fixed = hospital_use~bSpline(indexed_month, degree = 3, knots = 7),
                     random= ~bSpline(indexed_month, degree = 3, knots = 7),
                     mixture = ~bSpline(indexed_month, degree = 3, knots = 7),
                     classmb = ~1, 
                     ng = ng,
-                    B = lcmm_model_1,
                     data = data_resource_lcmm,
                     subject = "patient_id",
                     maxiter = max_iter,
