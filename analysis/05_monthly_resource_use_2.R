@@ -163,6 +163,7 @@ patient_id_2022 = data_cohort %>% filter(cohort == 2022) %>% pull(patient_id)
 
 # Plan multisession ----
 plan(multisession, workers = 8)
+options(future.globals.maxSize = 50000*1024^2) # 50 GB limit
 
 # GP ----
 data_gp = read_rds(here::here("output", "data", "data_gp.rds"))
