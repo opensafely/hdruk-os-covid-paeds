@@ -162,7 +162,7 @@ patient_id_2021 = data_cohort %>% filter(cohort == 2021) %>% pull(patient_id)
 patient_id_2022 = data_cohort %>% filter(cohort == 2022) %>% pull(patient_id)
 
 # Plan multisession ----
-plan(multisession, workers = 8)
+plan(multisession, workers = 4)
 options(future.globals.maxSize = 50000*1024^2) # 50 GB limit
 
 # GP ----
