@@ -56,7 +56,7 @@ if (ng == 1){
   lcmm_model_1 = read_rds(here::here("output", "lcmm", "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = hlme(fixed = hospital_use~bSpline(indexed_month, degree = 3, knots = 7),
+  lcmm_model = hlme(fixed = hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
                     random= ~bSpline(indexed_month, degree = 3, knots = 7),
                     mixture = ~bSpline(indexed_month, degree = 3, knots = 7),
                     classmb = ~1, 
