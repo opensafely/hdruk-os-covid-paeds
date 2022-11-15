@@ -12,18 +12,14 @@
 library(tidyverse)
 library(dtwclust)
 
-# Directories ----
-dir_dtw_selection   = here::here("output", "dtw", "selection")
-dir_dtw_cv_indicies = here::here("output", "dtw", "cv_indicies")
-
 ## Create output directories ----
-dir.create(dir_dtw_selection, showWarnings = FALSE, recursive=TRUE)
+dir.create(here::here("output", "dtw", "selection"), showWarnings = FALSE, recursive=TRUE)
 
 # Plot theme ----
 theme_set(theme_bw())
 
 # Time series clustering files ----
-cvi_files = list.files(dir_dtw_cv_indicies,
+cvi_files = list.files(here::here("output", "dtw", "cv_indicies"),
                        pattern = "tbl_cv_indicies_\\d+.csv")
 
 # Cluster validity indicies ----
@@ -31,13 +27,13 @@ cvi_files = list.files(dir_dtw_cv_indicies,
 tbl_cluster_validity = cvi_files %>% 
   map(function(cvi_file){
     # Load cvi files ----
-    cv_indicies = read_csv(here::here(dir_dtw_cv_indicies, cvi_file))
+    cv_indicies = read_csv(here::here("output", "dtw", "cv_indicies", cvi_file))
   }) %>% 
   bind_rows()
 
 ## Save table of cluster validity indicies
 write_csv(tbl_cluster_validity,
-          here::here(dir_dtw_selection, "tbl_cluster_validity.csv"))
+          here::here("output", "dtw", "selection", "tbl_cluster_validity.csv"))
 
 # Plot cluster validity indicies ----
 plot_cluster_validity = tbl_cluster_validity %>% 
@@ -48,7 +44,7 @@ plot_cluster_validity = tbl_cluster_validity %>%
        shape = "Converged")
 
 ## Save plot ----
-ggsave(filename = here::here(dir_dtw_selection,
+ggsave(filename = here::here("output", "dtw", "selection",
                              paste0("plot_cluster_validity.jpeg")),
        plot = plot_cluster_validity,
        height = 7, width = 8, units = "in")
