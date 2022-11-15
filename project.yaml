@@ -3462,6 +3462,93 @@ actions:
         resource_data: output/data/data_resource.rds
         patient_data: output/data/data_positives.rds
 
+  dtw_data_prep:
+    run: r:latest analysis/11_1_DTW_prep_resource.R
+    needs: [generate_positive_cohort]
+    outputs:
+      highly_sensitive:
+        lcmm_resource_data: output/data/data_resource_dtw.rds
+
+  dtw_run_model_5:
+    run: r:latest analysis/11_2_DTW_tsclust.R 5
+    needs: [dtw_data_prep]
+    outputs:
+      highly_sensitive:
+        ts_cluster: output/dtw/tsclust/tsclust_5.rds
+        cv_indicies: output/dtw/cv_indicies/tbl_cv_indicies_5.csv
+        cluster: output/dtw/data_cluster/data_cluster_5.rds
+
+  dtw_run_model_6:
+    run: r:latest analysis/11_2_DTW_tsclust.R 6
+    needs: [dtw_data_prep]
+    outputs:
+      highly_sensitive:
+        ts_cluster: output/dtw/tsclust/tsclust_6.rds
+        cv_indicies: output/dtw/cv_indicies/tbl_cv_indicies_6.csv
+        cluster: output/dtw/data_cluster/data_cluster_6.rds
+
+  dtw_run_model_7:
+    run: r:latest analysis/11_2_DTW_tsclust.R 7
+    needs: [dtw_data_prep]
+    outputs:
+      highly_sensitive:
+        ts_cluster: output/dtw/tsclust/tsclust_7.rds
+        cv_indicies: output/dtw/cv_indicies/tbl_cv_indicies_7.csv
+        cluster: output/dtw/data_cluster/data_cluster_7.rds
+
+  dtw_run_model_8:
+    run: r:latest analysis/11_2_DTW_tsclust.R 8
+    needs: [dtw_data_prep]
+    outputs:
+      highly_sensitive:
+        ts_cluster: output/dtw/tsclust/tsclust_8.rds
+        cv_indicies: output/dtw/cv_indicies/tbl_cv_indicies_8.csv
+        cluster: output/dtw/data_cluster/data_cluster_8.rds
+
+  dtw_selection:
+    run: r:latest analysis/11_3_DTW_selection.R
+    needs: [dtw_run_model_5, dtw_run_model_6, dtw_run_model_7, dtw_run_model_8]
+    outputs:
+      moderately_sensitive:
+        tbl_cvi: output/dtw/tsclust/tbl_cluster_validity.csv
+        plot_cvi: output/dtw/tsclust/plot_cluster_validity.jpeg
+
+  dtw_results_5:
+    run: r:latest analysis/11_4_DTW_results.R 5
+    needs: [dtw_run_model_5]
+    outputs:
+      moderately_sensitive:
+        tbl_summary: tbl_summary_5.csv
+        tbl_resource_use: tbl_resource_use_cluster_5.csv
+        plot_resource_use: plot_resource_use_cluster_5.jpeg
+
+  dtw_results_6:
+    run: r:latest analysis/11_4_DTW_results.R 6
+    needs: [dtw_run_model_6]
+    outputs:
+      moderately_sensitive:
+        tbl_summary: tbl_summary_6.csv
+        tbl_resource_use: tbl_resource_use_cluster_6.csv
+        plot_resource_use: plot_resource_use_cluster_6.jpeg
+
+  dtw_results_7:
+    run: r:latest analysis/11_4_DTW_results.R 7
+    needs: [dtw_run_model_7]
+    outputs:
+      moderately_sensitive:
+        tbl_summary: tbl_summary_7.csv
+        tbl_resource_use: tbl_resource_use_cluster_7.csv
+        plot_resource_use: plot_resource_use_cluster_7.jpeg
+
+  dtw_results_8:
+    run: r:latest analysis/11_4_DTW_results.R 8
+    needs: [dtw_run_model_8]
+    outputs:
+      moderately_sensitive:
+        tbl_summary: tbl_summary_8.csv
+        tbl_resource_use: tbl_resource_use_cluster_8.csv
+        plot_resource_use: plot_resource_use_cluster_8.jpeg
+
   lcmm_data_prep:
     run: r:latest analysis/12_1_prep_resource.R
     needs: [generate_positive_cohort]
