@@ -1104,6 +1104,13 @@ actions:
         tbl_irr_combined: output/comorbidity_multivar/negative_binomial/summary/tbl_irr_combined.csv
         plot_irr_combined: output/comorbidity_multivar/negative_binomial/summary/plot_irr_combined.jpeg
 
+  monthly_resource_use:
+    run: r:latest analysis/05_monthly_resource_use_2.R
+    needs: [construct_yearly_cohort, process_gp_data, process_outpatient_data, process_admissions_data]
+    outputs:
+      moderately_sensitive:
+        monthly_resource_use: output/descriptives/healthcare_use_2019_2022/tbl_resource_incidence.csv
+
   monthly_gp_all_overall:
     run: r:latest analysis/05_monthly_resource_use.R gp all overall
     needs: [construct_yearly_cohort, process_gp_data]
