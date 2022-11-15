@@ -31,18 +31,15 @@ global_var = jsonlite::read_json(path = here::here("analysis", "global_variables
 count_round  = global_var$disclosure_count_round
 count_redact = global_var$disclosure_redact
 
-# Directories ----
-dir_dtw_results      = here::here("output", "dtw", "results")
-dir_dtw_data_cluster = here::here("output", "dtw", "data_cluster")
-
-## Create output directories ----
-dir.create(dir_dtw_results, showWarnings = FALSE, recursive=TRUE)
+# Create output directories ----
+dir.create(here::here("output", "dtw", "results"), showWarnings = FALSE, recursive=TRUE)
 
 # Load data ----
 data_resource  = read_rds(here::here("output", "data", "data_resource_dtw.rds"))
 data_positives = read_rds(here::here("output", "data", "data_positives.rds"))
 data_cluster   = read_rds(
-  here::here(dir_dtw_data_cluster, paste0("data_cluster_", n_clusters, ".rds")))
+  here::here("output", "dtw", "data_cluster",
+             paste0("data_cluster_", n_clusters, ".rds")))
 
 # Add label ----
 data_cluster = data_cluster %>% 
@@ -94,7 +91,7 @@ tbl_resource_use_cluster = tbl_resource_use_cluster %>%
 
 ## Save table ----
 write_csv(tbl_resource_use_cluster,
-          here::here(dir_dtw_results,
+          here::here("output", "dtw", "results",
                      paste0("tbl_resource_use_cluster_", n_clusters, ".csv")))
 
 # Plot resource use by type and cluster ----
@@ -107,7 +104,7 @@ plot_resource_use_cluster = tbl_resource_use_cluster %>%
   labs(x = "Follow-up period (days)", y = "Counts per person-day")
 
 ## Save plot ----
-ggsave(here::here(dir_dtw_results, paste0("plot_resource_use_cluster_",
+ggsave(here::here("output", "dtw", "results", paste0("plot_resource_use_cluster_",
                                           n_clusters, ".jpeg")),
        plot = plot_resource_use_cluster,
        height = 8, width = 15, units = "in")
@@ -152,5 +149,5 @@ tbl_summary = data_positives %>%
 
 ## Save patient summary table ----
 write_csv(tbl_summary,
-          here::here(dir_dtw_results,
+          here::here("output", "dtw", "results",
                      paste0("tbl_summary_", n_clusters, ".csv")))
