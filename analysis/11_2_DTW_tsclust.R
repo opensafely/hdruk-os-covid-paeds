@@ -19,7 +19,7 @@ source(here::here("analysis", "11_0_DTW_functions.R"))
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  n_clusters = 5
+  n_clusters = 7
 } else{
   n_clusters = args[[1]]
 }
