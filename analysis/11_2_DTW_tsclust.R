@@ -21,7 +21,7 @@ args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
   n_clusters = 7
 } else{
-  n_clusters = args[[1]]
+  n_clusters = args[[1]] %>% as.integer()
 }
 
 # Load data ----
@@ -50,11 +50,14 @@ attr(id_resource_seq, "service_list") = service_list
 regist_dist() 
 
 # Perform time series clustering ----
-ts_cluster = tsclust(id_resource_seq, 
+ts_cluster = tsclust(series = id_resource_seq,
                      k = n_clusters,
                      distance = "dtw_basic",
                      type = "partitional",
                      seed = 43)
+
+# Reinterpolate to same length
+series <- reinterpolate(CharTraj, new.length = max(lengths(CharTraj)))
 
 ## Save time series clustering ----
 write_rds(ts_cluster,
