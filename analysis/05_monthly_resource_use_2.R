@@ -8,6 +8,17 @@ library(furrr)
 # Load custom functions ----
 source(here::here("analysis", "00_utility_functions.R"))
 
+poisson_test = function(numer, denom){
+  if(denom > 0){
+    test_object = poisson.test(numer, denom)
+    output = c(test_object$estimate, test_object$conf.int)
+  } else {
+    output = c(NA_real_, NA_real_, NA_real_)
+  }
+  names(output) = c("estimate", "lower_ci", "upper_ci")
+  return(output)
+}
+
 # Load global variables ----
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
 
@@ -22,11 +33,11 @@ tp_start_date    = ymd(global_var$tp_start_date)
 tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
-# Bootstrap samples ----
-B = 1000
-
+# Resource types, stratifications and presentations ----
+## Resource types
 resource_types = c("gp", "outpatient", "admissions", "beddays")
 
+## Stratifying variables
 startification_var = c(
   "age_group", "covid_status_tp", "comorbidity_count_factor",
   "mental_health_disorders", "neurodevelopmental_and_behavioural",
@@ -41,7 +52,7 @@ startification_var = c(
   "other_respiratory_with_cardiovascular"
 )
 
-# GP presentations
+## GP presentations
 gp_presentations = c(
   "cardiovascular_system", "cellular_component_of_blood",
   "central_nervous_system", "congenital_disease",
@@ -54,7 +65,7 @@ gp_presentations = c(
   "traumatic_injury", "visual_system"
 )
 
-# Outpatient presentations
+## Outpatient presentations
 outpatient_presentations = c(
   "cardiology", "community_paediatrics", "dermatology", "dietetics",
   "endocrinology", "gastrointestinal", "general",
@@ -65,7 +76,7 @@ outpatient_presentations = c(
   "respiratory", "rheumatology", "speech_and_language_therapy"
 )
 
-# Admission presentations
+## Admission presentations
 admission_presentations = c(
   "01_infectious_and_parasitic_diseases", "02_neoplasms",
   "03_diseases_of_the_blood", "04_endocrine_nutritional_and_metabolic",
@@ -214,7 +225,7 @@ tbl_resource_gp = resource_combinations %>%
         strata_label = attr(.data_cohort$strata_level, "label"),
         n_counts = sum(n),
         n_patient = length(unique(patient_id)),
-        incidence = list(Hmisc::smean.cl.boot(n, B = B))
+        incidence = list(poisson_test(round(n_counts), n_patient))
       )
   },
   .data_resource = data_gp,
@@ -272,7 +283,7 @@ tbl_resource_outpatient = resource_combinations %>%
         strata_label = attr(.data_cohort$strata_level, "label"),
         n_counts = sum(n),
         n_patient = length(unique(patient_id)),
-        incidence = list(Hmisc::smean.cl.boot(n, B = B))
+        incidence = list(poisson_test(round(n_counts), n_patient))
       )
   },
   .data_resource = data_outpatient,
@@ -333,7 +344,7 @@ tbl_resource_admissions = resource_combinations %>%
         strata_label = attr(.data_cohort$strata_level, "label"),
         n_counts = sum(n),
         n_patient = length(unique(patient_id)),
-        incidence = list(Hmisc::smean.cl.boot(n, B = B))
+        incidence = list(poisson_test(round(n_counts), n_patient))
       )
   },
   .data_resource = data_admissions,
@@ -416,7 +427,7 @@ tbl_resource_beddays = resource_combinations %>%
         strata_label = attr(.data_cohort$strata_level, "label"),
         n_counts = sum(n),
         n_patient = length(unique(patient_id)),
-        incidence = list(Hmisc::smean.cl.boot(n, B = B))
+        incidence = list(poisson_test(round(n_counts), n_patient))
       )
   },
   .data_resource = data_admissions,
@@ -434,20 +445,20 @@ tbl_resource_incidence = bind_rows(
 tbl_resource_incidence = tbl_resource_incidence %>% 
   mutate(
     n_counts = if_else(n_counts < count_redact, NA_real_, n_counts),
-    n_patient = if_else(n_patient < count_redact, NA_real_, n_counts),
+    n_patient = if_else(n_patient < count_redact, NA_real_, n_patient),
     n_counts = n_counts %>% plyr::round_any(count_round),
     n_patient = n_patient %>% plyr::round_any(count_round),
-    Mean = if_else(is.na(n_counts) | is.na(n_patient), NA_real_, Mean),
-    Lower = if_else(is.na(n_counts) | is.na(n_patient), NA_real_, Lower),
-    Upper = if_else(is.na(n_counts) | is.na(n_patient), NA_real_, Upper)
+    estimate = if_else(is.na(n_counts) | is.na(n_patient), NA_real_, estimate),
+    lower_ci = if_else(is.na(n_counts) | is.na(n_patient), NA_real_, lower_ci),
+    upper_ci = if_else(is.na(n_counts) | is.na(n_patient), NA_real_, upper_ci)
   ) %>% 
-  mutate(across(.cols = c(n_counts, n_patient, Mean, Lower, Upper),
+  mutate(across(.cols = c(n_counts, n_patient, estimate, lower_ci, upper_ci),
                 .fns = as.character)) %>% 
   replace_na(list(n_counts = "[REDACTED]",
                   n_patient = "[REDACTED]",
-                  Mean = "[REDACTED]",
-                  Lower = "[REDACTED]",
-                  Upper = "[REDACTED]"))
+                  estimate = "[REDACTED]",
+                  lower_ci = "[REDACTED]",
+                  upper_ci = "[REDACTED]"))
 
 # Save resource incidence table ----
 write_csv(tbl_resource_incidence, 
