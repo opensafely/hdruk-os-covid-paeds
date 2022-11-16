@@ -1115,3 +1115,61 @@ format_perc = function (probs, digits){
   paste(format(100 * probs, trim = TRUE, scientific = FALSE, digits = digits), 
         "%")
 }
+
+# Functions from sjstats version 0.18.1 ----
+svyglm.nb = function (formula, design, ...) 
+{
+  if (!requireNamespace("survey", quietly = TRUE)) {
+    stop("Package `survey` needed to for this function to work. Please install it.", 
+         call. = FALSE)
+  }
+  dw <- stats::weights(design)
+  design <- stats::update(design, scaled.weights = dw/mean(dw, 
+                                                           na.rm = TRUE))
+  mod <- MASS::glm.nb(formula, data = stats::model.frame(design), 
+                      weights = scaled.weights, ...)
+  fam <- stats::family(mod)
+  svyfit <- survey::svymle(loglike = sjstats_loglik, grad = sjstats_score, 
+                           design = design, formulas = list(theta = ~1, eta = formula), 
+                           start = c(mod$theta, stats::coef(mod)), na.action = "na.omit")
+  class(svyfit) <- c("svyglm.nb", class(svyfit))
+  attr(svyfit, "nb.terms") <- all.vars(formula)
+  attr(svyfit, "nb.formula") <- formula
+  attr(svyfit, "family") <- fam
+  attr(svyfit, "nb.theta") <- mod[["theta"]]
+  attr(svyfit, "nb.theta.se") <- mod[["SE.theta"]]
+  svyfit$deviance <- mod$deviance
+  svyfit$df.residuals <- mod$df.residuals
+  svyfit$df <- length(stats::coef(mod)) + 1
+  svyfit$aic <- mod$aic
+  svyfit
+}
+
+sjstats_loglik = function (y, theta, eta) 
+{
+  mu <- exp(eta)
+  return(lgamma(theta + y) - lgamma(theta) - lgamma(y + 1) + 
+           theta * log(theta) + y * log(mu + (y == 0)) - (theta + 
+                                                            y) * log(theta + mu))
+}
+
+sjstats_score = function (y, theta, eta) 
+{
+  cbind(sjstats_dtheta(y, theta, eta), sjstats_deta(y, theta, 
+                                                    eta))
+}
+
+sjstats_dtheta = function (y, theta, eta) 
+{
+  mu <- exp(eta)
+  digamma(theta + y) - digamma(theta) + log(theta) + 1 - log(theta + 
+                                                               mu) - (y + theta)/(mu + theta)
+}
+
+sjstats_deta = function (y, theta, eta) 
+{
+  mu <- exp(eta)
+  dmu <- y/mu - (theta + y)/(theta + mu)
+  dmu * mu
+}
+

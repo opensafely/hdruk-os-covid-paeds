@@ -293,8 +293,8 @@ if(model_type == "poisson"){
                   weights = data_weighted$weights,
                   data = data_weighted)
   
-  model_fit = sjstats::svyglm.nb(model_formula,
-                                 design = d.w)
+  model_fit = svyglm.nb(model_formula,
+                        design = d.w)
   
 } else {
   stop("Unrecognised fit_type")
