@@ -41,14 +41,24 @@ max_iter = 2000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = hlme(hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
+  lcmm_model = hlme(fixed = hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
                     random = ~bSpline(indexed_month, degree = 3, knots = 7),
-                    subject = "patient_id", 
+                    subject = "patient_id",
                     ng = ng,
-                    maxiter = max_iter, 
+                    maxiter = max_iter,
                     data = data_resource_lcmm,
                     verbose = FALSE,
                     nproc = 4)
+  
+  # lcmm_model = lcmm(fixed = hospital_use ~ 1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
+  #                   random = ~1 + period,
+  #                   subject = "patient_id",
+  #                   ng = ng,
+  #                   maxiter = max_iter,
+  #                   data = data_resource_lcmm,
+  #                   verbose = FALSE,
+  #                   link = "7-equi-splines",
+  #                   nproc = 4)
   
 } else{
   
@@ -59,7 +69,7 @@ if (ng == 1){
   lcmm_model = hlme(fixed = hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
                     random= ~bSpline(indexed_month, degree = 3, knots = 7),
                     mixture = ~bSpline(indexed_month, degree = 3, knots = 7),
-                    classmb = ~1, 
+                    #classmb = ~1, 
                     ng = ng,
                     B = lcmm_model_1,
                     data = data_resource_lcmm,
@@ -67,6 +77,18 @@ if (ng == 1){
                     maxiter = max_iter,
                     verbose = FALSE,
                     nproc = 4)
+  
+  # lcmm_model = lcmm(fixed = hospital_use ~ 1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
+  #                   mixture = ~1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
+  #                   random = ~1 + indexed_month,
+  #                   ng = ng,
+  #                   data = data_resource_lcmm,
+  #                   subject = "patient_id",
+  #                   maxiter = max_iter,
+  #                   verbose = FALSE,
+  #                   link = "7-equi-splines",
+  #                   nproc = 4)
+  
 }
 
 # Save lcmm_model ----
