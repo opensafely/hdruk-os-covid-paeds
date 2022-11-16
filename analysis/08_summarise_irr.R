@@ -71,7 +71,8 @@ coeff = coeff %>%
       resource == "gp"         ~ "Healthcare episodes"  
     ) %>%
       factor() %>% 
-      fct_relevel("Hospital admissions", "Hospital bed-days", "Outpatient appointments"),
+      fct_relevel("Healthcare episodes", "Outpatient appointments",
+                  "Hospital admissions", "Hospital bed-days"),
     condition = case_when(
       condition == "all"                                    ~ "Overall",
       
