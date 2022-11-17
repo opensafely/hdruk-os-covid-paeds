@@ -2925,7 +2925,7 @@ actions:
             monthly_outpatient_all_other_respiratory_with_cardiovascular,
             monthly_outpatient_cardiology_overall, monthly_outpatient_community_paediatrics_overall,
             monthly_outpatient_dermatology_overall, monthly_outpatient_dietetics_overall,
-            monthly_outpatient_endocrinology_overall, monthly_outpatient_gastrointestinal_overall
+            monthly_outpatient_endocrinology_overall, monthly_outpatient_gastrointestinal_overall,
             monthly_outpatient_general_overall, monthly_outpatient_haematology_overall,
             monthly_outpatient_immunology_and_allergy_overall, monthly_outpatient_infectious_disease_overall,
             monthly_outpatient_mental_health_overall, monthly_outpatient_mental_health_age_group,
