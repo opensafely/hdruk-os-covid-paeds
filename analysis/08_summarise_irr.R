@@ -132,26 +132,65 @@ table_irr = coeff %>%
   filter(reference_row == FALSE, label == "Positive") %>% 
   select(resource, condition, estimate, conf.low, conf.high)
 
+table_irr_all = coeff %>% 
+  filter(reference_row == FALSE, label %in% c("Untested", "Positive")) %>% 
+  select(resource, condition, covid_status = label, estimate, conf.low, conf.high)
+
 write_csv(table_irr,
           here::here("output", "descriptives", "matched_cohort", model_type,
                      paste0("summarised_", pred_type), "table_irr.csv"))
 
 # Plot incidence rate ratio ----
-plot_irr = table_irr %>% 
-  ggplot(aes(x = condition %>% fct_rev(),
-             y = estimate, ymin = conf.low, ymax = conf.high)) + 
-  geom_point(colour = "blue", size = 1.5) + 
-  geom_errorbar(colour = "blue", width=.2) +
-  geom_hline(yintercept=1, lty=2) +
-  scale_y_continuous(trans='log10') +
-  coord_flip() +
-  labs(x = NULL) +
-  ylab("Incidence rate ratio (95% CI)") +
-  facet_wrap(~ resource, ncol = 4)
+## Only positive
+plot_irr_positive = table_irr_all %>%
+  filter(covid_status == "Positive") %>% 
+  ggplot(aes(y = covid_status %>% fct_rev(),
+             x = estimate, xmin = conf.low, xmax = conf.high,
+             colour = covid_status)) + 
+  geom_point(size = 1.5) + 
+  geom_errorbar(width = 0.2) +
+  geom_vline(xintercept=1, lty=2) +
+  scale_x_continuous(trans='log10') +
+  labs(x = "Incidence rate ratio (95% CI)", y = NULL,
+       colour = "SARS-CoV-2 status (testing period)") +
+  facet_grid(condition ~ resource, switch = "y") +
+  theme(strip.text.y.left = element_text(angle = 0),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "none") +
+  scale_colour_manual(values = c("#648fff", "#dc267f"))
+
+## Positive and Untested
+plot_irr_all = table_irr_all %>% 
+  ggplot(aes(y = covid_status %>% fct_rev(),
+             x = estimate, xmin = conf.low, xmax = conf.high,
+             colour = covid_status)) + 
+  geom_point(size = 1.5) + 
+  geom_errorbar(width = .2) +
+  geom_vline(xintercept=1, lty=2) +
+  scale_x_continuous(trans='log10') +
+  labs(x = "Incidence rate ratio (95% CI)", y = NULL,
+       colour = "SARS-CoV-2 status (testing period)") +
+  facet_grid(condition ~ resource, switch = "y") +
+  theme(strip.text.y.left = element_text(angle = 0),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "bottom") +
+  scale_colour_manual(values = c("#648fff", "#dc267f"))
 
 ## Save plot ----
-ggsave(filename = paste0("plot_irr.jpeg"),
-       plot = plot_irr,
+ggsave(filename = paste0("plot_irr_positive.jpeg"),
+       plot = plot_irr_positive,
+       path = here::here("output", "descriptives", "matched_cohort", model_type,
+                         paste0("summarised_", pred_type)),
+       width = 9, height = 6, units = "in")
+
+ggsave(filename = paste0("plot_irr_all.jpeg"),
+       plot = plot_irr_all,
        path = here::here("output", "descriptives", "matched_cohort", model_type,
                          paste0("summarised_", pred_type)),
        width = 9, height = 6, units = "in")
