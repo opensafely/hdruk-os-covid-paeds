@@ -419,48 +419,48 @@ table_balance_summmary = table_pair_balance %>%
   distinct() %>% 
   pivot_wider() %>% 
   mutate(
-    Negative.Un = if_else(
-      Negative_n < count_redact, "[REDACTED]",
+    Negative_Un = if_else(
+      Negative_n*Negative.Un < count_redact, "[REDACTED]",
       paste0(plyr::round_any(Negative_n*Negative.Un, count_round), " (", 
              round_tidy(Negative.Un*100,1), ")")
       ),
-    Negative.Adj = if_else(
-      Negative_n < count_redact, "[REDACTED]",
+    Negative_Adj = if_else(
+      Negative_n*Negative.Un < count_redact, "[REDACTED]",
       paste0(round_tidy(Negative_ESS*Negative.Adj, 1), " (",
              round_tidy(Negative.Adj*100,1), ")")
       ),
-    Positive.Un = if_else(
-      Positive_n < count_redact, "[REDACTED]",
+    Positive_Un = if_else(
+      Positive_n*Positive.Un < count_redact, "[REDACTED]",
       paste0(plyr::round_any(Positive_n*Positive.Un, count_round), " (",
              round_tidy(Positive.Un*100,1), ")")
     ),
-    Positive.Adj = if_else(
-      Positive_n < count_redact, "[REDACTED]", 
+    Positive_Adj = if_else(
+      Positive_n*Positive.Un < count_redact, "[REDACTED]", 
       paste0(round_tidy(Positive_ESS*Positive.Adj, 1), " (",
              round_tidy(Positive.Adj*100,1), ")")
     ),
-    Untested.Un = if_else(
-      Untested_n < count_redact, "[REDACTED]", 
+    Untested_Un = if_else(
+      Untested_n*Untested.Un < count_redact, "[REDACTED]", 
       paste0(plyr::round_any(Untested_n*Untested.Un, count_round), " (",
              round_tidy(Untested.Un*100,1), ")")
       ),
-    Untested.Adj = if_else(
-      Untested_n < count_redact, "[REDACTED]", 
+    Untested_Adj = if_else(
+      Untested_n*Untested.Un < count_redact, "[REDACTED]", 
       paste0(round_tidy(Untested_ESS*Untested.Adj, 1), " (",
              round_tidy(Untested.Adj*100,1), ")")
     ),
-    Abs_Max_Diff.Un = round_tidy(pmax(abs(Negative_Positive_Diff.Un),
+    Abs_Max_Diff_Un = round_tidy(pmax(abs(Negative_Positive_Diff.Un),
                                       abs(Negative_Untested_Diff.Un),
                                       abs(Positive_Untested_Diff.Un))*100, 1),
-    Abs_Max_Diff.Adj = round_tidy(pmax(abs(Negative_Positive_Diff.Adj),
+    Abs_Max_Diff_Adj = round_tidy(pmax(abs(Negative_Positive_Diff.Adj),
                                        abs(Negative_Untested_Diff.Adj),
                                        abs(Positive_Untested_Diff.Adj))*100, 1),
-    Negative_Positive_Diff.Un = round_tidy(Negative_Positive_Diff.Un*100, 1),
-    Negative_Untested_Diff.Un = round_tidy(Negative_Untested_Diff.Un*100, 1),
-    Positive_Untested_Diff.Un = round_tidy(Positive_Untested_Diff.Un*100, 1),
-    Negative_Positive_Diff.Adj = round_tidy(Negative_Positive_Diff.Adj*100, 1),
-    Negative_Untested_Diff.Adj = round_tidy(Negative_Untested_Diff.Adj*100, 1),
-    Positive_Untested_Diff.Adj = round_tidy(Positive_Untested_Diff.Adj*100, 1),
+    Negative_Positive_Diff_Un = round_tidy(Negative_Positive_Diff.Un*100, 1),
+    Negative_Untested_Diff_Un = round_tidy(Negative_Untested_Diff.Un*100, 1),
+    Positive_Untested_Diff_Un = round_tidy(Positive_Untested_Diff.Un*100, 1),
+    Negative_Positive_Diff_Adj = round_tidy(Negative_Positive_Diff.Adj*100, 1),
+    Negative_Untested_Diff_Adj = round_tidy(Negative_Untested_Diff.Adj*100, 1),
+    Positive_Untested_Diff_Adj = round_tidy(Positive_Untested_Diff.Adj*100, 1),
   )
 
 ## Add variable labels to table ----
@@ -470,12 +470,12 @@ table_balance_summmary = table_balance_summmary %>%
 ## Organise columns ----
 table_balance_summmary = table_balance_summmary %>% 
   select(var_labels, level,
-         Negative.Un, Positive.Un, Untested.Un,
-         Negative.Adj, Positive.Adj, Untested.Adj,
-         Negative_Positive_Diff.Un, Negative_Positive_Diff.Adj,
-         Negative_Untested_Diff.Un, Negative_Untested_Diff.Adj,
-         Positive_Untested_Diff.Un, Positive_Untested_Diff.Adj,
-         Abs_Max_Diff.Un, Abs_Max_Diff.Adj)
+         Negative_Un, Positive_Un, Untested_Un,
+         Negative_Adj, Positive_Adj, Untested_Adj,
+         Negative_Positive_Diff_Un, Negative_Positive_Diff.Adj,
+         Negative_Untested_Diff_Un, Negative_Untested_Diff.Adj,
+         Positive_Untested_Diff_Un, Positive_Untested_Diff.Adj,
+         Abs_Max_Diff_Un, Abs_Max_Diff_Adj)
 
 ## Save balance table and balance summary tables ----
 write_csv(table_pair_balance,
