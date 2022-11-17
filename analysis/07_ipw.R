@@ -32,7 +32,8 @@ dir.create(here::here("output", "descriptives", "matched_cohort", "ipw", "balanc
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
 
 # Disclosure control parameters ----
-count_round = global_var$disclosure_count_round
+count_round  = global_var$disclosure_count_round
+count_redact = global_var$disclosure_redact
 
 ## Study dates ----
 start_date     = ymd(global_var$start_date)
@@ -418,29 +419,35 @@ table_balance_summmary = table_pair_balance %>%
   distinct() %>% 
   pivot_wider() %>% 
   mutate(
-    Negative.Un = paste0(
-      plyr::round_any(Negative_n*Negative.Un, count_round), " (",
-      round_tidy(Negative.Un*100,1), ")"
+    Negative.Un = if_else(
+      Negative_n < count_redact, "[REDACTED]",
+      paste0(plyr::round_any(Negative_n*Negative.Un, count_round), " (", 
+             round_tidy(Negative.Un*100,1), ")")
+      ),
+    Negative.Adj = if_else(
+      Negative_n < count_redact, "[REDACTED]",
+      paste0(round_tidy(Negative_ESS*Negative.Adj, 1), " (",
+             round_tidy(Negative.Adj*100,1), ")")
+      ),
+    Positive.Un = if_else(
+      Positive_n < count_redact, "[REDACTED]",
+      paste0(plyr::round_any(Positive_n*Positive.Un, count_round), " (",
+             round_tidy(Positive.Un*100,1), ")")
     ),
-    Negative.Adj = paste0(
-      round_tidy(Negative_ESS*Negative.Adj, 1), " (",
-      round_tidy(Negative.Adj*100,1), ")"
+    Positive.Adj = if_else(
+      Positive_n < count_redact, "[REDACTED]", 
+      paste0(round_tidy(Positive_ESS*Positive.Adj, 1), " (",
+             round_tidy(Positive.Adj*100,1), ")")
     ),
-    Positive.Un = paste0(
-      plyr::round_any(Positive_n*Positive.Un, count_round), " (",
-      round_tidy(Positive.Un*100,1), ")"
-    ),
-    Positive.Adj = paste0(
-      round_tidy(Positive_ESS*Positive.Adj, 1), " (",
-      round_tidy(Positive.Adj*100,1), ")"
-    ),
-    Untested.Un = paste0(
-      plyr::round_any(Untested_n*Untested.Un, count_round), " (",
-      round_tidy(Untested.Un*100,1), ")"
-    ),
-    Untested.Adj = paste0(
-      round_tidy(Untested_ESS*Untested.Adj, 1), " (",
-      round_tidy(Untested.Adj*100,1), ")"
+    Untested.Un = if_else(
+      Untested_n < count_redact, "[REDACTED]", 
+      paste0(plyr::round_any(Untested_n*Untested.Un, count_round), " (",
+             round_tidy(Untested.Un*100,1), ")")
+      ),
+    Untested.Adj = if_else(
+      Untested_n < count_redact, "[REDACTED]", 
+      paste0(round_tidy(Untested_ESS*Untested.Adj, 1), " (",
+             round_tidy(Untested.Adj*100,1), ")")
     ),
     Abs_Max_Diff.Un = round_tidy(pmax(abs(Negative_Positive_Diff.Un),
                                       abs(Negative_Untested_Diff.Un),
@@ -495,7 +502,8 @@ weight_variables %>%
 # Create love plot ----
 love_plot = love.plot(data_weights, thresholds = c(m = .1), binary = "std",
                       which.treat = .all, abs = TRUE, position = "bottom",
-                      var.names = var_label_level
+                      var.names = var_label_level,
+                      colors = c("#648fff", "#dc267f")
                       )
 
 ggsave(filename = paste0("love_plot.jpeg"),
