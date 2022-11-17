@@ -3451,7 +3451,8 @@ actions:
       moderately_sensitive:
         crude_rates: output/descriptives/matched_cohort/poisson/summarised_uni_var/crude_rates.csv
         irr_table: output/descriptives/matched_cohort/poisson/summarised_uni_var/table_irr.csv
-        irr_plot: output/descriptives/matched_cohort/poisson/summarised_uni_var/plot_irr.jpeg
+        irr_plot_positive: output/descriptives/matched_cohort/poisson/summarised_uni_var/plot_irr_positive.jpeg
+        irr_plot_all: output/descriptives/matched_cohort/poisson/summarised_uni_var/plot_irr_all.jpeg
 
   generate_positive_cohort:
     run: r:latest analysis/09_construct_positive_cohort.R
