@@ -41,24 +41,24 @@ max_iter = 50000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = hlme(fixed = hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
-                    random = ~bSpline(indexed_month, degree = 3, knots = 7),
-                    subject = "patient_id",
-                    ng = ng,
-                    maxiter = max_iter,
-                    data = data_resource_lcmm,
-                    verbose = FALSE,
-                    nproc = 4)
-  
-  # lcmm_model = lcmm(fixed = hospital_use ~ 1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
-  #                   random = ~1 + indexed_month,
+  # lcmm_model = hlme(fixed = hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
+  #                   random = ~bSpline(indexed_month, degree = 3, knots = 7),
   #                   subject = "patient_id",
   #                   ng = ng,
   #                   maxiter = max_iter,
   #                   data = data_resource_lcmm,
   #                   verbose = FALSE,
-  #                   link = "7-equi-splines",
   #                   nproc = 4)
+  
+  lcmm_model = lcmm(fixed = hospital_use ~ 1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
+                    random = ~1 + indexed_month,
+                    subject = "patient_id",
+                    ng = ng,
+                    maxiter = max_iter,
+                    data = data_resource_lcmm,
+                    verbose = FALSE,
+                    link = "7-equi-splines",
+                    nproc = 4)
   
 } else{
   
@@ -66,28 +66,29 @@ if (ng == 1){
   lcmm_model_1 = read_rds(here::here("output", "lcmm", "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = hlme(fixed = hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
-                    random= ~bSpline(indexed_month, degree = 3, knots = 7),
-                    mixture = ~bSpline(indexed_month, degree = 3, knots = 7),
-                    #classmb = ~1,
+  # lcmm_model = hlme(fixed = hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
+  #                   random= ~bSpline(indexed_month, degree = 3, knots = 7),
+  #                   mixture = ~bSpline(indexed_month, degree = 3, knots = 7),
+  #                   #classmb = ~1,
+  #                   ng = ng,
+  #                   B = lcmm_model_1,
+  #                   data = data_resource_lcmm,
+  #                   subject = "patient_id",
+  #                   maxiter = max_iter,
+  #                   verbose = FALSE,
+  #                   nproc = 4)
+  
+  lcmm_model = lcmm(fixed = hospital_use ~ 1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
+                    mixture = ~1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
+                    random = ~1 + indexed_month,
                     ng = ng,
                     B = lcmm_model_1,
                     data = data_resource_lcmm,
                     subject = "patient_id",
                     maxiter = max_iter,
                     verbose = FALSE,
+                    link = "7-equi-splines",
                     nproc = 4)
-  
-  # lcmm_model = lcmm(fixed = hospital_use ~ 1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
-  #                   mixture = ~1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
-  #                   random = ~1 + indexed_month,
-  #                   ng = ng,
-  #                   data = data_resource_lcmm,
-  #                   subject = "patient_id",
-  #                   maxiter = max_iter,
-  #                   verbose = FALSE,
-  #                   link = "7-equi-splines",
-  #                   nproc = 4)
   
 }
 
