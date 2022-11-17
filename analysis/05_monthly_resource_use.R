@@ -21,9 +21,9 @@ tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
 # Create output directory folders ----
-dir.create(here::here("output", "descriptives", "healthcare_use_2019_2022", "tables"),
+dir.create(here::here("output", "descriptives", "healthcare_use_2019_2022", "monthly_tables"),
            showWarnings = FALSE, recursive=TRUE)
-dir.create(here::here("output", "descriptives", "healthcare_use_2019_2022", "plots"),
+dir.create(here::here("output", "descriptives", "healthcare_use_2019_2022", "monthly_plots"),
            showWarnings = FALSE, recursive=TRUE)
 
 #Plot theme
@@ -51,8 +51,8 @@ var_labs = extract_variable_label(data_cohort[[1]])
 data_cohort = data_cohort%>% 
   bind_rows() %>%
   ff_relabel(var_labs) %>% 
-  mutate(overall = "Overall" %>% ff_label("")) %>% 
-  select(patient_id, cohort, stratification = all_of(stratification))
+  mutate(overall = "Overall" %>% ff_label("Overall")) %>% 
+  select(patient_id, cohort, strata_level = all_of(stratification))
 
 # Extract patient IDs for each year ----
 patient_id_2019 = data_cohort %>% filter(cohort == 2019) %>% pull(patient_id)
@@ -190,20 +190,20 @@ data_resource = data_resource %>%
   left_join(data_cohort, by = c("patient_id", "cohort"))
 
 data_resource = data_resource %>%
-  group_by(cohort, month_date, stratification) %>% 
+  group_by(cohort, month_date, strata_level) %>% 
   summarise(n_counts = round(sum(n))) %>% 
   ungroup()
 
 if(resource_type == "outpatient"){
   monthly_count = data_cohort %>%
-    group_by(stratification) %>% 
+    group_by(strata_level) %>% 
     summarise(
       month_date = seq(ymd("2019-04-01"), study_end_date - days(1), by = "month"),
       cohort = year(month_date)
     )
 } else {
   monthly_count = data_cohort %>%
-    group_by(stratification) %>% 
+    group_by(strata_level) %>% 
     summarise(
       month_date = seq(study_start_date, study_end_date - days(1), by = "month"),
       cohort = year(month_date)
@@ -213,20 +213,24 @@ if(resource_type == "outpatient"){
 monthly_count = monthly_count %>%
   left_join(
     data_cohort %>%
-      group_by(stratification, cohort) %>%
+      group_by(strata_level, cohort) %>%
       summarise(
         n_patient = n()
       ),
-    by = c("stratification", "cohort")
+    by = c("strata_level", "cohort")
   ) %>% 
   left_join(
     data_resource,
-    by = c("stratification", "month_date", "cohort")) %>% 
+    by = c("strata_level", "month_date", "cohort")) %>% 
   replace_na(list(n_counts = 0))
 
 # Remove low counts ----
-monthly_count = monthly_count%>% 
+monthly_count = monthly_count %>% 
   mutate(
+    resource_type = resource_type,
+    condition = condition,
+    strata_variable = stratification,
+    strata_label = extract_variable_label(monthly_count)["strata_level"],
     n_patient = if_else(n_patient <= count_redact,
                         NA_real_,
                         n_patient %>% plyr::round_any(count_round)),
@@ -243,7 +247,9 @@ monthly_count = monthly_count%>%
     ci_upper = ifelse(is.na(n_patient) | is.na(n_counts), NA_real_,
                        poisson.test(n_counts,n_patient_000)$conf.int[2])
   ) %>% 
-  ungroup()
+  ungroup() %>% 
+  relocate(resource_type, condition, strata_variable, strata_label, strata_level,
+           month_date, cohort, month_date)
 
 # Assign y axis label based on resource type ----
 if(resource_type == "gp"){
@@ -258,13 +264,13 @@ if(resource_type == "gp"){
 
 # Plot monthly resource use ----
 plot_monthly = monthly_count %>% 
-  ggplot(aes(month_date, estimate, colour = stratification, fill = stratification)) +
+  ggplot(aes(month_date, estimate, colour = strata_level, fill = strata_level)) +
   geom_point(size = 0.5) + geom_line() + 
   geom_ribbon(aes(ymin = ci_lower, ymax = ci_upper), alpha = 0.2, size = 0.1, linetype=2) +
   labs(
     y = y_lab, x = NULL,
-    colour = extract_variable_label(monthly_count)["stratification"],
-    fill = extract_variable_label(monthly_count)["stratification"]
+    colour = extract_variable_label(monthly_count)["strata_level"],
+    fill = extract_variable_label(monthly_count)["strata_level"]
   ) +
   scale_y_continuous(limits = c(0, NA)) +
   theme(legend.position = "bottom")
@@ -279,7 +285,7 @@ monthly_count = monthly_count %>%
 
 # Save monthly count table ----
 write_csv(monthly_count, 
-          here::here("output", "descriptives", "healthcare_use_2019_2022", "tables",
+          here::here("output", "descriptives", "healthcare_use_2019_2022", "monthly_tables",
                      paste0("monthly_", resource_type, "_", condition,
                             "_", stratification, ".csv")))
 
@@ -287,7 +293,7 @@ write_csv(monthly_count,
 ggsave(paste0("monthly_", resource_type, "_", condition,
               "_", stratification, ".jpeg"),
        plot_monthly,
-       path = here::here("output", "descriptives", "healthcare_use_2019_2022", "plots"),
+       path = here::here("output", "descriptives", "healthcare_use_2019_2022", "monthly_plots"),
        height = 5, width = 7)
 
 
