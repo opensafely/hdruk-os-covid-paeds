@@ -3394,16 +3394,6 @@ actions:
         model_stats: output/descriptives/matched_cohort/poisson/uni_var/tables/stats_gp_self_harm.csv
         rr_plot: output/descriptives/matched_cohort/poisson/uni_var/plots/rrplot_gp_self_harm.jpeg
 
-  count_regression_admissions_01_infectious_and_parasitic_diseases_negative_binomial_uni_var:
-    run: r:latest analysis/08_count_regression.R admissions 01_infectious_and_parasitic_diseases negative_binomial uni_var
-    needs: [weight_matched_cohort, process_admissions_data]
-    outputs:
-      moderately_sensitive:
-        crude_rates: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/crude_rates_admissions_01_infectious_and_parasitic_diseases.csv
-        model_coefficients: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/coeff_admissions_01_infectious_and_parasitic_diseases.csv
-        model_stats: output/descriptives/matched_cohort/negative_binomial/uni_var/tables/stats_admissions_01_infectious_and_parasitic_diseases.csv
-        rr_plot: output/descriptives/matched_cohort/negative_binomial/uni_var/plots/rrplot_admissions_01_infectious_and_parasitic_diseases.jpeg
-
   summarise_irr:
     run: r:latest analysis/08_summarise_irr.R poisson uni_var
     needs: [count_regression_admissions_all_poisson_uni_var,
