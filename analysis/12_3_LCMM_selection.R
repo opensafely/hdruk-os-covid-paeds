@@ -26,6 +26,9 @@ dir.create(dir_lcmm_pred_trajectory, showWarnings = FALSE, recursive=TRUE)
 # Plot theme ----
 theme_set(theme_bw())
 
+# Load resource data ----
+data_resource_lcmm = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
+
 # Load saved LCMM models ----
 lcmm_models = list.files(dir_lcmm_models,
                          pattern = "lcmm_model_[0-9]+.rds") %>% 
@@ -143,9 +146,9 @@ lcmm_models %>%
         class = str_extract(name, "\\d+$"),
         class = if_else(is.na(class), "1", class),
         name = case_when(
-          str_starts(name, "Ypred")    ~ "y",
-          str_starts(name, "lower.Ypred") ~ "y_lower",
-          str_starts(name, "upper.Ypred") ~ "y_upper"
+          str_starts(name, "Ypred_50")   ~ "y",
+          str_starts(name, "Ypred_2.5")  ~ "y_lower",
+          str_starts(name, "Ypred_97.5") ~ "y_upper"
         )
       ) %>%
       pivot_wider(names_from = name)
