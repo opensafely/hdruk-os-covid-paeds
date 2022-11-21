@@ -15,6 +15,7 @@ source(here::here("analysis", "10_0_MCC_functions.R"))
 dir_mcc_plot       = here::here("output", "mcc", "plots")
 dir_mcc_alloc       = here::here("output", "mcc", "allocations")
 
+dir_mcc_model = here::here("output","mcc","model")
 ## Create output directories ----
 dir.create(dir_mcc_plot, showWarnings = FALSE, recursive=TRUE)
 dir.create(dir_mcc_alloc, showWarnings = FALSE, recursive=TRUE)
@@ -24,11 +25,13 @@ model_selection = read.csv(here::here("output", "mcc", "model", "model_selection
 
 #===============================================================================
 # Select best cluster based on selection criteria
-best_cluster = as.integer(names(which.max(table(apply(x,2,which.min)))))
-model_name = paste0(dir_mcc_model, "MCC_H", best_cluster, "_.*\\.RData")
+best_cluster = as.integer(names(which.max(table(apply(model_selection,2,which.min)))))
+files = list.files(dir_mcc_model)
+model_name = files[which.max(sapply(X=files, FUN=grep, pattern=paste0("H",best_cluster)))]
 
 # Get class allocations for best clustering
-selected_model = load(model_name)  # Insert path for selected model here
+load(paste0(dir_mcc_model,'/',model_name),temp_env <- new.env())
+selected_model = as.list(temp_env)   # Insert path for selected model here
 thin = 1
 maxi = 50
 M0 = selected_model$Mcmc$M0
@@ -40,8 +43,8 @@ op <- calcAllocationsMCC(selected_model,
                          M0 = M0, 
                          plotPathsForEta = plotPathsForEta)
 
-class_allocation_file_name = paste0(dir_mcc_alloc, model_name, '_class_allocations','.csv')
-write.csv(x = op, file = class_allocation_file_name)
+write_csv(op$classProbs %>% as.data.frame(),
+          here::here("output", "mcc", "allocations", "allocations.csv"))
 
 #===============================================================================
 # Work with results
@@ -68,11 +71,14 @@ df$TransState <- recode_factor(df$TransState, `0` = 'None',`1`='Contact',`2`='OP
 
 
 # facet heatmap for transition probabilities
-ggplot(df, aes(TransState, InitState)) +
+plot_heatmap = ggplot(df, aes(TransState, InitState)) +
   geom_tile(aes(fill = value)) + 
   geom_text(aes(label = round(value, 2))) +
   scale_fill_gradient(low = "white", high = "green") +
   facet_grid(rows=vars(Group))
 
-ggsave(paste0(dir_mcc_plot, model_name, format(Sys.time(), "%Y%m%d_%H%M%S"),'_plot.png'))
+ggsave(filename = here::here("output", "mcc", "plots", "heatmap.jpeg"),
+       plot = plot_heatmap,
+       width = 7, height = 7, units = "in")
+
 #===============================================================================
