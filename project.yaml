@@ -3630,6 +3630,38 @@ actions:
         resource_data: output/data/data_resource.rds
         patient_data: output/data/data_positives.rds
 
+  mcc_data_prep:
+    run: r:latest analysis/10_1_MCC_prep_resource.R
+    needs: [generate_positive_cohort]
+    outputs:
+      highly_sensitive:
+        dtw_resource_data: output/data/data_resource_mcc.rds
+
+  mcc_run_model_and_selection:
+    run: r:latest analysis/10_2_MCC_model_selection.R 5
+    needs: [mcc_data_prep]
+    outputs:
+      highly_sensitive:
+        model_data_1: output/mcc/model/MCC_H1_M150.RData
+        model_data_2: output/mcc/model/MCC_H2_M150.RData
+        model_data_3: output/mcc/model/MCC_H3_M150.RData
+        model_data_4: output/mcc/model/MCC_H4_M150.RData
+        model_data_5: output/mcc/model/MCC_H5_M150.RData
+        approxMCL: output/mcc/model/MCCModSelCrits_approxMCL.RData
+        approxML: output/mcc/model/MCCModSelCrits_approxML.RData
+        postMode: output/mcc/model/MCCModSelCrits_postMode.RData
+      moderately_sensitive:
+        tbl_model_selection: output/mcc/model/model_selection_criteria.csv
+
+  mcc_results:
+    run: r:latest analysis/10_3_MCC_class_allocations_visualization.R
+    needs: [mcc_run_model_and_selection]
+    outputs:
+      highly_sensitive:
+        allocations: output/mcc/allocations/allocations.csv
+      moderately_sensitive:
+        heatmap: output/mcc/plots/heatmap.jpeg
+
   dtw_data_prep:
     run: r:latest analysis/11_1_DTW_prep_resource.R
     needs: [generate_positive_cohort]
