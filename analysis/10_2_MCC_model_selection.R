@@ -31,6 +31,10 @@ dir.create(dir_mcc_model,      showWarnings = FALSE, recursive=TRUE)
 data_resource = read_rds(here::here("output", "data", "data_resource_mcc.rds"))
 
 # Pre-processing for resource data ----
+levels=c('None', 'Contact', 'OP', 'BD', 'CC')
+data_resource <- data_resource %>% mutate(service_idx = as.numeric(factor(service, levels=levels)))
+
+
 # Create lagged service column to calculate transition frequency matrix
 resource <- data_resource %>% 
   group_by(patient_id) %>% 
@@ -41,12 +45,12 @@ resource <- data_resource %>%
 initial_state_vector <- resource$service_idx[which(resource$date_indexed==1)]
 
 # Transitions vectors
-tr_list <- vector("list", length = n)
 id_list = unique(data_resource$patient_id)
 n = length(id_list)
+tr_list <- vector("list", length = n)
 
 for (i in 1:n){
-  tr_list[[i]] <- as.integer(resource$service_idx[which(resource$patient_id == patient_list[i])]-1) #added -1
+  tr_list[[i]] <- as.integer(resource$service_idx[which(resource$patient_id == id_list[i])]-1) #added -1
 }
 
 njki <- dataListToNjki(tr_list)
