@@ -76,7 +76,8 @@ MCClust <- function (Data = list(dataFile = stop("'dataFile' (=> Njk.i) must be 
   dirName <- Data$storeDir
   if (!file.exists(dirName)) 
     dir.create(dirName)
-  fileName <- paste("MCC_H", H, "_M", M, "_", startDate, ".RData", 
+  fileName <- paste("MCC_H", H, "_M", M, # "_", startDate, 
+                    ".RData", 
                     sep = "")
   workspaceFile <- file.path(dirName, fileName)
   logLike <- numeric(M)
