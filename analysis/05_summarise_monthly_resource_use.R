@@ -12,9 +12,9 @@ monthly_count_summarised = list_files %>%
   map_df(function(file){
     monthly_count = read_csv(
       here::here("output", "descriptives", "healthcare_use_2019_2022",
-                 "monthly_tables", file),
-      col_types = rep("c", 13)
-    )
+                 "monthly_tables", file)
+    ) %>% 
+      mutate(across(.cols = everything(), as.character))
   }, .id = "set_id")
 
 # Save resource summary table ----
