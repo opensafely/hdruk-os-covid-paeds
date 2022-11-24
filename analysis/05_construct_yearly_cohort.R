@@ -22,7 +22,8 @@ theme_set(theme_bw())
 global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
 
 # Disclosure control parameters ----
-count_round = global_var$disclosure_count_round
+count_round  = global_var$disclosure_count_round
+count_redact = global_var$disclosure_redact
 
 # Study dates ----
 study_start_date = ymd(global_var$start_date)
@@ -174,7 +175,8 @@ tbl_cohort_summary = data_cohort %>%
   }) %>% 
   reduce(left_join, by = c("row_num", "label", "levels")) %>% 
   select(-row_num) %>% 
-  ff_round_counts(count_round)
+  ff_round_counts(count_round) %>% 
+  ff_redact_counts(count_redact)
 
 ## Save cohort summary table ----
 write_csv(tbl_cohort_summary, 
