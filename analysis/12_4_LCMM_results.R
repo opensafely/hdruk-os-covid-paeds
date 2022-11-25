@@ -129,7 +129,7 @@ tbl_obs_trajectory = data_resource_lcmm %>%
   ungroup()
 
 ## Save observed trajectory table ----
-write_csv(tbl_summary,
+write_csv(tbl_obs_trajectory,
           here::here("output", "lcmm", "obs_trajectory",
                      paste0("tbl_obs_trajectory_", ng, ".csv")))
 
