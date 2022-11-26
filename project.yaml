@@ -3821,7 +3821,7 @@ actions:
         plot_loglik: output/lcmm/beddays/selection/plot_loglik.jpeg
         plot_class_probability: output/lcmm/beddays/selection/plot_class_probability.jpeg 
 
-  lcmm_results_1:
+  lcmm_results_1_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 1 beddays
     needs: [lcmm_data_prep, lcmm_run_model_1_beddays]
     outputs:
@@ -3832,7 +3832,7 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_1.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_1.jpeg
 
-  lcmm_results_2:
+  lcmm_results_2_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 2 beddays
     needs: [lcmm_data_prep, lcmm_run_model_2_beddays]
     outputs:
@@ -3843,7 +3843,7 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_2.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_2.jpeg
 
-  lcmm_results_3:
+  lcmm_results_3_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 3 beddays
     needs: [lcmm_data_prep, lcmm_run_model_3_beddays]
     outputs:
@@ -3854,7 +3854,7 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_3.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_3.jpeg
 
-  lcmm_results_4:
+  lcmm_results_4_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 4 beddays
     needs: [lcmm_data_prep, lcmm_run_model_4_beddays]
     outputs:
@@ -3865,7 +3865,7 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_4.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_4.jpeg
 
-  lcmm_results_5:
+  lcmm_results_5_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 5 beddays
     needs: [lcmm_data_prep, lcmm_run_model_5_beddays]
     outputs:
