@@ -3832,8 +3832,8 @@ actions:
         plot_predicted_trajectory_5: output/lcmm/pred_trajectory/plot_predicted_trajectory_5.jpeg 
 
   lcmm_results_1:
-    run: r:latest analysis/12_4_LCMM_results.R 1
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_1_beddays]
+    run: r:latest analysis/12_4_LCMM_results.R 1 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_1_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/beddays/summary_tbl/tbl_summary_1.csv
@@ -3843,8 +3843,8 @@ actions:
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_1.jpeg
 
   lcmm_results_2:
-    run: r:latest analysis/12_4_LCMM_results.R 2
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_2_beddays]
+    run: r:latest analysis/12_4_LCMM_results.R 2 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_2_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/beddays/summary_tbl/tbl_summary_2.csv
@@ -3854,19 +3854,19 @@ actions:
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_2.jpeg
 
   lcmm_results_3:
-    run: r:latest analysis/12_4_LCMM_results.R 3
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_3_beddays]
+    run: r:latest analysis/12_4_LCMM_results.R 3 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_3_beddays]
     outputs:
       moderately_sensitive:
-        table_summary: output/lcmm/beddays/ssummary_tbl/tbl_summary_3.csv
+        table_summary: output/lcmm/beddays/summary_tbl/tbl_summary_3.csv
         table_observed_trajectory: output/lcmm/beddays/obs_trajectory/tbl_obs_trajectory_3.csv
         plot_observed_trajectory: output/lcmm/beddays/obs_trajectory/plot_observed_trajectory_3.jpeg
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_3.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_3.jpeg
 
   lcmm_results_4:
-    run: r:latest analysis/12_4_LCMM_results.R 4
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_4_beddays]
+    run: r:latest analysis/12_4_LCMM_results.R 4 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_4_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/beddays/summary_tbl/tbl_summary_4.csv
@@ -3876,8 +3876,8 @@ actions:
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_4.jpeg
 
   lcmm_results_5:
-    run: r:latest analysis/12_4_LCMM_results.R 5
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_5_beddays]
+    run: r:latest analysis/12_4_LCMM_results.R 5 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_5_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/beddays/summary_tbl/tbl_summary_5.csv
