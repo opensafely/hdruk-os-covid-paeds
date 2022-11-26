@@ -25,7 +25,7 @@ if(length(args) == 0){
 }
 
 # Number cores for parallel computation
-nproc = 2
+nproc = 1
 
 # Create output directories  ----
 dir_lcmm_models = here::here("output", "lcmm",resource_type, "models")
