@@ -945,6 +945,7 @@ ff_redact_counts = function (.data, n_redact = 7, ignore = c("label", "levels", 
                            value_perc = value_readact/sum(value_readact, na.rm = TRUE)*100
                            
                            dplyr::case_when(
+                             levels %in% c("Mean (SD)", "Median (IQR)") ~ .,
                              is.na(value_readact) ~ "[REDACTED]",
                              !levels %in% c("Mean (SD)", "Median (IQR)") ~ 
                                format_n_percent(value_readact, value_perc, 1), 
