@@ -82,7 +82,7 @@ tbl_daily_beddays = data_resource %>%
   summarise(
     n_patient = n(),
     mean_beddays = list(
-      Hmisc::smean.cl.boot(n_beddays, conf.int = 0.95, B = 1000)
+      Hmisc::smean.cl.boot(n_beddays, conf.int = 0.95, B = 10)
     )) %>%
   unnest_wider(mean_beddays)
 
@@ -109,7 +109,7 @@ tbl_daily_critical_care = data_resource %>%
   summarise(
     n_patient = n(),
     mean_critical_care = list(
-      Hmisc::smean.cl.boot(n_critical_care, conf.int = 0.95, B = 1000)
+      Hmisc::smean.cl.boot(n_critical_care, conf.int = 0.95, B = 10)
     )) %>%
   unnest_wider(mean_critical_care)
 
@@ -136,7 +136,7 @@ tbl_daily_outpatient = data_resource %>%
   summarise(
     n_patient = n(),
     mean_outpatient = list(
-      Hmisc::smean.cl.boot(n_outpatient, conf.int = 0.95, B = 1000)
+      Hmisc::smean.cl.boot(n_outpatient, conf.int = 0.95, B = 10)
     )) %>%
   unnest_wider(mean_outpatient)
 
@@ -163,7 +163,7 @@ tbl_daily_gp = data_resource %>%
   summarise(
     n_patient = n(),
     mean_gp = list(
-      Hmisc::smean.cl.boot(n_gp, conf.int = 0.95, B = 1000)
+      Hmisc::smean.cl.boot(n_gp, conf.int = 0.95, B = 10)
     )) %>%
   unnest_wider(mean_gp)
 
