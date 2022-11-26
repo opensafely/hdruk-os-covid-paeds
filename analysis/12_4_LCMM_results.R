@@ -16,9 +16,11 @@ library(finalfit)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 1
+  ng = 3
+  resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
+  resource_type = args[[2]]
 }
 
 # Load custom functions ----
@@ -32,24 +34,26 @@ count_round  = global_var$disclosure_count_round
 count_redact = global_var$disclosure_redact
 
 # Directories ----
-dir_lcmm_summary_tbl    = here::here("output", "lcmm", "summary_tbl")
-dir_lcmm_obs_trajectory = here::here("output", "lcmm", "obs_trajectory")
+dir_lcmm_summary_tbl     = here::here("output", "lcmm", resource_type, "summary_tbl")
+dir_lcmm_obs_trajectory  = here::here("output", "lcmm", resource_type, "obs_trajectory")
+dir_lcmm_pred_trajectory = here::here("output", "lcmm", resource_type, "pred_trajectory")
 
 ## Create new output directories ----
 dir.create(dir_lcmm_summary_tbl,    showWarnings = FALSE, recursive=TRUE)
 dir.create(dir_lcmm_obs_trajectory, showWarnings = FALSE, recursive=TRUE)
+dir.create(dir_lcmm_pred_trajectory, showWarnings = FALSE, recursive=TRUE)
 
 # Plot theme ----
 theme_set(theme_bw())
 
 # Load data ----
-data_resource_lcmm = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
-data_positives     = read_rds(here::here("output", "data", "data_positives.rds"))
-lcmm_model         = read_rds(here::here("output", "lcmm", "models", 
+data_resource_lcmm  = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
+data_positives_lcmm = read_rds(here::here("output", "data", "data_positives_lcmm.rds"))
+lcmm_model          = read_rds(here::here("output", "lcmm", resource_type, "models", 
                                          paste0("lcmm_model_", ng, ".rds")))
 
 # Join class to patient data ----
-data_positives = data_positives %>% 
+data_positives_lcmm = data_positives_lcmm %>% 
   left_join(
     lcmm_model$pprob %>% 
       as_tibble() %>% 
@@ -66,6 +70,9 @@ data_positives = data_positives %>%
 # Create patient summary table by class ----
 dependent_var = "class"
 explanatory_var = c(
+  
+  # Follow-up
+  "follow_up_days",
   
   # Demographics
   "age", "age_group", "sex", "ethnicity", "imd_Q5_2019", "region_2019",
@@ -85,11 +92,18 @@ explanatory_var = c(
   "metabolic", "transplant", "palliative_care",
   
   # Vaccination status
-  "vaccination_status"
+  "vaccination_status",
+  
+  # 2-weeks after postive test
+  "pims_ts",
+  "critical_care_2wks_flag", "critical_care_2wks", "critical_care_2wks_factor",
+  "beddays_2wks_flag", "beddays_2wks", "beddays_2wks_factor",
+  "outpatient_2wks_flag", "outpatient_2wks", "outpatient_2wks_factor", 
+  "gp_2wks_flag", "gp_2wks", "gp_2wks_factor"
 )
 
 ## Summary factorlist ----
-tbl_summary = data_positives %>% 
+tbl_summary = data_positives_lcmm %>% 
   summary_factorlist(
     dependent = dependent_var,
     explanatory = explanatory_var,
@@ -103,51 +117,117 @@ tbl_summary = data_positives %>%
 
 ## Save summary table ----
 write_csv(tbl_summary,
-          here::here("output", "lcmm", "summary_tbl",
+          here::here("output", "lcmm", resource_type, "summary_tbl",
                      paste0("tbl_summary_", ng, ".csv")))
 
 # Create observed trajectories by class ----
 ## Join class to resource data ----
 data_resource_lcmm = data_resource_lcmm %>% 
   left_join(
-    data_positives %>% 
+    data_positives_lcmm %>% 
       select(patient_id, class),
     by = "patient_id"
   )
 
 ## Calculate observed trajectories by class ----
 ## Bootstrapped 95% confidence intervals over 1000 realisations
-tbl_obs_trajectory = data_resource_lcmm %>%
+tbl_obs_trajectory = data_resource_lcmm %>% 
+  select(patient_id, indexed_month, class,
+         resource_use = all_of(paste0("n_", resource_type))) %>% 
   group_by(class, indexed_month) %>% 
   summarise(
     n_patient = n(),
-    hospital_use = list(Hmisc::smean.cl.boot(hospital_use,
+    resource_use = list(Hmisc::smean.cl.boot(resource_use,
                                              conf.int = 0.95,
                                              B = 1000))
   ) %>% 
-  unnest_wider(hospital_use) %>% 
+  unnest_wider(resource_use) %>% 
   ungroup()
 
 ## Save observed trajectory table ----
 write_csv(tbl_obs_trajectory,
-          here::here("output", "lcmm", "obs_trajectory",
+          here::here("output", "lcmm", resource_type, "obs_trajectory",
                      paste0("tbl_obs_trajectory_", ng, ".csv")))
 
 ## Plot observed trajectory ----
+y_label = case_when(
+  resource_type == "beddays" ~ "Bed-days per 30 days",
+  resource_type == "outpatient" ~ "Outpatient appointments per 30 days",
+  resource_type == "gp" ~ "Healthcare contact days per 30 days",
+  TRUE ~ "Error"
+)
+  
 plot_obs_trajectory = tbl_obs_trajectory %>%
   ggplot(aes(x = indexed_month, y = Mean, ymin = Lower, ymax = Upper,
              colour = class, fill = class)) +
   geom_line() + geom_point() +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
   labs(x = "Follow-up period (months)",
-       y = "Secondary care contact-days per 30 days",
+       y = y_label,
        fill = "Class", colour = "Class") +
   scale_x_continuous(breaks = seq(1, 12, 1)) +
   scale_y_continuous(limits = c(0, NA))
 
-ggsave(filename = here::here("output", "lcmm", "obs_trajectory",
+ggsave(filename = here::here("output", "lcmm", resource_type, "obs_trajectory",
                              paste0("plot_observed_trajectory_",
                                     lcmm_model$ng, ".jpeg")),
        plot = plot_obs_trajectory,
        height = 6, width = 6, units = "in")
+
+# Predicted trajectories ----
+## New time data ----
+data_time = data.frame(indexed_month  = seq(1, 12, length = 100))
+
+## Predict resource trajectories ----
+predict_resource = predictY(lcmm_model, data_time,
+                            var.time = "indexed_month", draws = T)
+
+## Table of predicted trajectories by class ----
+tbl_predicted_trajectory = predict_resource$pred %>% 
+  as_tibble() %>% 
+  bind_cols(predict_resource$times) %>% 
+  pivot_longer(-indexed_month) %>%
+  mutate(
+    class = str_extract(name, "\\d+$"),
+    class = if_else(is.na(class), "1", class),
+    name = case_when(
+      str_starts(name, "Ypred")        ~ "y",
+      str_starts(name, "lower.Ypred")  ~ "y_lower",
+      str_starts(name, "upper.Ypred")  ~ "y_upper"
+    )
+  ) %>%
+  pivot_wider(names_from = name)
+
+write_csv(tbl_predicted_trajectory,
+          here::here("output", "lcmm", resource_type,"pred_trajectory",
+                     paste0("tbl_predicted_trajectory_",
+                            lcmm_model$ng,
+                            ".csv")))
+
+# Plot predicted trajectory by class ----
+y_label_pred = case_when(
+  resource_type == "beddays" ~ "Predicted bed-days per 30 days",
+  resource_type == "outpatient" ~ "Predicted outpatient appointments per 30 days",
+  resource_type == "gp" ~ "Predicted healthcare contact days per 30 days",
+  TRUE ~ "Error"
+)
+
+plot_predicted_trajectory = tbl_predicted_trajectory %>% 
+  ggplot(aes(x = indexed_month, y = y,
+             ymin = y_lower, ymax = y_upper,
+             colour = class, fill = class)) +
+  geom_line() +
+  geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
+  labs(x = "Follow-up period (months)",
+       y = y_label_pred,
+       fill = "Class", colour = "Class") +
+  scale_x_continuous(breaks = seq(1, 12, 1)) +
+  scale_y_continuous(limits = c(0, NA))
+
+ggsave(filename = here::here("output", "lcmm", resource_type, "pred_trajectory",
+                             paste0("plot_predicted_trajectory_",
+                                    lcmm_model$ng, ".jpeg")),
+       plot = plot_predicted_trajectory,
+       height = 6, width = 6, units = "in")
+
 
