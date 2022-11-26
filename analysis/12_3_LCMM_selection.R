@@ -14,26 +14,29 @@ library(tidyverse)
 library(lcmm)
 library(splines2)
 
+# Command arguments to set number of clusters ----
+args = commandArgs(trailingOnly=TRUE)
+if(length(args) == 0){
+  resource_type = "beddays"
+} else{
+  resource_type = args[[1]]
+}
+
 # Directories ----
-dir_lcmm_models          = here::here("output", "lcmm", "models")
-dir_lcmm_selection       = here::here("output", "lcmm", "selection")
-dir_lcmm_pred_trajectory = here::here("output", "lcmm", "pred_trajectory")
+dir_lcmm_models          = here::here("output", "lcmm", resource_type, "models")
+dir_lcmm_selection       = here::here("output", "lcmm", resource_type, "selection")
 
 ## Create new output directories ----
-dir.create(dir_lcmm_selection,       showWarnings = FALSE, recursive=TRUE)
-dir.create(dir_lcmm_pred_trajectory, showWarnings = FALSE, recursive=TRUE)
+dir.create(dir_lcmm_selection, showWarnings = FALSE, recursive=TRUE)
 
 # Plot theme ----
 theme_set(theme_bw())
-
-# Load resource data ----
-data_resource_lcmm = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
 
 # Load saved LCMM models ----
 lcmm_models = list.files(dir_lcmm_models,
                          pattern = "lcmm_model_[0-9]+.rds") %>% 
   map(function(lcmm_file){
-    lcmm_model = read_rds(here::here("output", "lcmm", "models", lcmm_file))
+    lcmm_model = read_rds(here::here("output", "lcmm", resource_type, "models", lcmm_file))
   })
 
 # Model metrics ----
@@ -61,7 +64,8 @@ tbl_model_metrics = lcmm_models %>%
 
 ## Save model metrics ----
 write_csv(tbl_model_metrics,
-          here::here("output", "lcmm", "selection", "tbl_model_metrics.csv"))
+          here::here("output", "lcmm", resource_type, "selection",
+                     "tbl_model_metrics.csv"))
 
 ## Plot BIC by number of clusters ----
 plot_BIC = tbl_model_metrics %>% 
@@ -70,7 +74,7 @@ plot_BIC = tbl_model_metrics %>%
   labs(x = "Number of clusters", y = "BIC", shape = "Convergence status") +
   theme(legend.position = "bottom")
 
-ggsave(filename = here::here("output", "lcmm", "selection", "plot_BIC.jpeg"),
+ggsave(filename = here::here("output", "lcmm", resource_type, "selection", "plot_BIC.jpeg"),
        plot = plot_BIC,
        height = 6, width = 6, units = "in")
 
@@ -82,7 +86,7 @@ plot_loglik = tbl_model_metrics %>%
        shape = "Convergence status") +
   theme(legend.position = "bottom")
 
-ggsave(filename = here::here("output", "lcmm", "selection", "plot_loglik.jpeg"),
+ggsave(filename = here::here("output", "lcmm", resource_type, "selection", "plot_loglik.jpeg"),
        plot = plot_loglik,
        height = 6, width = 6, units = "in")
 
@@ -108,7 +112,7 @@ tbl_class_probability = lcmm_models %>%
 
 ## Save class porbabilities ----
 write_csv(tbl_class_probability,
-          here::here("output", "lcmm", "selection", "tbl_class_probability.csv"))
+          here::here("output", "lcmm", resource_type, "selection", "tbl_class_probability.csv"))
 
 ## Plot class probability by number of clusters ----
 plot_class_probability = tbl_class_probability %>%
@@ -122,6 +126,6 @@ plot_class_probability = tbl_class_probability %>%
   labs(x = "Number of clusters", fill = "Class",
        y = "Class membership probability (%)")
 
-ggsave(filename = here::here("output", "lcmm", "selection", "plot_class_probability.jpeg"),
+ggsave(filename = here::here("output", "lcmm", resource_type, "selection", "plot_class_probability.jpeg"),
        plot = plot_class_probability,
        height = 6, width = 6, units = "in")
