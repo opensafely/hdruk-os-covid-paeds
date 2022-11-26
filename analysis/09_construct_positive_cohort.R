@@ -191,7 +191,7 @@ data_positives = data_positives %>%
   left_join(
     data_admissions_2wks %>%
       select(patient_id, admission_date, discharge_date,
-             covid_test_date_pos_tp, follow_up_start_date) %>%
+             covid_test_date_pos_tp, follow_up_start_date) %>% 
       rowwise() %>% 
       mutate(date = list(seq(admission_date, discharge_date, by = "day"))) %>%
       ungroup() %>% 
@@ -347,16 +347,22 @@ data_admissions_fup = data_admissions %>%
 data_resource = data_resource %>% 
   left_join(
     data_admissions_fup %>%
-      select(patient_id, admission_date, discharge_date, censor_date) %>%
+      select(patient_id, admission_date, discharge_date) %>%
       rowwise() %>% 
       mutate(date = list(seq(admission_date, discharge_date, by = "day"))) %>% 
       unnest(date) %>%
+      ungroup() %>%
+      mutate(
+        n_beddays = case_when(
+          date == admission_date ~ 0.5,
+          date == discharge_date ~ 0.5,
+          TRUE ~ 1
+        )) %>%
+      group_by(patient_id, date) %>% 
+      summarise(
+        n_beddays = min(sum(n_beddays), 1)
+      ) %>% 
       ungroup() %>% 
-      mutate(n_beddays = case_when(
-        date == admission_date ~ 0.5,
-        date == discharge_date ~ 0.5,
-        TRUE ~ 1
-      )) %>% 
       select(patient_id, date, n_beddays),
     by = c("patient_id", "date")
   )
@@ -369,7 +375,7 @@ data_resource = data_resource %>%
       select(patient_id, index, admission_date, discharge_date, censor_date, critical_care_days) %>%
       rowwise() %>% 
       mutate(date = list(seq(admission_date,
-                             min(admission_date + days((critical_care_days)), discharge_date),
+                             min(admission_date + days(critical_care_days), discharge_date),
                              by = "day"))) %>% 
       unnest(date) %>%
       ungroup() %>% 
@@ -379,7 +385,11 @@ data_resource = data_resource %>%
         row_number() == n() ~ 0.5,
         TRUE ~ 1
       )) %>% 
-      ungroup() %>% 
+      ungroup() %>%
+      group_by(patient_id, date) %>% 
+      summarise(
+        n_critical_care = min(sum(n_critical_care), 1)
+      ) %>% 
       select(patient_id, date, n_critical_care),
     by = c("patient_id", "date")
   )
@@ -396,7 +406,12 @@ data_resource = data_resource %>%
       filter(outpatient_date >= follow_up_start_date,
              outpatient_date <= censor_date) %>%
       rename(date = outpatient_date, n_outpatient = outpatient_count) %>% 
-      select(patient_id, date, n_outpatient),
+      select(patient_id, date, n_outpatient) %>% 
+      group_by(patient_id, date) %>% 
+      summarise(
+        n_outpatient = sum(n_outpatient)
+      ) %>% 
+      ungroup(),
     by = c("patient_id", "date")
   )
 
