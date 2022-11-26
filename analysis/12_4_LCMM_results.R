@@ -12,6 +12,8 @@
 # Load packages ----
 library(tidyverse)
 library(finalfit)
+library(lcmm)
+library(splines2)
 
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
