@@ -3767,50 +3767,52 @@ actions:
         plot_resource_use: plot_resource_use_cluster_8.jpeg
 
   lcmm_data_prep:
-    run: r:latest analysis/12_1_prep_resource.R
+    run: r:latest analysis/12_1_LCMM_data_prep.R
     needs: [generate_positive_cohort]
     outputs:
       highly_sensitive:
         lcmm_resource_data: output/data/data_resource_lcmm.rds
+        lcmm_patient_data: output/data/data_positives_lcmm.rds
 
-  lcmm_run_model_1:
-    run: r:latest analysis/12_2_LCMM_model.R 1
+  lcmm_run_model_1_beddays:
+    run: r:latest analysis/12_2_LCMM_model.R 1 beddays
     needs: [lcmm_data_prep]
     outputs:
       highly_sensitive:
-        lcmm_model: output/lcmm/models/lcmm_model_1.rds
+        lcmm_model: output/lcmm/models/beddays/lcmm_model_1.rds
 
-  lcmm_run_model_2:
-    run: r:latest analysis/12_2_LCMM_model.R 2
-    needs: [lcmm_data_prep, lcmm_run_model_1]
+  lcmm_run_model_2_beddays:
+    run: r:latest analysis/12_2_LCMM_model.R 2 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_1_beddays]
     outputs:
       highly_sensitive:
-        lcmm_model: output/lcmm/models/lcmm_model_2.rds
+        lcmm_model: output/lcmm/models/beddays/lcmm_model_2.rds
 
-  lcmm_run_model_3:
-    run: r:latest analysis/12_2_LCMM_model.R 3
-    needs: [lcmm_data_prep, lcmm_run_model_1]
+  lcmm_run_model_3_beddays:
+    run: r:latest analysis/12_2_LCMM_model.R 3 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_1_beddays]
     outputs:
       highly_sensitive:
-        lcmm_model: output/lcmm/models/lcmm_model_3.rds
+        lcmm_model: output/lcmm/models/beddays/lcmm_model_3.rds
 
-  lcmm_run_model_4:
-    run: r:latest analysis/12_2_LCMM_model.R 4
-    needs: [lcmm_data_prep, lcmm_run_model_1]
+  lcmm_run_model_4_beddays:
+    run: r:latest analysis/12_2_LCMM_model.R 4 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_1_beddays]
     outputs:
       highly_sensitive:
-        lcmm_model: output/lcmm/models/lcmm_model_4.rds
+        lcmm_model: output/lcmm/models/beddays/lcmm_model_4.rds
 
-  lcmm_run_model_5:
-    run: r:latest analysis/12_2_LCMM_model.R 5
-    needs: [lcmm_data_prep, lcmm_run_model_1]
+  lcmm_run_model_5_beddays:
+    run: r:latest analysis/12_2_LCMM_model.R 5 beddays
+    needs: [lcmm_data_prep, lcmm_run_model_1_beddays]
     outputs:
       highly_sensitive:
-        lcmm_model: output/lcmm/models/lcmm_model_5.rds
+        lcmm_model: output/lcmm/models/beddays/lcmm_model_5.rds
 
   lcmm_model_selection:
     run: r:latest analysis/12_3_LCMM_selection.R
-    needs: [lcmm_data_prep, lcmm_run_model_1, lcmm_run_model_2, lcmm_run_model_3, lcmm_run_model_4, lcmm_run_model_5]
+    needs: [lcmm_data_prep, lcmm_run_model_1_beddays, lcmm_run_model_2_beddays, lcmm_run_model_3_beddays,
+            lcmm_run_model_4_beddays, lcmm_run_model_5_beddays]
     outputs:
       moderately_sensitive:
         table_model_metrics: output/lcmm/selection/tbl_model_metrics.csv
@@ -3831,7 +3833,7 @@ actions:
 
   lcmm_results_1:
     run: r:latest analysis/12_4_LCMM_results.R 1
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_1]
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_1_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/summary_tbl/tbl_summary_1.csv
@@ -3840,7 +3842,7 @@ actions:
 
   lcmm_results_2:
     run: r:latest analysis/12_4_LCMM_results.R 2
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_2]
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_2_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/summary_tbl/tbl_summary_2.csv
@@ -3849,7 +3851,7 @@ actions:
 
   lcmm_results_3:
     run: r:latest analysis/12_4_LCMM_results.R 3
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_3]
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_3_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/summary_tbl/tbl_summary_3.csv
@@ -3858,7 +3860,7 @@ actions:
 
   lcmm_results_4:
     run: r:latest analysis/12_4_LCMM_results.R 4
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_4]
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_4_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/summary_tbl/tbl_summary_4.csv
@@ -3867,7 +3869,7 @@ actions:
 
   lcmm_results_5:
     run: r:latest analysis/12_4_LCMM_results.R 5
-    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_5]
+    needs: [generate_positive_cohort, lcmm_data_prep, lcmm_run_model_5_beddays]
     outputs:
       moderately_sensitive:
         table_summary: output/lcmm/summary_tbl/tbl_summary_5.csv
