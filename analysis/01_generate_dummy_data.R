@@ -40,11 +40,11 @@ admission_method = c("11", "12", "13", "21", "22", "23", "24", "25", "2A",
                      "2B", "2C", "2D", "28", "31", "32", "82", "83", "81")
 primary_diagnosis = c(
   paste0(
-    sample(LETTERS, 1000, replace = TRUE),
-    sample(0:9, 1000, replace = TRUE),
-    sample(0:9, 1000, replace = TRUE),
-    sample(c(0:9, "", "", "", "", "", "", "", "", "", "", "", "", ""), 1000, replace = TRUE)
-  ))
+    sample(LETTERS, 100, replace = TRUE),
+    sample(0:9, 100, replace = TRUE),
+    sample(0:9, 100, replace = TRUE),
+    sample(c(0:9, "", "", "", "", "", "", "", "", "", "", "", "", ""), 100, replace = TRUE)
+  ), "M303", "R65", "U075")
 
 treatment_function = c("100", "101", "102", "110", "242", "260", "280", "321",
                        "180", "190", "192", "300", "301", "302", "361", "711")
