@@ -13,7 +13,7 @@ library(tidyverse)
 
 # Set seed
 set.seed(20221126)
-n_sample = 2000
+n_sample = 5000
 
 # Load resource data ----
 data_positives = read_rds(here::here("output", "data", "data_positives.rds"))
