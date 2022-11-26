@@ -3625,10 +3625,27 @@ actions:
     run: r:latest analysis/09_construct_positive_cohort.R
     needs: [process_patient_data, process_admissions_data, process_outpatient_data, process_gp_data]
     outputs:
-      highly_sensitive:
+      moderately_sensitive:
         cohort_flowchart: output/descriptives/positive_cohort/tbl_flowchart.csv
+      highly_sensitive:
         resource_data: output/data/data_resource.rds
         patient_data: output/data/data_positives.rds
+
+  summarise_positive_cohort:
+    run: r:latest analysis/09_summarise_positive_cohort.R
+    needs: [generate_positive_cohort]
+    outputs:
+      moderately_sensitive:
+        tbl_cohort_summary: output/descriptives/positive_cohort/tbl_cohort_summary.csv
+        tbl_daily_beddays: output/descriptives/positive_cohort/tbl_daily_beddays.csv
+        tbl_daily_critical_care: output/descriptives/positive_cohort/tbl_daily_critical_care.csv
+        tbl_daily_outpatient: output/descriptives/positive_cohort/tbl_daily_outpatient.csv
+        tbl_daily_gp: output/descriptives/positive_cohort/tbl_daily_gp.csv
+        plot_daily_beddays: output/descriptives/positive_cohort/plot_daily_beddays.jpeg
+        plot_daily_critical_care: output/descriptives/positive_cohort/plot_daily_critical_care.jpeg
+        plot_daily_outpatient: output/descriptives/positive_cohort/plot_daily_outpatient.jpeg
+        plot_daily_gp: output/descriptives/positive_cohort/plot_daily_gp.jpeg
+
 
   mcc_data_prep:
     run: r:latest analysis/10_1_MCC_prep_resource.R
