@@ -14,22 +14,37 @@ library(lcmm)
 library(splines2)
 library(tictoc)
 
-# Output directories ----
-dir_lcmm_models = here::here("output", "lcmm", "models")
-
-# Create output directories ----
-dir.create(dir_lcmm_models, showWarnings = FALSE, recursive=TRUE)
-
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
   ng = 1
+  resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
+  resource_type = args[[2]]
 }
+
+# Create output directories  ----
+dir_lcmm_models = here::here("output", "lcmm", "models", resource_type)
+dir.create(dir_lcmm_models, showWarnings = FALSE, recursive=TRUE)
 
 # Load resource data ----
 data_resource_lcmm = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
+
+data_resource_lcmm = data_resource_lcmm %>% 
+  select(patient_id, indexed_month, resource = all_of(paste0("n_", resource_type)))
+
+# Only include patients with at least 1 episode of healthcare use ----
+## Identify patient ids ----
+patient_id_non_zero = data_resource_lcmm %>% 
+  group_by(patient_id) %>% 
+  summarise(total = sum(resource)) %>% 
+  filter(total > 0) %>% 
+  pull(patient_id)
+
+## Filter for patinets with 1+ resource use ----
+data_resource_lcmm = data_resource_lcmm %>% 
+  filter(patient_id %in% patient_id_non_zero)
 
 # Convert to data.frame ----
 data_resource_lcmm = as.data.frame(data_resource_lcmm)
@@ -58,12 +73,13 @@ if (ng == 1){
                     data = data_resource_lcmm,
                     verbose = FALSE,
                     link = "7-equi-splines",
-                    nproc = 4)
+                    nproc = 1)
   
 } else{
   
   # Load lcmm model with ng = 1
-  lcmm_model_1 = read_rds(here::here("output", "lcmm", "models", "lcmm_model_1.rds"))
+  lcmm_model_1 = read_rds(
+    here::here("output", "lcmm", "models", resource_type, "lcmm_model_1.rds"))
   
   # Run hlme ----
   # lcmm_model = hlme(fixed = hospital_use ~ bSpline(indexed_month, degree = 3, knots = 7),
@@ -88,12 +104,12 @@ if (ng == 1){
                     maxiter = max_iter,
                     verbose = FALSE,
                     link = "7-equi-splines",
-                    nproc = 4)
+                    nproc = 1)
   
 }
 
 # Save lcmm_model ----
 write_rds(x = lcmm_model,
-          here::here("output", "lcmm", "models",
+          here::here("output", "lcmm", "models", resource_type,
                      paste0("lcmm_model_", ng, ".rds")))
 
