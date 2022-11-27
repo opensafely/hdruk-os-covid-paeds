@@ -21,13 +21,14 @@ data_resource_lcmm = data_resource %>%
   filter(patient_id %in% data_positives_lcmm$patient_id)
 
 # Group days into 12 x 30-day periods from follow-up start date ----
-data_resource_lcmm = data_resource_lcmm %>% 
-  mutate(indexed_month = ceiling(date_indexed/30)) %>% 
-  filter(indexed_month < 13)
+data_resource_lcmm = data_resource_lcmm %>%
+  mutate(date_followup = date_indexed - 14,
+          followup_month = ceiling(date_followup/30)) %>% 
+  filter(followup_month > 0, followup_month < 13)
 
 # Aggregate by period and filter out incomplete periods ----
 data_resource_lcmm = data_resource_lcmm %>% 
-  group_by(patient_id, indexed_month) %>% 
+  group_by(patient_id, followup_month) %>% 
   summarise(n_beddays = sum(n_beddays),
             n_beddays = sum(n_critical_care),
             n_outpatient = sum(n_outpatient),
