@@ -119,7 +119,6 @@ write_csv(tbl_flowchart,
           here::here("output", "descriptives", "positive_cohort",
                      "tbl_flowchart.csv"))
 
-
 # Create inclusion flag and append to patient data ----
 data_patient = data_patient %>% 
   left_join(data_inclusion %>%
@@ -143,31 +142,200 @@ data_gp = read_rds(here::here("output", "data", "data_gp.rds"))  %>%
   filter(patient_id %in% data_positives$patient_id)
 
 # Filter out specialty specific/non-contact code types ----
-## Outpatient ----
 data_outpatient = data_outpatient %>% 
   filter(is.na(specialty))
 
-## GP ----
 data_gp = data_gp %>%
   filter(str_starts(code_type, "KM_") |
            str_starts(code_type, "mapped_1_") |
            str_starts(code_type, "mapped_2"))
 
-# Calculate resource use in the first 2 weeks post-positive test ----
-## Admissions within 2 weeks of positive test -----
-data_admissions_2wks = data_admissions %>% 
+# Resource dataset ----
+## Create template spanning 1 year prior to positive test to censor date ----
+data_resource = data_positives %>% 
+  group_by(patient_id) %>% 
+  summarise(
+    date = seq(covid_test_date_pos_tp - days(365), censor_date, "day"),
+    date_indexed = (date - covid_test_date_pos_tp) %>% 
+      as.numeric() %>% 
+      ff_label("Day relative to index positive test date")
+  ) %>% 
+  ungroup()
+
+## Bed-days ---- 
+data_resource = data_resource %>% 
   left_join(
-    data_positives %>% 
-      select(patient_id, covid_test_date_pos_tp, follow_up_start_date),
+    data_admissions %>%
+      select(patient_id, admission_date, discharge_date) %>% 
+      rowwise() %>% 
+      mutate(date = list(seq(admission_date, discharge_date, by = "day"))) %>% 
+      unnest(date) %>%
+      ungroup() %>%
+      mutate(
+        n_beddays = case_when(
+          date == admission_date ~ 0.5,
+          date == discharge_date ~ 0.5,
+          TRUE ~ 1)
+      ) %>% 
+      group_by(patient_id, date) %>% 
+      summarise(n_beddays = min(sum(n_beddays), 1)) %>% 
+      ungroup(),
+    by = c("patient_id", "date")
+  ) %>% 
+  replace_na(list(n_beddays = 0))
+
+## Critical-care ----
+
+data_resource = data_resource %>% 
+  left_join(
+    data_admissions %>% 
+      filter(critical_care_days > 0) %>% 
+      select(patient_id, index, admission_date, discharge_date, critical_care_days) %>%
+      rowwise() %>% 
+      mutate(date = list(seq(admission_date,
+                             min(admission_date + days(critical_care_days), discharge_date),
+                             by = "day"))) %>% 
+      unnest(date) %>%
+      group_by(patient_id, index) %>% 
+      mutate(
+        critical_care_days = case_when(
+          row_number() == 1 ~ 0.5,
+          row_number() == n() ~ 0.5,
+          TRUE ~ 1
+        )
+      ) %>% 
+      group_by(patient_id, date) %>% 
+      summarise(
+        n_critical_care = min(sum(critical_care_days), 1)
+      ),
+    by = c("patient_id", "date")
+  ) %>% 
+  replace_na(list(n_critical_care = 0))
+
+## Outpatient ----
+data_resource = data_resource %>% 
+  left_join(
+    data_outpatient %>%
+      group_by(patient_id, outpatient_date) %>% 
+      summarise(
+        n_outpatient = sum(outpatient_count)
+      ) %>% 
+      rename(date = outpatient_date),
+    by = c("patient_id", "date")
+  ) %>% 
+  replace_na(list(n_outpatient = 0))
+
+## GP ----
+data_resource = data_resource %>% 
+  left_join(
+    data_gp %>%
+      group_by(patient_id, gp_date) %>% 
+      summarise(
+        n_gp = 1
+      ) %>% 
+      rename(date = gp_date),
+    by = c("patient_id", "date")
+  ) %>% 
+  replace_na(list(n_gp = 0))
+
+
+
+# Calculate resource related covariates ----
+## Healthcare use 1-year prior to positive test ----
+data_positives = data_positives %>% 
+  left_join(
+    data_resource %>% 
+      filter(date_indexed < 0) %>% 
+      group_by(patient_id) %>% 
+      summarise(
+        n_beddays_pre_covid_1yr = sum(n_beddays),
+        n_outpatient_pre_covid_1yr = sum(n_outpatient),
+        n_gp_pre_covid_1yr = sum(n_gp)
+      ),
     by = "patient_id"
   ) %>% 
-  filter(admission_date > covid_test_date_pos_tp,
-         admission_date < follow_up_start_date)
+  mutate(
+    n_beddays_pre_covid_1yr = n_beddays_pre_covid_1yr %>% 
+      na_if(0) %>% 
+      ff_label("Bed-days in year prior to positive test"),
+    n_outpatient_pre_covid_1yr = n_outpatient_pre_covid_1yr %>% 
+      na_if(0) %>% 
+      ff_label("Outpatient appointments (in year prior to positive test)"),
+    n_gp_pre_covid_1yr = n_gp_pre_covid_1yr %>% 
+      na_if(0) %>% 
+      ff_label("Contact days (in year prior to positive test)"),
+    ntile_beddays_pre_covid_1yr = n_beddays_pre_covid_1yr %>% 
+      ntile(3) %>% 
+      factor() %>%
+      fct_explicit_na("None") %>% 
+      fct_relevel("None") %>% 
+      fct_recode("1 (lowest)" = "1", "3 (highest)" = "3") %>% 
+      ff_label("Prior inpatient bed-days (tertile)"),
+    ntile_outpatient_pre_covid_1yr = n_outpatient_pre_covid_1yr %>% 
+      ntile(3) %>% 
+      factor() %>%
+      fct_explicit_na("None") %>% 
+      fct_relevel("None") %>% 
+      fct_recode("1 (lowest)" = "1", "3 (highest)" = "3") %>% 
+      ff_label("Prior outpatient appointments (tertile)"),
+    ntile_gp_pre_covid_1yr = n_gp_pre_covid_1yr %>% 
+      ntile(3) %>% 
+      factor() %>%
+      fct_explicit_na("None") %>% 
+      fct_relevel("None") %>% 
+      fct_recode("1 (lowest)" = "1", "3 (highest)" = "3") %>% 
+      ff_label("Prior healthcare episodes (tertile)"),
+  )
+
+## Healthcare use 2 weeks following positive test -----
+data_positives = data_positives %>% 
+  left_join(
+    data_resource %>% 
+      filter(date_indexed > 0, date_indexed < 15) %>% 
+      group_by(patient_id) %>% 
+      summarise(
+        n_critical_care_2wks_post_covid = sum(n_critical_care),
+        n_beddays_2wks_post_covid = sum(n_beddays),
+        n_outpatient_2wks_post_covid = sum(n_outpatient),
+        n_gp_2wks_post_covid = sum(n_gp)
+      ),
+    by = "patient_id"
+  ) %>% 
+  mutate(
+    n_critical_care_2wks_post_covid = n_critical_care_2wks_post_covid %>% 
+      na_if(0) %>% 
+      ff_label("Critical care days (2 weeks after positive test)"),
+    n_beddays_2wks_post_covid = n_beddays_2wks_post_covid %>% 
+      na_if(0) %>% 
+      ff_label("Bed-days (2 weeks after positive test)"),
+    n_outpatient_2wks_post_covid = n_outpatient_2wks_post_covid %>% 
+      na_if(0) %>% 
+      ff_label("Outpatient appointments (2 weeks after positive test)"),
+    n_gp_2wks_post_covid = n_gp_2wks_post_covid %>% 
+      na_if(0) %>% 
+      ff_label("Contact days (2 weeks after positive test)"),
+    illness_severity_2wks = case_when(
+      !is.na(n_critical_care_2wks_post_covid) ~ "Critical care",
+      !is.na(n_beddays_2wks_post_covid) ~ "Inpatient",
+      !is.na(n_outpatient_2wks_post_covid) ~ "Outpatient",
+      !is.na(n_gp_2wks_post_covid) ~ "Healthcare episode",
+      TRUE ~ "No contact"
+    ) %>%
+      factor() %>% 
+      fct_relevel("No contact", "Healthcare episode",
+                  "Outpatient", "Inpatient", "Critical care") %>% 
+      ff_label("Illness severity within 2 weeks")
+  )
 
 ## PIMS-TS status ----
 data_positives = data_positives %>% 
   left_join(
-    data_admissions_2wks %>%
+    data_admissions %>% 
+      left_join(data_positives %>% 
+                  select(patient_id, covid_test_date_pos_tp),
+                by = "patient_id") %>% 
+      filter(admission_date > covid_test_date_pos_tp,
+             admission_date <= covid_test_date_pos_tp + days(14)) %>%
       filter(
         (str_sub(primary_diagnosis, 1, 4) == "M303" &
            admission_date < ymd("2020-11-01")) |
@@ -185,260 +353,6 @@ data_positives = data_positives %>%
            factor() %>% 
            ff_label("PIMS-TS")
   )
-
-## Bed-days 2 weeks post-postivie test ----
-data_positives = data_positives %>% 
-  left_join(
-    data_admissions_2wks %>%
-      select(patient_id, admission_date, discharge_date,
-             covid_test_date_pos_tp, follow_up_start_date) %>% 
-      rowwise() %>% 
-      mutate(date = list(seq(admission_date, discharge_date, by = "day"))) %>%
-      ungroup() %>% 
-      unnest(date) %>% 
-      filter(date > covid_test_date_pos_tp, 
-             date < follow_up_start_date) %>% 
-      mutate(
-        beddays = case_when(
-          date == admission_date ~ 0.5,
-          date == discharge_date ~ 0.5,
-          TRUE ~ 1)
-      ) %>% 
-      group_by(patient_id) %>% 
-      summarise(
-        beddays_2wks = sum(beddays)
-      ),
-    by = "patient_id"
-  ) %>% 
-  mutate(
-    beddays_2wks = beddays_2wks %>% 
-      ff_label("Bed-days within 2 weeks of index positive test"),
-    beddays_2wks_flag = if_else(is.na(beddays_2wks), "No", "Yes") %>% 
-      factor() %>% 
-      ff_label("Hospitalisation within 2 weeks of positive test"),
-    beddays_2wks_factor = case_when(
-      is.na(beddays_2wks) ~ "None",
-      beddays_2wks == 0.5 ~ "0.5",
-      beddays_2wks < 2    ~ "1-1.5",
-      beddays_2wks >= 2   ~ "2+"
-    ) %>% 
-      factor() %>% 
-      fct_relevel("None") %>% 
-      ff_label("Bed-days within 2 weeks of positive test (categorical)")
-  )
-
-## Critical care days 2 weeks post-positive test -----
-data_positives = data_positives %>% 
-  left_join(
-    data_admissions_2wks %>%
-      group_by(patient_id) %>%
-      summarise(critical_care_2wks = min(sum(critical_care_days), 14)),
-    by = "patient_id"
-  ) %>% 
-  mutate(
-    critical_care_2wks = if_else(critical_care_2wks == 0,
-                                 NA_real_, critical_care_2wks) %>% 
-      ff_label("Critical care days within 2 weeks of positive test"),
-    critical_care_2wks_flag = if_else(is.na(critical_care_2wks), "No", "Yes") %>% 
-      factor() %>% 
-      ff_label("Critical care within 2 weeks of positive test"),
-    critical_care_2wks_factor = case_when(
-      is.na(critical_care_2wks) ~ "None",
-      critical_care_2wks < 1    ~ "Under 1",
-      critical_care_2wks < 2    ~ "1",
-      critical_care_2wks >= 2   ~ "2+"
-    ) %>% 
-      factor() %>% 
-      fct_relevel("None") %>% 
-      ff_label("Critical care days within 2 weeks of positive test (categorical)")
-  )
-
-## Number of outpatient appointments 2 weeks post-positive test ----
-data_outpatient_2wks = data_outpatient %>% 
-  left_join(
-    data_positives %>% 
-      select(patient_id, covid_test_date_pos_tp, follow_up_start_date),
-    by = "patient_id"
-  ) %>% 
-  filter(outpatient_date > covid_test_date_pos_tp,
-         outpatient_date < follow_up_start_date)
-
-# Count outpatient 
-data_positives = data_positives %>% 
-  left_join(
-    data_outpatient_2wks %>%
-      group_by(patient_id) %>%
-      summarise(outpatient_2wks = sum(outpatient_count)),
-    by = "patient_id"
-  ) %>% 
-  mutate(
-    outpatient_2wks = outpatient_2wks %>% 
-      ff_label("Outpatient appointments within 2 weeks of positive test"),
-    outpatient_2wks_flag = if_else(is.na(outpatient_2wks), "No", "Yes") %>% 
-      factor() %>% 
-      ff_label("Outpatient contact within 2 weeks of positive test"),
-    outpatient_2wks_factor = case_when(
-      is.na(outpatient_2wks) ~ "None",
-      outpatient_2wks == 1   ~ "1",
-      outpatient_2wks >=2    ~ "2+"
-    ) %>% 
-      factor() %>% 
-      fct_relevel("None") %>% 
-      ff_label("Outpatient appointments within 2 weeks of positive test (categorical)")
-  )
-
-## Number of contact-days 2 weeks post-positive test ----
-data_gp_2wks = data_gp %>% 
-  left_join(
-    data_positives %>% 
-      select(patient_id, covid_test_date_pos_tp, follow_up_start_date),
-    by = "patient_id"
-  ) %>% 
-  filter(gp_date > covid_test_date_pos_tp,
-         gp_date < follow_up_start_date)
-
-data_positives = data_positives %>% 
-  left_join(
-    data_gp_2wks %>%
-      group_by(patient_id) %>%
-      summarise(gp_2wks = n_distinct(gp_date)),
-    by = "patient_id"
-  ) %>% 
-  mutate(
-    gp_2wks = gp_2wks %>% 
-      ff_label("Healthcare contact-days within 2 weeks of positive test"),
-    gp_2wks_flag = if_else(is.na(gp_2wks), "No", "Yes") %>% 
-      factor() %>% 
-      ff_label("Healthcare contact within 2 weeks of positive test"),
-    gp_2wks_factor = case_when(
-      is.na(gp_2wks) ~ "None",
-      gp_2wks == 1   ~ "1",
-      gp_2wks >=2    ~ "2+"
-    ) %>% 
-      factor() %>% 
-      fct_relevel("None") %>% 
-      ff_label("Healthcare contact within 2 weeks of positive test (categorical))")
-  )
-
-
-# Follow-up period resource dataset ----
-## Create template ----
-data_resource = data_positives %>% 
-  group_by(patient_id) %>% 
-  summarise(
-    date = seq(follow_up_start_date, censor_date, "day"),
-    date_indexed = (date - follow_up_start_date) %>% 
-      as.numeric() + 1
-  ) %>% 
-  ungroup()
-
-## Admissions -----
-### Filter for dates during follow-up period (starts 14 days after test date) ----
-data_admissions_fup = data_admissions %>% 
-  left_join(
-    data_positives %>% 
-      select(patient_id, follow_up_start_date, censor_date),
-    by = "patient_id"
-  ) %>% 
-  filter(discharge_date >= follow_up_start_date,
-         admission_date <= censor_date)
-
-### Bed-days ----
-data_resource = data_resource %>% 
-  left_join(
-    data_admissions_fup %>%
-      select(patient_id, admission_date, discharge_date) %>%
-      rowwise() %>% 
-      mutate(date = list(seq(admission_date, discharge_date, by = "day"))) %>% 
-      unnest(date) %>%
-      ungroup() %>%
-      mutate(
-        n_beddays = case_when(
-          date == admission_date ~ 0.5,
-          date == discharge_date ~ 0.5,
-          TRUE ~ 1
-        )) %>%
-      group_by(patient_id, date) %>% 
-      summarise(
-        n_beddays = min(sum(n_beddays), 1)
-      ) %>% 
-      ungroup() %>% 
-      select(patient_id, date, n_beddays),
-    by = c("patient_id", "date")
-  )
-
-### Critical-care ----
-data_resource = data_resource %>% 
-  left_join(
-    data_admissions_fup %>%
-      filter(critical_care_days > 0) %>% 
-      select(patient_id, index, admission_date, discharge_date, censor_date, critical_care_days) %>%
-      rowwise() %>% 
-      mutate(date = list(seq(admission_date,
-                             min(admission_date + days(critical_care_days), discharge_date),
-                             by = "day"))) %>% 
-      unnest(date) %>%
-      ungroup() %>% 
-      group_by(patient_id, index) %>% 
-      mutate(n_critical_care = case_when(
-        row_number() == 1 ~ 0.5,
-        row_number() == n() ~ 0.5,
-        TRUE ~ 1
-      )) %>% 
-      ungroup() %>%
-      group_by(patient_id, date) %>% 
-      summarise(
-        n_critical_care = min(sum(n_critical_care), 1)
-      ) %>% 
-      select(patient_id, date, n_critical_care),
-    by = c("patient_id", "date")
-  )
-
-## Outpatient ----
-data_resource = data_resource %>% 
-  left_join(
-    data_outpatient %>% 
-      left_join(
-        data_positives %>% 
-          select(patient_id, follow_up_start_date, censor_date),
-        by = "patient_id"
-      ) %>% 
-      filter(outpatient_date >= follow_up_start_date,
-             outpatient_date <= censor_date) %>%
-      rename(date = outpatient_date, n_outpatient = outpatient_count) %>% 
-      select(patient_id, date, n_outpatient) %>% 
-      group_by(patient_id, date) %>% 
-      summarise(
-        n_outpatient = sum(n_outpatient)
-      ) %>% 
-      ungroup(),
-    by = c("patient_id", "date")
-  )
-
-## GP ----
-data_resource = data_resource %>% 
-  left_join(
-    data_gp %>% 
-      left_join(
-        data_positives %>% 
-          select(patient_id, follow_up_start_date, censor_date),
-        by = "patient_id"
-      ) %>% 
-      filter(gp_date >= follow_up_start_date,
-             gp_date <= censor_date) %>%
-      distinct(patient_id, gp_date, .keep_all = TRUE) %>% 
-      mutate(n_gp = 1) %>% 
-      select(patient_id, date = gp_date, n_gp),
-    by = c("patient_id", "date")
-  )
-
-# Fix N/A values ----
-data_resource = data_resource %>% 
-  replace_na(
-    list(n_beddays = 0,
-         n_critical_care = 0,
-         n_outpatient = 0,
-         n_gp = 0))
 
 # Save resource data ----
 write_rds(data_resource,
