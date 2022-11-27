@@ -48,12 +48,15 @@ explanatory_var = c(
   # Vaccination status
   "vaccination_status",
   
-  # 2-weeks after postive test
-  "pims_ts",
-  "critical_care_2wks_flag", "critical_care_2wks", "critical_care_2wks_factor",
-  "beddays_2wks_flag", "beddays_2wks", "beddays_2wks_factor",
-  "outpatient_2wks_flag", "outpatient_2wks", "outpatient_2wks_factor", 
-  "gp_2wks_flag", "gp_2wks", "gp_2wks_factor"
+  # Illness severity 2 weeks after positive test
+  "illness_severity_2wks", "pims_ts", 
+  "n_gp_2wks_post_covid", "n_outpatient_2wks_post_covid",
+  "n_beddays_2wks_post_covid", "n_critical_care_2wks_post_covid",
+  
+  # Previous healthcare use
+  "ntile_gp_pre_covid_1yr", "n_gp_pre_covid_1yr",
+  "ntile_outpatient_pre_covid_1yr", "n_outpatient_pre_covid_1yr",
+  "ntile_beddays_pre_covid_1yr", "n_beddays_pre_covid_1yr"
 )
 
 ## Summary factorlist ----
@@ -95,7 +98,7 @@ plot_daily_beddays = tbl_daily_beddays %>%
   ggplot(aes(date_indexed, y = Mean, ymin = Lower, ymax = Upper)) +
   geom_line() +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
-  labs(x = "Follow-up day", y = "Bed-days")
+  labs(x = "Days from indexed positive test date", y = "Bed-days")
 
 ggsave(filename = here::here("output", "descriptives", "positive_cohort",
                              "plot_daily_beddays.jpeg"),
@@ -122,7 +125,7 @@ plot_daily_critical_care = tbl_daily_critical_care %>%
   ggplot(aes(date_indexed, y = Mean, ymin = Lower, ymax = Upper)) +
   geom_line() +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
-  labs(x = "Follow-up day", y = "Critical care")
+  labs(x = "Days from indexed positive test date", y = "Critical care")
 
 ggsave(filename = here::here("output", "descriptives", "positive_cohort",
                              "plot_daily_critical_care.jpeg"),
@@ -149,7 +152,7 @@ plot_daily_outpatient = tbl_daily_outpatient %>%
   ggplot(aes(date_indexed, y = Mean, ymin = Lower, ymax = Upper)) +
   geom_line() +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
-  labs(x = "Follow-up day", y = "Outpatient appointments")
+  labs(x = "Days from indexed positive test date", y = "Outpatient appointments")
 
 ggsave(filename = here::here("output", "descriptives", "positive_cohort",
                              "plot_daily_outpatient.jpeg"),
@@ -176,7 +179,7 @@ plot_daily_gp = tbl_daily_gp %>%
   ggplot(aes(date_indexed, y = Mean, ymin = Lower, ymax = Upper)) +
   geom_line() +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
-  labs(x = "Follow-up day", y = "GP contact")
+  labs(x = "Days from indexed positive test date", y = "GP contact")
 
 ggsave(filename = here::here("output", "descriptives", "positive_cohort",
                              "plot_daily_gp.jpeg"),
