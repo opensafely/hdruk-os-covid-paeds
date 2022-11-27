@@ -35,7 +35,7 @@ dir.create(dir_lcmm_models, showWarnings = FALSE, recursive=TRUE)
 data_resource_lcmm = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
 
 data_resource_lcmm = data_resource_lcmm %>% 
-  select(patient_id, indexed_month, resource_use = all_of(paste0("n_", resource_type)))
+  select(patient_id, followup_month, resource_use = all_of(paste0("n_", resource_type)))
 
 # Only include patients with at least 1 episode of healthcare use ----
 ## Identify patient ids ----
@@ -54,13 +54,13 @@ data_resource_lcmm = as.data.frame(data_resource_lcmm)
 
 # Run LCMM model ----
 ## Set model parameters ----
-max_iter = 50000 # Maximum number of iterations
+max_iter = 5000 # Maximum number of iterations
 
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(indexed_month, degree = 3, knots = 7),
-                    random = ~bSpline(indexed_month, degree = 3, knots = 7),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7),
+                    random = ~bSpline(followup_month, degree = 3, knots = 7),
                     subject = "patient_id",
                     ng = ng,
                     maxiter = max_iter,
@@ -68,8 +68,8 @@ if (ng == 1){
                     verbose = FALSE,
                     nproc = nproc)
   
-  # lcmm_model = lcmm(fixed = resource_use ~ 1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
-  #                   random = ~1 + indexed_month,
+  # lcmm_model = lcmm(fixed = resource_use ~ 1 + followup_month + I(followup_month^2) + I(followup_month^3),
+  #                   random = ~1 + followup_month,
   #                   subject = "patient_id",
   #                   ng = ng,
   #                   maxiter = max_iter,
@@ -85,9 +85,9 @@ if (ng == 1){
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(indexed_month, degree = 3, knots = 7),
-                    random= ~bSpline(indexed_month, degree = 3, knots = 7),
-                    mixture = ~bSpline(indexed_month, degree = 3, knots = 7),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7),
+                    random= ~bSpline(followup_month, degree = 3, knots = 7),
+                    mixture = ~bSpline(followup_month, degree = 3, knots = 7),
                     classmb = ~1,
                     ng = ng,
                     B = lcmm_model_1,
@@ -97,9 +97,9 @@ if (ng == 1){
                     verbose = FALSE,
                     nproc = nproc)
   
-  # lcmm_model = lcmm(fixed = resource_use ~ 1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
-  #                   mixture = ~1 + indexed_month + I(indexed_month^2) + I(indexed_month^3),
-  #                   random = ~1 + indexed_month,
+  # lcmm_model = lcmm(fixed = resource_use ~ 1 + followup_month + I(followup_month^2) + I(followup_month^3),
+  #                   mixture = ~1 + followup_month + I(followup_month^2) + I(followup_month^3),
+  #                   random = ~1 + followup_month,
   #                   ng = ng,
   #                   B = lcmm_model_1,
   #                   data = data_resource_lcmm,
