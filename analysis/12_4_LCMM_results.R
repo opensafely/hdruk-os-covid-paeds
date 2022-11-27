@@ -96,12 +96,15 @@ explanatory_var = c(
   # Vaccination status
   "vaccination_status",
   
-  # 2-weeks after postive test
-  "pims_ts",
-  "critical_care_2wks_flag", "critical_care_2wks", "critical_care_2wks_factor",
-  "beddays_2wks_flag", "beddays_2wks", "beddays_2wks_factor",
-  "outpatient_2wks_flag", "outpatient_2wks", "outpatient_2wks_factor", 
-  "gp_2wks_flag", "gp_2wks", "gp_2wks_factor"
+  # Illness severity 2 weeks after positive test
+  "illness_severity_2wks", "pims_ts", 
+  "n_gp_2wks_post_covid", "n_outpatient_2wks_post_covid",
+  "n_beddays_2wks_post_covid", "n_critical_care_2wks_post_covid",
+  
+  # Previous healthcare use
+  "ntile_gp_pre_covid_1yr", "n_gp_pre_covid_1yr",
+  "ntile_outpatient_pre_covid_1yr", "n_outpatient_pre_covid_1yr",
+  "ntile_beddays_pre_covid_1yr", "n_beddays_pre_covid_1yr"
 )
 
 ## Summary factorlist ----
@@ -134,9 +137,9 @@ data_resource_lcmm = data_resource_lcmm %>%
 ## Calculate observed trajectories by class ----
 ## Bootstrapped 95% confidence intervals over 1000 realisations
 tbl_obs_trajectory = data_resource_lcmm %>% 
-  select(patient_id, indexed_month, class,
+  select(patient_id, followup_month, class,
          resource_use = all_of(paste0("n_", resource_type))) %>% 
-  group_by(class, indexed_month) %>% 
+  group_by(class, followup_month) %>% 
   summarise(
     n_patient = n(),
     resource_use = list(Hmisc::smean.cl.boot(resource_use,
@@ -160,7 +163,7 @@ y_label = case_when(
 )
   
 plot_obs_trajectory = tbl_obs_trajectory %>%
-  ggplot(aes(x = indexed_month, y = Mean, ymin = Lower, ymax = Upper,
+  ggplot(aes(x = followup_month, y = Mean, ymin = Lower, ymax = Upper,
              colour = class, fill = class)) +
   geom_line() + geom_point() +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
@@ -178,17 +181,17 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "obs_trajectory",
 
 # Predicted trajectories ----
 ## New time data ----
-data_time = data.frame(indexed_month  = seq(1, 12, length = 100))
+data_time = data.frame(followup_month  = seq(1, 12, length = 100))
 
 ## Predict resource trajectories ----
 predict_resource = predictY(lcmm_model, data_time,
-                            var.time = "indexed_month", draws = T)
+                            var.time = "followup_month", draws = T)
 
 ## Table of predicted trajectories by class ----
 tbl_predicted_trajectory = predict_resource$pred %>% 
   as_tibble() %>% 
   bind_cols(predict_resource$times) %>% 
-  pivot_longer(-indexed_month) %>%
+  pivot_longer(-followup_month) %>%
   mutate(
     class = str_extract(name, "\\d+$"),
     class = if_else(is.na(class), "1", class),
@@ -215,7 +218,7 @@ y_label_pred = case_when(
 )
 
 plot_predicted_trajectory = tbl_predicted_trajectory %>% 
-  ggplot(aes(x = indexed_month, y = y,
+  ggplot(aes(x = followup_month, y = y,
              ymin = y_lower, ymax = y_upper,
              colour = class, fill = class)) +
   geom_line() +
