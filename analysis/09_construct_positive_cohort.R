@@ -24,6 +24,10 @@ tp_start_date    = ymd(global_var$tp_start_date)
 tp_end_date      = ymd(global_var$tp_end_date)
 fup_start_date   = ymd(global_var$fup_start_date)
 
+# Random sample ----
+set.seed(4192875)
+n_positive_sample = 5000
+
 # Load patient data ----
 data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
 
@@ -65,6 +69,21 @@ data_inclusion = data_patient %>%
     list(age_between_4_and_17 = FALSE,
          minimum_90_days_follow_up = FALSE))
 
+# Randomly sample from patients satisfying inclusion ---- 
+random_sample = data_inclusion %>%
+  pivot_longer(-patient_id) %>%
+  group_by(patient_id) %>%
+  summarise(elegible_for_sample = all(value)) %>% 
+  filter(elegible_for_sample) %>% 
+  slice_sample(n = min(n_positive_sample, nrow(.)), replace = FALSE) %>% 
+  mutate(randomly_sampled = TRUE)
+
+
+data_inclusion = data_inclusion %>% 
+  left_join(random_sample %>% 
+              select(patient_id, randomly_sampled), by = "patient_id") %>% 
+  replace_na(list(randomly_sampled = FALSE))
+
 # Create inclusion flowchart ----
 flowchart = data_inclusion %>% 
   transmute(
@@ -75,7 +94,8 @@ flowchart = data_inclusion %>%
     c3 = c2 & no_discrepant_results,
     c4 = c3 & alive_on_test_date,
     c5 = c4 & age_between_4_and_17,
-    c6 = c5 & minimum_90_days_follow_up
+    c6 = c5 & minimum_90_days_follow_up,
+    c7 = c6 & randomly_sampled
   ) %>%
   select(-patient_id) %>%
   summarise(across(.fns=sum)) %>% 
@@ -102,6 +122,7 @@ flowchart = data_inclusion %>%
       crit == "c4" ~ "-  alive on test date",
       crit == "c5" ~ "-  with age between 4 and 17 years inclusive on test date",
       crit == "c6" ~ "-  with minimum 90 days follow-up",
+      crit == "c7" ~ "-  randomly sampled",
       TRUE ~ NA_character_
     )
   ) %>%
