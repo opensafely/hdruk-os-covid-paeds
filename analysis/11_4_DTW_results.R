@@ -34,8 +34,11 @@ count_redact = global_var$disclosure_redact
 # Create output directories ----
 dir.create(here::here("output", "dtw", "results"), showWarnings = FALSE, recursive=TRUE)
 
+# Bootstrap samples
+B = 10
+
 # Load data ----
-data_resource  = read_rds(here::here("output", "data", "data_resource_dtw.rds"))
+data_resource_dtw  = read_rds(here::here("output", "data", "data_resource_dtw.rds"))
 data_positives = read_rds(here::here("output", "data", "data_positives.rds"))
 data_cluster   = read_rds(
   here::here("output", "dtw", "data_cluster",
@@ -48,7 +51,7 @@ data_cluster = data_cluster %>%
   )
 
 # Add clustering assignment to patient and resource data ----
-data_resource = data_resource %>% 
+data_resource_dtw = data_resource_dtw %>% 
   left_join(data_cluster, by = "patient_id")
 
 data_positives = data_positives %>% 
@@ -56,22 +59,22 @@ data_positives = data_positives %>%
 
 # Resource use by cluster ----
 ## 
-tbl_resource_use_cluster = data_resource %>%
+tbl_resource_use_cluster = data_resource_dtw %>%
   group_by(date_indexed, cluster) %>% 
   summarise(
     n_patient = n(),
     critical_care = list(Hmisc::smean.cl.boot(n_critical_care,
                                               conf.int = 0.95,
-                                              B = 200)),
+                                              B = B)),
     beddays = list(Hmisc::smean.cl.boot(n_beddays,
                                         conf.int = 0.95,
-                                        B = 200)),
+                                        B = B)),
     outpatient = list(Hmisc::smean.cl.boot(n_outpatient,
                                            conf.int = 0.95,
-                                           B = 200)),
+                                           B = B)),
     gp = list(Hmisc::smean.cl.boot(n_gp,
                                    conf.int = 0.95,
-                                   B = 200)),
+                                   B = B)),
   )
 
 ## Tidy up table and resource factor levels ----
@@ -84,10 +87,10 @@ tbl_resource_use_cluster = tbl_resource_use_cluster %>%
   pivot_wider(names_from = statistic, values_from = value) %>% 
   mutate(resource_type = resource_type %>%
            fct_relevel("gp", "outpatient", "beddays", "critical_care") %>% 
-           fct_recode("Healthcare episode contact-days" = "gp",
-                      "Outpatient appointments" = "outpatient",
-                      "Inpatient bed-days" = "beddays",
-                      "Critical care bed-days" = "critical_care"))
+           fct_recode("Healthcare episode" = "gp",
+                      "Outpatient appointment" = "outpatient",
+                      "Inpatient admission" = "beddays",
+                      "Critical care" = "critical_care"))
 
 ## Save table ----
 write_csv(tbl_resource_use_cluster,
@@ -113,6 +116,9 @@ ggsave(here::here("output", "dtw", "results", paste0("plot_resource_use_cluster_
 dependent_var = "cluster"
 explanatory_var = c(
   
+  # Follow-up
+  "follow_up_days",
+  
   # Demographics
   "age", "age_group", "sex", "ethnicity", "imd_Q5_2019", "region_2019",
   "rural_urban_2019",
@@ -121,17 +127,27 @@ explanatory_var = c(
   "shielding",
   
   # Comorbidities
-  "comorbidity_count.factor",
+  "comorbidity_count_factor",
   "mental_health_disorders", "neurodevelopmental_and_behavioural",
   "asthma", "cystic_fibrosis", "other_respiratory",
   "cardiovascular", "epilepsy", "headaches", "other_neurological",
   "gastrointestinal_conditions", "genitourinary", "cancer",
   "non_malignant_haematological", "immunological", "chronic_infections",
   "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "obesity", "transplant", "palliative_care",
+  "metabolic", "transplant", "palliative_care",
   
   # Vaccination status
-  "vaccination_status"
+  "vaccination_status",
+  
+  # Illness severity 2 weeks after positive test
+  "illness_severity_2wks", "pims_ts", 
+  "n_gp_2wks_post_covid", "n_outpatient_2wks_post_covid",
+  "n_beddays_2wks_post_covid", "n_critical_care_2wks_post_covid",
+  
+  # Previous healthcare use
+  "ntile_gp_pre_covid_1yr", "n_gp_pre_covid_1yr",
+  "ntile_outpatient_pre_covid_1yr", "n_outpatient_pre_covid_1yr",
+  "ntile_beddays_pre_covid_1yr", "n_beddays_pre_covid_1yr"
 )
 
 ## Summary factorlist ----
