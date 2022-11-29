@@ -12,6 +12,7 @@
 library(tidyverse)
 library(lubridate)
 library(dtwclust)
+library(tictoc)
 
 # Load function files ----
 source(here::here("analysis", "11_0_DTW_functions.R"))
@@ -19,45 +20,25 @@ source(here::here("analysis", "11_0_DTW_functions.R"))
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  n_clusters = 7
+  n_clusters = 8
 } else{
   n_clusters = args[[1]] %>% as.integer()
 }
 
 # Load data ----
-data_resource = read_rds(here::here("output", "data", "data_resource_dtw.rds"))
+data_timeseries_dtw = read_rds(here::here("output", "data", "data_timeseries_dtw.rds"))
 
 # Create output directories ----
 dir.create(here::here("output", "dtw", "tsclust"),      showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "dtw", "cv_indicies"),  showWarnings = FALSE, recursive=TRUE)
 dir.create(here::here("output", "dtw", "data_cluster"), showWarnings = FALSE, recursive=TRUE)
 
-# Pre-processing for resource data ----
-## Create list of patients ----
-id_list = unique(data_resource$patient_id)
-
-## List of services (5) -----
-service_list = levels(data_resource$service)
-
-# Run the function (map to patient group in df) ----
-id_resource_seq = data_resource %>%
-  group_by(patient_id) %>%
-  group_map(~get_indv_resource_traj(.x, .y$patient_id))
-
-names(id_resource_seq) = map(id_resource_seq, attr, "name")
-attr(id_resource_seq, "service_list") = service_list
-
-regist_dist() 
-
 # Perform time series clustering ----
-ts_cluster = tsclust(series = id_resource_seq,
+ts_cluster = tsclust(series = data_timeseries_dtw,
                      k = n_clusters,
                      distance = "dtw_basic",
                      type = "partitional",
                      seed = 43)
-
-# Reinterpolate to same length
-series <- reinterpolate(CharTraj, new.length = max(lengths(CharTraj)))
 
 ## Save time series clustering ----
 write_rds(ts_cluster,
