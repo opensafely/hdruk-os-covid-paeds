@@ -12,13 +12,8 @@
 library(tidyverse)
 
 # Load resource data ----
-data_positives = read_rds(here::here("output", "data", "data_positives.rds"))
-data_resource = read_rds(here::here("output", "data", "data_resource.rds"))
-
-# Random sample
-data_positives_lcmm = data_positives 
-data_resource_lcmm = data_resource %>% 
-  filter(patient_id %in% data_positives_lcmm$patient_id)
+data_positives_lcmm = read_rds(here::here("output", "data", "data_positives.rds"))
+data_resource_lcmm = read_rds(here::here("output", "data", "data_resource.rds"))
 
 # Group days into 12 x 30-day periods from follow-up start date ----
 data_resource_lcmm = data_resource_lcmm %>%
@@ -30,7 +25,7 @@ data_resource_lcmm = data_resource_lcmm %>%
 data_resource_lcmm = data_resource_lcmm %>% 
   group_by(patient_id, followup_month) %>% 
   summarise(n_beddays = sum(n_beddays),
-            n_beddays = sum(n_critical_care),
+            n_critical_care = sum(n_critical_care),
             n_outpatient = sum(n_outpatient),
             n_gp = sum(n_gp),
             days = n()) %>% 
