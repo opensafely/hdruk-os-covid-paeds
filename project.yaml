@@ -3684,6 +3684,7 @@ actions:
     needs: [generate_positive_cohort]
     outputs:
       highly_sensitive:
+        dtw_timeseries_data: output/data/data_timeseries_dtw.rds
         dtw_resource_data: output/data/data_resource_dtw.rds
 
   dtw_run_model_5:
@@ -3727,8 +3728,8 @@ actions:
     needs: [dtw_run_model_5, dtw_run_model_6, dtw_run_model_7, dtw_run_model_8]
     outputs:
       moderately_sensitive:
-        tbl_cvi: output/dtw/tsclust/tbl_cluster_validity.csv
-        plot_cvi: output/dtw/tsclust/plot_cluster_validity.jpeg
+        tbl_cvi: output/dtw/selection/tbl_cluster_validity.csv
+        plot_cvi: output/dtw/selection/plot_cluster_validity.jpeg
 
   dtw_results_5:
     run: r:latest analysis/11_4_DTW_results.R 5
