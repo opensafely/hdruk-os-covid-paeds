@@ -17,7 +17,7 @@ library(tictoc)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 3
+  ng = 5
   resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
