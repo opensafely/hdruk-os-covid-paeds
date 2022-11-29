@@ -13,21 +13,33 @@ library(tidyverse)
 data_resource = read_rds(here::here("output", "data", "data_resource.rds"))
 
 ## Create used service column ----
-data_resource = data_resource %>%
-  mutate(service = case_when(
-    n_critical_care > 0 ~ "CC",
-    n_beddays > 0 & n_critical_care == 0 ~ "BD",
-    n_outpatient > 0 & (n_beddays == 0 & n_critical_care == 0) ~ "OP",
-    n_gp > 0 & (n_critical_care == 0 & n_outpatient == 0 & n_beddays == 0) ~ "Contact",
-    n_gp == 0 & n_critical_care == 0 & n_outpatient == 0 & n_beddays == 0 ~ "None") %>% 
+data_resource_dtw = data_resource %>%
+  mutate(
+    day_followup = date_indexed - 14,
+    service = case_when(
+      n_critical_care > 0 ~ "Critial care",
+      n_beddays > 0 ~ "Inpatient admission",
+      n_outpatient > 0 ~ "Outpatient appointment",
+      n_gp > 0 ~ "Healthcare episode",
+      TRUE ~ "None") %>% 
       factor() %>% 
-      fct_relevel("None", "Contact", "OP", "BD", "CC")
-  )
+      fct_relevel("None", "Healthcare episode",
+                  "Outpatient appointment", "Inpatient admission",
+                  "Critial care")
+  ) %>% 
+  filter(day_followup > 0)
 
-## Filter out rows with dead status ----
-data_resource = data_resource %>% 
-  filter(alive == TRUE)
+# Create timeseries list of resource use ----
+data_timeseries_dtw = data_resource_dtw %>% 
+  group_by(patient_id) %>% 
+  summarise(service = list(service %>% as.integer())) %>%
+  ungroup() %>% 
+  mutate(service = service %>% set_names(patient_id)) %>% 
+  pull(service)
 
-# Save resource data for time series clustering ----
-write_rds(data_resource,
+# Save resource and time series data ----
+write_rds(data_resource_dtw,
           here::here("output", "data", "data_resource_dtw.rds"))
+
+write_rds(data_timeseries_dtw,
+          here::here("output", "data", "data_timeseries_dtw.rds"))
