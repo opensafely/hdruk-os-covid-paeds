@@ -37,9 +37,12 @@ dir.create(here::here("output", "dtw", "results"), showWarnings = FALSE, recursi
 # Bootstrap samples
 B = 10
 
+# Plot theme ----
+theme_set(theme_bw())
+
 # Load data ----
 data_resource_dtw  = read_rds(here::here("output", "data", "data_resource_dtw.rds"))
-data_positives = read_rds(here::here("output", "data", "data_positives.rds"))
+data_positives_dtw = read_rds(here::here("output", "data", "data_positives_dtw.rds"))
 data_cluster   = read_rds(
   here::here("output", "dtw", "data_cluster",
              paste0("data_cluster_", n_clusters, ".rds")))
@@ -52,7 +55,7 @@ data_resource_dtw = data_resource_dtw %>%
            factor() %>% 
            ff_label("Cluster"))
 
-data_positives = data_positives %>% 
+data_positives_dtw = data_positives_dtw %>% 
   left_join(data_cluster, by = "patient_id")  %>% 
   replace_na(list(cluster = 0)) %>% 
   mutate(cluster = cluster %>% 
@@ -61,31 +64,15 @@ data_positives = data_positives %>%
 
 # Resource use by cluster ----
 tbl_resource_use_cluster = data_resource_dtw %>%
-  group_by(date_indexed, cluster) %>% 
+  pivot_longer(cols = c(starts_with("n_")),
+               names_pattern = "n_([[:alnum:]_]+)", names_to = "resource_type") %>% 
+  group_by(day_followup, cluster, resource_type) %>% 
   summarise(
     n_patient = n(),
-    critical_care = list(Hmisc::smean.cl.boot(n_critical_care,
-                                              conf.int = 0.95,
-                                              B = B)),
-    beddays = list(Hmisc::smean.cl.boot(n_beddays,
-                                        conf.int = 0.95,
-                                        B = B)),
-    outpatient = list(Hmisc::smean.cl.boot(n_outpatient,
-                                           conf.int = 0.95,
-                                           B = B)),
-    gp = list(Hmisc::smean.cl.boot(n_gp,
-                                   conf.int = 0.95,
-                                   B = B)),
-  )
-
-## Tidy up table and resource factor levels ----
-tbl_resource_use_cluster = tbl_resource_use_cluster %>%
-  unnest_wider(c(critical_care, beddays, outpatient, gp),
-               names_sep = "_") %>%
-  pivot_longer(-c(date_indexed, n_patient, cluster),
-               names_to = c("resource_type", "statistic"),
-               names_pattern = "(.*)_([[:alpha:]]+)$") %>% 
-  pivot_wider(names_from = statistic, values_from = value) %>% 
+    bootstats = list(Hmisc::smean.cl.boot(value, conf.int = 0.95, B = B))
+  ) %>% 
+  ungroup() %>%
+  unnest_wider(bootstats) %>% 
   mutate(resource_type = resource_type %>%
            fct_relevel("gp", "outpatient", "beddays", "critical_care") %>% 
            fct_recode("Healthcare episode" = "gp",
@@ -100,7 +87,7 @@ write_csv(tbl_resource_use_cluster,
 
 # Plot resource use by type and cluster ----
 plot_resource_use_cluster = tbl_resource_use_cluster %>%
-  ggplot(aes(x = date_indexed, y = Mean, ymin = Lower, ymax = Upper)) +
+  ggplot(aes(x = day_followup, y = Mean, ymin = Lower, ymax = Upper)) +
   geom_line() +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
   facet_grid(resource_type ~ cluster, scales = "free_y") +
@@ -152,7 +139,7 @@ explanatory_var = c(
 )
 
 ## Summary factorlist ----
-tbl_summary = data_positives %>% 
+tbl_summary = data_positives_dtw %>% 
   summary_factorlist(
     dependent = dependent_var,
     explanatory = explanatory_var,
