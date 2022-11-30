@@ -94,17 +94,18 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "selection", "plot
 ## Extract class probabilities ----
 tbl_class_probability = lcmm_models %>% 
   map(function(lcmm_model){
-    lcmm_model$pprob %>% 
-      summarise(across(starts_with("prob"),
-                       list(mean = mean, sd = sd))) %>% 
-      pivot_longer(everything(),
-                   names_pattern = "prob(\\d+)_(.*)$",
-                   names_to = c("class", "statistic")) %>% 
+    lcmm_model$pprob %>%
+      pivot_longer(cols = -c(patient_id, class),
+                   names_pattern = "prob(\\d+)$",
+                   names_to = "class_pred") %>% 
+      filter(class == class_pred) %>% 
+      group_by(class) %>% 
+      summarise(boots_stats = list(Hmisc::smean.cl.boot(value, B = 250))) %>% 
+      unnest_wider(boots_stats) %>% 
       mutate(n_cluster = lcmm_model$ng) %>% 
       relocate(n_cluster)
   }) %>%
   bind_rows() %>% 
-  pivot_wider(names_from = statistic) %>% 
   mutate(
     n_cluster = n_cluster %>% factor(),
     class = class %>% factor()
@@ -116,13 +117,13 @@ write_csv(tbl_class_probability,
 
 ## Plot class probability by number of clusters ----
 plot_class_probability = tbl_class_probability %>%
-  ggplot(aes(x = n_cluster, y = mean*100, 
-             ymin = (mean - sd)*100,
-             ymax = (mean + sd)*100,
+  ggplot(aes(x = n_cluster, y = Mean*100, 
+             ymin = Lower*100,
+             ymax = Upper*100,
              fill = class)) +
   geom_col(position = "dodge") +
   geom_errorbar(position = "dodge") +
-  geom_hline(yintercept = 5, linetype = 2) + 
+  geom_hline(yintercept = 5, linetype = 2) +
   labs(x = "Number of clusters", fill = "Class",
        y = "Class membership probability (%)")
 
