@@ -3686,6 +3686,7 @@ actions:
       highly_sensitive:
         dtw_timeseries_data: output/data/data_timeseries_dtw.rds
         dtw_resource_data: output/data/data_resource_dtw.rds
+        dtw_patient_data: output/data/data_patient_dtw.rds
 
   dtw_run_model_5:
     run: r:latest analysis/11_2_DTW_tsclust.R 5
