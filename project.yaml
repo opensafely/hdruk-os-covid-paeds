@@ -3733,7 +3733,7 @@ actions:
 
   dtw_results_5:
     run: r:latest analysis/11_4_DTW_results.R 5
-    needs: [dtw_run_model_5]
+    needs: [dtw_data_prep, dtw_run_model_5]
     outputs:
       moderately_sensitive:
         tbl_summary: tbl_summary_5.csv
@@ -3742,7 +3742,7 @@ actions:
 
   dtw_results_6:
     run: r:latest analysis/11_4_DTW_results.R 6
-    needs: [dtw_run_model_6]
+    needs: [dtw_data_prep, dtw_run_model_6]
     outputs:
       moderately_sensitive:
         tbl_summary: tbl_summary_6.csv
@@ -3751,7 +3751,7 @@ actions:
 
   dtw_results_7:
     run: r:latest analysis/11_4_DTW_results.R 7
-    needs: [dtw_run_model_7]
+    needs: [dtw_data_prep, dtw_run_model_7]
     outputs:
       moderately_sensitive:
         tbl_summary: tbl_summary_7.csv
@@ -3760,7 +3760,7 @@ actions:
 
   dtw_results_8:
     run: r:latest analysis/11_4_DTW_results.R 8
-    needs: [dtw_run_model_8]
+    needs: [dtw_data_prep, dtw_run_model_8]
     outputs:
       moderately_sensitive:
         tbl_summary: tbl_summary_8.csv
