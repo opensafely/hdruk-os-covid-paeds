@@ -123,7 +123,6 @@ plot_class_probability = tbl_class_probability %>%
              fill = class)) +
   geom_col(position = "dodge") +
   geom_errorbar(position = "dodge") +
-  geom_hline(yintercept = 5, linetype = 2) +
   labs(x = "Number of clusters", fill = "Class",
        y = "Class membership probability (%)")
 
