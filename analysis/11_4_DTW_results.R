@@ -52,13 +52,20 @@ data_cluster = data_cluster %>%
 
 # Add clustering assignment to patient and resource data ----
 data_resource_dtw = data_resource_dtw %>% 
-  left_join(data_cluster, by = "patient_id")
+  left_join(data_cluster, by = "patient_id") %>% 
+  replace_na(list(cluster = 0)) %>% 
+  mutate(cluster = cluster %>% 
+           factor() %>% 
+           ff_label("Cluster"))
 
 data_positives = data_positives %>% 
-  left_join(data_cluster, by = "patient_id")
+  left_join(data_cluster, by = "patient_id")  %>% 
+  replace_na(list(cluster = 0)) %>% 
+  mutate(cluster = cluster %>% 
+           factor() %>% 
+           ff_label("Cluster"))
 
 # Resource use by cluster ----
-## 
 tbl_resource_use_cluster = data_resource_dtw %>%
   group_by(date_indexed, cluster) %>% 
   summarise(
