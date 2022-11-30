@@ -26,7 +26,7 @@ fup_start_date   = ymd(global_var$fup_start_date)
 
 # Random sample ----
 set.seed(4192875)
-n_positive_sample = 5000
+n_positive_sample = 10000
 
 # Load patient data ----
 data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
