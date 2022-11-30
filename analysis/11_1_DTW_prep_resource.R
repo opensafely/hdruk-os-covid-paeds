@@ -29,8 +29,16 @@ data_resource_dtw = data_resource %>%
   ) %>% 
   filter(day_followup > 0)
 
+# Patient IDs with no healthcare contacts ----
+patient_id_no_service = data_resource_dtw %>% 
+  group_by(patient_id) %>% 
+  summarise(no_service = all(service == "None")) %>% 
+  filter(no_service) %>% 
+  pull(patient_id)
+
 # Create timeseries list of resource use ----
-data_timeseries_dtw = data_resource_dtw %>% 
+data_timeseries_dtw = data_resource_dtw %>%
+  filter(!patient_id %in% patient_id_no_service) %>% 
   group_by(patient_id) %>% 
   summarise(service = list(service %>% as.integer())) %>%
   ungroup() %>% 
