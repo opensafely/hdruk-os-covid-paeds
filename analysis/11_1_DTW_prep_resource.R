@@ -10,10 +10,11 @@
 library(tidyverse)
 
 # Load data ----
-data_resource = read_rds(here::here("output", "data", "data_resource.rds"))
+data_resource_dtw = read_rds(here::here("output", "data", "data_resource.rds"))
+data_patient_dtw = read_rds(here::here("output", "data", "data_patient_dtw.rds"))
 
 ## Create used service column ----
-data_resource_dtw = data_resource %>%
+data_resource_dtw = data_resource_dtw %>%
   mutate(
     day_followup = date_indexed - 14,
     service = case_when(
@@ -45,9 +46,12 @@ data_timeseries_dtw = data_resource_dtw %>%
   mutate(service = service %>% set_names(patient_id)) %>% 
   pull(service)
 
-# Save resource and time series data ----
+# Save patient, resource and time series data ----
 write_rds(data_resource_dtw,
           here::here("output", "data", "data_resource_dtw.rds"))
 
 write_rds(data_timeseries_dtw,
           here::here("output", "data", "data_timeseries_dtw.rds"))
+
+write_rds(data_patient_dtw,
+          here::here("output", "data", "data_patient_dtw.rds"))
