@@ -69,6 +69,7 @@ tbl_resource_use_cluster = data_resource_dtw %>%
   group_by(day_followup, cluster, resource_type) %>% 
   summarise(
     n_patient = n(),
+    n_events = sum(value),
     bootstats = list(Hmisc::smean.cl.boot(value, conf.int = 0.95, B = B))
   ) %>% 
   ungroup() %>%
