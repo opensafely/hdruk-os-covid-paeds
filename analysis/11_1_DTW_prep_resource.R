@@ -11,7 +11,7 @@ library(tidyverse)
 
 # Load data ----
 data_resource_dtw = read_rds(here::here("output", "data", "data_resource.rds"))
-data_patient_dtw = read_rds(here::here("output", "data", "data_patient_dtw.rds"))
+data_positives_dtw = read_rds(here::here("output", "data", "data_positives.rds"))
 
 ## Create used service column ----
 data_resource_dtw = data_resource_dtw %>%
@@ -53,5 +53,5 @@ write_rds(data_resource_dtw,
 write_rds(data_timeseries_dtw,
           here::here("output", "data", "data_timeseries_dtw.rds"))
 
-write_rds(data_patient_dtw,
-          here::here("output", "data", "data_patient_dtw.rds"))
+write_rds(data_positives_dtw,
+          here::here("output", "data", "data_positives_dtw.rds"))
