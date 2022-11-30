@@ -44,12 +44,6 @@ data_cluster   = read_rds(
   here::here("output", "dtw", "data_cluster",
              paste0("data_cluster_", n_clusters, ".rds")))
 
-# Add label ----
-data_cluster = data_cluster %>% 
-  mutate(
-    cluster = cluster %>% factor() %>% ff_label("Cluster")
-  )
-
 # Add clustering assignment to patient and resource data ----
 data_resource_dtw = data_resource_dtw %>% 
   left_join(data_cluster, by = "patient_id") %>% 
