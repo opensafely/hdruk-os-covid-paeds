@@ -85,7 +85,8 @@ if (ng == 1){
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 1, knots = 7),
+  lcmm_model = gridsearch(
+    m = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 1, knots = 7),
                     random = ~ bSpline(followup_month, degree = 1, knots = 7),
                     mixture = ~ bSpline(followup_month, degree = 1, knots = 7),
                     classmb = ~1,
@@ -94,8 +95,13 @@ if (ng == 1){
                     data = data_resource_lcmm,
                     subject = "patient_id",
                     maxiter = max_iter,
-                    verbose = FALSE,
-                    nproc = nproc)
+                    verbose = TRUE,
+                    nproc = nproc),
+    rep = 20,
+    maxiter = 20,
+    minit = lcmm_model_1
+  )
+  
   
   # lcmm_model = lcmm(fixed = resource_use ~ 1 + followup_month + I(followup_month^2) + I(followup_month^3),
   #                   mixture = ~1 + followup_month + I(followup_month^2) + I(followup_month^3),
