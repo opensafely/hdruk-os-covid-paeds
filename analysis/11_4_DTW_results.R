@@ -66,7 +66,7 @@ data_positives_dtw = data_positives_dtw %>%
 tbl_resource_use_cluster = data_resource_dtw %>%
   pivot_longer(cols = c(starts_with("n_")),
                names_pattern = "n_([[:alnum:]_]+)", names_to = "resource_type") %>% 
-  group_by(day_followup, cluster, resource_type) %>% 
+  group_by(week_followup, cluster, resource_type) %>% 
   summarise(
     n_patient = n(),
     n_events = sum(value),
@@ -88,12 +88,12 @@ write_csv(tbl_resource_use_cluster,
 
 # Plot resource use by type and cluster ----
 plot_resource_use_cluster = tbl_resource_use_cluster %>%
-  ggplot(aes(x = day_followup, y = Mean, ymin = Lower, ymax = Upper)) +
+  ggplot(aes(x = week_followup, y = Mean, ymin = Lower, ymax = Upper)) +
   geom_line() +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
   facet_grid(resource_type ~ cluster, scales = "free_y") +
   scale_y_continuous(limits = c(0, NA)) +
-  labs(x = "Follow-up period (days)", y = "Counts per person-day")
+  labs(x = "Follow-up period (weeks)", y = "Average count per person-week")
 
 ## Save plot ----
 ggsave(here::here("output", "dtw", "results", paste0("plot_resource_use_cluster_",

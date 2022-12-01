@@ -15,8 +15,19 @@ data_positives_dtw = read_rds(here::here("output", "data", "data_positives.rds")
 
 ## Create used service column ----
 data_resource_dtw = data_resource_dtw %>%
+  filter(date_indexed > 14) %>%
+  mutate(day_followup = date_indexed - 14,
+         week_followup = ceiling(day_followup/7)) %>% 
+  group_by(patient_id, week_followup) %>% 
+  summarise(
+    n_critical_care = sum(n_critical_care),
+    n_beddays = sum(n_beddays),
+    n_outpatient = sum(n_outpatient),
+    n_gp = sum(n_gp),
+    days = n()
+  ) %>%
+  ungroup() %>% 
   mutate(
-    day_followup = date_indexed - 14,
     service = case_when(
       n_critical_care > 0 ~ "Critial care",
       n_beddays > 0 ~ "Inpatient admission",
@@ -28,7 +39,7 @@ data_resource_dtw = data_resource_dtw %>%
                   "Outpatient appointment", "Inpatient admission",
                   "Critial care")
   ) %>% 
-  filter(day_followup > 0)
+  filter(days == 7)
 
 # Patient IDs with no healthcare contacts ----
 patient_id_no_service = data_resource_dtw %>% 
