@@ -25,7 +25,7 @@ if(length(args) == 0){
 }
 
 # Number cores for parallel computation
-nproc = 4
+nproc = 1
 
 # Create output directories  ----
 dir_lcmm_models = here::here("output", "lcmm",resource_type, "models")
@@ -59,24 +59,14 @@ max_iter = 5000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 1, knots = 7),
-                    random = ~ bSpline(followup_month, degree = 1, knots = 7),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
+                    random = ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
                     subject = "patient_id",
                     ng = ng,
                     maxiter = max_iter,
                     data = data_resource_lcmm,
                     verbose = FALSE,
                     nproc = nproc)
-  
-  # lcmm_model = lcmm(fixed = resource_use ~ 1 + followup_month + I(followup_month^2) + I(followup_month^3),
-  #                   random = ~1 + followup_month,
-  #                   subject = "patient_id",
-  #                   ng = ng,
-  #                   maxiter = max_iter,
-  #                   data = data_resource_lcmm,
-  #                   verbose = FALSE,
-  #                   link = "7-equi-splines",
-  #                   nproc = nproc)
   
 } else{
   
@@ -85,10 +75,9 @@ if (ng == 1){
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = gridsearch(
-    m = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 1, knots = 7),
-                    random = ~ bSpline(followup_month, degree = 1, knots = 7),
-                    mixture = ~ bSpline(followup_month, degree = 1, knots = 7),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
+                    random = ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
+                    mixture = ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
                     classmb = ~1,
                     ng = ng,
                     B = lcmm_model_1,
@@ -96,24 +85,7 @@ if (ng == 1){
                     subject = "patient_id",
                     maxiter = max_iter,
                     verbose = TRUE,
-                    nproc = nproc),
-    rep = 20,
-    maxiter = 20,
-    minit = lcmm_model_1
-  )
-  
-  
-  # lcmm_model = lcmm(fixed = resource_use ~ 1 + followup_month + I(followup_month^2) + I(followup_month^3),
-  #                   mixture = ~1 + followup_month + I(followup_month^2) + I(followup_month^3),
-  #                   random = ~1 + followup_month,
-  #                   ng = ng,
-  #                   B = lcmm_model_1,
-  #                   data = data_resource_lcmm,
-  #                   subject = "patient_id",
-  #                   maxiter = max_iter,
-  #                   verbose = FALSE,
-  #                   link = "7-equi-splines",
-  #                   nproc = nproc)
+                    nproc = nproc)
   
 }
 
