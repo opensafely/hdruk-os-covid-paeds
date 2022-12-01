@@ -3688,6 +3688,15 @@ actions:
         dtw_resource_data: output/data/data_resource_dtw.rds
         dtw_patient_data: output/data/data_positives_dtw.rds
 
+  dtw_run_model_4:
+    run: r:latest analysis/11_2_DTW_tsclust.R 4
+    needs: [dtw_data_prep]
+    outputs:
+      highly_sensitive:
+        ts_cluster: output/dtw/tsclust/tsclust_4.rds
+        cv_indicies: output/dtw/cv_indicies/tbl_cv_indicies_4.csv
+        cluster: output/dtw/data_cluster/data_cluster_4.rds
+
   dtw_run_model_5:
     run: r:latest analysis/11_2_DTW_tsclust.R 5
     needs: [dtw_data_prep]
@@ -3726,11 +3735,20 @@ actions:
 
   dtw_selection:
     run: r:latest analysis/11_3_DTW_selection.R
-    needs: [dtw_run_model_5, dtw_run_model_6, dtw_run_model_7, dtw_run_model_8]
+    needs: [dtw_run_model_4, dtw_run_model_5, dtw_run_model_6, dtw_run_model_7, dtw_run_model_8]
     outputs:
       moderately_sensitive:
         tbl_cvi: output/dtw/selection/tbl_cluster_validity.csv
         plot_cvi: output/dtw/selection/plot_cluster_validity.jpeg
+
+  dtw_results_4:
+    run: r:latest analysis/11_4_DTW_results.R 4
+    needs: [dtw_data_prep, dtw_run_model_4]
+    outputs:
+      moderately_sensitive:
+        tbl_summary: output/dtw/results/tbl_summary_4.csv
+        tbl_resource_use: output/dtw/results/tbl_resource_use_cluster_4.csv
+        plot_resource_use: output/dtw/results/plot_resource_use_cluster_4.jpeg
 
   dtw_results_5:
     run: r:latest analysis/11_4_DTW_results.R 5
