@@ -45,6 +45,7 @@ tbl_model_metrics = lcmm_models %>%
   map(function(lcmm_model){
     tibble(
       n_cluster = lcmm_model$ng,
+      AIC = lcmm_model$AIC,
       BIC = lcmm_model$BIC,
       loglik = lcmm_model$loglik,
       niter = lcmm_model$niter,
@@ -66,6 +67,17 @@ tbl_model_metrics = lcmm_models %>%
 write_csv(tbl_model_metrics,
           here::here("output", "lcmm", resource_type, "selection",
                      "tbl_model_metrics.csv"))
+
+## Plot AIC by number of clusters ----
+plot_AIC = tbl_model_metrics %>% 
+  ggplot(aes(x = n_cluster, y = AIC, shape = conv_status)) +
+  geom_line() + geom_point() +
+  labs(x = "Number of clusters", y = "AIC", shape = "Convergence status") +
+  theme(legend.position = "bottom")
+
+ggsave(filename = here::here("output", "lcmm", resource_type, "selection", "plot_AIC.jpeg"),
+       plot = plot_AIC,
+       height = 6, width = 6, units = "in")
 
 ## Plot BIC by number of clusters ----
 plot_BIC = tbl_model_metrics %>% 
