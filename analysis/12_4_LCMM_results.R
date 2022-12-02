@@ -188,7 +188,9 @@ predict_resource = predictY(lcmm_model, data_time,
                             var.time = "followup_month", draws = T
                             )
 
-tbl_predicted_trajectory = predict_resource$pred
+tbl_predicted_trajectory = predict_resource$pred %>% 
+  as_tibble() %>% 
+  bind_cols(predict_resource$times)
 
 # Save predicted trajectory
 write_csv(tbl_predicted_trajectory,
@@ -198,9 +200,7 @@ write_csv(tbl_predicted_trajectory,
                             ".csv")))
 
 ## Table of predicted trajectories by class ----
-tbl_predicted_trajectory = predict_resource$pred %>% 
-  as_tibble() %>% 
-  bind_cols(predict_resource$times) %>% 
+tbl_predicted_trajectory = tbl_predicted_trajectory %>% 
   pivot_longer(cols = -followup_month) %>% 
   mutate(
     class = case_when(
