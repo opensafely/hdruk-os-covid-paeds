@@ -59,7 +59,7 @@ max_iter = 1000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = lcmm(fixed = resource_use ~ bSpline(followup_month, degree = 1),
+  lcmm_model = lcmm(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7),
                     #random = ~ bSpline(followup_month, degree = 1),
                     link = "3-equi-splines",
                     subject = "patient_id",
@@ -76,8 +76,8 @@ if (ng == 1){
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = lcmm(fixed = resource_use ~ bSpline(followup_month, degree = 1),
-                    mixture = ~ bSpline(followup_month, degree = 1),
+  lcmm_model = lcmm(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7),
+                    mixture = ~ bSpline(followup_month, degree = 3, knots = 7),
                     #random = ~ bSpline(followup_month, degree = 1),
                     link = "3-equi-splines",
                     classmb = ~1,
