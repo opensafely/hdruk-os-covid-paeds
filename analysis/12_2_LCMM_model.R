@@ -25,7 +25,7 @@ if(length(args) == 0){
 }
 
 # Number cores for parallel computation
-nproc = 1
+nproc = 2
 
 # Create output directories  ----
 dir_lcmm_models = here::here("output", "lcmm",resource_type, "models")
@@ -59,7 +59,7 @@ max_iter = 1000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 3),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7),
                     #random = ~ bSpline(followup_month, degree = 1, knots = c(7)),
                     subject = "patient_id",
                     ng = ng,
@@ -75,8 +75,8 @@ if (ng == 1){
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 3),
-                    mixture = ~ bSpline(followup_month, degree = 3),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7),
+                    mixture = ~ bSpline(followup_month, degree = 3, knots = 7),
                     #random = ~ bSpline(followup_month, degree = 1, knots = c(7)),
                     classmb = ~1,
                     ng = ng,
