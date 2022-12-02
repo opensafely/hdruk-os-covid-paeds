@@ -185,7 +185,17 @@ data_time = data.frame(followup_month  = seq(1, 12, length = 100))
 
 ## Predict resource trajectories ----
 predict_resource = predictY(lcmm_model, data_time,
-                            var.time = "followup_month", draws = T)
+                            var.time = "followup_month", draws = T
+                            )
+
+tbl_predicted_trajectory = predict_resource$pred
+
+# Save predicted trajectory
+write_csv(tbl_predicted_trajectory,
+          here::here("output", "lcmm", resource_type,"pred_trajectory",
+                     paste0("tbl_predicted_trajectory_",
+                            lcmm_model$ng,
+                            ".csv")))
 
 ## Table of predicted trajectories by class ----
 tbl_predicted_trajectory = predict_resource$pred %>% 
@@ -206,12 +216,6 @@ tbl_predicted_trajectory = predict_resource$pred %>%
   select(-name) %>% 
   pivot_wider(names_from = statistic)
 
-# Save predicted trajectory
-write_csv(tbl_predicted_trajectory,
-          here::here("output", "lcmm", resource_type,"pred_trajectory",
-                     paste0("tbl_predicted_trajectory_",
-                            lcmm_model$ng,
-                            ".csv")))
 
 # Plot predicted trajectory by class ----
 y_label_pred = case_when(
