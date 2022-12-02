@@ -3793,6 +3793,8 @@ actions:
       highly_sensitive:
         lcmm_resource_data: output/data/data_resource_lcmm.rds
         lcmm_patient_data: output/data/data_positives_lcmm.rds
+      moderately_sensitive:
+        lcmm_resource_summary: output/lcmm/summary_data_resource_lcmm.csv
 
   lcmm_run_model_1_beddays:
     run: r:latest analysis/12_2_LCMM_model.R 1 beddays
