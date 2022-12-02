@@ -181,6 +181,14 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "obs_trajectory",
        plot = plot_obs_trajectory,
        height = 6, width = 6, units = "in")
 
+
+
+# Save model summary ----
+sink(here::here("output", "lcmm", resource_type, "model_summary",
+                paste0("model_summary_", lcmm_model$ng, ".txt")))
+print(summary(lcmm_model))
+sink()
+
 # Predicted trajectories ----
 ## New time data ----
 data_time = data.frame(followup_month  = seq(1, 12, length = 100))
@@ -189,24 +197,10 @@ data_time = data.frame(followup_month  = seq(1, 12, length = 100))
 predict_resource = predictY(lcmm_model, data_time, var.time = "followup_month",
                             draws = TRUE)
 
-## Save model summary ----
-sink(here::here("output", "lcmm", resource_type, "model_summary",
-                paste0("model_summary_", lcmm_model$ng, ".txt")))
-#print(summary(lcmm_model))
-print(predict_resource)
-sink()
-
+## Table of predicted trajectories by class ----
 tbl_predicted_trajectory = predict_resource$pred %>% 
   as_tibble() %>% 
-  bind_cols(predict_resource$times)
-
-# Save predicted trajectory
-write_csv(tbl_predicted_trajectory,
-          here::here("output", "lcmm", resource_type,"pred_trajectory",
-                     paste0("tbl_predicted_trajectory_", lcmm_model$ng, ".csv")))
-
-## Table of predicted trajectories by class ----
-tbl_predicted_trajectory = tbl_predicted_trajectory %>% 
+  bind_cols(predict_resource$times) %>% 
   pivot_longer(cols = -followup_month) %>% 
   mutate(
     class = case_when(
@@ -222,6 +216,10 @@ tbl_predicted_trajectory = tbl_predicted_trajectory %>%
   select(-name) %>% 
   pivot_wider(names_from = statistic)
 
+## Save predicted trajectory
+write_csv(tbl_predicted_trajectory,
+          here::here("output", "lcmm", resource_type,"pred_trajectory",
+                     paste0("tbl_predicted_trajectory_", lcmm_model$ng, ".csv")))
 
 # Plot predicted trajectory by class ----
 y_label_pred = case_when(
