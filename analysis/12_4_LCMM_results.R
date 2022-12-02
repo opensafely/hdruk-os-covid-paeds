@@ -18,7 +18,7 @@ library(splines2)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 5
+  ng = 1
   resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
@@ -191,18 +191,22 @@ predict_resource = predictY(lcmm_model, data_time,
 tbl_predicted_trajectory = predict_resource$pred %>% 
   as_tibble() %>% 
   bind_cols(predict_resource$times) %>% 
-  pivot_longer(-followup_month) %>%
+  pivot_longer(cols = -followup_month) %>% 
   mutate(
-    class = str_extract(name, "\\d+$"),
-    class = if_else(is.na(class), "1", class),
-    name = case_when(
-      str_starts(name, "Ypred")        ~ "y",
-      str_starts(name, "lower.Ypred")  ~ "y_lower",
-      str_starts(name, "upper.Ypred")  ~ "y_upper"
+    class = case_when(
+      str_ends(name, "_class\\d+$") ~ str_extract(name, "\\d+$"),
+      TRUE ~ "1"
+    ),
+    statistic = case_when(
+      str_starts(name, "Ypred_50")        ~ "y",
+      str_starts(name, "Ypred_2.5")  ~ "y_lower",
+      str_starts(name, "Ypred_97.5")  ~ "y_upper"
     )
   ) %>%
-  pivot_wider(names_from = name)
+  select(-name) %>% 
+  pivot_wider(names_from = statistic)
 
+# Save predicted trajectory
 write_csv(tbl_predicted_trajectory,
           here::here("output", "lcmm", resource_type,"pred_trajectory",
                      paste0("tbl_predicted_trajectory_",
