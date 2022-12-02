@@ -28,7 +28,7 @@ if(length(args) == 0){
 nproc = 2
 
 # Create output directories  ----
-dir_lcmm_models = here::here("output", "lcmm",resource_type, "models")
+dir_lcmm_models = here::here("output", "lcmm", resource_type, "models")
 dir.create(dir_lcmm_models, showWarnings = FALSE, recursive=TRUE)
 
 # Load resource data ----
@@ -59,13 +59,10 @@ max_iter = 1000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 1, knots = 7),
                     #random = ~ bSpline(followup_month, degree = 1, knots = c(7)),
                     subject = "patient_id",
                     ng = ng,
-                    convB = 10^(-5),
-                    convL = 10^(-5),
-                    convG = 10^(-5),
                     maxiter = max_iter,
                     data = data_resource_lcmm,
                     verbose = TRUE,
@@ -78,8 +75,8 @@ if (ng == 1){
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7),
-                    mixture = ~ bSpline(followup_month, degree = 3, knots = 7),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 1, knots = 7),
+                    mixture = ~ bSpline(followup_month, degree = 1, knots = 7),
                     #random = ~ bSpline(followup_month, degree = 1, knots = c(7)),
                     classmb = ~1,
                     ng = ng,
