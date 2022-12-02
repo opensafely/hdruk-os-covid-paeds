@@ -184,21 +184,18 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "obs_trajectory",
 # Predicted trajectories ----
 
 ## Save model summary ----
-dput(
-  summary(lcmm_model),
-  file = here::here("output", "lcmm", resource_type, "model_summary",
-                  paste0("model_summary_", lcmm_model$ng, ".txt")),
-  control = "all"
-)
+sink(here::here("output", "lcmm", resource_type, "model_summary",
+                paste0("model_summary_", lcmm_model$ng, ".txt")))
+#print(summary(lcmm_model))
+print(predict_resource)
+sink()
 
 ## New time data ----
 data_time = data.frame(followup_month  = seq(1, 12, length = 100))
 
 ## Predict resource trajectories ----
-predict_resource = predictY(lcmm_model, data_time,
-                            var.time = "followup_month",
-                            draws = TRUE
-)
+predict_resource = predictY(lcmm_model, data_time, var.time = "followup_month",
+                            draws = TRUE)
 
 tbl_predicted_trajectory = predict_resource$pred %>% 
   as_tibble() %>% 
@@ -207,9 +204,7 @@ tbl_predicted_trajectory = predict_resource$pred %>%
 # Save predicted trajectory
 write_csv(tbl_predicted_trajectory,
           here::here("output", "lcmm", resource_type,"pred_trajectory",
-                     paste0("tbl_predicted_trajectory_",
-                            lcmm_model$ng,
-                            ".csv")))
+                     paste0("tbl_predicted_trajectory_", lcmm_model$ng, ".csv")))
 
 ## Table of predicted trajectories by class ----
 tbl_predicted_trajectory = tbl_predicted_trajectory %>% 
@@ -220,9 +215,9 @@ tbl_predicted_trajectory = tbl_predicted_trajectory %>%
       TRUE ~ "1"
     ),
     statistic = case_when(
-      str_starts(name, "Ypred_50")        ~ "y",
+      str_starts(name, "Ypred_50")   ~ "y",
       str_starts(name, "Ypred_2.5")  ~ "y_lower",
-      str_starts(name, "Ypred_97.5")  ~ "y_upper"
+      str_starts(name, "Ypred_97.5") ~ "y_upper"
     )
   ) %>%
   select(-name) %>% 
@@ -248,9 +243,6 @@ plot_predicted_trajectory = tbl_predicted_trajectory %>%
        fill = "Class", colour = "Class") +
   scale_x_continuous(breaks = seq(1, 12, 1)) +
   scale_y_continuous(limits = c(0, NA))
-
-
-plot_predicted_trajectory = plot(predict_resource)
 
 ggsave(filename = here::here("output", "lcmm", resource_type, "pred_trajectory",
                              paste0("plot_predicted_trajectory_",
