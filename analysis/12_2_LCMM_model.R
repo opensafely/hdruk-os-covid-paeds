@@ -17,7 +17,7 @@ library(tictoc)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 5
+  ng = 2
   resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
@@ -80,13 +80,13 @@ if (ng == 1){
              mixture = ~ bSpline(followup_month, degree = 1, knots = c(3,6,9)),
              #random = ~ bSpline(followup_month, degree = 1, knots = c(7)),
              classmb = ~1,
-             ng = ng,
+             ng = 2,
              B = lcmm_model_1,
              data = data_resource_lcmm,
              subject = "patient_id",
              maxiter = max_iter,
              verbose = TRUE,
-             nproc = nproc),
+             nproc = 4),
     maxiter = 20, rep = 20, minit = lcmm_model_1, cl = nproc)
   
 }
