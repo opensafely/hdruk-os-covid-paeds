@@ -17,7 +17,7 @@ library(tictoc)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 1
+  ng = 2
   resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
@@ -59,9 +59,9 @@ max_iter = 1000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = hlme(fixed = resource_use ~ followup_month,
+  lcmm_model = lcmm(fixed = resource_use ~ followup_month,
                     #random = ~ bSpline(followup_month, degree = 1),
-                    #link = "linear",
+                    link = "linear",
                     subject = "patient_id",
                     ng = ng,
                     maxiter = max_iter,
@@ -76,10 +76,10 @@ if (ng == 1){
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = hlme(fixed = resource_use ~ followup_month,
+  lcmm_model = lcmm(fixed = resource_use ~ followup_month,
                     mixture = ~ followup_month,
                     #random = ~ bSpline(followup_month, degree = 1),
-                    #link = "linear",
+                    link = "linear",
                     classmb = ~1,
                     ng = ng,
                     B = lcmm_model_1,
