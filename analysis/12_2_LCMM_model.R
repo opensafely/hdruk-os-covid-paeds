@@ -61,7 +61,7 @@ if (ng == 1){
 
   lcmm_model = lcmm(fixed = resource_use ~ followup_month,
                     #random = ~ bSpline(followup_month, degree = 1),
-                    link = "linear",
+                    link = "beta",
                     subject = "patient_id",
                     ng = ng,
                     maxiter = max_iter,
@@ -79,7 +79,7 @@ if (ng == 1){
   lcmm_model = lcmm(fixed = resource_use ~ followup_month,
                     mixture = ~ followup_month,
                     #random = ~ bSpline(followup_month, degree = 1),
-                    link = "linear",
+                    link = "beta",
                     classmb = ~1,
                     ng = ng,
                     B = lcmm_model_1,
