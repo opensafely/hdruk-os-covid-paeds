@@ -17,7 +17,7 @@ library(tictoc)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 1
+  ng = 5
   resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
@@ -59,13 +59,13 @@ max_iter = 5000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
-                    random = ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 1, knots = c(3,6,9)),
+                    #random = ~ bSpline(followup_month, degree = 1, knots = c(7)),
                     subject = "patient_id",
                     ng = ng,
                     maxiter = max_iter,
                     data = data_resource_lcmm,
-                    verbose = FALSE,
+                    verbose = TRUE,
                     nproc = nproc)
   
 } else{
@@ -75,9 +75,9 @@ if (ng == 1){
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
   # Run hlme ----
-  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
-                    random = ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
-                    mixture = ~ bSpline(followup_month, degree = 2, knots = c(3, 6, 9)),
+  lcmm_model = hlme(fixed = resource_use ~ bSpline(followup_month, degree = 1, knots = c(3,6,9)),
+                    mixture = ~ bSpline(followup_month, degree = 1, knots = c(3,6,9)),
+                    #random = ~ bSpline(followup_month, degree = 1, knots = c(7)),
                     classmb = ~1,
                     ng = ng,
                     B = lcmm_model_1,
