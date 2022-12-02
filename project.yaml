@@ -3941,6 +3941,7 @@ actions:
       moderately_sensitive:
         table_model_metrics: output/lcmm/outpatient/selection/tbl_model_metrics.csv
         table_class_probability: output/lcmm/outpatient/selection/tbl_class_probability.csv
+        plot_AIC: output/lcmm/outpatient/selection/plot_AIC.jpeg
         plot_BIC: output/lcmm/outpatient/selection/plot_BIC.jpeg
         plot_loglik: output/lcmm/outpatient/selection/plot_loglik.jpeg
         plot_class_probability: output/lcmm/outpatient/selection/plot_class_probability.jpeg 
