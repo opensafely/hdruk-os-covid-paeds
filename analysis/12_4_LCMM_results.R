@@ -18,7 +18,7 @@ library(splines2)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 1
+  ng = 2
   resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
@@ -208,9 +208,9 @@ tbl_predicted_trajectory = predict_resource$pred %>%
       TRUE ~ "1"
     ),
     statistic = case_when(
-      str_starts(name, "Ypred_50")   ~ "y",
-      str_starts(name, "Ypred_2.5")  ~ "y_lower",
-      str_starts(name, "Ypred_97.5") ~ "y_upper"
+      str_starts(name, "Ypred") ~ "y",
+      str_starts(name, "lower") ~ "y_lower",
+      str_starts(name, "upper") ~ "y_upper"
     )
   ) %>%
   select(-name) %>% 
