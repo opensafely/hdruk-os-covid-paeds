@@ -208,9 +208,9 @@ tbl_predicted_trajectory = predict_resource$pred %>%
       TRUE ~ "1"
     ),
     statistic = case_when(
-      str_starts(name, "Ypred") ~ "y",
-      str_starts(name, "lower") ~ "y_lower",
-      str_starts(name, "upper") ~ "y_upper"
+      str_starts(name, "Ypred_50") ~ "y",
+      str_starts(name, "Ypred_2.5") ~ "y_lower",
+      str_starts(name, "Ypred_97.5") ~ "y_upper"
     )
   ) %>%
   select(-name) %>% 
