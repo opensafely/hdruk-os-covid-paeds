@@ -11,6 +11,10 @@
 # Load packages ----
 library(tidyverse)
 
+# Create output directories  ----
+dir_lcmm = here::here("output", "lcmm")
+dir.create(dir_lcmm, showWarnings = FALSE, recursive=TRUE)
+
 # Load resource data ----
 data_positives_lcmm = read_rds(here::here("output", "data", "data_positives.rds"))
 data_resource_lcmm = read_rds(here::here("output", "data", "data_resource.rds"))
