@@ -31,6 +31,16 @@ data_resource_lcmm = data_resource_lcmm %>%
             days = n()) %>% 
   filter(days == 30)
 
+# Create summary of resource-use for diagnositics
+summary_data_resource_lcmm = data_resource_lcmm %>% 
+  pivot_longer(cols = -c(patient_id, followup_month)) %>% 
+  group_by(name, followup_month) %>% 
+  count(value)
+
+## Save summary
+write_csv(summary_data_resource_lcmm,
+          here::here("output", "lcmm", "summary_data_resource_lcmm.csv"))
+
 # Save resource data ----
 write_rds(data_resource_lcmm,
           here::here("output", "data", "data_resource_lcmm.rds"))
