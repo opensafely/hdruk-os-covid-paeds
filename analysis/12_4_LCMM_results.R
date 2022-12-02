@@ -182,6 +182,12 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "obs_trajectory",
        height = 6, width = 6, units = "in")
 
 # Predicted trajectories ----
+## New time data ----
+data_time = data.frame(followup_month  = seq(1, 12, length = 100))
+
+## Predict resource trajectories ----
+predict_resource = predictY(lcmm_model, data_time, var.time = "followup_month",
+                            draws = TRUE)
 
 ## Save model summary ----
 sink(here::here("output", "lcmm", resource_type, "model_summary",
@@ -189,13 +195,6 @@ sink(here::here("output", "lcmm", resource_type, "model_summary",
 #print(summary(lcmm_model))
 print(predict_resource)
 sink()
-
-## New time data ----
-data_time = data.frame(followup_month  = seq(1, 12, length = 100))
-
-## Predict resource trajectories ----
-predict_resource = predictY(lcmm_model, data_time, var.time = "followup_month",
-                            draws = TRUE)
 
 tbl_predicted_trajectory = predict_resource$pred %>% 
   as_tibble() %>% 
