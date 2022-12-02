@@ -39,11 +39,13 @@ count_redact = global_var$disclosure_redact
 dir_lcmm_summary_tbl     = here::here("output", "lcmm", resource_type, "summary_tbl")
 dir_lcmm_obs_trajectory  = here::here("output", "lcmm", resource_type, "obs_trajectory")
 dir_lcmm_pred_trajectory = here::here("output", "lcmm", resource_type, "pred_trajectory")
+dir_lcmm_model_summary   = here::here("output", "lcmm", resource_type, "model_summary")
 
 ## Create new output directories ----
-dir.create(dir_lcmm_summary_tbl,    showWarnings = FALSE, recursive=TRUE)
-dir.create(dir_lcmm_obs_trajectory, showWarnings = FALSE, recursive=TRUE)
+dir.create(dir_lcmm_summary_tbl,     showWarnings = FALSE, recursive=TRUE)
+dir.create(dir_lcmm_obs_trajectory,  showWarnings = FALSE, recursive=TRUE)
 dir.create(dir_lcmm_pred_trajectory, showWarnings = FALSE, recursive=TRUE)
+dir.create(dir_lcmm_model_summary,   showWarnings = FALSE, recursive=TRUE)
 
 # Plot theme ----
 theme_set(theme_bw())
@@ -180,13 +182,23 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "obs_trajectory",
        height = 6, width = 6, units = "in")
 
 # Predicted trajectories ----
+
+## Save model summary ----
+dput(
+  summary(lcmm_model),
+  file = here::here("output", "lcmm", resource_type, "model_summary",
+                  paste0("model_summary_", lcmm_model$ng, ".txt")),
+  control = "all"
+)
+
 ## New time data ----
 data_time = data.frame(followup_month  = seq(1, 12, length = 100))
 
 ## Predict resource trajectories ----
 predict_resource = predictY(lcmm_model, data_time,
-                            var.time = "followup_month", draws = T
-                            )
+                            var.time = "followup_month",
+                            draws = TRUE
+)
 
 tbl_predicted_trajectory = predict_resource$pred %>% 
   as_tibble() %>% 
@@ -236,6 +248,9 @@ plot_predicted_trajectory = tbl_predicted_trajectory %>%
        fill = "Class", colour = "Class") +
   scale_x_continuous(breaks = seq(1, 12, 1)) +
   scale_y_continuous(limits = c(0, NA))
+
+
+plot_predicted_trajectory = plot(predict_resource)
 
 ggsave(filename = here::here("output", "lcmm", resource_type, "pred_trajectory",
                              paste0("plot_predicted_trajectory_",
