@@ -54,7 +54,7 @@ data_resource_lcmm = as.data.frame(data_resource_lcmm)
 
 # Run LCMM model ----
 ## Set model parameters ----
-max_iter = 5000 # Maximum number of iterations
+max_iter = 1000 # Maximum number of iterations
 
 ## Run lcmm ----
 if (ng == 1){
