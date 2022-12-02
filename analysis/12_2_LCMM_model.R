@@ -17,7 +17,7 @@ library(tictoc)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 2
+  ng = 1
   resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
@@ -25,7 +25,7 @@ if(length(args) == 0){
 }
 
 # Number cores for parallel computation
-nproc = 2
+nproc = 4
 
 # Create output directories  ----
 dir_lcmm_models = here::here("output", "lcmm", resource_type, "models")
@@ -61,7 +61,7 @@ if (ng == 1){
 
   lcmm_model = lcmm(fixed = resource_use ~ bSpline(followup_month, degree = 1),
                     #random = ~ bSpline(followup_month, degree = 1),
-                    link = "splines",
+                    link = "3-equi-splines",
                     subject = "patient_id",
                     ng = ng,
                     maxiter = max_iter,
@@ -79,7 +79,7 @@ if (ng == 1){
   lcmm_model = lcmm(fixed = resource_use ~ bSpline(followup_month, degree = 1),
                     mixture = ~ bSpline(followup_month, degree = 1),
                     #random = ~ bSpline(followup_month, degree = 1),
-                    link = "splines",
+                    link = "3-equi-splines",
                     classmb = ~1,
                     ng = ng,
                     B = lcmm_model_1,
