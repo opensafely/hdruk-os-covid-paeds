@@ -3853,6 +3853,7 @@ actions:
         plot_observed_trajectory: output/lcmm/beddays/obs_trajectory/plot_observed_trajectory_1.jpeg
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_1.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_1.jpeg
+        model_summary: output/lcmm/beddays/model_summary/model_summary_1.txt
 
   lcmm_results_2_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 2 beddays
@@ -3864,6 +3865,7 @@ actions:
         plot_observed_trajectory: output/lcmm/beddays/obs_trajectory/plot_observed_trajectory_2.jpeg
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_2.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_2.jpeg
+        model_summary: output/lcmm/beddays/model_summary/model_summary_2.txt
 
   lcmm_results_3_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 3 beddays
@@ -3875,6 +3877,7 @@ actions:
         plot_observed_trajectory: output/lcmm/beddays/obs_trajectory/plot_observed_trajectory_3.jpeg
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_3.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_3.jpeg
+        model_summary: output/lcmm/beddays/model_summary/model_summary_3.txt
 
   lcmm_results_4_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 4 beddays
@@ -3886,6 +3889,7 @@ actions:
         plot_observed_trajectory: output/lcmm/beddays/obs_trajectory/plot_observed_trajectory_4.jpeg
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_4.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_4.jpeg
+        model_summary: output/lcmm/beddays/model_summary/model_summary_4.txt
 
   lcmm_results_5_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 5 beddays
@@ -3897,6 +3901,7 @@ actions:
         plot_observed_trajectory: output/lcmm/beddays/obs_trajectory/plot_observed_trajectory_5.jpeg
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_5.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_5.jpeg
+        model_summary: output/lcmm/beddays/model_summary/model_summary_5.txt
 
   lcmm_run_model_1_outpatient:
     run: r:latest analysis/12_2_LCMM_model.R 1 outpatient
@@ -3956,6 +3961,7 @@ actions:
         plot_observed_trajectory: output/lcmm/outpatient/obs_trajectory/plot_observed_trajectory_1.jpeg
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_1.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_1.jpeg
+        model_summary: output/lcmm/outpatient/model_summary/model_summary_1.txt
 
   lcmm_results_2_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 2 outpatient
@@ -3967,6 +3973,7 @@ actions:
         plot_observed_trajectory: output/lcmm/outpatient/obs_trajectory/plot_observed_trajectory_2.jpeg
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_2.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_2.jpeg
+        model_summary: output/lcmm/outpatient/model_summary/model_summary_2.txt
 
   lcmm_results_3_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 3 outpatient
@@ -3978,6 +3985,7 @@ actions:
         plot_observed_trajectory: output/lcmm/outpatient/obs_trajectory/plot_observed_trajectory_3.jpeg
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_3.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_3.jpeg
+        model_summary: output/lcmm/outpatient/model_summary/model_summary_3.txt
 
   lcmm_results_4_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 4 outpatient
@@ -3989,6 +3997,7 @@ actions:
         plot_observed_trajectory: output/lcmm/outpatient/obs_trajectory/plot_observed_trajectory_4.jpeg
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_4.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_4.jpeg
+        model_summary: output/lcmm/outpatient/model_summary/model_summary_4.txt
 
   lcmm_results_5_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 5 outpatient
@@ -4000,6 +4009,7 @@ actions:
         plot_observed_trajectory: output/lcmm/outpatient/obs_trajectory/plot_observed_trajectory_5.jpeg
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_5.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_5.jpeg
+        model_summary: output/lcmm/outpatient/model_summary/model_summary_5.txt
 
   lcmm_run_model_1_gp:
     run: r:latest analysis/12_2_LCMM_model.R 1 gp
@@ -4058,6 +4068,7 @@ actions:
         plot_observed_trajectory: output/lcmm/gp/obs_trajectory/plot_observed_trajectory_1.jpeg
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_1.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_1.jpeg
+        model_summary: output/lcmm/gp/model_summary/model_summary_1.txt
 
   lcmm_results_2_gp:
     run: r:latest analysis/12_4_LCMM_results.R 2 gp
@@ -4069,6 +4080,7 @@ actions:
         plot_observed_trajectory: output/lcmm/gp/obs_trajectory/plot_observed_trajectory_2.jpeg
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_2.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_2.jpeg
+        model_summary: output/lcmm/gp/model_summary/model_summary_2.txt
 
   lcmm_results_3_gp:
     run: r:latest analysis/12_4_LCMM_results.R 3 gp
@@ -4080,6 +4092,7 @@ actions:
         plot_observed_trajectory: output/lcmm/gp/obs_trajectory/plot_observed_trajectory_3.jpeg
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_3.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_3.jpeg
+        model_summary: output/lcmm/gp/model_summary/model_summary_3.txt
 
   lcmm_results_4_gp:
     run: r:latest analysis/12_4_LCMM_results.R 4 gp
@@ -4091,6 +4104,7 @@ actions:
         plot_observed_trajectory: output/lcmm/gp/obs_trajectory/plot_observed_trajectory_4.jpeg
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_4.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_4.jpeg
+        model_summary: output/lcmm/gp/model_summary/model_summary_4.txt
 
   lcmm_results_5_gp:
     run: r:latest analysis/12_4_LCMM_results.R 5 gp
@@ -4102,3 +4116,4 @@ actions:
         plot_observed_trajectory: output/lcmm/gp/obs_trajectory/plot_observed_trajectory_5.jpeg
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_5.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_5.jpeg
+        model_summary: output/lcmm/gp/model_summary/model_summary_5.txt
