@@ -75,19 +75,22 @@ if (ng == 1){
   lcmm_model_1 = read_rds(
     here::here("output", "lcmm", resource_type, "models", "lcmm_model_1.rds"))
   
-  # Run hlme ----
-  lcmm_model = lcmm(fixed = resource_use ~ followup_month,
-                    mixture = ~ followup_month,
-                    #random = ~ bSpline(followup_month, degree = 1),
-                    link = "3-equi-splines",
-                    classmb = ~1,
-                    ng = ng,
-                    B = lcmm_model_1,
-                    data = data_resource_lcmm,
-                    subject = "patient_id",
-                    maxiter = max_iter,
-                    verbose = TRUE,
-                    nproc = nproc)
+  # Run lcmm ----
+  lcmm_model = gridsearch(
+    m = lcmm(fixed = resource_use ~ followup_month,
+             mixture = ~ followup_month,
+             #random = ~ bSpline(followup_month, degree = 1),
+             link = "3-equi-splines",
+             classmb = ~1,
+             ng = ng,
+             B = lcmm_model_1,
+             data = data_resource_lcmm,
+             subject = "patient_id",
+             maxiter = max_iter,
+             verbose = TRUE,
+             nproc = nproc),
+    rep = 20, maxiter = 10, minit = lcmm_model_1
+  )
 }
 
 # Save lcmm_model ----
