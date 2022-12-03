@@ -3839,9 +3839,11 @@ actions:
       moderately_sensitive:
         table_model_metrics: output/lcmm/beddays/selection/tbl_model_metrics.csv
         table_class_probability: output/lcmm/beddays/selection/tbl_class_probability.csv
+        table_class_proportion: output/lcmm/beddays/selection/tbl_class_proportion.csv
         plot_BIC: output/lcmm/beddays/selection/plot_BIC.jpeg
         plot_loglik: output/lcmm/beddays/selection/plot_loglik.jpeg
-        plot_class_probability: output/lcmm/beddays/selection/plot_class_probability.jpeg 
+        plot_class_probability: output/lcmm/beddays/selection/plot_class_probability.jpeg
+        plot_class_proportion: output/lcmm/beddays/selection/plot_class_proportion.jpeg 
 
   lcmm_results_1_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 1 beddays
@@ -3946,10 +3948,12 @@ actions:
       moderately_sensitive:
         table_model_metrics: output/lcmm/outpatient/selection/tbl_model_metrics.csv
         table_class_probability: output/lcmm/outpatient/selection/tbl_class_probability.csv
+        table_class_proportion: output/lcmm/outpatient/selection/tbl_class_proportion.csv
         plot_AIC: output/lcmm/outpatient/selection/plot_AIC.jpeg
         plot_BIC: output/lcmm/outpatient/selection/plot_BIC.jpeg
         plot_loglik: output/lcmm/outpatient/selection/plot_loglik.jpeg
-        plot_class_probability: output/lcmm/outpatient/selection/plot_class_probability.jpeg 
+        plot_class_probability: output/lcmm/outpatient/selection/plot_class_probability.jpeg
+        plot_class_proportion: output/lcmm/outpatient/selection/plot_class_proportion.jpeg 
 
   lcmm_results_1_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 1 outpatient
@@ -4054,9 +4058,11 @@ actions:
       moderately_sensitive:
         table_model_metrics: output/lcmm/gp/selection/tbl_model_metrics.csv
         table_class_probability: output/lcmm/gp/selection/tbl_class_probability.csv
+        table_class_proportion: output/lcmm/gp/selection/tbl_class_proportion.csv
         plot_BIC: output/lcmm/gp/selection/plot_BIC.jpeg
         plot_loglik: output/lcmm/gp/selection/plot_loglik.jpeg
-        plot_class_probability: output/lcmm/gp/selection/plot_class_probability.jpeg 
+        plot_class_probability: output/lcmm/gp/selection/plot_class_probability.jpeg
+        plot_class_proportion: output/lcmm/gp/selection/plot_class_proportion.jpeg 
 
   lcmm_results_1_gp:
     run: r:latest analysis/12_4_LCMM_results.R 1 gp
