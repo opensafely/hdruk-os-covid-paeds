@@ -73,15 +73,18 @@ lcmm_models = link_function %>%
   pmap(function(label, link_function, interior_nodes){
     
     # Run LCMM ----
-    lcmm_model = lcmm(fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7, Boundary.knots = c(0, 12)),
-                      link = link_function,
-                      intnodes = interior_nodes,
-                      subject = "patient_id",
-                      ng = 1,
-                      maxiter = max_iter,
-                      data = data_resource_lcmm,
-                      verbose = TRUE,
-                      nproc = nproc)
+    lcmm_model = lcmm(
+      fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7,
+                                     Boundary.knots = c(1, 12)),
+      link = link_function,
+      intnodes = interior_nodes,
+      subject = "patient_id",
+      ng = 1,
+      maxiter = max_iter,
+      data = data_resource_lcmm,
+      verbose = TRUE,
+      nproc = nproc
+    )
     
     # Add label to list
     lcmm_model$label = label
