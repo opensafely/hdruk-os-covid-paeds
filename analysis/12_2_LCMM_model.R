@@ -59,16 +59,19 @@ max_iter = 1000 # Maximum number of iterations
 ## Run lcmm ----
 if (ng == 1){
 
-  lcmm_model = lcmm(fixed = resource_use ~ followup_month,
-                    #random = ~ bSpline(followup_month, degree = 1),
-                    link = "3-manual-splines",
-                    intnodes = c(5),
-                    subject = "patient_id",
-                    ng = ng,
-                    maxiter = max_iter,
-                    data = data_resource_lcmm,
-                    verbose = TRUE,
-                    nproc = nproc)
+  lcmm_model = lcmm(
+    fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7,
+                                   Boundary.knots = c(0, 12)),
+    #random = ~ bSpline(followup_month, degree = 1),
+    link = "3-manual-splines",
+    intnodes = c(5),
+    subject = "patient_id",
+    ng = ng,
+    maxiter = max_iter,
+    data = data_resource_lcmm,
+    verbose = TRUE,
+    nproc = nproc
+  )
   
 } else{
   
@@ -78,20 +81,23 @@ if (ng == 1){
   
   # Run lcmm ----
   lcmm_model = gridsearch(
-    m = lcmm(fixed = resource_use ~ followup_month,
-             mixture = ~ followup_month,
-             #random = ~ bSpline(followup_month, degree = 1),
-             link = "3-manual-splines",
-             intnodes = c(5),
-             classmb = ~1,
-             ng = ng,
-             B = lcmm_model_1,
-             data = data_resource_lcmm,
-             subject = "patient_id",
-             maxiter = max_iter,
-             verbose = TRUE,
-             nproc = nproc),
-    rep = 20, maxiter = 10, minit = lcmm_model_1
+    m = lcmm(
+      fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7,
+                                     Boundary.knots = c(1, 12)),
+      mixture = ~ bSpline(followup_month, degree = 3, knots = 7,
+                          Boundary.knots = c(1, 12)),
+      #random = ~ bSpline(followup_month, degree = 1),
+      link = "3-manual-splines",
+      intnodes = c(5),
+      classmb = ~1,
+      ng = ng,
+      B = lcmm_model_1,
+      data = data_resource_lcmm,
+      subject = "patient_id",
+      maxiter = max_iter,
+      verbose = TRUE,
+      nproc = nproc),
+    rep = 20, maxiter = 5, minit = lcmm_model_1
   )
 }
 
