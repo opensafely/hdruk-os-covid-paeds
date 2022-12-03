@@ -80,7 +80,7 @@ if (ng == 1){
     m = lcmm(fixed = resource_use ~ followup_month,
              mixture = ~ followup_month,
              #random = ~ bSpline(followup_month, degree = 1),
-             link = "3-equi-splines",
+             link = "4-equi-splines",
              classmb = ~1,
              ng = ng,
              B = lcmm_model_1,
