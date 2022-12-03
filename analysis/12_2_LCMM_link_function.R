@@ -16,10 +16,13 @@ library(splines2)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  resource_type = "outpatient"
+  resource_type = "beddays"
 } else{
   resource_type = args[[1]]
 }
+
+# Plot theme ----
+theme_set(theme_bw())
 
 # Number cores for parallel computation
 nproc = 4
@@ -58,10 +61,12 @@ max_iter = 1000 # Maximum number of iterations
 
 # Create table of link functions to model ----
 link_function = tribble(
-  ~label,                       ~link_function,      ~interior_nodes,
-  "linear",                     "linear",            NULL,
-  "splines (5 equi-distant)",   "5-equi-splines",    NULL,
-  "splines (10 equi-distant)",  "10-equi-splines",   NULL
+  ~label,                           ~link_function,      ~interior_nodes,
+  "linear",                         "linear",            NULL,
+  "splines (5 equi-distant)",       "5-equi-splines",    NULL,
+  "splines (7 equi-distant)",       "7-equi-splines",    NULL,
+  "splines (3 manual - knot: 3)",   "3-manual-splines",  c(3),
+  "splines (3 manual - knot: 5)",   "3-manual-splines",  c(5)
 )
 
 lcmm_models = link_function %>% 
@@ -147,12 +152,11 @@ plot_estimlink = tbl_estimlink %>%
   labs(x = "Latent process",
        y = y_label_pred,
        fill = "Link function", colour = "Link function") +
-  scale_y_continuous(limits = c(0, NA)) +
-  theme(legend.position = "bottom")
+  scale_y_continuous(limits = c(0, NA))
 
 ggsave(filename = here::here("output", "lcmm", resource_type, 
                              "link_function", "plot_estimlink.jpeg"),
        plot = plot_estimlink,
-       height = 6, width = 6, units = "in")
+       height = 6, width = 10, units = "in")
 
 
