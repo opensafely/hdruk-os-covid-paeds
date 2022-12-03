@@ -141,3 +141,37 @@ plot_class_probability = tbl_class_probability %>%
 ggsave(filename = here::here("output", "lcmm", resource_type, "selection", "plot_class_probability.jpeg"),
        plot = plot_class_probability,
        height = 6, width = 6, units = "in")
+
+
+# Class proportion ----
+## Calculate class proportion ----
+tbl_class_proportion = lcmm_models %>% 
+  map(function(lcmm_model){
+    lcmm_model$pprob %>%
+      count(class) %>% 
+      mutate(proprtion = n/sum(n),
+             n_cluster = lcmm_model$ng) %>% 
+      relocate(n_cluster)
+  }) %>%
+  bind_rows() %>% 
+  mutate(
+    n_cluster = n_cluster %>% factor(),
+    class = class %>% factor()
+  )
+
+## Save class proportion ----
+write_csv(tbl_class_proportion,
+          here::here("output", "lcmm", resource_type, "selection", "tbl_class_proportion.csv"))
+
+## Plot class proportion by number of clusters ----
+plot_class_proportion = tbl_class_proportion %>%
+  ggplot(aes(x = n_cluster, y = proprtion*100, fill = class)) +
+  geom_col(position = "dodge") +
+  geom_hline(yintercept = 5, linetype = "dashed") +
+  labs(x = "Number of clusters", fill = "Class",
+       y = "Class membership proportion (%)")
+
+ggsave(filename = here::here("output", "lcmm", resource_type, "selection", "plot_class_proportion.jpeg"),
+       plot = plot_class_proportion,
+       height = 6, width = 6, units = "in")
+
