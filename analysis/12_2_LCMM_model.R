@@ -61,7 +61,7 @@ if (ng == 1){
 
   lcmm_model = lcmm(fixed = resource_use ~ followup_month,
                     #random = ~ bSpline(followup_month, degree = 1),
-                    link = "3-equi-splines",
+                    link = "4-equi-splines",
                     subject = "patient_id",
                     ng = ng,
                     maxiter = max_iter,
