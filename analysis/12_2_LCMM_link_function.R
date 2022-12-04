@@ -25,7 +25,7 @@ if(length(args) == 0){
 theme_set(theme_bw())
 
 # Number cores for parallel computation
-nproc = 4
+nproc = 1
 
 # Create output directories  ----
 dir_lcmm_link_models = here::here("output", "lcmm", resource_type, 
