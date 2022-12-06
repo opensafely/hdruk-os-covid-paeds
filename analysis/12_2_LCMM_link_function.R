@@ -63,8 +63,8 @@ max_iter = 1000 # Maximum number of iterations
 link_function = tribble(
   ~label,                           ~link_function,      ~interior_nodes,
   "linear",                         "linear",            NULL,
-  "splines (5 equi-distant)",       "5-equi-splines",    NULL,
   "splines (7 equi-distant)",       "7-equi-splines",    NULL,
+  "splines (3 manual - knot: 2)",   "3-manual-splines",  c(2),
   "splines (3 manual - knot: 3)",   "3-manual-splines",  c(3),
   "splines (3 manual - knot: 5)",   "3-manual-splines",  c(5)
 )
