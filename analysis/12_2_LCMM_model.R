@@ -25,7 +25,11 @@ if(length(args) == 0){
 }
 
 # Number cores for parallel computation
-nproc = 4
+nproc = case_when(
+  resource_type == "beddays" ~ 1,
+  resource_type == "outpatient" ~ 2,
+  resource_type == "gp" ~ 8
+)
 
 # Create output directories  ----
 dir_lcmm_models = here::here("output", "lcmm", resource_type, "models")
@@ -54,15 +58,16 @@ data_resource_lcmm = as.data.frame(data_resource_lcmm)
 
 # Run LCMM model ----
 ## Set model parameters ----
-max_iter = 1000 # Maximum number of iterations
+max_iter = 5000 # Maximum number of iterations
 
 ## Run lcmm ----
 if (ng == 1){
 
   lcmm_model = lcmm(
-    fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7,
-                                   Boundary.knots = c(0, 12)),
-    #random = ~ bSpline(followup_month, degree = 1),
+    fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 6.5,
+                                   Boundary.knots = c(1, 12)),
+    random = ~ bSpline(followup_month, degree = 3, knots = 6.5,
+                       Boundary.knots = c(1, 12)),
     link = "3-manual-splines",
     intnodes = c(3),
     subject = "patient_id",
@@ -82,11 +87,12 @@ if (ng == 1){
   # Run lcmm ----
   lcmm_model = gridsearch(
     m = lcmm(
-      fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7,
+      fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 6.5,
                                      Boundary.knots = c(1, 12)),
-      mixture = ~ bSpline(followup_month, degree = 3, knots = 7,
+      mixture = ~ bSpline(followup_month, degree = 3, knots = 6.5,
                           Boundary.knots = c(1, 12)),
-      #random = ~ bSpline(followup_month, degree = 1),
+      random = ~ bSpline(followup_month, degree = 3, knots = 6.5,
+                         Boundary.knots = c(1, 12)),
       link = "3-manual-splines",
       intnodes = c(3),
       classmb = ~1,
