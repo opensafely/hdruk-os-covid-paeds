@@ -26,6 +26,7 @@ if(length(args) == 0){
 
 # Number cores for parallel computation
 nproc = case_when(
+  ng == 1 ~ 4,
   resource_type == "beddays" ~ 1,
   resource_type == "outpatient" ~ 2,
   resource_type == "gp" ~ 8
