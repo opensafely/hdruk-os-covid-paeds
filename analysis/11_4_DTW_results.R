@@ -162,7 +162,6 @@ write_csv(tbl_summary,
 
 
 # Multinomial logistic regression ----------------
-
 ## Predictor variables -----------------------
 predictor_var = c(
   # Demographics
