@@ -375,6 +375,11 @@ data_positives = data_positives %>%
            ff_label("PIMS-TS")
   )
 
+
+# Drop unused factors ----
+data_positives = data_positives %>% 
+  mutate(across(where(is.factor), fct_drop))
+
 # Save resource data ----
 write_rds(data_resource,
           here::here("output", "data", "data_resource.rds"),
