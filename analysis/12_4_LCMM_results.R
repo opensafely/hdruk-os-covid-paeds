@@ -14,6 +14,9 @@ library(tidyverse)
 library(finalfit)
 library(lcmm)
 library(splines2)
+library(nnet)
+library(broom)
+library(broom.helpers)
 
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
@@ -40,6 +43,7 @@ dir_lcmm_summary_tbl     = here::here("output", "lcmm", resource_type, "summary_
 dir_lcmm_obs_trajectory  = here::here("output", "lcmm", resource_type, "obs_trajectory")
 dir_lcmm_pred_trajectory = here::here("output", "lcmm", resource_type, "pred_trajectory")
 dir_lcmm_model_summary   = here::here("output", "lcmm", resource_type, "model_summary")
+dir_lcmm_model_summary   = here::here("output", "lcmm", resource_type, "multinomial")
 
 ## Create new output directories ----
 dir.create(dir_lcmm_summary_tbl,     showWarnings = FALSE, recursive=TRUE)
@@ -247,4 +251,88 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "pred_trajectory",
        plot = plot_predicted_trajectory,
        height = 6, width = 6, units = "in")
 
+
+
+# Multinomial logistic regression ----------------
+## Predictor variables -----------------------
+predictor_var = c(
+  # Demographics
+  "age_group", "sex", "imd_Q5_2019", "region_2019",
+  "rural_urban_2019",
+  
+  # Shielding
+  "shielding",
+  
+  # Comorbidities
+  "mental_health_disorders", "neurodevelopmental_and_behavioural",
+  "asthma", "cystic_fibrosis", "other_respiratory",
+  "cardiovascular", "epilepsy", "headaches", "other_neurological",
+  "gastrointestinal_conditions", "genitourinary", "cancer",
+  "non_malignant_haematological", "immunological", "chronic_infections",
+  "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
+  "metabolic", "transplant", "palliative_care",
+  
+  # Vaccination status
+  "vaccination_status",
+  
+  # Illness severity 2 weeks after positive test
+  "illness_severity_2wks",
+  
+  # Previous healthcare use
+  "ntile_gp_pre_covid_1yr",
+  "ntile_outpatient_pre_covid_1yr",
+  "ntile_beddays_pre_covid_1yr"
+)
+
+## Model forumla --------------
+model_formula = paste0("class ~ ",
+                       paste(predictor_var, collapse = " + ")) %>% 
+  as.formula()
+
+## Fit multinomial model ------------------------
+model_multinom = multinom(formula = model_formula, data = data_positives_lcmm)
+
+## Model coefficients ------
+tbl_multinom_coef = model_multinom %>%
+  tidy_and_attach(exponentiate = TRUE, conf.int = TRUE) %>%
+  tidy_add_reference_rows() %>%
+  tidy_add_estimate_to_reference_rows() %>% 
+  tidy_add_term_labels()
+
+## Save model coefficients table ----
+write_csv(tbl_multinom_coef,
+          here::here("output", "lcmm", resource_type, "multinomial",
+                     paste0("tbl_multinom_coef_", n_clusters, ".csv")))
+
+## Save model metrics -----
+tbl_multinom_metrics = model_multinom %>% 
+  glance()
+
+## Save model metrics -----
+write_csv(tbl_multinom_metrics,
+          here::here("output", "lcmm", resource_type, "multinomial",
+                     paste0("tbl_multinom_metrics_", n_clusters, ".csv")))
+
+## Plot odds ratios ----
+plot_or = tbl_multinom_coef %>%
+  tidy_remove_intercept() %>%
+  filter(reference_row == FALSE) %>% 
+  mutate(plot_label = paste0(var_label, ": ", label) %>% 
+           factor() %>% 
+           fct_inorder() %>% 
+           fct_rev()) %>%
+  ggplot(aes(y = plot_label, x = estimate, xmin = conf.low, xmax = conf.high)) +
+  geom_point(colour = "blue", size = 1.5) + 
+  geom_errorbar(colour = "blue", width=.2) +
+  geom_vline(xintercept = 1, lty = 2) +
+  facet_wrap(~ y.level) +
+  scale_x_continuous(trans='log10') +
+  labs(y = NULL) +
+  xlab("Odds ratio (95% CI)")
+
+## Save plot --------
+ggsave(filename = paste0("plot_multinom_coef_", n_clusters, ".jpeg"),
+       plot = plot_or,
+       path = here::here("output", "lcmm", resource_type, "multinomial"),
+       width = 10, height = 10, units = "in")
 
