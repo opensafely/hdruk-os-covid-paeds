@@ -3749,6 +3749,9 @@ actions:
         tbl_summary: output/dtw/results/tbl_summary_4.csv
         tbl_resource_use: output/dtw/results/tbl_resource_use_cluster_4.csv
         plot_resource_use: output/dtw/results/plot_resource_use_cluster_4.jpeg
+        tbl_multinom_coef: output/dtw/results/tbl_multinom_coef_4.csv
+        tbl_multinom_metrics: output/dtw/results/tbl_multinom_metrics_4.csv
+        plot_multinom_coef: output/dtw/results/plot_multinom_coef_4.jpeg
 
   dtw_results_5:
     run: r:latest analysis/11_4_DTW_results.R 5
@@ -3758,6 +3761,9 @@ actions:
         tbl_summary: output/dtw/results/tbl_summary_5.csv
         tbl_resource_use: output/dtw/results/tbl_resource_use_cluster_5.csv
         plot_resource_use: output/dtw/results/plot_resource_use_cluster_5.jpeg
+        tbl_multinom_coef: output/dtw/results/tbl_multinom_coef_5.csv
+        tbl_multinom_metrics: output/dtw/results/tbl_multinom_metrics_5.csv
+        plot_multinom_coef: output/dtw/results/plot_multinom_coef_5.jpeg
 
   dtw_results_6:
     run: r:latest analysis/11_4_DTW_results.R 6
@@ -3767,6 +3773,9 @@ actions:
         tbl_summary: output/dtw/results/tbl_summary_6.csv
         tbl_resource_use: output/dtw/results/tbl_resource_use_cluster_6.csv
         plot_resource_use: output/dtw/results/plot_resource_use_cluster_6.jpeg
+        tbl_multinom_coef: output/dtw/results/tbl_multinom_coef_6.csv
+        tbl_multinom_metrics: output/dtw/results/tbl_multinom_metrics_6.csv
+        plot_multinom_coef: output/dtw/results/plot_multinom_coef_6.jpeg
 
   dtw_results_7:
     run: r:latest analysis/11_4_DTW_results.R 7
@@ -3776,6 +3785,9 @@ actions:
         tbl_summary: output/dtw/results/tbl_summary_7.csv
         tbl_resource_use: output/dtw/results/tbl_resource_use_cluster_7.csv
         plot_resource_use: output/dtw/results/plot_resource_use_cluster_7.jpeg
+        tbl_multinom_coef: output/dtw/results/tbl_multinom_coef_7.csv
+        tbl_multinom_metrics: output/dtw/results/tbl_multinom_metrics_7.csv
+        plot_multinom_coef: output/dtw/results/plot_multinom_coef_7.jpeg
 
   dtw_results_8:
     run: r:latest analysis/11_4_DTW_results.R 8
@@ -3785,6 +3797,9 @@ actions:
         tbl_summary: output/dtw/results/tbl_summary_8.csv
         tbl_resource_use: output/dtw/results/tbl_resource_use_cluster_8.csv
         plot_resource_use: output/dtw/results/plot_resource_use_cluster_8.jpeg
+        tbl_multinom_coef: output/dtw/results/tbl_multinom_coef_8.csv
+        tbl_multinom_metrics: output/dtw/results/tbl_multinom_metrics_8.csv
+        plot_multinom_coef: output/dtw/results/plot_multinom_coef_8.jpeg
 
   lcmm_data_prep:
     run: r:latest analysis/12_1_LCMM_data_prep.R
