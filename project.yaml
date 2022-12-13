@@ -3898,6 +3898,9 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_1.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_1.jpeg
         model_summary: output/lcmm/beddays/model_summary/model_summary_1.txt
+        tbl_multinom_coef: output/lcmm/beddays/multinomial/tbl_multinom_coef_1.csv
+        tbl_multinom_metrics: output/lcmm/beddays/multinomial/tbl_multinom_metrics_1.csv
+        plot_multinom_coef: output/lcmm/beddays/multinomial/plot_multinom_coef_1.jpeg
 
   lcmm_results_2_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 2 beddays
@@ -3910,6 +3913,9 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_2.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_2.jpeg
         model_summary: output/lcmm/beddays/model_summary/model_summary_2.txt
+        tbl_multinom_coef: output/lcmm/beddays/multinomial/tbl_multinom_coef_2.csv
+        tbl_multinom_metrics: output/lcmm/beddays/multinomial/tbl_multinom_metrics_2.csv
+        plot_multinom_coef: output/lcmm/beddays/multinomial/plot_multinom_coef_2.jpeg
 
   lcmm_results_3_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 3 beddays
@@ -3922,6 +3928,9 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_3.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_3.jpeg
         model_summary: output/lcmm/beddays/model_summary/model_summary_3.txt
+        tbl_multinom_coef: output/lcmm/beddays/multinomial/tbl_multinom_coef_3.csv
+        tbl_multinom_metrics: output/lcmm/beddays/multinomial/tbl_multinom_metrics_3.csv
+        plot_multinom_coef: output/lcmm/beddays/multinomial/plot_multinom_coef_3.jpeg
 
   lcmm_results_4_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 4 beddays
@@ -3934,6 +3943,9 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_4.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_4.jpeg
         model_summary: output/lcmm/beddays/model_summary/model_summary_4.txt
+        tbl_multinom_coef: output/lcmm/beddays/multinomial/tbl_multinom_coef_4.csv
+        tbl_multinom_metrics: output/lcmm/beddays/multinomial/tbl_multinom_metrics_4.csv
+        plot_multinom_coef: output/lcmm/beddays/multinomial/plot_multinom_coef_4.jpeg
 
   lcmm_results_5_beddays:
     run: r:latest analysis/12_4_LCMM_results.R 5 beddays
@@ -3946,6 +3958,9 @@ actions:
         table_predicted_trajectory: output/lcmm/beddays/pred_trajectory/tbl_predicted_trajectory_5.csv
         plot_predicted_trajectory: output/lcmm/beddays/pred_trajectory/plot_predicted_trajectory_5.jpeg
         model_summary: output/lcmm/beddays/model_summary/model_summary_5.txt
+        tbl_multinom_coef: output/lcmm/beddays/multinomial/tbl_multinom_coef_5.csv
+        tbl_multinom_metrics: output/lcmm/beddays/multinomial/tbl_multinom_metrics_5.csv
+        plot_multinom_coef: output/lcmm/beddays/multinomial/plot_multinom_coef_5.jpeg
 
   lcmm_run_model_1_outpatient:
     run: r:latest analysis/12_2_LCMM_model.R 1 outpatient
