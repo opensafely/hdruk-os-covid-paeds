@@ -25,7 +25,7 @@ if(length(args) == 0){
 }
 
 # Number cores for parallel computation
-nproc = 4
+nproc = 1
 
 # Create output directories  ----
 dir_lcmm_models = here::here("output", "lcmm", resource_type, "models")
@@ -62,8 +62,10 @@ if (ng == 1){
   lcmm_model = lcmm(
     fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 6.5,
                                    Boundary.knots = c(1, 12)),
-    link = "3-manual-splines",
-    intnodes = c(3),
+    random = ~ bSpline(followup_month, degree = 3, knots = 6.5,
+                       Boundary.knots = c(1, 12)),
+    link = "4-manual-splines",
+    intnodes = c(1, 5),
     subject = "patient_id",
     ng = ng,
     maxiter = max_iter,
@@ -85,8 +87,10 @@ if (ng == 1){
                                      Boundary.knots = c(1, 12)),
       mixture = ~ bSpline(followup_month, degree = 3, knots = 6.5,
                           Boundary.knots = c(1, 12)),
-      link = "3-manual-splines",
-      intnodes = c(3),
+      random = ~ bSpline(followup_month, degree = 3, knots = 6.5,
+                         Boundary.knots = c(1, 12)),
+      link = "4-manual-splines",
+      intnodes = c(1, 5),
       classmb = ~1,
       ng = ng,
       B = lcmm_model_1,
