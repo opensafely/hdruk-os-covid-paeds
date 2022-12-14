@@ -68,7 +68,7 @@ link_function = tribble(
   "splines (5 manual - knot: 1, 3, 5)",       "5-manual-splines",  c(1, 3, 5),
   "splines (4 manual - knot: 1, 3)",          "4-manual-splines",  c(1, 3),
   "splines (4 manual - knot: 1, 5)",          "4-manual-splines",  c(1, 5),
-  "splines (3 manual - knot: 1)",             "4-manual-splines",  c(1),
+  "splines (3 manual - knot: 1)",             "3-manual-splines",  c(1),
 )
 
 lcmm_models = link_function %>% 
