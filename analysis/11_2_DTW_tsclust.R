@@ -38,10 +38,7 @@ ts_cluster = tsclust(series = data_timeseries_dtw,
                      k = n_clusters,
                      distance = "dtw_basic",
                      type = "partitional",
-                     control = partitional_control(
-                       pam.precompute = FALSE,
-                       pam.sparse = TRUE
-                     ),
+                     control = partitional_control(pam.precompute = FALSE),
                      seed = 43)
 
 ## Save time series clustering ----
