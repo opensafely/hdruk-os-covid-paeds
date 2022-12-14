@@ -61,13 +61,14 @@ max_iter = 500 # Maximum number of iterations
 
 # Create table of link functions to model ----
 link_function = tribble(
-  ~label,                                 ~link_function,      ~interior_nodes,
-  "linear",                               "linear",            NULL,
-  "splines (5 equi-distant)",             "5-equi-splines",    NULL,
-  "splines (5 manual - knot: 1, 3, 5)",   "5-manual-splines",  c(1, 3, 5),
-  "splines (3 manual - knot: 3)",         "3-manual-splines",  c(1),
-  "splines (3 manual - knot: 3)",         "3-manual-splines",  c(3),
-  "splines (3 manual - knot: 5)",         "3-manual-splines",  c(5)
+  ~label,                                     ~link_function,      ~interior_nodes,
+  "linear",                                   "linear",            NULL,
+  "splines (5 equi-distant)",                 "5-equi-splines",    NULL,
+  "splines (5 manual - knot: 1, 3, 5, 15)",   "6-manual-splines",  c(1, 3, 5, 15),
+  "splines (5 manual - knot: 1, 3, 5)",       "5-manual-splines",  c(1, 3, 5),
+  "splines (4 manual - knot: 1, 3)",          "4-manual-splines",  c(1, 3),
+  "splines (4 manual - knot: 1, 5)",          "4-manual-splines",  c(1, 5),
+  "splines (3 manual - knot: 1)",             "4-manual-splines",  c(1),
 )
 
 lcmm_models = link_function %>% 
