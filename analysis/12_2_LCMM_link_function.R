@@ -47,7 +47,7 @@ patient_id_non_zero = data_resource_lcmm %>%
   filter(total > 0) %>% 
   pull(patient_id)
 
-## Filter for patinets with 1+ resource use ----
+## Filter for patients with 1+ resource use ----
 data_resource_lcmm = data_resource_lcmm %>% 
   filter(patient_id %in% patient_id_non_zero)
 
@@ -56,7 +56,7 @@ data_resource_lcmm = as.data.frame(data_resource_lcmm)
 
 # Run LCMM model ----
 ## Set model parameters ----
-max_iter = 2000 # Maximum number of iterations
+max_iter = 5000 # Maximum number of iterations
 
 
 # Create table of link functions to model ----
@@ -73,7 +73,7 @@ lcmm_models = link_function %>%
     
     # Run LCMM ----
     lcmm_model = lcmm(
-      fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 7,
+      fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 6.5,
                                      Boundary.knots = c(1, 12)),
       link = link_function,
       intnodes = interior_nodes,
