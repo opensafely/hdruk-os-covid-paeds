@@ -45,7 +45,7 @@ patient_id_non_zero = data_resource_lcmm %>%
   filter(total > 0) %>% 
   pull(patient_id)
 
-## Filter for patinets with 1+ resource use ----
+## Filter for patients with 1+ resource use ----
 data_resource_lcmm = data_resource_lcmm %>% 
   filter(patient_id %in% patient_id_non_zero)
 
@@ -62,8 +62,6 @@ if (ng == 1){
   lcmm_model = lcmm(
     fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 6.5,
                                    Boundary.knots = c(1, 12)),
-    random = ~ bSpline(followup_month, degree = 3, knots = 6.5,
-                       Boundary.knots = c(1, 12)),
     link = "3-manual-splines",
     intnodes = c(3),
     subject = "patient_id",
@@ -87,8 +85,6 @@ if (ng == 1){
                                      Boundary.knots = c(1, 12)),
       mixture = ~ bSpline(followup_month, degree = 3, knots = 6.5,
                           Boundary.knots = c(1, 12)),
-      random = ~ bSpline(followup_month, degree = 3, knots = 6.5,
-                         Boundary.knots = c(1, 12)),
       link = "3-manual-splines",
       intnodes = c(3),
       classmb = ~1,
