@@ -56,16 +56,18 @@ data_resource_lcmm = as.data.frame(data_resource_lcmm)
 
 # Run LCMM model ----
 ## Set model parameters ----
-max_iter = 5000 # Maximum number of iterations
+max_iter = 500 # Maximum number of iterations
 
 
 # Create table of link functions to model ----
 link_function = tribble(
-  ~label,                           ~link_function,      ~interior_nodes,
-  "linear",                         "linear",            NULL,
-  "splines (5 equi-distant)",       "5-equi-splines",    NULL,
-  "splines (3 manual - knot: 3)",   "3-manual-splines",  c(3),
-  "splines (3 manual - knot: 5)",   "3-manual-splines",  c(5)
+  ~label,                                 ~link_function,      ~interior_nodes,
+  "linear",                               "linear",            NULL,
+  "splines (5 equi-distant)",             "5-equi-splines",    NULL,
+  "splines (5 manual - knot: 1, 3, 5)",   "5-manual-splines",  c(1, 3, 5),
+  "splines (3 manual - knot: 3)",         "3-manual-splines",  c(1),
+  "splines (3 manual - knot: 3)",         "3-manual-splines",  c(3),
+  "splines (3 manual - knot: 5)",         "3-manual-splines",  c(5)
 )
 
 lcmm_models = link_function %>% 
