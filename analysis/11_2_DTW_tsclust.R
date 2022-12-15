@@ -48,7 +48,7 @@ dir.create(here::here("output", "dtw", "data_cluster"), showWarnings = FALSE, re
 print("008")
 
 # Perform time series clustering ----
-ts_cluster = tsclust(series = data_timeseries_dtw,
+ts_cluster = tsclust(series = data_timeseries_dtw[1:100],
                      k = n_clusters,
                      distance = "dtw",
                      type = "partitional",
