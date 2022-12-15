@@ -52,7 +52,10 @@ ts_cluster = tsclust(series = data_timeseries_dtw,
                      k = n_clusters,
                      distance = "dtw_basic",
                      type = "partitional",
-                     control = partitional_control(pam.precompute = FALSE),
+                     control = partitional_control(
+                       pam.precompute = FALSE,
+                       symmetric = TRUE
+                       ),
                      trace = TRUE,
                      seed = 43)
 
