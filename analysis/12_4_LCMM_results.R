@@ -43,13 +43,14 @@ dir_lcmm_summary_tbl     = here::here("output", "lcmm", resource_type, "summary_
 dir_lcmm_obs_trajectory  = here::here("output", "lcmm", resource_type, "obs_trajectory")
 dir_lcmm_pred_trajectory = here::here("output", "lcmm", resource_type, "pred_trajectory")
 dir_lcmm_model_summary   = here::here("output", "lcmm", resource_type, "model_summary")
-dir_lcmm_model_summary   = here::here("output", "lcmm", resource_type, "multinomial")
+dir_lcmm_multinomial     = here::here("output", "lcmm", resource_type, "multinomial")
 
 ## Create new output directories ----
 dir.create(dir_lcmm_summary_tbl,     showWarnings = FALSE, recursive=TRUE)
 dir.create(dir_lcmm_obs_trajectory,  showWarnings = FALSE, recursive=TRUE)
 dir.create(dir_lcmm_pred_trajectory, showWarnings = FALSE, recursive=TRUE)
 dir.create(dir_lcmm_model_summary,   showWarnings = FALSE, recursive=TRUE)
+dir.create(dir_lcmm_multinomial,     showWarnings = FALSE, recursive=TRUE)
 
 # Plot theme ----
 theme_set(theme_bw())
@@ -263,17 +264,19 @@ predictor_var = c(
   # Shielding
   "shielding",
   
-  # Comorbidities
-  "mental_health_disorders", "neurodevelopmental_and_behavioural",
-  "asthma", "cystic_fibrosis", "other_respiratory",
-  "cardiovascular", "epilepsy", "headaches", "other_neurological",
-  "gastrointestinal_conditions", "genitourinary", "cancer",
-  "non_malignant_haematological", "immunological", "chronic_infections",
-  "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "transplant", "palliative_care",
+  "comorbidity_count_factor",
   
-  # Vaccination status
-  "vaccination_status",
+  # # Comorbidities
+  # "mental_health_disorders", "neurodevelopmental_and_behavioural",
+  # "asthma", "cystic_fibrosis", "other_respiratory",
+  # "cardiovascular", "epilepsy", "headaches", "other_neurological",
+  # "gastrointestinal_conditions", "genitourinary", "cancer",
+  # "non_malignant_haematological", "immunological", "chronic_infections",
+  # "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
+  # "metabolic", "transplant", "palliative_care",
+  # 
+  # # Vaccination status
+  # "vaccination_status",
   
   # Illness severity 2 weeks after positive test
   "illness_severity_2wks",
