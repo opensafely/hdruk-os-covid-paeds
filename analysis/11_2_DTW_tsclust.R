@@ -50,7 +50,7 @@ print("008")
 # Perform time series clustering ----
 ts_cluster = tsclust(series = data_timeseries_dtw[1:1000],
                      k = n_clusters,
-                     distance = "dtw",
+                     distance = "dtw_basic",
                      type = "partitional",
                      control = partitional_control(pam.precompute = FALSE),
                      trace = TRUE,
