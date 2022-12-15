@@ -305,7 +305,7 @@ tbl_multinom_coef = model_multinom %>%
 ## Save model coefficients table ----
 write_csv(tbl_multinom_coef,
           here::here("output", "lcmm", resource_type, "multinomial",
-                     paste0("tbl_multinom_coef_", n_clusters, ".csv")))
+                     paste0("tbl_multinom_coef_", ng, ".csv")))
 
 ## Save model metrics -----
 tbl_multinom_metrics = model_multinom %>% 
@@ -314,7 +314,7 @@ tbl_multinom_metrics = model_multinom %>%
 ## Save model metrics -----
 write_csv(tbl_multinom_metrics,
           here::here("output", "lcmm", resource_type, "multinomial",
-                     paste0("tbl_multinom_metrics_", n_clusters, ".csv")))
+                     paste0("tbl_multinom_metrics_", ng, ".csv")))
 
 ## Plot odds ratios ----
 plot_or = tbl_multinom_coef %>%
@@ -334,7 +334,7 @@ plot_or = tbl_multinom_coef %>%
   xlab("Odds ratio (95% CI)")
 
 ## Save plot --------
-ggsave(filename = paste0("plot_multinom_coef_", n_clusters, ".jpeg"),
+ggsave(filename = paste0("plot_multinom_coef_", ng, ".jpeg"),
        plot = plot_or,
        path = here::here("output", "lcmm", resource_type, "multinomial"),
        width = 10, height = 10, units = "in")
