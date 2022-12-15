@@ -62,8 +62,6 @@ if (ng == 1){
   lcmm_model = lcmm(
     fixed = resource_use ~ bSpline(followup_month, degree = 3, knots = 6.5,
                                    Boundary.knots = c(1, 12)),
-    random = ~ bSpline(followup_month, degree = 3, knots = 6.5,
-                       Boundary.knots = c(1, 12)),
     link = "4-manual-splines",
     intnodes = c(1, 5),
     subject = "patient_id",
@@ -87,8 +85,6 @@ if (ng == 1){
                                      Boundary.knots = c(1, 12)),
       mixture = ~ bSpline(followup_month, degree = 3, knots = 6.5,
                           Boundary.knots = c(1, 12)),
-      random = ~ bSpline(followup_month, degree = 3, knots = 6.5,
-                         Boundary.knots = c(1, 12)),
       link = "4-manual-splines",
       intnodes = c(1, 5),
       classmb = ~1,
