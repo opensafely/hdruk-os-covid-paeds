@@ -24,8 +24,13 @@ if(length(args) == 0){
   resource_type = args[[2]]
 }
 
-# Number cores for parallel computation
-nproc = 1
+# Number cores for parallel computation ----
+nproc = case_when(
+  resource_type == "outpatient" ~ 4,
+  resource_type == "gp" ~ 8,
+  ng > 2 ~ 4,
+  TRUE ~ 2
+)
 
 # Create output directories  ----
 dir_lcmm_models = here::here("output", "lcmm", resource_type, "models")
