@@ -294,7 +294,8 @@ model_formula = paste0("class ~ ",
 
 ## Fit logistic/multinomial model ------------------------
 if(ng == 1){
-  model_out = glm(formula = model_formula, data = data_positives_lcmm)
+  model_out = glm(formula = model_formula, family = binomial,
+                  data = data_positives_lcmm)
 } else{
   model_out = multinom(formula = model_formula, data = data_positives_lcmm)
 }
