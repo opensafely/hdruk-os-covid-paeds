@@ -24,8 +24,12 @@ if(length(args) == 0){
 # Plot theme ----
 theme_set(theme_bw())
 
-# Number cores for parallel computation
-nproc = 1
+# Number cores for parallel computation ----
+nproc = case_when(
+  resource_type == "outpatient" ~ 4,
+  resource_type == "gp" ~ 8,
+  TRUE ~ 2
+)
 
 # Create output directories  ----
 dir_lcmm_link_models = here::here("output", "lcmm", resource_type, 
