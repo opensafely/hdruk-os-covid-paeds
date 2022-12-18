@@ -54,6 +54,7 @@ ts_cluster = tsclust(series = data_timeseries_dtw,
                      k = n_clusters,
                      distance = "dtw_lb",
                      type = "partitional",
+                     window.size = 50,
                      control = partitional_control(
                        pam.precompute = FALSE
                        ),
