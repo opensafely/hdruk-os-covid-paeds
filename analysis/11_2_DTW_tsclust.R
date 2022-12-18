@@ -47,14 +47,15 @@ dir.create(here::here("output", "dtw", "data_cluster"), showWarnings = FALSE, re
 
 print("008")
 
+data_timeseries_dtw = reinterpolate(data_timeseries_dtw, new.length = max(lengths(data_timeseries_dtw)))
+
 # Perform time series clustering ----
 ts_cluster = tsclust(series = data_timeseries_dtw,
                      k = n_clusters,
-                     distance = "dtw_basic",
+                     distance = "dtw_lb",
                      type = "partitional",
                      control = partitional_control(
-                       pam.precompute = FALSE,
-                       symmetric = TRUE
+                       pam.precompute = FALSE
                        ),
                      trace = TRUE,
                      seed = 43)
