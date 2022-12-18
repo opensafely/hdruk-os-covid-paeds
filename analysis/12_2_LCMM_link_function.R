@@ -60,7 +60,7 @@ data_resource_lcmm = as.data.frame(data_resource_lcmm)
 
 # Run LCMM model ----
 ## Set model parameters ----
-max_iter = 500 # Maximum number of iterations
+max_iter = 5000 # Maximum number of iterations
 
 
 # Create table of link functions to model ----
