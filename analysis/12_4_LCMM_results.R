@@ -292,11 +292,16 @@ model_formula = paste0("class ~ ",
                        paste(predictor_var, collapse = " + ")) %>% 
   as.formula()
 
-## Fit multinomial model ------------------------
-model_multinom = multinom(formula = model_formula, data = data_positives_lcmm)
+## Fit logistic/multinomial model ------------------------
+if(ng == 1){
+  model_out = glm(formula = model_formula, data = data_positives_lcmm)
+} else{
+  model_out = multinom(formula = model_formula, data = data_positives_lcmm)
+}
+
 
 ## Model coefficients ------
-tbl_multinom_coef = model_multinom %>%
+tbl_multinom_coef = model_out %>%
   tidy_and_attach(exponentiate = TRUE, conf.int = TRUE) %>%
   tidy_add_reference_rows() %>%
   tidy_add_estimate_to_reference_rows() %>% 
@@ -308,7 +313,7 @@ write_csv(tbl_multinom_coef,
                      paste0("tbl_multinom_coef_", ng, ".csv")))
 
 ## Save model metrics -----
-tbl_multinom_metrics = model_multinom %>% 
+tbl_multinom_metrics = model_out %>% 
   glance()
 
 ## Save model metrics -----
