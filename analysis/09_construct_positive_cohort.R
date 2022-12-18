@@ -26,7 +26,7 @@ fup_start_date   = ymd(global_var$fup_start_date)
 
 # Random sample ----
 set.seed(4192875)
-n_positive_sample = 500000
+n_positive_sample = 50000
 
 # Load patient data ----
 data_patient    = read_rds(here::here("output", "data", "data_patient.rds"))
@@ -259,7 +259,14 @@ data_resource = data_resource %>%
   ) %>% 
   replace_na(list(n_gp = 0))
 
-
+# Positive test period -----
+data_positives = data_positives %>% 
+  mutate(
+    covid_test_date_period = covid_test_date_pos_tp %>% 
+      floor_date(unit = "3 months") %>% 
+      factor() %>% 
+      ff_label("Positive test date")
+  )
 
 # Calculate resource related covariates ----
 ## Healthcare use 1-year prior to positive test ----
