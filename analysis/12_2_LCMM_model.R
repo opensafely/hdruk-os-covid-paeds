@@ -27,7 +27,7 @@ if(length(args) == 0){
 # Number cores for parallel computation ----
 nproc = case_when(
   resource_type == "outpatient" ~ 4,
-  resource_type == "gp" ~ 8,
+  resource_type == "gp" ~ 16,
   ng > 2 ~ 4,
   TRUE ~ 2
 )
@@ -59,7 +59,7 @@ data_resource_lcmm = as.data.frame(data_resource_lcmm)
 
 # Run LCMM model ----
 ## Set model parameters ----
-max_iter = 5000 # Maximum number of iterations
+max_iter = 50000 # Maximum number of iterations
 
 ## Run lcmm ----
 if (ng == 1){
