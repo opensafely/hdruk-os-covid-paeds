@@ -27,7 +27,7 @@ theme_set(theme_bw())
 # Number cores for parallel computation ----
 nproc = case_when(
   resource_type == "outpatient" ~ 4,
-  resource_type == "gp" ~ 8,
+  resource_type == "gp" ~ 16,
   TRUE ~ 2
 )
 
@@ -66,9 +66,8 @@ max_iter = 5000 # Maximum number of iterations
 # Create table of link functions to model ----
 link_function = tribble(
   ~label,                                     ~link_function,      ~interior_nodes,
-  "linear",                                   "linear",            NULL,
   "splines (5 equi-distant)",                 "5-equi-splines",    NULL,
-  "splines (5 manual - knot: 1, 3, 5, 15)",   "6-manual-splines",  c(1, 3, 5, 15),
+  "splines (6 manual - knot: 1, 3, 5, 15)",   "6-manual-splines",  c(1, 3, 5, 15),
   "splines (5 manual - knot: 1, 3, 5)",       "5-manual-splines",  c(1, 3, 5),
   "splines (4 manual - knot: 1, 3)",          "4-manual-splines",  c(1, 3),
   "splines (4 manual - knot: 1, 5)",          "4-manual-splines",  c(1, 5),
