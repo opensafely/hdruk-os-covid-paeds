@@ -29,15 +29,13 @@ data_resource_dtw = data_resource_dtw %>%
   ungroup() %>% 
   mutate(
     service = case_when(
-      n_critical_care > 0 ~ "Critial care",
-      n_beddays > 0 ~ "Inpatient admission",
+      n_beddays > 0 ~ "Inpatient bed-days",
       n_outpatient > 0 ~ "Outpatient appointment",
       n_gp > 0 ~ "Healthcare episode",
       TRUE ~ "None") %>% 
       factor() %>% 
       fct_relevel("None", "Healthcare episode",
-                  "Outpatient appointment", "Inpatient admission",
-                  "Critial care")
+                  "Outpatient appointment", "Inpatient bed-days")
   ) %>% 
   filter(days == 7)
 
