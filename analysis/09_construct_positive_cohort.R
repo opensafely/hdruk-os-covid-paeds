@@ -352,7 +352,7 @@ data_positives = data_positives %>%
       factor() %>% 
       fct_relevel("No contact", "Healthcare episode",
                   "Outpatient", "Inpatient", "Critical care") %>% 
-      ff_label("Illness severity within 2 weeks")
+      ff_label("Level of care 2 weeks post-infection")
   )
 
 ## PIMS-TS status ----
@@ -363,7 +363,7 @@ data_positives = data_positives %>%
                   select(patient_id, covid_test_date_pos_tp),
                 by = "patient_id") %>% 
       filter(admission_date > covid_test_date_pos_tp,
-             admission_date <= covid_test_date_pos_tp + days(14)) %>%
+             admission_date <= covid_test_date_pos_tp + days(56)) %>%
       filter(
         (str_sub(primary_diagnosis, 1, 4) == "M303" &
            admission_date < ymd("2020-11-01")) |
