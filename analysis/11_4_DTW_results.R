@@ -78,11 +78,10 @@ tbl_resource_use_cluster = data_resource_dtw %>%
   ungroup() %>%
   unnest_wider(bootstats) %>% 
   mutate(resource_type = resource_type %>%
-           fct_relevel("gp", "outpatient", "beddays", "critical_care") %>% 
+           fct_relevel("gp", "outpatient", "beddays") %>% 
            fct_recode("Healthcare episode" = "gp",
                       "Outpatient appointment" = "outpatient",
-                      "Inpatient admission" = "beddays",
-                      "Critical care" = "critical_care"))
+                      "Inpatient admission" = "beddays"))
 
 ## Save table ----
 write_csv(tbl_resource_use_cluster,
@@ -137,9 +136,9 @@ explanatory_var = c(
   "n_beddays_2wks_post_covid", "n_critical_care_2wks_post_covid",
   
   # Previous healthcare use
-  "ntile_gp_pre_covid_1yr", "n_gp_pre_covid_1yr",
-  "ntile_outpatient_pre_covid_1yr", "n_outpatient_pre_covid_1yr",
-  "ntile_beddays_pre_covid_1yr", "n_beddays_pre_covid_1yr"
+  "n_beddays_pre_covid_1yr", "beddays_pre_covid_1yr",
+  "n_outpatient_pre_covid_1yr", "outpatient_pre_covid_1yr",
+  "n_gp_pre_covid_1yr", "gp_pre_covid_1yr"
 )
 
 ## Summary factorlist ----
@@ -168,28 +167,19 @@ predictor_var = c(
   "age_group", "sex", "imd_Q5_2019", "region_2019",
   "rural_urban_2019",
 
-  # Shielding
-  "shielding",
-
-  # Comorbidities
-  "mental_health_disorders", "neurodevelopmental_and_behavioural",
-  "asthma", "cystic_fibrosis", "other_respiratory",
-  "cardiovascular", "epilepsy", "headaches", "other_neurological",
-  "gastrointestinal_conditions", "genitourinary", "cancer",
-  "non_malignant_haematological", "immunological", "chronic_infections",
-  "rheumatology", "congenital_malformation", "diabetes", "other_endocrine",
-  "metabolic", "transplant", "palliative_care",
+  # Shielding and comorbidity count
+  "shielding", "comorbidity_count_factor",
 
   # Vaccination status
   "vaccination_status",
 
   # Illness severity 2 weeks after positive test
   "illness_severity_2wks",
-
+  
   # Previous healthcare use
-  "ntile_gp_pre_covid_1yr",
-  "ntile_outpatient_pre_covid_1yr",
-  "ntile_beddays_pre_covid_1yr"
+  "beddays_pre_covid_1yr",
+  "outpatient_pre_covid_1yr",
+  "gp_pre_covid_1yr"
 )
 
 ## Model forumla --------------
