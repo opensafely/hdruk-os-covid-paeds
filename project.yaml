@@ -3652,7 +3652,7 @@ actions:
     needs: [generate_positive_cohort]
     outputs:
       highly_sensitive:
-        dtw_resource_data: output/data/data_resource_mcc.rds
+        mcc_resource_data: output/data/data_resource_mcc.rds
 
   mcc_run_model_and_selection:
     run: r:latest analysis/10_2_MCC_model_selection.R 5
