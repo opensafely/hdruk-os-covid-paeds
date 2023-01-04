@@ -37,8 +37,8 @@ count_redact = global_var$disclosure_redact
 # Create output directories ----
 dir.create(here::here("output", "dtw", "results"), showWarnings = FALSE, recursive=TRUE)
 
-# Bootstrap samples
-B = 10
+# Bootstrap samples ----
+B = 500
 
 # Plot theme ----
 theme_set(theme_bw())
@@ -67,7 +67,8 @@ data_positives_dtw = data_positives_dtw %>%
 
 # Resource use by cluster ----
 tbl_resource_use_cluster = data_resource_dtw %>%
-  filter(period != "index") %>% 
+  filter(period != "index") %>%
+  filter(week_indexed > -53, week_indexed < 53) %>% 
   pivot_longer(cols = c(starts_with("n_")),
                names_pattern = "n_([[:alnum:]_]+)", names_to = "resource_type") %>% 
   group_by(week_indexed, period, cluster, resource_type) %>% 
