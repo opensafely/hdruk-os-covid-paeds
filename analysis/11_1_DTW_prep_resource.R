@@ -20,7 +20,6 @@ data_resource_dtw = data_resource_dtw %>%
          week_followup = ceiling(day_followup/7)) %>% 
   group_by(patient_id, week_followup) %>% 
   summarise(
-    n_critical_care = sum(n_critical_care),
     n_beddays = sum(n_beddays),
     n_outpatient = sum(n_outpatient),
     n_gp = sum(n_gp),
