@@ -13,12 +13,20 @@ library(tidyverse)
 data_resource_dtw = read_rds(here::here("output", "data", "data_resource.rds"))
 data_positives_dtw = read_rds(here::here("output", "data", "data_positives.rds"))
 
-## Create used service column ----
+## Create used service column by week ----
 data_resource_dtw = data_resource_dtw %>%
-  filter(date_indexed > 14) %>%
-  mutate(day_followup = date_indexed - 14,
-         week_followup = ceiling(day_followup/7)) %>% 
-  group_by(patient_id, week_followup) %>% 
+  mutate(
+    week_indexed = case_when(
+           date_indexed == 0 ~ 0,
+           date_indexed < 0 ~ floor(date_indexed/7),
+           date_indexed > 0 ~ ceiling(date_indexed/7)),
+    period = case_when(
+      week_indexed < 0 ~ "prior",
+      week_indexed == 0 ~ "index",
+      week_indexed < 3 ~ "immediate",
+      week_indexed >= 3 ~ "follow_up"
+    )) %>% 
+  group_by(patient_id, week_indexed, period) %>% 
   summarise(
     n_beddays = sum(n_beddays),
     n_outpatient = sum(n_outpatient),
@@ -35,18 +43,19 @@ data_resource_dtw = data_resource_dtw %>%
       factor() %>% 
       fct_relevel("None", "Healthcare episode",
                   "Outpatient appointment", "Inpatient bed-days")
-  ) %>% 
-  filter(days == 7)
+  )
 
-# Patient IDs with no healthcare contacts ----
-patient_id_no_service = data_resource_dtw %>% 
+# Patient IDs with no healthcare contacts in follow-up period ----
+patient_id_no_service = data_resource_dtw %>%
+  filter(period == "follow_up") %>% 
   group_by(patient_id) %>% 
   summarise(no_service = all(service == "None")) %>% 
   filter(no_service) %>% 
   pull(patient_id)
 
-# Create timeseries list of resource use ----
+# Create timeseries list of resource use during follow-up period ----
 data_timeseries_dtw = data_resource_dtw %>%
+  filter(period == "follow_up") %>% 
   filter(!patient_id %in% patient_id_no_service) %>% 
   group_by(patient_id) %>% 
   summarise(service = list(service %>% as.integer())) %>%
