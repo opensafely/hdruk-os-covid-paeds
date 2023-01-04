@@ -132,8 +132,6 @@ explanatory_var = c(
   
   # Illness severity 2 weeks after positive test
   "illness_severity_2wks", "pims_ts", 
-  "n_gp_2wks_post_covid", "n_outpatient_2wks_post_covid",
-  "n_beddays_2wks_post_covid", "n_critical_care_2wks_post_covid",
   
   # Previous healthcare use
   "n_beddays_pre_covid_1yr", "beddays_pre_covid_1yr",
@@ -161,6 +159,18 @@ write_csv(tbl_summary,
 
 
 # Multinomial logistic regression ----------------
+## Prep ---------
+data_positives_dtw = data_positives_dtw %>% 
+  mutate(
+    illness_severity_2wks = illness_severity_2wks %>% 
+      fct_collapse(
+        "Inpatient" = "Critical care"
+      )
+  )
+
+
+
+
 ## Predictor variables -----------------------
 predictor_var = c(
   # Demographics
@@ -170,11 +180,8 @@ predictor_var = c(
   # Shielding and comorbidity count
   "shielding", "comorbidity_count_factor",
 
-  # Vaccination status
-  #"vaccination_status",
-
   # Illness severity 2 weeks after positive test
-  #"illness_severity_2wks",
+  "illness_severity_2wks",
   
   # Previous healthcare use
   "beddays_pre_covid_1yr",
