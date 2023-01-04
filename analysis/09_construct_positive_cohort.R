@@ -284,35 +284,35 @@ data_positives = data_positives %>%
   ) %>% 
   mutate(
     n_beddays_pre_covid_1yr = n_beddays_pre_covid_1yr %>% 
-      na_if(0) %>% 
       ff_label("Bed-days in year prior to positive test"),
     n_outpatient_pre_covid_1yr = n_outpatient_pre_covid_1yr %>% 
-      na_if(0) %>% 
-      ff_label("Outpatient appointments (in year prior to positive test)"),
+      ff_label("Outpatient appointments in year prior to positive test"),
     n_gp_pre_covid_1yr = n_gp_pre_covid_1yr %>% 
-      na_if(0) %>% 
-      ff_label("Contact days (in year prior to positive test)"),
-    ntile_beddays_pre_covid_1yr = n_beddays_pre_covid_1yr %>% 
-      ntile(3) %>% 
-      factor() %>%
-      fct_explicit_na("None") %>% 
-      fct_relevel("None") %>% 
-      fct_recode("1 (lowest)" = "1", "3 (highest)" = "3") %>% 
-      ff_label("Prior inpatient bed-days (tertile)"),
-    ntile_outpatient_pre_covid_1yr = n_outpatient_pre_covid_1yr %>% 
-      ntile(3) %>% 
-      factor() %>%
-      fct_explicit_na("None") %>% 
-      fct_relevel("None") %>% 
-      fct_recode("1 (lowest)" = "1", "3 (highest)" = "3") %>% 
-      ff_label("Prior outpatient appointments (tertile)"),
-    ntile_gp_pre_covid_1yr = n_gp_pre_covid_1yr %>% 
-      ntile(3) %>% 
-      factor() %>%
-      fct_explicit_na("None") %>% 
-      fct_relevel("None") %>% 
-      fct_recode("1 (lowest)" = "1", "3 (highest)" = "3") %>% 
-      ff_label("Prior healthcare episodes (tertile)"),
+      ff_label("Contact days in year prior to positive test"),
+    
+    beddays_pre_covid_1yr = case_when(
+      n_beddays_pre_covid_1yr == 0 ~ "None",
+      n_beddays_pre_covid_1yr <  2 ~ "0.5 to 1.5",
+      TRUE                         ~ "2+",
+    ) %>% 
+      fct_relevel("None", "0.5 to 1.5", "2+") %>% 
+      ff_label("Bed-days (previous year)"),
+    
+    outpatient_pre_covid_1yr = case_when(
+      n_outpatient_pre_covid_1yr == 0 ~ "None",
+      n_outpatient_pre_covid_1yr < 3  ~ "1 or 2",
+      TRUE                            ~ "3+" 
+    ) %>% 
+      fct_relevel("None", "1 or 2", "3+") %>% 
+      ff_label("Outpatient appointments (previous year)"),
+    
+    gp_pre_covid_1yr = case_when(
+      n_gp_pre_covid_1yr == 0 ~ "None",
+      n_gp_pre_covid_1yr < 7  ~ "1 to 6",
+      TRUE                    ~ "7+" 
+    ) %>% 
+      fct_relevel("None", "1 or 2", "7+") %>% 
+      ff_label("Healthcare episodes (previous year)")
   )
 
 ## Healthcare use 2 weeks following positive test -----
