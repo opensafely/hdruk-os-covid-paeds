@@ -171,10 +171,10 @@ predictor_var = c(
   "shielding", "comorbidity_count_factor",
 
   # Vaccination status
-  "vaccination_status",
+  #"vaccination_status",
 
   # Illness severity 2 weeks after positive test
-  "illness_severity_2wks",
+  #"illness_severity_2wks",
   
   # Previous healthcare use
   "beddays_pre_covid_1yr",
