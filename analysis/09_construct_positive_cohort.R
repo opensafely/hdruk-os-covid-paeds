@@ -308,10 +308,10 @@ data_positives = data_positives %>%
     
     gp_pre_covid_1yr = case_when(
       n_gp_pre_covid_1yr == 0 ~ "None",
-      n_gp_pre_covid_1yr < 7  ~ "1 to 6",
-      TRUE                    ~ "7+" 
+      n_gp_pre_covid_1yr < 4  ~ "1 to 3",
+      TRUE                    ~ "4+" 
     ) %>% 
-      fct_relevel("None", "1 or 2", "7+") %>% 
+      fct_relevel("None", "1 to 3", "4+") %>% 
       ff_label("Healthcare episodes (previous year)")
   )
 
