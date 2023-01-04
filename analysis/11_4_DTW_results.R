@@ -67,9 +67,10 @@ data_positives_dtw = data_positives_dtw %>%
 
 # Resource use by cluster ----
 tbl_resource_use_cluster = data_resource_dtw %>%
+  filter(period != "index") %>% 
   pivot_longer(cols = c(starts_with("n_")),
                names_pattern = "n_([[:alnum:]_]+)", names_to = "resource_type") %>% 
-  group_by(week_followup, cluster, resource_type) %>% 
+  group_by(week_indexed, period, cluster, resource_type) %>% 
   summarise(
     n_patient = n(),
     n_events = sum(value),
@@ -81,7 +82,8 @@ tbl_resource_use_cluster = data_resource_dtw %>%
            fct_relevel("gp", "outpatient", "beddays") %>% 
            fct_recode("Healthcare episode" = "gp",
                       "Outpatient appointment" = "outpatient",
-                      "Inpatient admission" = "beddays"))
+                      "Inpatient bed-days" = "beddays"))
+  
 
 ## Save table ----
 write_csv(tbl_resource_use_cluster,
@@ -90,18 +92,22 @@ write_csv(tbl_resource_use_cluster,
 
 # Plot resource use by type and cluster ----
 plot_resource_use_cluster = tbl_resource_use_cluster %>%
-  ggplot(aes(x = week_followup, y = Mean, ymin = Lower, ymax = Upper)) +
+  ggplot(aes(x = week_indexed, y = Mean, ymin = Lower, ymax = Upper,
+             group = period)) +
   geom_line() +
+  geom_vline(xintercept = 3, linetype = "dotted") +
+  geom_vline(xintercept = 0, linetype = "longdash") +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
-  facet_grid(resource_type ~ cluster, scales = "free_y") +
+  facet_grid(cluster ~ resource_type, scales = "free_y") +
   scale_y_continuous(limits = c(0, NA)) +
-  labs(x = "Follow-up period (weeks)", y = "Average count per person-week")
+  labs(x = "Weeks from positive SARS-CoV-2 test",
+       y = "Incidence (count per person-week)")
 
 ## Save plot ----
 ggsave(here::here("output", "dtw", "results", paste0("plot_resource_use_cluster_",
                                           n_clusters, ".jpeg")),
        plot = plot_resource_use_cluster,
-       height = 8, width = 15, units = "in")
+       height = 15, width = 8, units = "in")
 
 # Table of patient characteristics by cluster ----
 dependent_var = "cluster"
@@ -161,14 +167,8 @@ write_csv(tbl_summary,
 # Multinomial logistic regression ----------------
 ## Prep ---------
 data_positives_dtw = data_positives_dtw %>% 
-  mutate(
-    illness_severity_2wks = illness_severity_2wks %>% 
-      fct_collapse(
-        "Inpatient" = "Critical care"
-      )
-  )
-
-
+  mutate(illness_severity_2wks = illness_severity_2wks %>% 
+           fct_collapse("Inpatient" = "Critical care"))
 
 
 ## Predictor variables -----------------------
