@@ -92,22 +92,23 @@ write_csv(tbl_resource_use_cluster,
 
 # Plot resource use by type and cluster ----
 plot_resource_use_cluster = tbl_resource_use_cluster %>%
-  ggplot(aes(x = week_indexed, y = Mean, ymin = Lower, ymax = Upper,
+  ggplot(aes(x = week_indexed, y = Mean*1000, 
+             ymin = Lower*1000, ymax = Upper*1000,
              group = period)) +
   geom_line() +
   geom_vline(xintercept = 3, linetype = "dotted") +
   geom_vline(xintercept = 0, linetype = "longdash") +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
-  facet_grid(cluster ~ resource_type, scales = "free_y") +
+  facet_grid(resource_type ~ cluster, scales = "free_y") +
   scale_y_continuous(limits = c(0, NA)) +
   labs(x = "Weeks from positive SARS-CoV-2 test",
-       y = "Incidence (count per person-week)")
+       y = "Incidence (count per 1,000 CYP)")
 
 ## Save plot ----
 ggsave(here::here("output", "dtw", "results", paste0("plot_resource_use_cluster_",
                                           n_clusters, ".jpeg")),
        plot = plot_resource_use_cluster,
-       height = 15, width = 8, units = "in")
+       height = 8, width = 17, units = "in")
 
 # Table of patient characteristics by cluster ----
 dependent_var = "cluster"
