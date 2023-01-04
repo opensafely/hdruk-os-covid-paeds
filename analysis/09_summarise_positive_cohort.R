@@ -50,13 +50,11 @@ explanatory_var = c(
   
   # Illness severity 2 weeks after positive test
   "illness_severity_2wks", "pims_ts", 
-  "n_gp_2wks_post_covid", "n_outpatient_2wks_post_covid",
-  "n_beddays_2wks_post_covid", "n_critical_care_2wks_post_covid",
   
   # Previous healthcare use
-  "ntile_gp_pre_covid_1yr", "n_gp_pre_covid_1yr",
-  "ntile_outpatient_pre_covid_1yr", "n_outpatient_pre_covid_1yr",
-  "ntile_beddays_pre_covid_1yr", "n_beddays_pre_covid_1yr"
+  "n_beddays_pre_covid_1yr", "beddays_pre_covid_1yr",
+  "n_outpatient_pre_covid_1yr", "outpatient_pre_covid_1yr",
+  "n_gp_pre_covid_1yr", "gp_pre_covid_1yr"
 )
 
 ## Summary factorlist ----
