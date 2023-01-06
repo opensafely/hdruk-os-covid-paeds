@@ -56,7 +56,7 @@ dir.create(dir_lcmm_multinomial,     showWarnings = FALSE, recursive=TRUE)
 theme_set(theme_bw())
 
 # Bootstrap samples ----
-B = 10
+B = 500
 
 # Load data ----
 data_resource       = read_rds(here::here("output", "data", "data_resource.rds"))
@@ -164,7 +164,6 @@ data_resource = data_resource %>%
       select(patient_id, class),
     by = "patient_id"
   )
-
 
 ## Bootstrapped 95% confidence intervals over B realisations ----
 tbl_obs_trajectory = data_resource %>% 
@@ -326,6 +325,12 @@ tbl_multinom_coef = model_out %>%
   tidy_add_reference_rows() %>%
   tidy_add_estimate_to_reference_rows() %>% 
   tidy_add_term_labels()
+
+### Add class column if only one group -----
+if(ng == 1){
+  tbl_multinom_coef = tbl_multinom_coef %>%
+    mutate(y.level = 1)
+}
 
 ## Save model coefficients table ----
 write_csv(tbl_multinom_coef,
