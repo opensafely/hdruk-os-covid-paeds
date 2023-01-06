@@ -21,7 +21,7 @@ library(broom.helpers)
 # Command arguments to set number of clusters ----
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) == 0){
-  ng = 2
+  ng = 1
   resource_type = "beddays"
 } else{
   ng = args[[1]] %>% as.integer()
@@ -55,7 +55,11 @@ dir.create(dir_lcmm_multinomial,     showWarnings = FALSE, recursive=TRUE)
 # Plot theme ----
 theme_set(theme_bw())
 
+# Bootstrap samples ----
+B = 10
+
 # Load data ----
+data_resource       = read_rds(here::here("output", "data", "data_resource.rds"))
 data_resource_lcmm  = read_rds(here::here("output", "data", "data_resource_lcmm.rds"))
 data_positives_lcmm = read_rds(here::here("output", "data", "data_positives_lcmm.rds"))
 lcmm_model          = read_rds(here::here("output", "lcmm", resource_type, "models", 
@@ -76,7 +80,7 @@ data_positives_lcmm = data_positives_lcmm %>%
       ff_label("Class")
   )
 
-# Create patient summary table by class ----
+# Table of patient characteristics by class ----
 dependent_var = "class"
 explanatory_var = c(
   
@@ -104,13 +108,12 @@ explanatory_var = c(
   "vaccination_status",
   
   # Illness severity 2 weeks after positive test
-  "illness_severity_2wks", "pims_ts",
+  "illness_severity_2wks", "pims_ts", 
   
   # Previous healthcare use
-  "beddays_pre_covid_1yr",
-  "outpatient_pre_covid_1yr",
-  "gp_pre_covid_1yr"
-  
+  "n_beddays_pre_covid_1yr", "beddays_pre_covid_1yr",
+  "n_outpatient_pre_covid_1yr", "outpatient_pre_covid_1yr",
+  "n_gp_pre_covid_1yr", "gp_pre_covid_1yr"
 )
 
 ## Summary factorlist ----
@@ -131,26 +134,48 @@ write_csv(tbl_summary,
           here::here("output", "lcmm", resource_type, "summary_tbl",
                      paste0("tbl_summary_", ng, ".csv")))
 
+
 # Create observed trajectories by class ----
+## Calculate observed trajectories by class ----
+data_resource = data_resource %>% 
+  select(patient_id, date_indexed,
+         resource_use = all_of(paste0("n_", resource_type))) %>%
+  mutate(
+    week_indexed = case_when(
+      date_indexed == 0 ~ 0,
+      date_indexed < 0 ~ floor(date_indexed/7),
+      date_indexed > 0 ~ ceiling(date_indexed/7)),
+    period = case_when(
+      week_indexed < 0 ~ "prior",
+      week_indexed == 0 ~ "index",
+      week_indexed < 3 ~ "immediate",
+      week_indexed >= 3 ~ "follow_up"
+    )) %>% 
+  group_by(patient_id, week_indexed, period) %>% 
+  summarise(
+    resource_use = sum(resource_use),
+    days = n()
+  )
+
 ## Join class to resource data ----
-data_resource_lcmm = data_resource_lcmm %>% 
+data_resource = data_resource %>%
   left_join(
     data_positives_lcmm %>% 
       select(patient_id, class),
     by = "patient_id"
   )
 
-## Calculate observed trajectories by class ----
-## Bootstrapped 95% confidence intervals over 1000 realisations
-tbl_obs_trajectory = data_resource_lcmm %>% 
-  select(patient_id, followup_month, class,
-         resource_use = all_of(paste0("n_", resource_type))) %>% 
-  group_by(class, followup_month) %>% 
+
+## Bootstrapped 95% confidence intervals over B realisations ----
+tbl_obs_trajectory = data_resource %>% 
+  filter(days == 7, week_indexed > -53, week_indexed < 55) %>% 
+  group_by(class, period, week_indexed) %>% 
   summarise(
     n_patient = n(),
+    n_events = sum(resource_use),
     resource_use = list(Hmisc::smean.cl.boot(resource_use,
                                              conf.int = 0.95,
-                                             B = 1000))
+                                             B = B))
   ) %>% 
   unnest_wider(resource_use) %>% 
   ungroup()
@@ -162,28 +187,30 @@ write_csv(tbl_obs_trajectory,
 
 ## Plot observed trajectory ----
 y_label = case_when(
-  resource_type == "beddays" ~ "Bed-days per 30 days",
-  resource_type == "outpatient" ~ "Outpatient appointments per 30 days",
-  resource_type == "gp" ~ "Healthcare contact days per 30 days",
+  resource_type == "beddays" ~ "Weekly bed-days per 1,000 CYP",
+  resource_type == "outpatient" ~ "Weekly outpatient appointments per 1,000 CYP",
+  resource_type == "gp" ~ "Weekly healthcare episodes days per 1,000 CYP",
   TRUE ~ "Error"
 )
   
 plot_obs_trajectory = tbl_obs_trajectory %>%
-  ggplot(aes(x = followup_month, y = Mean, ymin = Lower, ymax = Upper,
-             colour = class, fill = class)) +
-  geom_line() + geom_point() +
+  ggplot(aes(x = week_indexed, y = Mean*1000,
+             ymin = Lower*1000, ymax = Upper*1000,
+             group = period)) +
+  geom_line()+
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
-  labs(x = "Follow-up period (months)",
-       y = y_label,
-       fill = "Class", colour = "Class") +
-  scale_x_continuous(breaks = seq(1, 12, 1)) +
-  scale_y_continuous(limits = c(0, NA))
+  facet_wrap(~class) +
+  geom_vline(xintercept = 2, linetype = "dotted") +
+  geom_vline(xintercept = 0, linetype = "longdash") +
+  scale_y_continuous(limits = c(0, NA)) +
+  labs(x = "Weeks from positive SARS-CoV-2 test",
+       y = y_label)
 
 ggsave(filename = here::here("output", "lcmm", resource_type, "obs_trajectory",
                              paste0("plot_observed_trajectory_",
                                     lcmm_model$ng, ".jpeg")),
        plot = plot_obs_trajectory,
-       height = 6, width = 6, units = "in")
+       height = 7, width = 10, units = "in")
 
 
 
@@ -254,15 +281,21 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "pred_trajectory",
 
 
 # Multinomial logistic regression ----------------
+## Prep ---------
+data_positives_lcmm = data_positives_lcmm %>% 
+  mutate(illness_severity_2wks = illness_severity_2wks %>% 
+           fct_collapse("Inpatient" = "Critical care"))
+
+
+
 ## Predictor variables -----------------------
 predictor_var = c(
   # Demographics
   "age_group", "sex", "imd_Q5_2019", "region_2019",
   "rural_urban_2019",
   
-  # Shielding
-  "shielding",
-  "comorbidity_count_factor",
+  # Shielding and comorbidity count
+  "shielding", "comorbidity_count_factor",
   
   # Illness severity 2 weeks after positive test
   "illness_severity_2wks",
