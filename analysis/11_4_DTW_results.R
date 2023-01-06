@@ -68,7 +68,7 @@ data_positives_dtw = data_positives_dtw %>%
 # Resource use by cluster ----
 tbl_resource_use_cluster = data_resource_dtw %>%
   filter(period != "index") %>%
-  filter(week_indexed > -53, week_indexed < 53) %>% 
+  filter(week_indexed > -53, week_indexed < 55) %>% 
   pivot_longer(cols = c(starts_with("n_")),
                names_pattern = "n_([[:alnum:]_]+)", names_to = "resource_type") %>% 
   group_by(week_indexed, period, cluster, resource_type) %>% 
@@ -97,7 +97,7 @@ plot_resource_use_cluster = tbl_resource_use_cluster %>%
              ymin = Lower*1000, ymax = Upper*1000,
              group = period)) +
   geom_line() +
-  geom_vline(xintercept = 3, linetype = "dotted") +
+  geom_vline(xintercept = 2, linetype = "dotted") +
   geom_vline(xintercept = 0, linetype = "longdash") +
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
   facet_grid(resource_type ~ cluster, scales = "free_y") +
