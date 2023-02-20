@@ -5,6 +5,20 @@ expectations:
 
 actions:
 
+  generate_resource_by_age:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_resource_by_age --output-format csv.gz
+    outputs:
+      highly_sensitive:
+        cohort: output/input_resource_by_age.csv.gz
+
+  summarise_resource_by_age:
+    run: r:latest analysis/00_resource_by_age_check.R
+    needs: [generate_resource_by_age]
+    outputs:
+      moderately_sensitive:
+        summary_table: output/diagnostics/resource_by_age_group/table_yearly_resource.csv
+        summary_plot: output/diagnostics/resource_by_age_group/plot_yearly_resource.jpeg
+
   generate_study_population:
     run: cohortextractor:latest generate_cohort --study-definition study_definition --output-format csv.gz
     outputs:
