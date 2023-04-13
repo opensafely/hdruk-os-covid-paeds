@@ -84,12 +84,18 @@ tbl_resource_use_cluster = data_resource_dtw %>%
            fct_recode("Healthcare episode" = "gp",
                       "Outpatient appointment" = "outpatient",
                       "Inpatient bed-days" = "beddays"))
-  
 
-## Save table ----
-write_csv(tbl_resource_use_cluster,
-          here::here("output", "dtw", "results",
-                     paste0("tbl_resource_use_cluster_", n_clusters, ".csv")))
+## Apply disclosure controls ----
+tbl_resource_use_cluster = tbl_resource_use_cluster %>% 
+  mutate(
+    n_patient = if_else(n_patient <= count_redact, NA_real_,
+                        n_patient %>% plyr::round_any(count_round)),
+    n_events = if_else(n_patient <= count_redact, NA_real_, n_events),
+    Mean = if_else(n_patient <= count_redact, NA_real_, n_events / n_patient),
+    Lower = if_else(n_patient <= count_redact, NA_real_, Lower),
+    Upper = if_else(n_patient <= count_redact, NA_real_, Upper),
+  )
+  
 
 # Plot resource use by type and cluster ----
 plot_resource_use_cluster = tbl_resource_use_cluster %>%
@@ -110,6 +116,21 @@ ggsave(here::here("output", "dtw", "results", paste0("plot_resource_use_cluster_
                                           n_clusters, ".jpeg")),
        plot = plot_resource_use_cluster,
        height = 8, width = 17, units = "in")
+
+
+## Save table ----
+tbl_resource_use_cluster = tbl_resource_use_cluster %>% 
+  mutate(across(c(n_patient, n_events, Mean, Lower, Upper), as.character)) %>% 
+  replace_na(list(n_patient = "[REDACTED]",
+                  n_events = "[REDACTED]",
+                  Mean = "[REDACTED]",
+                  Lower = "[REDACTED]",
+                  Upper = "[REDACTED]"))
+
+write_csv(tbl_resource_use_cluster,
+          here::here("output", "dtw", "results",
+                     paste0("tbl_resource_use_cluster_", n_clusters, ".csv")))
+
 
 # Table of patient characteristics by cluster ----
 dependent_var = "cluster"
@@ -214,6 +235,12 @@ write_csv(tbl_multinom_coef,
 ## Save model metrics -----
 tbl_multinom_metrics = model_multinom %>% 
   glance()
+
+## Apply disclosure controls
+tbl_multinom_metrics = tbl_multinom_metrics %>% 
+  mutate(nobs = if_else(nobs <= count_redact, "[REDACTED]",
+                        plyr::round_any(nobs, count_round) %>% 
+                          as.character()))
 
 ## Save model metrics -----
 write_csv(tbl_multinom_metrics,
