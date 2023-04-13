@@ -22,6 +22,13 @@ if(length(args) == 0){
   resource_type = args[[1]]
 }
 
+# Load global variables ----
+global_var = jsonlite::read_json(path = here::here("analysis", "global_variables.json"))
+
+# Disclosure control parameters ----
+count_round  = global_var$disclosure_count_round
+count_redact = global_var$disclosure_redact
+
 # Directories ----
 dir_lcmm_models          = here::here("output", "lcmm", resource_type, "models")
 dir_lcmm_selection       = here::here("output", "lcmm", resource_type, "selection")
@@ -149,7 +156,9 @@ tbl_class_proportion = lcmm_models %>%
   map(function(lcmm_model){
     lcmm_model$pprob %>%
       count(class) %>% 
-      mutate(proprtion = n/sum(n),
+      mutate(
+        n = if_else(n <= count_redact, NA_real_, plyr::round_any(n, count_round)),
+        proportion = n/sum(n, na.rm = TRUE),
              n_cluster = lcmm_model$ng) %>% 
       relocate(n_cluster)
   }) %>%
@@ -159,13 +168,9 @@ tbl_class_proportion = lcmm_models %>%
     class = class %>% factor()
   )
 
-## Save class proportion ----
-write_csv(tbl_class_proportion,
-          here::here("output", "lcmm", resource_type, "selection", "tbl_class_proportion.csv"))
-
 ## Plot class proportion by number of clusters ----
 plot_class_proportion = tbl_class_proportion %>%
-  ggplot(aes(x = n_cluster, y = proprtion*100, fill = class)) +
+  ggplot(aes(x = n_cluster, y = proportion*100, fill = class)) +
   geom_col(position = "dodge") +
   geom_hline(yintercept = 5, linetype = "dashed") +
   labs(x = "Number of clusters", fill = "Class",
@@ -175,3 +180,10 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "selection", "plot
        plot = plot_class_proportion,
        height = 6, width = 6, units = "in")
 
+## Save proportion table ----
+tbl_class_proportion = tbl_class_proportion %>% 
+  mutate(across(c(n, proportion), as.character)) %>% 
+  replace_na(list(n = "[REDACTED]", proportion = "[REDACTED]"))
+
+write_csv(tbl_class_proportion,
+          here::here("output", "lcmm", resource_type, "selection", "tbl_class_proportion.csv"))
