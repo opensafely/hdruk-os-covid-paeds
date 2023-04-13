@@ -190,7 +190,6 @@ tbl_obs_trajectory = tbl_obs_trajectory %>%
     Upper = if_else(n_patient <= count_redact, NA_real_, Upper),
   )
 
-
 ## Plot observed trajectory ----
 y_label = case_when(
   resource_type == "beddays" ~ "Weekly bed-days per 1,000 CYP",
@@ -359,6 +358,12 @@ write_csv(tbl_multinom_coef,
 ## Save model metrics -----
 tbl_multinom_metrics = model_out %>% 
   glance()
+
+## Apply disclosure controls
+tbl_multinom_metrics = tbl_multinom_metrics %>% 
+  mutate(nobs = if_else(nobs <= count_redact, "[REDACTED]",
+                        plyr::round_any(nobs, count_round) %>% 
+                          as.character()))
 
 ## Save model metrics -----
 write_csv(tbl_multinom_metrics,
