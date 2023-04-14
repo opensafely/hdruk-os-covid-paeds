@@ -4037,6 +4037,9 @@ actions:
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_1.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_1.jpeg
         model_summary: output/lcmm/outpatient/model_summary/model_summary_1.txt
+        tbl_multinom_coef: output/lcmm/outpatient/multinomial/tbl_multinom_coef_1.csv
+        tbl_multinom_metrics: output/lcmm/outpatient/multinomial/tbl_multinom_metrics_1.csv
+        plot_multinom_coef: output/lcmm/outpatient/multinomial/plot_multinom_coef_1.jpeg
 
   lcmm_results_2_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 2 outpatient
@@ -4049,6 +4052,9 @@ actions:
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_2.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_2.jpeg
         model_summary: output/lcmm/outpatient/model_summary/model_summary_2.txt
+        tbl_multinom_coef: output/lcmm/outpatient/multinomial/tbl_multinom_coef_2.csv
+        tbl_multinom_metrics: output/lcmm/outpatient/multinomial/tbl_multinom_metrics_2.csv
+        plot_multinom_coef: output/lcmm/outpatient/multinomial/plot_multinom_coef_2.jpeg
 
   lcmm_results_3_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 3 outpatient
@@ -4061,6 +4067,9 @@ actions:
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_3.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_3.jpeg
         model_summary: output/lcmm/outpatient/model_summary/model_summary_3.txt
+        tbl_multinom_coef: output/lcmm/outpatient/multinomial/tbl_multinom_coef_3.csv
+        tbl_multinom_metrics: output/lcmm/outpatient/multinomial/tbl_multinom_metrics_3.csv
+        plot_multinom_coef: output/lcmm/outpatient/multinomial/plot_multinom_coef_3.jpeg
 
   lcmm_results_4_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 4 outpatient
@@ -4073,6 +4082,9 @@ actions:
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_4.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_4.jpeg
         model_summary: output/lcmm/outpatient/model_summary/model_summary_4.txt
+        tbl_multinom_coef: output/lcmm/outpatient/multinomial/tbl_multinom_coef_4.csv
+        tbl_multinom_metrics: output/lcmm/outpatient/multinomial/tbl_multinom_metrics_4.csv
+        plot_multinom_coef: output/lcmm/outpatient/multinomial/plot_multinom_coef_4.jpeg
 
   lcmm_results_5_outpatient:
     run: r:latest analysis/12_4_LCMM_results.R 5 outpatient
@@ -4085,6 +4097,9 @@ actions:
         table_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/tbl_predicted_trajectory_5.csv
         plot_predicted_trajectory: output/lcmm/outpatient/pred_trajectory/plot_predicted_trajectory_5.jpeg
         model_summary: output/lcmm/outpatient/model_summary/model_summary_5.txt
+        tbl_multinom_coef: output/lcmm/outpatient/multinomial/tbl_multinom_coef_5.csv
+        tbl_multinom_metrics: output/lcmm/outpatient/multinomial/tbl_multinom_metrics_5.csv
+        plot_multinom_coef: output/lcmm/outpatient/multinomial/plot_multinom_coef_5.jpeg
 
   lcmm_run_model_1_gp:
     run: r:latest analysis/12_2_LCMM_model.R 1 gp
@@ -4146,6 +4161,9 @@ actions:
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_1.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_1.jpeg
         model_summary: output/lcmm/gp/model_summary/model_summary_1.txt
+        tbl_multinom_coef: output/lcmm/gp/multinomial/tbl_multinom_coef_1.csv
+        tbl_multinom_metrics: output/lcmm/gp/multinomial/tbl_multinom_metrics_1.csv
+        plot_multinom_coef: output/lcmm/gp/multinomial/plot_multinom_coef_1.jpeg
 
   lcmm_results_2_gp:
     run: r:latest analysis/12_4_LCMM_results.R 2 gp
@@ -4158,6 +4176,9 @@ actions:
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_2.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_2.jpeg
         model_summary: output/lcmm/gp/model_summary/model_summary_2.txt
+        tbl_multinom_coef: output/lcmm/gp/multinomial/tbl_multinom_coef_2.csv
+        tbl_multinom_metrics: output/lcmm/gp/multinomial/tbl_multinom_metrics_2.csv
+        plot_multinom_coef: output/lcmm/gp/multinomial/plot_multinom_coef_2.jpeg
 
   lcmm_results_3_gp:
     run: r:latest analysis/12_4_LCMM_results.R 3 gp
@@ -4170,6 +4191,9 @@ actions:
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_3.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_3.jpeg
         model_summary: output/lcmm/gp/model_summary/model_summary_3.txt
+        tbl_multinom_coef: output/lcmm/gp/multinomial/tbl_multinom_coef_3.csv
+        tbl_multinom_metrics: output/lcmm/gp/multinomial/tbl_multinom_metrics_3.csv
+        plot_multinom_coef: output/lcmm/gp/multinomial/plot_multinom_coef_3.jpeg
 
   lcmm_results_4_gp:
     run: r:latest analysis/12_4_LCMM_results.R 4 gp
@@ -4182,6 +4206,9 @@ actions:
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_4.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_4.jpeg
         model_summary: output/lcmm/gp/model_summary/model_summary_4.txt
+        tbl_multinom_coef: output/lcmm/gp/multinomial/tbl_multinom_coef_4.csv
+        tbl_multinom_metrics: output/lcmm/gp/multinomial/tbl_multinom_metrics_4.csv
+        plot_multinom_coef: output/lcmm/gp/multinomial/plot_multinom_coef_4.jpeg
 
   lcmm_results_5_gp:
     run: r:latest analysis/12_4_LCMM_results.R 5 gp
@@ -4194,3 +4221,6 @@ actions:
         table_predicted_trajectory: output/lcmm/gp/pred_trajectory/tbl_predicted_trajectory_5.csv
         plot_predicted_trajectory: output/lcmm/gp/pred_trajectory/plot_predicted_trajectory_5.jpeg
         model_summary: output/lcmm/gp/model_summary/model_summary_5.txt
+        tbl_multinom_coef: output/lcmm/gp/multinomial/tbl_multinom_coef_5.csv
+        tbl_multinom_metrics: output/lcmm/gp/multinomial/tbl_multinom_metrics_5.csv
+        plot_multinom_coef: output/lcmm/gp/multinomial/plot_multinom_coef_5.jpeg
