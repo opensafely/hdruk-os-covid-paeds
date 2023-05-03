@@ -171,24 +171,24 @@ tbl_obs_trajectory = data_resource %>%
   group_by(class, period, week_indexed) %>% 
   summarise(
     n_patient = n(),
-    n_events = sum(resource_use),
-    resource_use = list(Hmisc::smean.cl.boot(resource_use,
-                                             conf.int = 0.95,
-                                             B = B))
+    n_events = sum(resource_use)
   ) %>% 
-  unnest_wider(resource_use) %>% 
   ungroup()
 
 ## Apply disclosure controls ----
 tbl_obs_trajectory = tbl_obs_trajectory %>% 
   mutate(
-    n_patient = if_else(n_patient <= count_redact, NA_real_,
-                        n_patient %>% plyr::round_any(count_round)),
-    n_events = if_else(n_patient <= count_redact, NA_real_, n_events),
-    Mean = if_else(n_patient <= count_redact, NA_real_, n_events / n_patient),
-    Lower = if_else(n_patient <= count_redact, NA_real_, Lower),
-    Upper = if_else(n_patient <= count_redact, NA_real_, Upper),
-  )
+    n_patient_midpoint6 = roundmid_any(n_patient),
+    n_events_midpoint6  = roundmid_any(n_events)
+    ) %>% 
+  rowwise() %>% 
+  mutate(
+    mean_midpoint6_derived  = poisson.test(n_events_midpoint6, n_patient_midpoint6)$estimate,
+    lower_midpoint6_derived = poisson.test(n_events_midpoint6, n_patient_midpoint6)$conf.int[1],
+    upper_midpoint6_derived = poisson.test(n_events_midpoint6, n_patient_midpoint6)$conf.int[2]
+  ) %>%
+  ungroup() %>% 
+  select(-n_patient, -n_events)
 
 ## Plot observed trajectory ----
 y_label = case_when(
@@ -199,8 +199,8 @@ y_label = case_when(
 )
   
 plot_obs_trajectory = tbl_obs_trajectory %>%
-  ggplot(aes(x = week_indexed, y = Mean*1000,
-             ymin = Lower*1000, ymax = Upper*1000,
+  ggplot(aes(x = week_indexed, y = mean_midpoint6_derived*1000,
+             ymin = lower_midpoint6_derived*1000, ymax = upper_midpoint6_derived*1000,
              group = period)) +
   geom_line()+
   geom_ribbon(alpha = 0.2, linetype = 2, size = 0.25) +
@@ -218,14 +218,6 @@ ggsave(filename = here::here("output", "lcmm", resource_type, "obs_trajectory",
        height = 7, width = 10, units = "in")
 
 ## Save observed trajectory table ----
-tbl_obs_trajectory = tbl_obs_trajectory %>% 
-  mutate(across(c(n_patient, n_events, Mean, Lower, Upper), as.character)) %>% 
-  replace_na(list(n_patient = "[REDACTED]",
-                  n_events = "[REDACTED]",
-                  Mean = "[REDACTED]",
-                  Lower = "[REDACTED]",
-                  Upper = "[REDACTED]"))
-
 write_csv(tbl_obs_trajectory,
           here::here("output", "lcmm", resource_type, "obs_trajectory",
                      paste0("tbl_obs_trajectory_", ng, ".csv")))

@@ -1117,6 +1117,12 @@ format_perc = function (probs, digits){
         "%")
 }
 
+roundmid_any <- function(x, to=6){
+  # like round_any, but centers on (integer) midpoint of the rounding points
+  # used to satisfy disclosure controls
+  ceiling(x/to)*to - (floor(to/2)*(x!=0))
+}
+
 # Functions from sjstats version 0.18.1 ----
 svyglm.nb = function (formula, design, ...) 
 {

@@ -74,11 +74,9 @@ tbl_resource_use_cluster = data_resource_dtw %>%
   group_by(week_indexed, period, cluster, resource_type) %>% 
   summarise(
     n_patient = n(),
-    n_events = sum(value),
-    bootstats = list(Hmisc::smean.cl.boot(value, conf.int = 0.95, B = B))
+    n_events = sum(value)
   ) %>% 
   ungroup() %>%
-  unnest_wider(bootstats) %>% 
   mutate(resource_type = resource_type %>%
            fct_relevel("gp", "outpatient", "beddays") %>% 
            fct_recode("Healthcare episode" = "gp",
@@ -88,19 +86,23 @@ tbl_resource_use_cluster = data_resource_dtw %>%
 ## Apply disclosure controls ----
 tbl_resource_use_cluster = tbl_resource_use_cluster %>% 
   mutate(
-    n_patient = if_else(n_patient <= count_redact, NA_real_,
-                        n_patient %>% plyr::round_any(count_round)),
-    n_events = if_else(n_patient <= count_redact, NA_real_, n_events),
-    Mean = if_else(n_patient <= count_redact, NA_real_, n_events / n_patient),
-    Lower = if_else(n_patient <= count_redact, NA_real_, Lower),
-    Upper = if_else(n_patient <= count_redact, NA_real_, Upper),
-  )
+    n_patient_midpoint6 = roundmid_any(n_patient),
+    n_events_midpoint6 = roundmid_any(n_events)
+  ) %>% 
+  rowwise() %>% 
+  mutate(
+    mean_midpoint6_derived  = poisson.test(n_events_midpoint6, n_patient_midpoint6)$estimate,
+    lower_midpoint6_derived = poisson.test(n_events_midpoint6, n_patient_midpoint6)$conf.int[1],
+    upper_midpoint6_derived = poisson.test(n_events_midpoint6, n_patient_midpoint6)$conf.int[2]
+  ) %>%
+  ungroup() %>% 
+  select(-n_patient, -n_events)
   
 
 # Plot resource use by type and cluster ----
 plot_resource_use_cluster = tbl_resource_use_cluster %>%
-  ggplot(aes(x = week_indexed, y = Mean*1000, 
-             ymin = Lower*1000, ymax = Upper*1000,
+  ggplot(aes(x = week_indexed, y = mean_midpoint6_derived*1000, 
+             ymin = lower_midpoint6_derived*1000, ymax = upper_midpoint6_derived*1000,
              group = period)) +
   geom_line() +
   geom_vline(xintercept = 2, linetype = "dotted") +
@@ -119,14 +121,6 @@ ggsave(here::here("output", "dtw", "results", paste0("plot_resource_use_cluster_
 
 
 ## Save table ----
-tbl_resource_use_cluster = tbl_resource_use_cluster %>% 
-  mutate(across(c(n_patient, n_events, Mean, Lower, Upper), as.character)) %>% 
-  replace_na(list(n_patient = "[REDACTED]",
-                  n_events = "[REDACTED]",
-                  Mean = "[REDACTED]",
-                  Lower = "[REDACTED]",
-                  Upper = "[REDACTED]"))
-
 write_csv(tbl_resource_use_cluster,
           here::here("output", "dtw", "results",
                      paste0("tbl_resource_use_cluster_", n_clusters, ".csv")))
